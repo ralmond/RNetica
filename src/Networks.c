@@ -3,6 +3,7 @@
  * destroying, saving and other high level functions on networks.
  */
 
+#include <string.h>
 #include <R.h>
 #include <Rdefines.h>
 #include <RNetica.h>
@@ -99,6 +100,29 @@ void RN_stop_Netica() {
     error("%s",mesg);
   }
   return;
+}
+
+
+SEXP RN_Netica_Version() {
+  SEXP result, vnum, vstring, names;
+  const char *vs;
+  PROTECT(result = allocVector(VECSXP,2));
+  PROTECT(vnum = allocVector(INTSXP,1));
+  PROTECT(vstring = allocVector(STRSXP,1));
+  PROTECT(names = allocVector(STRSXP,2));
+
+  INTEGER(vnum)[0]= GetNeticaVersion(RN_netica_env,vs);
+  SET_STRING_ELT(vstring,0,vs);
+
+  SET_VECTOR_ELT(result,0,vnum);
+  SET_STRING_ELT(names, 0,"number");
+  SET_VECTOR_ELT(result,1, vstring);
+  SET_STRING_ELT(names, 1,"message");
+  setAttrib(result, R_NamesSymbol, names);
+
+  UNPROTECT(4);
+  return result;
+
 }
 
 /*****************************************************************************
@@ -217,7 +241,7 @@ SEXP RN_New_Net(SEXP namelist) {
 
   PROTECT(bnclass = allocVector(STRSXP,1));
   SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
-  Protect(bnatt = install("Netica_bn")); 
+  PROTECT(bnatt = install("Netica_bn")); 
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
@@ -249,7 +273,7 @@ SEXP RN_Delete_Net(SEXP netlist) {
   SEXP bnclass,bnatt;
 
   PROTECT(bnclass = allocVector(STRSXP,1));
-  Protect(bnatt = install("Netica_bn")); 
+  PROTECT(bnatt = install("Netica_bn")); 
   SET_STRING_ELT(bnclass,0,mkChar("DeletedNeticaBN"));
   
   for (n=0; n < nn; n++) {
@@ -268,4 +292,123 @@ SEXP RN_Delete_Net(SEXP netlist) {
   }
   UNPROTECT(3);
   return(netlist);
+}
+
+// Copyied from NETICA API manual because it looks useful.
+net_bn* NetNamed (const char* name, environ_ns* env){
+    int nth = 0;
+    net_bn* net;
+    do {
+        net = GetNthNet_bn (nth++, env);
+    } while (net  strcmp (name, GetNetName_bn (net)) != 0);
+    return net;
+}
+
+SEXP RN_Named_Nets(SEXP namelist) {
+  PROTECT(namelist = AS_CHARACTER(namelist));
+  R_len_t n, nn = lenght(namelist);
+  const char* name;
+  net_bn* netica_handle;
+  SEXP bnhandlelist, bn, bnhandle;
+  SEXP bnclass,bnatt;
+
+  PROTECT(bnclass = allocVector(STRSXP,1));
+  SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
+  PROTECT(bnatt = install("Netica_bn")); 
+
+  PROTECT(bnhandlelist = allocVector(VECSXP,nn));
+  for (n=0; n < nn; n++) {
+    name = CHAR(STRING_ELT(namelist,n));
+    netica_handle = NetNamed(name,RN_netica_env);
+    PROTECT(bn = allocVector(STRSXP,1));
+    bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+                                 R_NilValue);
+    PROTECT(bnhandle);
+    /* Return the network name */
+    SET_STRING_ELT(bn,0,mkChar(name));
+    /* Set the handle as an attribute. */
+    setAttrib(bn,NetPointer,bnhandle);
+    classgets(bn,bnclass);
+    /* Now stick it in array */
+    SET_VECTOR_ELT(bnhandlelist,n,bn);
+    UNPROTECT(2); //I think it should be OK to free these up as soon as
+                  //they are assigned to a protected object.
+  }
+  UNPROTECT(4);
+  return(bnhandlelist);
+}
+
+SEXP RN_GetNth_Nets(SEXP nlist) {
+  PROTECT(nlist = AS_INTEGER(nlist));
+  R_len_t n, nn = lenght(nlist);
+  int *netno;
+  const char* name;
+  net_bn* netica_handle;
+  SEXP bnhandlelist, bn, bnhandle;
+  SEXP bnclass,bnatt;
+
+  PROTECT(bnclass = allocVector(STRSXP,1));
+  SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
+  PROTECT(bnatt = install("Netica_bn")); 
+
+  PROTECT(bnhandlelist = allocVector(VECSXP,nn));
+  netno = INTEGER(nlist);
+  for (n=0; n < nn; n++) {
+    netica_handle = GetNthNet_bn(netno[n],RN_netica_env);
+    name = GetNetName_bn(netica_handle);
+    PROTECT(bn = allocVector(STRSXP,1));
+    bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+                                 R_NilValue);
+    PROTECT(bnhandle);
+    /* Return the network name */
+    SET_STRING_ELT(bn,0,mkChar(name));
+    /* Set the handle as an attribute. */
+    setAttrib(bn,NetPointer,bnhandle);
+    classgets(bn,bnclass);
+    /* Now stick it in array */
+    SET_VECTOR_ELT(bnhandlelist,n,bn);
+    UNPROTECT(2); //I think it should be OK to free these up as soon as
+                  //they are assigned to a protected object.
+  }
+  UNPROTECT(4);
+  return(bnhandlelist);
+}
+
+SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
+  PROTECT(namelist = AS_CHARACTER(namelist));
+  PROTECT(nets = AS_CHARACTER(namelist));
+  R_len_t n, nn = lenght(namelist);
+  const char* name;
+  net_bn* old_net, new_net;
+  SEXP bnhandlelist, old_bn, new_bn, old_handle, new_handle;
+  SEXP bnclass,bnatt;
+
+  PROTECT(bnclass = allocVector(STRSXP,1));
+  SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
+  PROTECT(bnatt = install("Netica_bn")); 
+
+  PROTECT(bnhandlelist = allocVector(VECSXP,nn));
+  for (n=0; n < nn; n++) {
+    name = CHAR(STRING_ELT(namelist,n));
+    PROTECT(old_bn = GET_VECTOR_ELT(netlist,n));
+    PROTECT(old_handle = getAttrib(old_bn,bnatt));
+    old_net = (net_bn*) R_ExternalPtrAddr(old_handle);
+
+    new_net = NewNet_bn(name,RN_netica_env);
+    PROTECT(new_bn = allocVector(STRSXP,1));
+    new_handle = R_MakeExternalPtr(new_net,bnatt,
+                                 R_NilValue);
+    PROTECT(new_handle);
+    /* Return the network name */
+    SET_STRING_ELT(new_bn,0,mkChar(name));
+    /* Set the handle as an attribute. */
+    setAttrib(new_bn,NetPointer,new_handle);
+    classgets(new_bn,bnclass);
+    /* Now stick it in array */
+    SET_VECTOR_ELT(bnhandlelist,n,new_bn);
+    UNPROTECT(4); //I think it should be OK to free these up as soon as
+                  //they are assigned to a protected object.
+  }
+  UNPROTECT(5);
+  return(bnhandlelist);
 }
