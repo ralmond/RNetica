@@ -16,6 +16,14 @@ StopNetica <- function() {
   .C("RN_stop_Netica")
 }
 
+## This function returns the version number as a list with two named
+## components, the first is the version number (expressed as an
+## integer).  The second is the message string sent back from the
+## version command.
+NeticaVersion <- function () {
+  .Call("RN_Netica_Version")
+}
+
 
 ## This function reports on any errors, and if <clear> is TRUE clears
 ## them as well.  It returns a vector given the counts of errors of
@@ -45,7 +53,7 @@ CreateNetwork <- function (names) {
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
+    stop("CreateNetwork: Netica Errors Encountered, see console for details.")
   }
   handles
 }
@@ -60,13 +68,13 @@ print.NeticaBN <- function(x, ...) {
   
 DeleteNetwork <- function (nets) {
   if (!isList(nets)) nets <- list(nets)
-  if (!all(sapply(nets,class)=="NeticaBN"))
+  if (!all(sapply(nets,class)=="NeticaBN")) {
     stop("Expected List of NeticaBN objects")
   }
   .Call("RN_Delete_Net",names)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
+    stop("DeleteNetwork: Netica Errors Encountered, see console for details.")
   }
 }
 
@@ -76,4 +84,45 @@ toString.DeletedNeticaBN <- function(x,...) {
   
 print.DeletedNeticaBN <- function(x, ...) {
   cat(toString(x),"\n")
+}
+
+## Returns a network by its position in the list.
+GetNthNets <- function (n) {
+  n <- as.integer(n)
+  if (any(is.na(n))) {
+    stop("GetNthNets: Expected vector of integers")
+  }
+  handles <- .Call("RN_GetNth_Nets",n)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("GetNthNets: Netica Errors Encountered, see console for details.")
+  }
+  handles
+}
+
+## Returns a network by its name.
+GetNamedNets <- function (namelist) {
+  namelist <- as.character(namelist)
+  handles <- .Call("RN_Named_Nets",n)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("GetNamedNets: Netica Errors Encountered, see console for details.")
+  }
+  handles
+}
+
+CopyNets <- function (nets, newnamelist, options) {
+  if (!isList(nets)) nets <- list(nets)
+  if (!all(sapply(nets,class)=="NeticaBN")) {
+    stop("Expected List of NeticaBN objects")
+  }
+  if (length(nets)!=length(newnamelist)) {
+    stop("Number of new names doesn't match number of old nets").
+  }
+  options <- paste(options,collapse=",")
+  handles <- .Call("RN_Copy_Nets",nets,newnamelist,options)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("GetNamedNets: Netica Errors Encountered, see console for details.")
+  }
 }
