@@ -87,7 +87,7 @@ print.DeletedNeticaBN <- function(x, ...) {
 }
 
 ## Returns a network by its position in the list.
-GetNthNets <- function (n) {
+GetNthNet <- function (n) {
   n <- as.integer(n)
   if (any(is.na(n))) {
     stop("GetNthNets: Expected vector of integers")
@@ -117,7 +117,7 @@ CopyNets <- function (nets, newnamelist, options) {
     stop("Expected List of NeticaBN objects")
   }
   if (length(nets)!=length(newnamelist)) {
-    stop("Number of new names doesn't match number of old nets").
+    stop("Number of new names doesn't match number of old nets")
   }
   options <- paste(options,collapse=",")
   handles <- .Call("RN_Copy_Nets",nets,newnamelist,options)

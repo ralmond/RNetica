@@ -1,0 +1,3 @@
+PKG_LIBS= -L@NETICA_LIB@ -lnetica -lstdc++
+PKG_CFLAGS= -I. -I@NETICA_INCDIR@
+

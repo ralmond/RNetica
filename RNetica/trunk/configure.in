@@ -1,0 +1,35 @@
+# An input file for autoconf to configure 
+# 
+#
+AC_INIT(DESCRIPTION)
+
+ dnl Get the C compiler, including any values set by the user
+ dnl We need this to perform compilation and link checks.
+#AC_PROG_CC
+
+dnl ======================================================
+
+NETICA_HOME="/home/ralmond/software/Netica_API_504"
+#AC_ARG_WITH(netica-home,[  --with-netica    the path to the Netica API installation.],
+#               [NETICA_HOME=${withval}])
+NETICA_LIB="${NETICA_HOME}/lib/64bit"
+NETICA_INCDIR="${NETICA_HOME}/src"
+AC_SUBST(NETICA_LIB)
+AC_SUBST(NETICA_INCDIR)
+
+echo "****************************************"
+echo "Configuration information:"
+echo ""
+echo "Netica settings"
+echo ""
+echo "Netica API DIRECTORY:     ${NETICA_HOME}"
+echo "Netica Lib DIRECTORY:     ${NETICA_LIB}"
+echo "Netica Include Directory: ${NETICA_INCDIR}"
+echo ""
+echo "Compilation flags:        ${PKG_CLAGS} ${LANGUAGE_DEFS}"
+echo "Link flags:               ${PKG_LIBS}"
+
+
+AC_OUTPUT(src/Makevars)
+#chmod +x cleanup
+
