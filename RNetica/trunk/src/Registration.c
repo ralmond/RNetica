@@ -28,17 +28,17 @@ SEXP bnatt=NULL;
 static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
-
+  printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
   if (bnclass==NULL) {
-    PROTECT(bnclass = allocVector(STRSXP,1));
+    R_PreserveObject(bnclass = allocVector(STRSXP,1));
     SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
   }
   if (delbnclass==NULL) {
-    PROTECT(delbnclass = allocVector(STRSXP,1));
+    R_PreserveObject(delbnclass = allocVector(STRSXP,1));
     SET_STRING_ELT(delbnclass,0,mkChar(DeletedClass));
   }
   if (bnatt==NULL) {
-    PROTECT(bnatt = install("Netica_bn")); 
+    R_PreserveObject(bnatt = install("Netica_bn")); 
   }
 
   symbolRegCount++;
@@ -47,7 +47,19 @@ void RN_Define_Symbols() {
 void RN_Free_Symbols() {
   printf("RN_Free_Symbols: %d.\n",symbolRegCount);
   if (--symbolRegCount == 0) {
-    UNPROTECT(3);
+    //UNPROTECT(3);
+    if (bnclass != NULL) {
+      R_ReleaseObject(bnclass);
+      bnclass = NULL;
+    }
+    if (delbnclass != NULL) {
+      R_ReleaseObject(delbnclass);
+      delbnclass = NULL;
+    }
+    if (bnatt != NULL) {
+      R_ReleaseObject(bnatt);
+      bnatt = NULL;
+    }
   }
 }
 
@@ -100,5 +112,5 @@ void R_init_RNEtica(DllInfo *info) {
 }
 
 void R_unload_RNetica(DllInfo *info) {
-  UNPROTECT(3);
+  RN_Free_Symbols();
 }

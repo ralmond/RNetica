@@ -262,14 +262,10 @@ SEXP RN_New_Net(SEXP namelist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    //UNPROTECT_PTR(bnhandle);
-    //UNPROTECT_PTR(bn);
-    UNPROTECT(2);
+    //UNPROTECT(2); //I think I need to free these two object in the
+                  //loop after they are in the list.
   }
-  //UNPROTECT(2); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
-    //It should be, but this is generating errors.  Pulling it outside
-    //the loop.
+
   printf("Nets are ready\n");
   UNPROTECT(2);
   RN_Free_Symbols();
@@ -295,7 +291,7 @@ SEXP RN_Delete_Net(SEXP netlist) {
     R_SetExternalPtrAddr(bnhandle,NULL);
     setAttrib(bn,bnatt,bnhandle);
     classgets(bn,delbnclass);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
+    //UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
   UNPROTECT(1);
@@ -337,7 +333,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
+    //UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
@@ -371,7 +367,7 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
+    //UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
@@ -408,9 +404,10 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
     classgets(new_bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,new_bn);
-    UNPROTECT(4); //I think it should be OK to free these up as soon as
+    //UNPROTECT(4); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
-  UNPROTECT(3); RN_Free_Symbols();
+  UNPROTECT(3); 
+  RN_Free_Symbols();
   return(bnhandlelist);
 }
