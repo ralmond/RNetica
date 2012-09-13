@@ -1,0 +1,15 @@
+import(methods)
+
+export(StartNetica, StopNetica, NeticaVersion,
+       ReportErrors, ClearAllErrors,
+       CreateNetwork, DeleteNetwork,
+       print.NeticaBN, toString.NeticaBN,
+       print.DeletedNeticaBN, toString.DeletedNeticaBN,
+       GetNthNet, GetNamedNets, CopyNets)
+
+
+S3method(print, NeticaBN)
+S3method(toString, NeticaBN)
+S3method(print, DeletedNeticaBN)
+S3method(toString, DeletedNeticaBN)
+       
