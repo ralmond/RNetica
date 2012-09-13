@@ -25,6 +25,7 @@ SEXP bnclass=NULL;
 SEXP delbnclass=NULL;
 SEXP bnatt=NULL;
 
+static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
 
@@ -40,8 +41,15 @@ void RN_Define_Symbols() {
     PROTECT(bnatt = install("Netica_bn")); 
   }
 
+  symbolRegCount++;
 }
 
+void RN_Free_Symbols() {
+  printf("RN_Free_Symbols: %d.\n",symbolRegCount);
+  if (--symbolRegCount == 0) {
+    UNPROTECT(3);
+  }
+}
 
 
 /////////////////////////////////////////////////////////////////////
