@@ -9,11 +9,11 @@ LicenseKey <- NULL
 ##These functions start and stop the Netica API Environment.
 StartNetica <- function(license=LicenseKey, checking=NULL,
                         maxmem=NULL) {
-  .C("RN_start_Netica",as.character(LicenseKey),
-     as.character(checking),as.double(maxmem))
+  invisible(.C("RN_start_Netica",as.character(LicenseKey),
+     as.character(checking),as.double(maxmem)))
 }
 StopNetica <- function() {
-  .C("RN_stop_Netica")
+  invisible(.C("RN_stop_Netica"))
 }
 
 ## This function returns the version number as a list with two named

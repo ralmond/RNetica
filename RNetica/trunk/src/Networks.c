@@ -69,7 +69,12 @@ void RN_start_Netica(char** license, char** checking, double* maxmem) {
     ArgumentChecking_ns(do_check,RN_netica_env);
   }
 
-  if (maxmem != NULL) {
+  //It appears that even though I am passing NULL, it is showing up as
+  //an array with a very low value.  I've just added a minimum
+  //check
+  if (maxmem != NULL && maxmem[0]>200000) {
+    
+    //[DEBUG] printf("Maximizing Memory, %e.\n",maxmem[0]);
     LimitMemoryUsage_ns(maxmem[0],RN_netica_env);
   }
 
@@ -227,32 +232,47 @@ void RN_ClearAllErrors(char** sev) {
  *****************************************************************************/
 
 SEXP RN_New_Net(SEXP namelist) {
+  RN_Define_Symbols();
+
   PROTECT(namelist = AS_CHARACTER(namelist));
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
   SEXP bnhandlelist, bn, bnhandle;
-
-
+    
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = NewNet_bn(name,RN_netica_env);
+    printf("New net named %s\n",name);
     PROTECT(bn = allocVector(STRSXP,1));
+    /* Return the network name */
+    SET_STRING_ELT(bn,0,mkChar(name));
+    printf("bn = ");
+    PrintValue(bn);
+    printf("\n");
+    /* Set the handle as an attribute. */
     bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
                                  R_NilValue);
     PROTECT(bnhandle);
-    /* Return the network name */
-    SET_STRING_ELT(bn,0,mkChar(name));
-    /* Set the handle as an attribute. */
+    printf("bnhandle = ");
+    PrintValue(bnhandle);
+    printf("\n");
     setAttrib(bn,bnatt,bnhandle);
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
+    //UNPROTECT_PTR(bnhandle);
+    //UNPROTECT_PTR(bn);
+    UNPROTECT(2);
   }
+  //UNPROTECT(2); //I think it should be OK to free these up as soon as
+                  //they are assigned to a protected object.
+    //It should be, but this is generating errors.  Pulling it outside
+    //the loop.
+  printf("Nets are ready\n");
   UNPROTECT(2);
+  RN_Free_Symbols();
   return(bnhandlelist);
 }
 
@@ -261,6 +281,8 @@ SEXP RN_Delete_Net(SEXP netlist) {
   R_len_t n, nn = length(netlist);
   net_bn* netica_handle;
   SEXP bn, bnhandle;
+
+  RN_Define_Symbols();
   
   for (n=0; n < nn; n++) {
     PROTECT(bn = VECTOR_ELT(netlist,n));
@@ -277,6 +299,7 @@ SEXP RN_Delete_Net(SEXP netlist) {
                   //they are assigned to a protected object.
   }
   UNPROTECT(1);
+  RN_Free_Symbols();
   return(netlist);
 }
 
@@ -297,6 +320,8 @@ SEXP RN_Named_Nets(SEXP namelist) {
   net_bn* netica_handle;
   SEXP bnhandlelist, bn, bnhandle;
 
+  RN_Define_Symbols();
+
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
@@ -316,6 +341,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
+  RN_Free_Symbols();
   return(bnhandlelist);
 }
 
@@ -326,6 +352,8 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
   const char* name;
   net_bn* netica_handle;
   SEXP bnhandlelist, bn, bnhandle;
+
+  RN_Define_Symbols();
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   netno = INTEGER(nlist);
@@ -347,6 +375,7 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
+  RN_Free_Symbols();
   return(bnhandlelist);
 }
 
@@ -357,6 +386,8 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
   const char* name;
   net_bn *old_net, *new_net;
   SEXP bnhandlelist, old_bn, new_bn, old_handle, new_handle;
+
+  RN_Define_Symbols();
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
@@ -380,6 +411,6 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
     UNPROTECT(4); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
-  UNPROTECT(3);
+  UNPROTECT(3); RN_Free_Symbols();
   return(bnhandlelist);
 }

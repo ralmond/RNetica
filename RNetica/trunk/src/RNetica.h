@@ -16,3 +16,7 @@ extern SEXP bnclass;
 extern SEXP delbnclass;
 extern SEXP bnatt;
 
+extern void RN_Define_Symbols();  //Reloads symbol definitions.
+extern void RN_Free_Symbols();  //Seems we can only allocate them on 
+                                //a call basis.
+
