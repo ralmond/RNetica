@@ -34,7 +34,7 @@ void RN_start_Netica(char** license, char** checking, double* maxmem) {
   int res;
 
   //Now called on library init.
-  //RN_Define_Symbols();
+  RN_Define_Symbols();
 
   if (RN_netica_env != NULL) {
     warning("Netica already running, use stopNetica before restarting Netica with new parameters.");
@@ -99,6 +99,7 @@ void RN_stop_Netica() {
   if (res < 0) {
     error("%s",mesg);
   }
+  RN_Free_Symbols();
   return;
 }
 
@@ -262,7 +263,7 @@ SEXP RN_New_Net(SEXP namelist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    //UNPROTECT(2); //I think I need to free these two object in the
+    UNPROTECT(2); //I think I need to free these two object in the
                   //loop after they are in the list.
   }
 
@@ -273,12 +274,11 @@ SEXP RN_New_Net(SEXP namelist) {
 }
 
 SEXP RN_Delete_Net(SEXP netlist) {
-  PROTECT(netlist);
+  RN_Define_Symbols();
   R_len_t n, nn = length(netlist);
   net_bn* netica_handle;
   SEXP bn, bnhandle;
 
-  RN_Define_Symbols();
   
   for (n=0; n < nn; n++) {
     PROTECT(bn = VECTOR_ELT(netlist,n));
@@ -291,10 +291,9 @@ SEXP RN_Delete_Net(SEXP netlist) {
     R_SetExternalPtrAddr(bnhandle,NULL);
     setAttrib(bn,bnatt,bnhandle);
     classgets(bn,delbnclass);
-    //UNPROTECT(2); //I think it should be OK to free these up as soon as
+    UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
-  UNPROTECT(1);
   RN_Free_Symbols();
   return(netlist);
 }
@@ -310,13 +309,13 @@ net_bn* NetNamed (const char* name, environ_ns* env){
 }
 
 SEXP RN_Named_Nets(SEXP namelist) {
+  RN_Define_Symbols();
   PROTECT(namelist = AS_CHARACTER(namelist));
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
   SEXP bnhandlelist, bn, bnhandle;
 
-  RN_Define_Symbols();
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
@@ -333,7 +332,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    //UNPROTECT(2); //I think it should be OK to free these up as soon as
+    UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
@@ -342,6 +341,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
 }
 
 SEXP RN_GetNth_Nets(SEXP nlist) {
+  RN_Define_Symbols();
   PROTECT(nlist = AS_INTEGER(nlist));
   R_len_t n, nn = length(nlist);
   int *netno;
@@ -349,7 +349,6 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
   net_bn* netica_handle;
   SEXP bnhandlelist, bn, bnhandle;
 
-  RN_Define_Symbols();
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   netno = INTEGER(nlist);
@@ -367,7 +366,7 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    //UNPROTECT(2); //I think it should be OK to free these up as soon as
+    UNPROTECT(2); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
   UNPROTECT(2);
@@ -376,14 +375,13 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
 }
 
 SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
+  RN_Define_Symbols();
   PROTECT(namelist = AS_CHARACTER(namelist));
-  PROTECT(nets);
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn *old_net, *new_net;
   SEXP bnhandlelist, old_bn, new_bn, old_handle, new_handle;
 
-  RN_Define_Symbols();
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
@@ -404,10 +402,10 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
     classgets(new_bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,new_bn);
-    //UNPROTECT(4); //I think it should be OK to free these up as soon as
+    UNPROTECT(4); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
-  UNPROTECT(3); 
+  UNPROTECT(2); 
   RN_Free_Symbols();
   return(bnhandlelist);
 }
