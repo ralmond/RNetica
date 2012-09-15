@@ -67,15 +67,15 @@ print.NeticaBN <- function(x, ...) {
 }
   
 DeleteNetwork <- function (nets) {
-  if (!isList(nets)) nets <- list(nets)
-  if (!all(sapply(nets,class)=="NeticaBN")) {
-    stop("Expected List of NeticaBN objects")
-  }
-  .Call("RN_Delete_Net",names)
+  # We actually ignore the class of the nets and just extract the names
+  # from the NeticaBN objects, or we can just pass a list of names.
+  nets <- as.character(nets)
+  handles <- .Call("RN_Delete_Net",nets)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("DeleteNetwork: Netica Errors Encountered, see console for details.")
   }
+  invisible(handles)
 }
 
 toString.DeletedNeticaBN <- function(x,...) {
@@ -103,7 +103,7 @@ GetNthNet <- function (n) {
 ## Returns a network by its name.
 GetNamedNets <- function (namelist) {
   namelist <- as.character(namelist)
-  handles <- .Call("RN_Named_Nets",n)
+  handles <- .Call("RN_Named_Nets",namelist)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("GetNamedNets: Netica Errors Encountered, see console for details.")
@@ -111,18 +111,17 @@ GetNamedNets <- function (namelist) {
   handles
 }
 
-CopyNets <- function (nets, newnamelist, options) {
-  if (!isList(nets)) nets <- list(nets)
-  if (!all(sapply(nets,class)=="NeticaBN")) {
-    stop("Expected List of NeticaBN objects")
-  }
+CopyNets <- function (nets, newnamelist, options=character(0)) {
   if (length(nets)!=length(newnamelist)) {
     stop("Number of new names doesn't match number of old nets")
   }
+  nets <- as.character(nets) # Just use the names
+  newnamelist <- as.character(newnamelist)
   options <- paste(options,collapse=",")
   handles <- .Call("RN_Copy_Nets",nets,newnamelist,options)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("GetNamedNets: Netica Errors Encountered, see console for details.")
   }
+  handles
 }

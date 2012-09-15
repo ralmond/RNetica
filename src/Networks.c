@@ -231,6 +231,24 @@ void RN_ClearAllErrors(char** sev) {
 /*****************************************************************************
  * Creating and Destroying Bayesian Networks.
  *****************************************************************************/
+// Original design here was to capture and save the returned handle to
+// the network.  But this is difficult to make safe as R will hang
+// onto the stale pointers.  Instead, we will use the names, and then
+// just try to find the network by name when we want to modify it.
+// That should be only slightly slower but infinitely safer.
+
+// Copyied from NETICA API manual because it looks useful.
+// This is now key to the new strategy.  
+net_bn* RN_AS_NET (const char* name){
+    int nth = 0;
+    net_bn* net;
+    do {
+        net = GetNthNet_bn (nth++, RN_netica_env);
+    } while (net && strcmp (name, GetNetName_bn (net)) != 0);
+    return net;
+}
+
+
 
 SEXP RN_New_Net(SEXP namelist) {
   RN_Define_Symbols();
@@ -245,29 +263,21 @@ SEXP RN_New_Net(SEXP namelist) {
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = NewNet_bn(name,RN_netica_env);
-    printf("New net named %s\n",name);
     PROTECT(bn = allocVector(STRSXP,1));
     /* Return the network name */
     SET_STRING_ELT(bn,0,mkChar(name));
-    printf("bn = ");
-    PrintValue(bn);
-    printf("\n");
     /* Set the handle as an attribute. */
-    bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-                                 R_NilValue);
-    PROTECT(bnhandle);
-    printf("bnhandle = ");
-    PrintValue(bnhandle);
-    printf("\n");
-    setAttrib(bn,bnatt,bnhandle);
+    // Skip this step, to risky as pointer might go stale.
+    // bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+    //                             R_NilValue);
+    //setAttrib(bn,bnatt,bnhandle);
+
     classgets(bn,bnclass);
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think I need to free these two object in the
-                  //loop after they are in the list.
+    UNPROTECT(1); //bn is created within loop, so free it here.
   }
 
-  printf("Nets are ready\n");
   UNPROTECT(2);
   RN_Free_Symbols();
   return(bnhandlelist);
@@ -275,42 +285,39 @@ SEXP RN_New_Net(SEXP namelist) {
 
 SEXP RN_Delete_Net(SEXP netlist) {
   RN_Define_Symbols();
-  R_len_t n, nn = length(netlist);
-  net_bn* netica_handle;
-  SEXP bn, bnhandle;
 
-  
+  R_len_t n, nn = length(netlist);
+  const char* name;
+  net_bn* netica_handle;
+  SEXP bn, bnhandle, result;
+
+  PROTECT(result = allocVector(VECSXP,nn));
+
   for (n=0; n < nn; n++) {
-    PROTECT(bn = VECTOR_ELT(netlist,n));
-    PROTECT(bnhandle = getAttrib(bn,bnatt));
-    netica_handle = (net_bn*) R_ExternalPtrAddr(bnhandle);
+    name = CHAR(STRING_ELT(netlist,n));
+    netica_handle = RN_AS_NET(name);
 
     DeleteNet_bn(netica_handle);
 
     /* Clear the handle and the class. */
-    R_SetExternalPtrAddr(bnhandle,NULL);
-    setAttrib(bn,bnatt,bnhandle);
+    //R_SetExternalPtrAddr(bnhandle,NULL);
+    //setAttrib(bn,bnatt,bnhandle);
+    PROTECT(bn = allocVector(STRSXP,1));
+    /* Return the network name */
+    SET_STRING_ELT(bn,0,mkChar(name));
     classgets(bn,delbnclass);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
+    SET_VECTOR_ELT(result,n,bn);
+    UNPROTECT(1); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
+  UNPROTECT(1);
   RN_Free_Symbols();
-  return(netlist);
+  return(result);
 }
 
-// Copyied from NETICA API manual because it looks useful.
-net_bn* NetNamed (const char* name, environ_ns* env){
-    int nth = 0;
-    net_bn* net;
-    do {
-        net = GetNthNet_bn (nth++, env);
-    } while (net && strcmp (name, GetNetName_bn (net)) != 0);
-    return net;
-}
 
 SEXP RN_Named_Nets(SEXP namelist) {
   RN_Define_Symbols();
-  PROTECT(namelist = AS_CHARACTER(namelist));
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
@@ -320,29 +327,33 @@ SEXP RN_Named_Nets(SEXP namelist) {
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
-    netica_handle = NetNamed(name,RN_netica_env);
-    PROTECT(bn = allocVector(STRSXP,1));
-    bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-                                 R_NilValue);
-    PROTECT(bnhandle);
-    /* Return the network name */
-    SET_STRING_ELT(bn,0,mkChar(name));
-    /* Set the handle as an attribute. */
-    setAttrib(bn,bnatt,bnhandle);
-    classgets(bn,bnclass);
-    /* Now stick it in array */
-    SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
+    netica_handle = RN_AS_NET(name);
+    if (netica_handle) {
+      PROTECT(bn = allocVector(STRSXP,1));
+      /* Return the network name */
+      SET_STRING_ELT(bn,0,mkChar(name));
+
+      /* Set the handle as an attribute. (Not done) */
+      //bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+      //                             R_NilValue);
+      //PROTECT(bnhandle);
+      //setAttrib(bn,bnatt,bnhandle);
+
+      classgets(bn,bnclass);
+      /* Now stick it in array */
+      SET_VECTOR_ELT(bnhandlelist,n,bn);
+      UNPROTECT(1); //Can free bn when in array
+    } else {
+      SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+    }
   }
-  UNPROTECT(2);
+  UNPROTECT(1);
   RN_Free_Symbols();
   return(bnhandlelist);
 }
 
 SEXP RN_GetNth_Nets(SEXP nlist) {
   RN_Define_Symbols();
-  PROTECT(nlist = AS_INTEGER(nlist));
   R_len_t n, nn = length(nlist);
   int *netno;
   const char* name;
@@ -354,58 +365,58 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
   netno = INTEGER(nlist);
   for (n=0; n < nn; n++) {
     netica_handle = GetNthNet_bn(netno[n],RN_netica_env);
-    name = GetNetName_bn(netica_handle);
-    PROTECT(bn = allocVector(STRSXP,1));
-    bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-                                 R_NilValue);
-    PROTECT(bnhandle);
-    /* Return the network name */
-    SET_STRING_ELT(bn,0,mkChar(name));
-    /* Set the handle as an attribute. */
-    setAttrib(bn,bnatt,bnhandle);
-    classgets(bn,bnclass);
-    /* Now stick it in array */
-    SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(2); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
+    if (netica_handle) {
+      name = GetNetName_bn(netica_handle);
+      PROTECT(bn = allocVector(STRSXP,1));
+      /* Return the network name */
+      SET_STRING_ELT(bn,0,mkChar(name));
+
+      /* Set the handle as an attribute. (Not anymore) */
+      //bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+      //                               R_NilValue);
+      //PROTECT(bnhandle);
+      //setAttrib(bn,bnatt,bnhandle);
+
+      classgets(bn,bnclass);
+      /* Now stick it in array */
+      SET_VECTOR_ELT(bnhandlelist,n,bn);
+      UNPROTECT(1); //bn is safe now.
+    } else{
+      SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+    }
   }
-  UNPROTECT(2);
+  UNPROTECT(1);
   RN_Free_Symbols();
   return(bnhandlelist);
 }
 
 SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
   RN_Define_Symbols();
-  PROTECT(namelist = AS_CHARACTER(namelist));
   R_len_t n, nn = length(namelist);
-  const char* name;
+  const char *oldname, *newname, *opt;
   net_bn *old_net, *new_net;
-  SEXP bnhandlelist, old_bn, new_bn, old_handle, new_handle;
+  SEXP bnhandlelist, new_bn;
 
+  opt = CHAR(STRING_ELT(options,0));
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
-    name = CHAR(STRING_ELT(namelist,n));
-    PROTECT(old_bn = VECTOR_ELT(nets,n));
-    PROTECT(old_handle = getAttrib(old_bn,bnatt));
-    old_net = (net_bn*) R_ExternalPtrAddr(old_handle);
+    oldname = CHAR(STRING_ELT(nets,n));
+    newname = CHAR(STRING_ELT(namelist,n));
+    old_net = RN_AS_NET(oldname);
+    new_net = CopyNet_bn(old_net,newname,RN_netica_env,opt);
 
-    new_net = NewNet_bn(name,RN_netica_env);
     PROTECT(new_bn = allocVector(STRSXP,1));
-    new_handle = R_MakeExternalPtr(new_net,bnatt,
-                                 R_NilValue);
-    PROTECT(new_handle);
     /* Return the network name */
-    SET_STRING_ELT(new_bn,0,mkChar(name));
-    /* Set the handle as an attribute. */
-    setAttrib(new_bn,bnatt,new_handle);
+    SET_STRING_ELT(new_bn,0,mkChar(newname));
     classgets(new_bn,bnclass);
+
     /* Now stick it in array */
     SET_VECTOR_ELT(bnhandlelist,n,new_bn);
-    UNPROTECT(4); //I think it should be OK to free these up as soon as
+    UNPROTECT(1); //I think it should be OK to free these up as soon as
                   //they are assigned to a protected object.
   }
-  UNPROTECT(2); 
+  UNPROTECT(1); 
   RN_Free_Symbols();
   return(bnhandlelist);
 }
