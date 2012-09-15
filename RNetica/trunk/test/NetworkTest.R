@@ -1,27 +1,49 @@
 StartNetica()
 print(NeticaVersion())
 net1 <- CreateNetwork("Untitled")
-print(net1)
+stopifnot(is(net1,"NeticaBN"))
+stopifnot(as.character(net1)=="Untitled")
+
 nets <- CreateNetwork(paste("Untitled",2:3,sep=""))
-print(nets)
+stopifnot(all(sapply(nets,is,"NeticaBN")))
+stopifnot(as.character(nets) == c("Untitled2","Untitled3"))
+
 net2 <- GetNamedNets("Untitled2")
-print(net2)
+stopifnot(is(net2,"NeticaBN"))
+stopifnot(as.character(net2)=="Untitled2")
+
 fish <- GetNamedNets("fish")
-print(fish)
+stopifnot(all(sapply(fish,is.null)))
+
 netn <- GetNthNet(2)
-print(netn)
-netnn <- GetNthNet(c(0,2))
-print(netnn)
-netnnn <- GetNthNet(17)
-print(netnnn)
+stopifnot(is(netn,"NeticaBN"))
+stopifnot(as.character(net2)=="Untitled2")
+
+
+netnn <- GetNthNet(c(1,3))
+stopifnot(all(sapply(netnn,is,"NeticaBN")))
+stopifnot(as.character(netnn) == c("Untitled","Untitled3"))
+
+netn17 <- GetNthNet(17)
+stopifnot(all(sapply(netn17,is.null)))
+
 netd <- DeleteNetwork(net2)
-print(netd)
-netdd <- GetNamedNets("Untitled2")
-print(netdd)
-netn <- GetNthNet(1)
-print(netn)
-netc <- CopyNets(netnn,paste("Copies",2:3,sep=""))
-print(netc)
-netnn <- GetNthNet(0:3)
-print(netnn)
+stopifnot(is(netd,"DeletedNeticaBN"))
+stopifnot(as.character(netd)=="Untitled2")
+
+netd2 <- GetNamedNets("Untitled2")
+stopifnot(all(sapply(netd2,is.null)))
+
+netnd2 <- GetNthNet(2)
+stopifnot(is(netnd2,"NeticaBN"))
+stopifnot(as.character(netnd2)=="Untitled3")
+
+netc <- CopyNets(netnn,paste("Copy",c(1,3),sep=""))
+stopifnot(all(sapply(netc,is,"NeticaBN")))
+stopifnot(as.character(netc) == c("Copy1","Copy3"))
+
+netnall <- GetNthNet(1:4)
+stopifnot(all(sapply(netnall,is,"NeticaBN")))
+stopifnot(as.character(netnall) == c("Untitled","Untitled3","Copy1","Copy3"))
+
 StopNetica()

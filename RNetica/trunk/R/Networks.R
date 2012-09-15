@@ -27,7 +27,9 @@ NeticaVersion <- function () {
 
 ## This function reports on any errors, and if <clear> is TRUE clears
 ## them as well.  It returns a vector given the counts of errors of
-## various types.
+## various types.  This is mostly used internally:  The R functions
+## call Netica through .Call and the call ReportErrors to report on
+## errors. 
 ReportErrors <- function(maxreport=999999,clear=TRUE) {
   counts <- .C("RN_report_errors",as.integer(maxreport),
                 as.integer(clear),counts=integer(4))$counts
@@ -75,6 +77,7 @@ DeleteNetwork <- function (nets) {
   if (ecount[1]>0) {
     stop("DeleteNetwork: Netica Errors Encountered, see console for details.")
   }
+  if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
 }
 
@@ -88,7 +91,9 @@ print.DeletedNeticaBN <- function(x, ...) {
 
 ## Returns a network by its position in the list.
 GetNthNet <- function (n) {
-  n <- as.integer(n)
+  ## Netica uses 0 based indexing, but R convention is 1-based.
+  ## So convert here.
+  n <- as.integer(n-1)
   if (any(is.na(n))) {
     stop("GetNthNets: Expected vector of integers")
   }
@@ -97,6 +102,7 @@ GetNthNet <- function (n) {
   if (ecount[1]>0) {
     stop("GetNthNets: Netica Errors Encountered, see console for details.")
   }
+  if (length(handles)==1) handles <- handles[[1]]
   handles
 }
 
@@ -108,6 +114,7 @@ GetNamedNets <- function (namelist) {
   if (ecount[1]>0) {
     stop("GetNamedNets: Netica Errors Encountered, see console for details.")
   }
+  if (length(handles)==1) handles <- handles[[1]]
   handles
 }
 
@@ -123,5 +130,6 @@ CopyNets <- function (nets, newnamelist, options=character(0)) {
   if (ecount[1]>0) {
     stop("GetNamedNets: Netica Errors Encountered, see console for details.")
   }
+  if (length(handles)==1) handles <- handles[[1]]
   handles
 }
