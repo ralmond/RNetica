@@ -19,11 +19,11 @@
  */
 char* NeticaClass = "NeticaBN";
 char* DeletedClass = "DeletedNeticaBN";
-char* NetPointer = "Netica_net_bn";
+//char* NetPointer = "Netica_net_bn";
 
 SEXP bnclass=NULL;
 SEXP delbnclass=NULL;
-SEXP bnatt=NULL;
+//SEXP bnatt=NULL;
 
 static int symbolRegCount=0;
 
@@ -37,9 +37,9 @@ void RN_Define_Symbols() {
     R_PreserveObject(delbnclass = allocVector(STRSXP,1));
     SET_STRING_ELT(delbnclass,0,mkChar(DeletedClass));
   }
-  if (bnatt==NULL) {
-    R_PreserveObject(bnatt = install("Netica_bn")); 
-  }
+  /* if (bnatt==NULL) { */
+  /*   R_PreserveObject(bnatt = install("Netica_bn"));  */
+  /* } */
 
   symbolRegCount++;
 }
@@ -56,10 +56,10 @@ void RN_Free_Symbols() {
       R_ReleaseObject(delbnclass);
       delbnclass = NULL;
     }
-    if (bnatt != NULL) {
-      R_ReleaseObject(bnatt);
-      bnatt = NULL;
-    }
+    /* if (bnatt != NULL) { */
+    /*   R_ReleaseObject(bnatt); */
+    /*   bnatt = NULL; */
+    /* } */
   }
 }
 
