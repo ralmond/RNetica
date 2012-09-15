@@ -28,7 +28,7 @@ SEXP delbnclass=NULL;
 static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
-  printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
+  //printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
   if (bnclass==NULL) {
     R_PreserveObject(bnclass = allocVector(STRSXP,1));
     SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
@@ -45,7 +45,7 @@ void RN_Define_Symbols() {
 }
 
 void RN_Free_Symbols() {
-  printf("RN_Free_Symbols: %d.\n",symbolRegCount);
+  //printf("RN_Free_Symbols: %d.\n",symbolRegCount);
   if (--symbolRegCount == 0) {
     //UNPROTECT(3);
     if (bnclass != NULL) {

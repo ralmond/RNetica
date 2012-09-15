@@ -296,19 +296,22 @@ SEXP RN_Delete_Net(SEXP netlist) {
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(netlist,n));
     netica_handle = RN_AS_NET(name);
+    if (netica_handle) {
+      DeleteNet_bn(netica_handle);
 
-    DeleteNet_bn(netica_handle);
-
-    /* Clear the handle and the class. */
-    //R_SetExternalPtrAddr(bnhandle,NULL);
-    //setAttrib(bn,bnatt,bnhandle);
-    PROTECT(bn = allocVector(STRSXP,1));
-    /* Return the network name */
-    SET_STRING_ELT(bn,0,mkChar(name));
-    classgets(bn,delbnclass);
-    SET_VECTOR_ELT(result,n,bn);
-    UNPROTECT(1); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
+      /* Clear the handle and the class. */
+      //R_SetExternalPtrAddr(bnhandle,NULL);
+      //setAttrib(bn,bnatt,bnhandle);
+      PROTECT(bn = allocVector(STRSXP,1));
+      /* Return the network name */
+      SET_STRING_ELT(bn,0,mkChar(name));
+      classgets(bn,delbnclass);
+      SET_VECTOR_ELT(result,n,bn);
+      UNPROTECT(1); //Safe in result array
+    } else {
+      SET_VECTOR_ELT(result,n,R_NilValue);
+      warning("Did not find a network named %s.",name);
+    }
   }
   UNPROTECT(1);
   RN_Free_Symbols();
@@ -345,6 +348,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
       UNPROTECT(1); //Can free bn when in array
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+      warning("Did not find a network named %s.",name);
     }
   }
   UNPROTECT(1);
@@ -383,6 +387,7 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
       UNPROTECT(1); //bn is safe now.
     } else{
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+      //warning("Did not find a network named %s.",name);
     }
   }
   UNPROTECT(1);
@@ -404,17 +409,22 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
     oldname = CHAR(STRING_ELT(nets,n));
     newname = CHAR(STRING_ELT(namelist,n));
     old_net = RN_AS_NET(oldname);
-    new_net = CopyNet_bn(old_net,newname,RN_netica_env,opt);
+    if (old_net) {
+      new_net = CopyNet_bn(old_net,newname,RN_netica_env,opt);
 
-    PROTECT(new_bn = allocVector(STRSXP,1));
-    /* Return the network name */
-    SET_STRING_ELT(new_bn,0,mkChar(newname));
-    classgets(new_bn,bnclass);
+      PROTECT(new_bn = allocVector(STRSXP,1));
+      /* Return the network name */
+      SET_STRING_ELT(new_bn,0,mkChar(newname));
+      classgets(new_bn,bnclass);
 
-    /* Now stick it in array */
-    SET_VECTOR_ELT(bnhandlelist,n,new_bn);
-    UNPROTECT(1); //I think it should be OK to free these up as soon as
-                  //they are assigned to a protected object.
+      /* Now stick it in array */
+      SET_VECTOR_ELT(bnhandlelist,n,new_bn);
+      UNPROTECT(1); //Now safe in array
+    } else {
+      SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+      warning("Did not find a network named %s.",oldname);
+    }
+      
   }
   UNPROTECT(1); 
   RN_Free_Symbols();
