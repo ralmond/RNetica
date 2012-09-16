@@ -5,6 +5,11 @@
 ## Variable which stores the Netica License string (if you have one).
 LicenseKey <- NULL
 
+## tests a string to see if it is a legal Netica name.
+is.IDname <- function (x) {
+  if (!is.character(x)) return(rep(FALSE,length(x)))
+  grepl("^[[:alpha:]][[:alnum:]_]{,29}$",x) & (nchar(x)<31)
+}
 
 ##These functions start and stop the Netica API Environment.
 StartNetica <- function(license=LicenseKey, checking=NULL,
@@ -51,6 +56,10 @@ CreateNetwork <- function (names) {
   if (!is.character(names) || length(names) == 0) {
     stop("Network names not supplied.")
   }
+  goodNames <- is.IDname(names)
+  if (any(!goodNames)) {
+    stop("Illegal Netica Names, ",names[!goodNames])
+  }
   handles <- .Call("RN_New_Net",names)
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- ReportErrors()
@@ -60,18 +69,36 @@ CreateNetwork <- function (names) {
   handles
 }
 
+
+## Tests to see if the handle attached to a BN object is live or not.
+## Returns NA if the object is not a network.
+is.active <- function (bn) {
+  if(!is(bn,"NeticaBN")) return(NA)
+  return(.Call("RN_isBNActive",bn))
+}
+
 toString.NeticaBN <- function(x,...) {
-  paste("<Netica BN:",as.character(x),">")
+  if (is.active(x))
+    paste("<Netica BN:",as.character(x),">")
+  else 
+    paste("<Deleted Netica BN:",as.character(x),">")
 }
   
 print.NeticaBN <- function(x, ...) {
   cat(toString(x),"\n")
 }
-  
+
+is.NeticaBN <- function (x) {
+  is(x,"NeticaBN")
+}
+
 DeleteNetwork <- function (nets) {
-  # We actually ignore the class of the nets and just extract the names
-  # from the NeticaBN objects, or we can just pass a list of names.
-  nets <- as.character(nets)
+  if (is(nets,"NeticaBN") && length(nets) ==1) {
+    nets <- list(nets)
+  }
+  if (any(!sapply(nets,is,"NeticaBN"))) {
+    stop("Expected a list of Netica networks, got, ",nets)
+  }
   handles <- .Call("RN_Delete_Net",nets)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -79,14 +106,6 @@ DeleteNetwork <- function (nets) {
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
-}
-
-toString.DeletedNeticaBN <- function(x,...) {
-  paste("<Deleted Netica BN:",as.character(x),">")
-}
-  
-print.DeletedNeticaBN <- function(x, ...) {
-  cat(toString(x),"\n")
 }
 
 ## Returns a network by its position in the list.
@@ -119,10 +138,17 @@ GetNamedNets <- function (namelist) {
 }
 
 CopyNets <- function (nets, newnamelist, options=character(0)) {
+  if (is(nets,"NeticaBN") && length(nets) ==1) nets <-list(nets)
+  if (!all(sapply(nets,is,"NeticaBN"))) {
+    stop("Expected a list of Netica networks, got, ",nets)
+  }
   if (length(nets)!=length(newnamelist)) {
     stop("Number of new names doesn't match number of old nets")
   }
-  nets <- as.character(nets) # Just use the names
+  goodNames <- is.IDname(newnamelist)
+  if (any(!goodNames)) {
+    stop("Illegal Netica Names, ",newnamelist[!goodNames])
+  }
   newnamelist <- as.character(newnamelist)
   options <- paste(options,collapse=",")
   handles <- .Call("RN_Copy_Nets",nets,newnamelist,options)

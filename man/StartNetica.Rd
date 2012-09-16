@@ -81,7 +81,7 @@ StopNetica()
   The Netica API is also not free-as-in-beer software.  The demonstration
   version of the Netica API, however, is.  In order for you to make full
   use of the RNetica API, you must purchase a Netica API license from
-  Norsys.
+  Norsys (\link{http://norsys.com/}).
 
   RNetica itself (the glue layers between R and Netica) is free (in both
   the speech and beer senses) software.  Suggestions for improvements

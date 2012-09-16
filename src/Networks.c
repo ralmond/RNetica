@@ -89,10 +89,23 @@ void RN_stop_Netica() {
   char mesg[MESG_LEN_ns];
   int res;
 
+  // Shut down any remaining nets
+  int nth = 0;
+  net_bn* net;
+  SEXP bn, bnPointer;
+  do {
+    net = GetNthNet_bn (nth++, RN_netica_env);
+    PROTECT(bn = (SEXP) GetNetUserData_bn(net,0));
+    PROTECT(bnPointer = getAttrib(bn,bnatt));
+    R_ClearExternalPtr(bnatt);
+    UNPROTECT(2);
+  } while (net);
+
   if (RN_netica_env == NULL) {
     warning("Netica not running, nothing to do.");
     return;
   }
+  
 
   res = CloseNetica_bn(RN_netica_env,mesg);
   RN_netica_env = NULL; //Set to null no matter what.
@@ -236,6 +249,26 @@ void RN_ClearAllErrors(char** sev) {
 // onto the stale pointers.  Instead, we will use the names, and then
 // just try to find the network by name when we want to modify it.
 // That should be only slightly slower but infinitely safer.
+//
+// Design 3.  Now I am using the Netica User data field to store
+// NeticaBN object.  This means that I should be able to make the
+// objects unique.
+
+/**
+ * This is a small utility function meant to be used from within
+ * toString to determine if the pointer is live or not.
+ */
+SEXP RN_isBNActive(SEXP bn) {
+  SEXP bnPtr, result;
+  PROTECT(result=allocVector(LGLSXP,1));
+  LOGICAL(result)[0]=FALSE;
+  PROTECT(bnPtr = getAttrib(bn,bnatt));
+  if (bnPtr && R_ExternalPtrAddr(bnPtr)) {
+    LOGICAL(result)[0] = TRUE;
+  }
+  UNPROTECT(2);
+  return result;
+}
 
 // Copyied from NETICA API manual because it looks useful.
 // This is now key to the new strategy.  
@@ -251,7 +284,7 @@ net_bn* RN_AS_NET (const char* name){
 
 
 SEXP RN_New_Net(SEXP namelist) {
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
 
   PROTECT(namelist = AS_CHARACTER(namelist));
   R_len_t n, nn = length(namelist);
@@ -262,29 +295,38 @@ SEXP RN_New_Net(SEXP namelist) {
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
-    netica_handle = NewNet_bn(name,RN_netica_env);
-    PROTECT(bn = allocVector(STRSXP,1));
-    /* Return the network name */
-    SET_STRING_ELT(bn,0,mkChar(name));
-    /* Set the handle as an attribute. */
-    // Skip this step, to risky as pointer might go stale.
-    // bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-    //                             R_NilValue);
-    //setAttrib(bn,bnatt,bnhandle);
+    netica_handle = RN_AS_NET(name);
+    if (netica_handle) {
+      warning("Network named %s already exists.",name);
+      SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
+    } else {
+      netica_handle = NewNet_bn(name,RN_netica_env);
+      bn = allocVector(STRSXP,1);
+      R_PreserveObject(bn);
+      /* Return the network name */
+      SET_STRING_ELT(bn,0,mkChar(name));
+      /* Set the handle as an attribute. */
+      PROTECT(bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
+                                           R_NilValue));
+      setAttrib(bn,bnatt,bnhandle);
 
-    classgets(bn,bnclass);
-    /* Now stick it in array */
-    SET_VECTOR_ELT(bnhandlelist,n,bn);
-    UNPROTECT(1); //bn is created within loop, so free it here.
+      SET_CLASS(bn,bnclass);
+
+      /* Set a back pointer to the R object in the Netica Object */
+      SetNet_RRef(netica_handle,bn);
+      /* Finally, stick it in array */
+      SET_VECTOR_ELT(bnhandlelist,n,bn);
+      UNPROTECT(1); //bn is created within loop, so free it here.
+    }
   }
 
   UNPROTECT(2);
-  RN_Free_Symbols();
+  //RN_Free_Symbols();
   return(bnhandlelist);
 }
 
 SEXP RN_Delete_Net(SEXP netlist) {
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
 
   R_len_t n, nn = length(netlist);
   const char* name;
@@ -294,70 +336,59 @@ SEXP RN_Delete_Net(SEXP netlist) {
   PROTECT(result = allocVector(VECSXP,nn));
 
   for (n=0; n < nn; n++) {
-    name = CHAR(STRING_ELT(netlist,n));
-    netica_handle = RN_AS_NET(name);
+    PROTECT(bn = VECTOR_ELT(netlist,n));
+    PROTECT(bnhandle = getAttrib(bn,bnatt));
+    netica_handle = (net_bn*) R_ExternalPtrAddr(bnhandle);
     if (netica_handle) {
       DeleteNet_bn(netica_handle);
+      /* Clear the handle */
+      R_ClearExternalPtr(bnhandle);
+      setAttrib(bn,bnatt,bnhandle); //Probably not needed.
 
-      /* Clear the handle and the class. */
-      //R_SetExternalPtrAddr(bnhandle,NULL);
-      //setAttrib(bn,bnatt,bnhandle);
-      PROTECT(bn = allocVector(STRSXP,1));
-      /* Return the network name */
-      SET_STRING_ELT(bn,0,mkChar(name));
-      classgets(bn,delbnclass);
       SET_VECTOR_ELT(result,n,bn);
-      UNPROTECT(1); //Safe in result array
+      R_ReleaseObject(bn); //Let R garbage collect it when all
+                           //references are gone.
     } else {
       SET_VECTOR_ELT(result,n,R_NilValue);
-      warning("Did not find a network named %s.",name);
+      warning("Did not find a network named %s.", BN_NAME(bn));
     }
+    UNPROTECT(2);
   }
   UNPROTECT(1);
-  RN_Free_Symbols();
+  //RN_Free_Symbols();
   return(result);
 }
 
 
 SEXP RN_Named_Nets(SEXP namelist) {
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
-  SEXP bnhandlelist, bn, bnhandle;
-
+  SEXP bnhandlelist, bn;
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = RN_AS_NET(name);
     if (netica_handle) {
-      PROTECT(bn = allocVector(STRSXP,1));
-      /* Return the network name */
-      SET_STRING_ELT(bn,0,mkChar(name));
-
-      /* Set the handle as an attribute. (Not done) */
-      //bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-      //                             R_NilValue);
-      //PROTECT(bnhandle);
-      //setAttrib(bn,bnatt,bnhandle);
-
-      classgets(bn,bnclass);
+      /* Fetch the bn object. */
+      bn = GetNet_RRef(netica_handle);
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
-      UNPROTECT(1); //Can free bn when in array
+      //UNPROTECT(1); //It is preserved, do don't need to free it.
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
       warning("Did not find a network named %s.",name);
     }
   }
   UNPROTECT(1);
-  RN_Free_Symbols();
+  //RN_Free_Symbols();
   return(bnhandlelist);
 }
 
 SEXP RN_GetNth_Nets(SEXP nlist) {
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
   R_len_t n, nn = length(nlist);
   int *netno;
   const char* name;
@@ -370,63 +401,259 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
   for (n=0; n < nn; n++) {
     netica_handle = GetNthNet_bn(netno[n],RN_netica_env);
     if (netica_handle) {
-      name = GetNetName_bn(netica_handle);
-      PROTECT(bn = allocVector(STRSXP,1));
-      /* Return the network name */
-      SET_STRING_ELT(bn,0,mkChar(name));
-
-      /* Set the handle as an attribute. (Not anymore) */
-      //bnhandle = R_MakeExternalPtr(netica_handle,bnatt,
-      //                               R_NilValue);
-      //PROTECT(bnhandle);
-      //setAttrib(bn,bnatt,bnhandle);
-
-      classgets(bn,bnclass);
+      /* Get corresponding R object */
+      bn = GetNet_RRef(netica_handle);
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
-      UNPROTECT(1); //bn is safe now.
+      //UNPROTECT(1); //bn is preserved, so don't need protection.
     } else{
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
       //warning("Did not find a network named %s.",name);
     }
   }
   UNPROTECT(1);
-  RN_Free_Symbols();
+  //RN_Free_Symbols();
   return(bnhandlelist);
 }
 
 SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options) {
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
   R_len_t n, nn = length(namelist);
-  const char *oldname, *newname, *opt;
+  const char *newname, *opt;
   net_bn *old_net, *new_net;
-  SEXP bnhandlelist, new_bn;
+  SEXP bnhandlelist, old_bn, new_bn, newHandle;
 
   opt = CHAR(STRING_ELT(options,0));
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
-    oldname = CHAR(STRING_ELT(nets,n));
     newname = CHAR(STRING_ELT(namelist,n));
-    old_net = RN_AS_NET(oldname);
+    PROTECT(old_bn = VECTOR_ELT(nets,n));
+    old_net = GetNeticaHandle(old_bn);
     if (old_net) {
       new_net = CopyNet_bn(old_net,newname,RN_netica_env,opt);
 
-      PROTECT(new_bn = allocVector(STRSXP,1));
+      R_PreserveObject(new_bn = allocVector(STRSXP,1));
       /* Return the network name */
       SET_STRING_ELT(new_bn,0,mkChar(newname));
-      classgets(new_bn,bnclass);
+      setAttrib(new_bn,bnatt,
+                R_MakeExternalPtr(new_net,bnatt,
+                                  R_NilValue));
+
+      SET_CLASS(new_bn,bnclass);
+      /* Set a back pointer to the R object in the Netica Object */
+      SetNet_RRef(new_net,new_bn);
 
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,new_bn);
-      UNPROTECT(1); //Now safe in array
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
-      warning("Did not find a network named %s.",oldname);
+      warning("Did not find a network named %s.",BN_NAME(old_bn));
     }
       
   }
   UNPROTECT(1); 
-  RN_Free_Symbols();
+  //RN_Free_Symbols();
   return(bnhandlelist);
 }
+
+///////////////////////////////////////////////////////////////////////
+// Net level File I/O
+///////////////////////////////////////////////////////////////////////
+
+SEXP RN_Read_Nets(SEXP filelist) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(filelist);
+  const char *name, *filename;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, bn;
+
+  PROTECT(result = allocVector(VECSXP,nn));
+  
+  for (n=0; n < nn; n++) {
+      filename = CHAR(STRING_ELT(filelist,n));
+      file = NewFileStream_ns(filename,RN_netica_env,NULL);
+      netica_handle = ReadNet_bn(file,NO_WINDOW); //NO_WINDOW looks
+                                                  //like best opition choice.
+      DeleteStream_ns(file);
+
+    if (netica_handle) {
+      name = GetNetName_bn(netica_handle);
+      R_PreserveObject(bn = allocVector(STRSXP,1));
+      /* Return the network name */
+      SET_STRING_ELT(bn,0,mkChar(name));
+      setAttrib(bn,bnatt,
+                R_MakeExternalPtr(netica_handle,bnatt,
+                                  R_NilValue));
+
+      SET_CLASS(bn,bnclass);
+      /* Set a back pointer to the R object in the Netica Object */
+      SetNet_RRef(netica_handle,bn);
+
+      /* Now stick it in array */
+      SET_VECTOR_ELT(result,n,bn);
+
+    } else {
+      SET_VECTOR_ELT(result,n,R_NilValue);
+      warning("Could not find network for file %s.",filename);
+    }
+  }
+  //RN_Free_Symbols();
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(filelist);
+  const char *name, *filename;
+  stream_ns *file;
+  SEXP bn;
+  net_bn* netica_handle;
+
+  for (n=0; n < nn; n++) {
+    PROTECT(bn = VECTOR_ELT(nets,n));
+    netica_handle = GetNeticaHandle(bn);
+
+    if (netica_handle) {
+      filename = CHAR(STRING_ELT(filelist,n));
+      file = NewFileStream_ns(filename,RN_netica_env,NULL);
+      SetNet_RRef(netica_handle,NULL); //Set this temporarily to NULL
+      // To keep it from being saved.
+      WriteNet_bn(netica_handle,file);
+      SetNet_RRef(netica_handle,bn); //Now set it back.
+      DeleteStream_ns(file);
+    } else {
+      SET_VECTOR_ELT(nets,n,R_NilValue);
+      warning("Could not find network %s.",BN_NAME(bn));
+    }
+    UNPROTECT(1);
+  }
+  //RN_Free_Symbols();
+  return(nets);
+}
+
+
+/**
+ * No setter for this method, implicitly defined by
+ * Reading or Writing file.
+ */
+SEXP RN_GetNetFilenames(SEXP nets) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(nets);
+  const char *name, *filename;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, bn;
+
+  PROTECT(result = allocVector(STRSXP,nn));
+
+  for (n=0; n < nn; n++) {
+    PROTECT(bn = VECTOR_ELT(nets,n));
+    netica_handle = GetNeticaHandle(bn);
+
+    if (netica_handle) {
+      filename = GetNetFileName_bn(netica_handle);
+      SET_STRING_ELT(result,n,mkChar(filename));
+    } else {
+      SET_STRING_ELT(result,n,NA_STRING);
+      warning("Could not find network %s.",name);
+    }
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  //RN_Free_Symbols();
+  return(result);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Getters and Setters for Global Net properties.
+//////////////////////////////////////////////////////////////////////////
+
+
+
+SEXP RN_GetNetNames(SEXP nets) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(nets);
+  const char *netname;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, bn;
+
+  PROTECT(result = allocVector(STRSXP,nn));
+
+  for (n=0; n < nn; n++) {
+    PROTECT(bn = VECTOR_ELT(nets,n));
+    netica_handle = GetNeticaHandle(bn);
+
+    if (netica_handle) {
+      netname = GetNetName_bn(netica_handle);
+      SET_STRING_ELT(result,n,mkChar(netname));
+    } else {
+      SET_STRING_ELT(result,n,NA_STRING);
+      warning("Could not find network %s.",BN_NAME(bn));
+    }
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  //RN_Free_Symbols();
+  return(result);
+}
+
+SEXP RN_GetNetTitles(SEXP nets) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(nets);
+  const char *title;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, bn;
+
+  PROTECT(result = allocVector(STRSXP,nn));
+
+  for (n=0; n < nn; n++) {
+    PROTECT(bn = VECTOR_ELT(nets,n));
+    netica_handle = GetNeticaHandle(bn);
+
+    if (netica_handle) {
+      title = GetNetTitle_bn(netica_handle);
+      SET_STRING_ELT(result,n,mkChar(title));
+    } else {
+      SET_STRING_ELT(result,n,NA_STRING);
+      warning("Could not find network %s.",BN_NAME(bn));
+    }
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  //RN_Free_Symbols();
+  return(result);
+}
+
+SEXP RN_GetNetComments(SEXP nets) {
+  //RN_Define_Symbols();
+  R_len_t n, nn = length(nets);
+  const char *comment;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, bn;
+
+  PROTECT(result = allocVector(STRSXP,nn));
+
+  for (n=0; n < nn; n++) {
+    PROTECT(bn = VECTOR_ELT(nets,n));
+    netica_handle = GetNeticaHandle(bn);
+
+    if (netica_handle) {
+      comment = GetNetTitle_bn(netica_handle);
+      SET_STRING_ELT(result,n,mkChar(comment));
+    } else {
+      SET_STRING_ELT(result,n,NA_STRING);
+      warning("Could not find network %s.",BN_NAME(bn));
+    }
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  //RN_Free_Symbols();
+  return(result);
+}
+
