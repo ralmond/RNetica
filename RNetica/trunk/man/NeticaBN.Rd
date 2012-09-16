@@ -1,10 +1,9 @@
 \name{NeticaBN}
 \alias{NeticaBN}
-\alias{DeletedNeticaBN}
 \alias{NeticaBN.toString}
 \alias{NeticaBN.print}
-\alias{DeletedNeticaBN.toString}
-\alias{DeletedNeticaBN.print}
+\alias{is.NeticaBN}
+\alias{is.active}
 
 \title{
 An object referencing a Bayesian network.
@@ -12,52 +11,63 @@ An object referencing a Bayesian network.
 \description{
   This object is returned by various RNetica functions which create or
   find network objects, and contain handles to the Bayesian network.  A
-  \code{NeticaBN} object represents an active network, and a
-  \code{DeletedBN} object represents a stale network handle that should
-  not be used.
+  \code{NeticaBN} object represents an active network.  The function
+  \code{is.active()} tests whether the network is still loaded into
+  Netica's memory.
+
 }
 \usage{
 NeticaBN.toString(x, ...)
 NeticaBN.print(x, ...)
+is.NeticaBN(x)
+is.active(bn)
 
-DeletedNeticaBN.toString(x, ...)
-DeletedNeticaBN.print(x, ...)
 }
 \arguments{
-  \item{x}{The object to print
+  \item{x}{The object to print or test
 }
   \item{\dots}{Other arguments to \code{\link[base]{print}()} or
-    \code{\link[base]{toString}()} 
+    \code{\link[base]{toString}()}
+  }
+  \item{bn}{A \code{NeticaBN} object to test.}
 }
+\details {
+  This is an argument of class \code{NeticaBN}.  It consists of a name,
+  and an invisible handle to a Netica network.  The function
+  \code{is.active()} test the state of that handle and returns
+  \code{FALSE} if the network is no longer in active memory (usually
+  because of a call to to 
+
 }
 \value{
   For \code{toString()} a string.  The function \code{print()} is
   usually called for its side effects.
+
+  The function \code{is.NeticaBN()} returns a logical scalar depending
+  on whether or not its argument is a \code{NeticaBN}.
+
+  The function \code{is.active()} returns \code{TRUE} if the argument
+  still points to a network loaded in Netica's memory, and \code{FALSE}
+  if that network has been deleted.  It returns \code{NA} if the
+  argument is not a \code{NeticaBN}.
+
 }
 \author{
   Russell Almond
 }
-\section{Implementation Notes}{
+\note{
   Internally, the \code{NeticaBN} and \code{DeletedNeticaBN} objects are
   character strings with extra attributes.  So \code{as.character(net)}
   will return the name of the network.
 
-  The current version of RNetica uses the name of the network as the
-  object as the handle.  This is because it is generally a real pain to
-  ensure that no R objects hang onto stale pointer references.  Thus,
-  generally one can substitute the string in any place where a NeticaBN
-  object is called for.
-
-  The safer, but less efficient method is to call
-  \code{\link{GetNamedNets}()} every time to force the string into a
-  Bayesian network.  This will also check that a network of that name
-  exists (returning \code{NULL} if it does not).
+  Note that if a \code{NeticaBN} object is stored in an R object, and
+  the network is subsquently renamed (with a call to \code{RenameNets}),
+  the old object may persist with the wrong name.
 
 }
-
 \seealso{
   \code{\link{CreateNetwok}()},\code{\link{DeleteNetwork}()},
-  \code{\link{GetNamedNets}()}
+  \code{\link{GetNamedNets}()},\code{\link{RenameNets}()}
 }
 \examples{
 StartNetica()

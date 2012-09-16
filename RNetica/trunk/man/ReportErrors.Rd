@@ -41,11 +41,12 @@ ClearAllErrors(severity="XXX_ERR")
 \author{
   Russell Almond
 }
-\section{Implementation Notes}{
+\note{
   At this point, the protocol is that the higher level RNetica functions
   all call \code{ReportErrors()} to report error messages and warnings
   and then throw an error (call \code{\link[base]{stop}()}) whenever the
-  error count is greater than one.
+  error count is greater than one.  These functions are probably not
+  necessary in user level code.
 
   Future versions may use a more sophisticated error checking mechanism
   that allows for more user control.

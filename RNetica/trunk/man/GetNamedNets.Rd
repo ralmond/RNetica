@@ -7,7 +7,7 @@
   This searches through the currently open Netica networks and returns a
   \code{\link{NeticaBN}} object pointing to the networks with the given
   names.  If no network with the name is found \code{NULL} is returned
-  instead, so this provides a way to check whether a network is open.
+  instead, so this provides a way to check whether a network exists.
 }
 \usage{
 GetNamedNets(namelist)
@@ -40,15 +40,6 @@ GetNamedNets(namelist)
   This function does a linear search through all networks, so it could
   be pretty slow if there are a large number of networks open.
 }
-\section{Implementation Notes}{
-  Currently, the names are used as the handle, so the names are
-  essentially checked each time, although the behavior if the name does
-  not correspond to a network depends on the function.  Consequently,
-  this function probably isn't necessary.
-
-  Future versions may look at creating actual pointers to networks.
-}
-
 \seealso{
   \code{\link{CreateNetwork}()}, \code{\link{GetNthNetwork}()}
 }

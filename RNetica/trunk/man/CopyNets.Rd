@@ -15,8 +15,7 @@ CopyNets(nets, newnamelist, options = character(0))
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{nets}{
-    A list of \code{\link{NeticaBN}} objects or a character vector
-    containing their names.
+    A list of \code{\link{NeticaBN}} objects.
 }
   \item{newnamelist}{
     A character vector of the same length as \code{nets} which gives the
@@ -56,13 +55,6 @@ CopyNets(nets, newnamelist, options = character(0))
 }
 \author{
   Russell Almond
-}
-\section{Implementation Notes}{
-  Currently \code{NeticaBN}'s are referenced by their name, so
-  \code{nets} may either be a list of \code{NeticaBN} objects or a
-  character vector containing the names.
-
-  This may change in future implementations.
 }
 
 \seealso{
