@@ -17,8 +17,11 @@ StopNetica()
 }
 \arguments{
   \item{license}{A string containing a license key from Norsys.  If this
-    is \code{null} (the default) the limited student/demonstration
-    version of Netica is used rather than the full version.
+    is \code{NULL} the limited student/demonstration
+    version of Netica is used rather than the full version.  If the
+    variable \code{NeticaLicenceKey} is set before \code{RNetica} is
+    loaded, then the value of that variable at the time the package is
+    loaded will become the deafult for \code{license}.
 }
   \item{checking}{A character string containing one of the keywords:
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
@@ -32,6 +35,7 @@ StopNetica()
 }
 }
 \details{
+
   The function \code{StartNetica()} calls the Netica functions
   \code{NewNeticaEnviron_ns()} and \code{InitNetica2_bn()} to create and
   set up a Netica environment.
@@ -43,10 +47,16 @@ StopNetica()
   be purchased from Norsys (\link{http://www.Norsys.com/}).  They will
   send a license key which unlocks the full capabilities of the shared
   library.  This can be passed as the first argument to
-  \code{StartNetica()}.  The variable \code{RNetica::LicenseKey} is used
-  as the default value.  As the package is distributed, this is set to
-  \code{NULL}.  If you set the value of this variable, this will be used
-  as the default in future calls to \code{StartNetica()}.
+  \code{StartNetica()}.  If the value of the first argument is
+  \code{NULL} then the demonstration verison is used instead of the
+  licensed version (could be useful for testing).
+
+  If you set the value of a variable \code{NeticaLicenseKey}, then when
+  \code{RNetica} is loaded, then its value at the time the
+  package is loaded is used as the default value for \code{license}. 
+  If no value for as \code{NeticaLicenseKey}, the default value for
+  \code{license} is set to \code{NULL}, which loads the demo version of
+  \code{Netica}. 
 
   The \code{checking} argument, if supplied, is used to call the Netica
   function \code{ArgumentChecking_ns()}.  See the documentation of that
@@ -62,6 +72,13 @@ StopNetica()
   The function \code{StopNetica()} calls the Netica function
   \code{CloseNetica_bn()}.  It is mainly used when one wants to stop
   Netica and restart it with other parameters.
+
+  The function \code{StartNetica} is called when the package is attached
+  (in the \code{.onAttach()} function.  The function \code{StopNetica()}
+  is called by \code{.Last.lib()}, Normally, users should not need to
+  call these functions, but they may wish to do so if they need to
+  restart Netica with different arguments.
+
 }
 \value{
   These functions are called for side effects and do not return
@@ -88,9 +105,10 @@ StopNetica()
   and bug fixes are welcome.
 }
 \section{Implementation Notes}{
-Eventually, \code{StartNetica()} and \code{StopNetica()} will be called
-  by the \code{.onload()} function for RNetica.  Until that time, users
-  will need to call them by hand.
+  I'm looking into a way to burry the license key into RNetica during
+  the installation process.  Probably will happen in a future version.
+  Until then, best bet is to save a value for \code{NeticaLicenseKey} in
+  the workspace.
 
   The Netica environment pointer, which is used by the Netica shared
   library is defined inside of the RNetica shared library, and not

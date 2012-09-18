@@ -44,7 +44,6 @@ GetNamedNetworks(namelist)
   \code{\link{CreateNetwork}()}, \code{\link{GetNthNetwork}()}
 }
 \examples{
-StartNetica()
 
 net1 <- CreateNetwork("myNet")
 ## Fetch the network we just created by name.
@@ -56,7 +55,6 @@ stopifnot(as.character(net1)==as.character(net2))
 fish <- GetNamedNetworks("fish")
 stopifnot(all(sapply(fish,is.null)))
 
-StopNetica()
 }
 \keyword{ interface }
 \keyword{ utilities }% __ONLY ONE__ keyword per line

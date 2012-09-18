@@ -68,8 +68,7 @@ myCreateNetwork <- function (names) {
 }
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
+\keyword{ programming }
 \keyword{ error }
 \keyword{ internal }% __ONLY ONE__ keyword per line

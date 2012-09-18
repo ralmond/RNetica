@@ -37,8 +37,6 @@ NetworkRedo(net)
   \code{\link{NeticaBN}}, \code{\link{CreateNetwork}}
 }
 \examples{
-StartNetica()
-
 activeNet <- CreateNetwork("undoRedoTest")
 
 ## This test doesn't work, because setting the comment/title
@@ -55,8 +53,6 @@ print(NetworkUndo(activeNet))
 
 print(NetworkRedo(activeNet))
 ##stopifnot(NetworkTitle(activeNet)=="State2")
-
-StopNetica()
 
 }
 \keyword{ interface }

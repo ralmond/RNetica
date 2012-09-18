@@ -50,8 +50,6 @@ NetworkComment(net) <- value
 
 }
 \examples{
-StartNetica()
-
 firstNet <- CreateNetwork("firstNet")
 
 NetworkTitle(firstNet) <- "My First Bayesian Network"
@@ -63,8 +61,7 @@ stopifnot(NetworkComment(firstNet) ==
 
 ## Print here escapes the newline, so is harder to read
 cat(NetworkComment(firstNet),"\n")
-
-StopNetica()
+DeleteNetwork(firstNet)
 }
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ attribute }% __ONLY ONE__ keyword per line

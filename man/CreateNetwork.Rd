@@ -66,7 +66,6 @@ DeleteNetwork(nets)
   \code{\link{CopyNets}()}, \code{\link{is.active}()}
 }
 \examples{
-StartNetica()
 
 net1 <- CreateNetwork("EmptyNet")
 stopifnot(is(net1,"NeticaBN"))
@@ -78,7 +77,6 @@ stopifnot(!is.active(netd))
 stopifnot(!is.active(net1))
 stopifnot(as.character(netd)=="EmptyNet")
 
-StopNetica()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

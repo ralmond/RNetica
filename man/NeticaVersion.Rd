@@ -30,10 +30,8 @@ NeticaVersion()
   \code{\link{StartNetica}()}
 }
 \examples{
-StartNetica()
 print(NeticaVersion()$message)
 stopifnot(NeticaVersion$number>409) ## Version 4.09 is a popular one.
-StopNetica()
 }
 \keyword{ interface }
 \keyword{ environment }% __ONLY ONE__ keyword per line

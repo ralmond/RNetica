@@ -51,8 +51,6 @@ NetworkName(net) <- value
   \code{\link{GetNamedNetworks}()}, \code{\link{NetworkTitle}()} 
 }
 \examples{
-StartNetica()
-
 net <- CreateNetwork("myNet")
 netcached <- net
 
@@ -71,8 +69,6 @@ stopifnot(net==netcached)
 ## This fixes the problem
 NetworkName(netcached) <- NetworkName(netcached)
 stopifnot(as.character(netcached) != NetworkName(netcached))
-
-StopNetica()
 }
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ attribute }% __ONLY ONE__ keyword per line

@@ -89,23 +89,24 @@ void RN_stop_Netica() {
   char mesg[MESG_LEN_ns];
   int res;
 
-  // Shut down any remaining nets
-  int nth = 0;
-  net_bn* net;
-  SEXP bn, bnPointer;
-  do {
-    net = GetNthNet_bn (nth++, RN_netica_env);
-    PROTECT(bn = (SEXP) GetNetUserData_bn(net,0));
-    PROTECT(bnPointer = getAttrib(bn,bnatt));
-    R_ClearExternalPtr(bnatt);
-    UNPROTECT(2);
-  } while (net);
 
   if (RN_netica_env == NULL) {
     warning("Netica not running, nothing to do.");
     return;
   }
   
+  // Shut down any remaining nets
+  int nth = 0;
+  net_bn* net;
+  SEXP bn, bnPointer;
+  while (TRUE) {
+    net = GetNthNet_bn (nth++, RN_netica_env);
+    if (!net) break;
+    PROTECT(bn = (SEXP) GetNetUserData_bn(net,0));
+    PROTECT(bnPointer = getAttrib(bn,bnatt));
+    R_ClearExternalPtr(bnatt);
+    UNPROTECT(2);
+  } 
 
   res = CloseNetica_bn(RN_netica_env,mesg);
   RN_netica_env = NULL; //Set to null no matter what.

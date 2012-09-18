@@ -61,7 +61,6 @@ CopyNets(nets, newnamelist, options = character(0))
   \code{\link{DeleteNet}()}
 }
 \examples{
-StartNetica()
 
 net1 <- CreateNetwork("Untitled1")
 nets <- CreateNetwork(paste("Untitled",2:3,sep=""))
@@ -73,8 +72,6 @@ stopifnot(as.character(copy1) == "Copy1")
 netc <- CopyNets(netnn,paste("Copy",2:3,sep=""))
 stopifnot(all(sapply(netc,is,"NeticaBN")))
 stopifnot(as.character(netc) == c("Copy2","Copy3"))
-
-StopNetica()
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -67,7 +67,6 @@ WithoutAutoUpdate(net,expr)
   \code{\link{NeticaBN}}
 }
 \examples{
-StartNetica()
 
 autoNet <- CreateNetwork("AutomaticTest")
 
@@ -84,7 +83,8 @@ stopifnot(!result)
 
 DeleteNetwork(autoNet)
 
-StopNetica()
 }
 \keyword{ interface }
+\keyword{ programming }
+\keyword{ attribute }
 \keyword{ utility }% __ONLY ONE__ keyword per line

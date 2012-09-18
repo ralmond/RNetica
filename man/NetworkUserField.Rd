@@ -53,8 +53,6 @@ NetworkAllUserFields(net)
   \code{\link{NeticaBN}}, \code{\link{NetworkComment}()}
 }
 \examples{
-StartNetica()
-
 userNet <- CreateNetwork("UserNet")
 NetworkUserField(userNet,"Author") <- "Russell Almond"
 NetworkUserField(userNet,"Status") <- "In Progress"
@@ -70,9 +68,8 @@ stopifnot(all(!is.na(match(c("Author","Status"),names(fields)))))
 stopifnot(is.na(NetworkUserField(userNet,"gender")))
 
 DeleteNetwork(userNet)
-StopNetica()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ attribute }% __ONLY ONE__ keyword per line
