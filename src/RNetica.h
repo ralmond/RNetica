@@ -30,6 +30,7 @@ extern net_bn* RN_AS_NET(const char* name);
 extern SEXP bnclass;
 //extern SEXP delbnclass;
 extern SEXP bnatt;
+extern char* EmptyString;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 

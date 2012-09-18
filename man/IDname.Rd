@@ -1,4 +1,4 @@
-\name{is.IDname}
+\name{IDname}
 \alias{is.IDname}
 \alias{IDname}
 %- Also NEED an '\alias' for EACH other topic documented here.

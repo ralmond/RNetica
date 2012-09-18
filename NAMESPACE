@@ -3,23 +3,25 @@ import(methods)
 export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,
        CreateNetwork, DeleteNetwork,
-       print.NeticaBN, toString.NeticaBN, is.active, is.IDname,
-       GetNthNet, GetNamedNets, CopyNets)
+       print.NeticaBN, toString.NeticaBN, is.active,
+       is.IDname, is.NeticaBN,
+       GetNthNetwork, GetNamedNetworks, CopyNetworks)
 
-## export(WriteNet, ReadNet,
-##        GetNetFileName)
-
-## export(GetNetName, RenameNet,
-##        GetNetAutoUpdate, SetNetAutoUpdate, WithoutAutoUpdate,
-##        GetNetTitle, SetNetTitle,
-##        GetNetComment, SetNetComment,
-##        GetNetUserField, SetNetUserField,
-##        GetNetAllUserFields,
-##        NetworkUndo, NetworkRedo)
+export(WriteNetworks, ReadNetworks,
+       GetNetworkFileName,
+       NetworkName, "NetworkName<-",
+       NetworkTitle, "NetworkTitle<-",
+       NetworkComment, "NetworkComment<-",
+       GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
+       NetworkUserField, "NetworkUserField<-",
+       NetworkAllUserFields,
+       NetworkUndo, NetworkRedo
+       )
 
 
 
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)
+S3method(Ops, NeticaBN)
 
        

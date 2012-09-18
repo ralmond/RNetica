@@ -20,6 +20,7 @@
 char* NeticaClass = "NeticaBN";
 char* DeletedClass = "DeletedNeticaBN";
 //char* NetPointer = "Netica_net_bn";
+char* EmptyString = "";
 
 SEXP bnclass=NULL;
 //SEXP delbnclass=NULL;
@@ -69,11 +70,30 @@ void RN_Free_Symbols() {
 ////////////////////////////////////////////////////////////////
 // File = Networks.c
 extern SEXP RN_Netica_Version();
+extern SEXP RN_isBNActive(SEXP net);
 extern SEXP RN_New_Net(SEXP namelist);
 extern SEXP RN_Delete_Net(SEXP netlist);
 extern SEXP RN_Named_Nets(SEXP namelist);
 extern SEXP RN_GetNth_Nets(SEXP nlist);
 extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options);
+extern SEXP RN_Read_Nets(SEXP filelist);
+extern SEXP RN_Write_Nets(SEXP nets, SEXP filelist);
+extern SEXP RN_GetNetFilename(SEXP bn);
+extern SEXP RN_GetNetName(SEXP bn);
+extern SEXP RN_SetNetName(SEXP bn, SEXP newnames);
+extern SEXP RN_GetNetTitle(SEXP bn);
+extern SEXP RN_SetNetTitle(SEXP bn, SEXP newtitle);
+extern SEXP RN_GetNetComment(SEXP bn);
+extern SEXP RN_SetNetComment(SEXP bn, SEXP newcomment);
+extern SEXP RN_GetNetAutoUpdate(SEXP bn);
+extern SEXP RN_SetNetAutoUpdate(SEXP bn, SEXP newflags);
+extern SEXP RN_GetNetUserField(SEXP bn, SEXP fieldnames);
+extern SEXP RN_GetAllNetUserFields(SEXP bn);
+extern SEXP RN_SetNetUserField(SEXP bn, SEXP fieldnames, SEXP newvals);
+extern SEXP RN_Undo(SEXP bn);
+extern SEXP RN_Redo(SEXP bn);
+
+
 
 R_CallMethodDef callMethods[] = {
   {"RN_Netica_Version", (DL_FUNC) &RN_Netica_Version, 0},
@@ -83,12 +103,22 @@ R_CallMethodDef callMethods[] = {
   {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 1},
   {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 1},
   {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 3},
-  {"RN_Read_Nets", (DL_FUNC) &RN_Copy_Nets, 1},
-  {"RN_WriteNets", (DL_FUNC) &RN_Copy_Nets, 2},
-  {"RN_GetNetFilenames", (DL_FUNC) &RN_Copy_Nets, 1},
-  {"RN_GetNetNames", (DL_FUNC) &RN_Copy_Nets, 1},
-  {"RN_GetNetTitles", (DL_FUNC) &RN_Copy_Nets, 1},
-  {"RN_GetNetComments", (DL_FUNC) &RN_Copy_Nets, 1},
+  {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 1},
+  {"RN_WriteNets", (DL_FUNC) &RN_Write_Nets, 2},
+  {"RN_GetNetFilename", (DL_FUNC) &RN_GetNetFilename, 1},
+  {"RN_GetNetName", (DL_FUNC) &RN_GetNetName, 1},
+  {"RN_GetNetTitle", (DL_FUNC) &RN_GetNetTitle, 1},
+  {"RN_GetNetComment", (DL_FUNC) &RN_GetNetComment, 1},
+  {"RN_SetNetName", (DL_FUNC) &RN_SetNetName, 2},
+  {"RN_SetNetTitle", (DL_FUNC) &RN_SetNetTitle, 2},
+  {"RN_SetNetComment", (DL_FUNC) &RN_SetNetComment, 2},
+  {"RN_GetNetAutoUpdate", (DL_FUNC) &RN_GetNetAutoUpdate, 1},
+  {"RN_SetNetAutoUpdate", (DL_FUNC) &RN_SetNetAutoUpdate, 2},
+  {"RN_GetNetUserField", (DL_FUNC) &RN_GetNetUserField, 2},
+  {"RN_SetNetUserField", (DL_FUNC) &RN_SetNetUserField, 3},
+  {"RN_GetAllNetUserFields", (DL_FUNC) &RN_GetAllNetUserFields, 1},
+  {"RN_Undo", (DL_FUNC) &RN_Undo, 1},
+  {"RN_Redo", (DL_FUNC) &RN_Redo, 1},
   {NULL, NULL, 0},
 };
 
