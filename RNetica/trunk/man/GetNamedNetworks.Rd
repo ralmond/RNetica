@@ -1,5 +1,5 @@
-\name{GetNamedNets}
-\alias{GetNamedNets}
+\name{GetNamedNetworks}
+\alias{GetNamedNetworks}
 \title{
   Finds a Netica network (if it exists) for the name.
 }
@@ -10,7 +10,7 @@
   instead, so this provides a way to check whether a network exists.
 }
 \usage{
-GetNamedNets(namelist)
+GetNamedNetworks(namelist)
 }
 \arguments{
   \item{namelist}{
@@ -18,7 +18,7 @@ GetNamedNets(namelist)
 }
 }
 \details{
-  \code{GetNamedNets()} searches the list of network names looking for
+  \code{GetNamedNetworks()} searches the list of network names looking for
   a network with the appropriate name.  If it is found, a handle to that
   network is returned as a \code{NeticaBN} object.  If not, \code{NULL}
   is returned.
@@ -48,12 +48,12 @@ StartNetica()
 
 net1 <- CreateNetwork("myNet")
 ## Fetch the network we just created by name.
-net2 <- GetNamedNets("myNet")
+net2 <- GetNamedNetworks("myNet")
 stopifnot(is(net2,"NeticaBN"))
 stopifnot(as.character(net1)==as.character(net2))
 
 ## No network named "fish", this should return NULL
-fish <- GetNamedNets("fish")
+fish <- GetNamedNetworks("fish")
 stopifnot(all(sapply(fish,is.null)))
 
 StopNetica()

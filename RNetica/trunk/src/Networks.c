@@ -499,13 +499,11 @@ SEXP RN_Read_Nets(SEXP filelist) {
       warning("Could not find network for file %s.",filename);
     }
   }
-  //RN_Free_Symbols();
   UNPROTECT(1);
   return(result);
 }
 
 SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
-  //RN_Define_Symbols();
   R_len_t n, nn = length(filelist);
   const char *name, *filename;
   stream_ns *file;
@@ -530,7 +528,6 @@ SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
     }
     UNPROTECT(1);
   }
-  //RN_Free_Symbols();
   return(nets);
 }
 
@@ -539,31 +536,22 @@ SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
  * No setter for this method, implicitly defined by
  * Reading or Writing file.
  */
-SEXP RN_GetNetFilenames(SEXP nets) {
-  //RN_Define_Symbols();
-  R_len_t n, nn = length(nets);
+SEXP RN_GetNetFilename(SEXP bn) {
   const char *name, *filename;
-  stream_ns *file;
   net_bn* netica_handle;
-  SEXP result, bn;
+  SEXP result;
 
-  PROTECT(result = allocVector(STRSXP,nn));
+  PROTECT(result = allocVector(STRSXP,1));
 
-  for (n=0; n < nn; n++) {
-    PROTECT(bn = VECTOR_ELT(nets,n));
-    netica_handle = GetNeticaHandle(bn);
-
-    if (netica_handle) {
-      filename = GetNetFileName_bn(netica_handle);
-      SET_STRING_ELT(result,n,mkChar(filename));
-    } else {
-      SET_STRING_ELT(result,n,NA_STRING);
-      warning("Could not find network %s.",name);
-    }
-    UNPROTECT(1);
+  netica_handle = GetNeticaHandle(bn);
+  if (netica_handle) {
+    filename = GetNetFileName_bn(netica_handle);
+    SET_STRING_ELT(result,0,mkChar(filename));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find network %s.",name);
   }
   UNPROTECT(1);
-  //RN_Free_Symbols();
   return(result);
 }
 
@@ -571,89 +559,290 @@ SEXP RN_GetNetFilenames(SEXP nets) {
 // Getters and Setters for Global Net properties.
 //////////////////////////////////////////////////////////////////////////
 
-
-
-SEXP RN_GetNetNames(SEXP nets) {
-  //RN_Define_Symbols();
-  R_len_t n, nn = length(nets);
+SEXP RN_GetNetName(SEXP bn) {
   const char *netname;
   stream_ns *file;
   net_bn* netica_handle;
-  SEXP result, bn;
+  SEXP result;
 
-  PROTECT(result = allocVector(STRSXP,nn));
+  PROTECT(result = allocVector(STRSXP,1));
 
-  for (n=0; n < nn; n++) {
-    PROTECT(bn = VECTOR_ELT(nets,n));
-    netica_handle = GetNeticaHandle(bn);
-
-    if (netica_handle) {
-      netname = GetNetName_bn(netica_handle);
-      SET_STRING_ELT(result,n,mkChar(netname));
-    } else {
-      SET_STRING_ELT(result,n,NA_STRING);
-      warning("Could not find network %s.",BN_NAME(bn));
-    }
-    UNPROTECT(1);
+  netica_handle = GetNeticaHandle(bn);
+  if (netica_handle) {
+    netname = GetNetName_bn(netica_handle);
+    SET_STRING_ELT(result,0,mkChar(netname));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find network %s.",BN_NAME(bn));
   }
   UNPROTECT(1);
-  //RN_Free_Symbols();
   return(result);
 }
 
-SEXP RN_GetNetTitles(SEXP nets) {
-  //RN_Define_Symbols();
-  R_len_t n, nn = length(nets);
+SEXP RN_SetNetName(SEXP bn, SEXP newnames) {
+  const char *newname;
+  stream_ns *file;
+  net_bn *netica_handle, *other_net;
+  SEXP result;
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    newname = CHAR(STRING_ELT(newnames,0)); 
+    other_net = RN_AS_NET(newname);
+    if ( other_net && other_net != netica_handle) {
+      warning("There is already a network named %s.",newname);
+    } else {
+      SetNetName_bn(netica_handle,newname);
+      // We need to change the bn object to reflect the new name.
+      SET_STRING_ELT(bn,0,mkChar(newname));
+      SetNet_RRef(netica_handle,bn);
+    }
+  } else {
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  return(bn);
+}
+
+
+SEXP RN_GetNetTitle(SEXP bn) {
   const char *title;
   stream_ns *file;
   net_bn* netica_handle;
-  SEXP result, bn;
+  SEXP result;
 
-  PROTECT(result = allocVector(STRSXP,nn));
+  PROTECT(result = allocVector(STRSXP,1));
 
-  for (n=0; n < nn; n++) {
-    PROTECT(bn = VECTOR_ELT(nets,n));
-    netica_handle = GetNeticaHandle(bn);
+  netica_handle = GetNeticaHandle(bn);
 
-    if (netica_handle) {
-      title = GetNetTitle_bn(netica_handle);
-      SET_STRING_ELT(result,n,mkChar(title));
-    } else {
-      SET_STRING_ELT(result,n,NA_STRING);
-      warning("Could not find network %s.",BN_NAME(bn));
-    }
-    UNPROTECT(1);
+  if (netica_handle) {
+    title = GetNetTitle_bn(netica_handle);
+    SET_STRING_ELT(result,0,mkChar(title));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find network %s.",BN_NAME(bn));
   }
   UNPROTECT(1);
-  //RN_Free_Symbols();
   return(result);
 }
 
-SEXP RN_GetNetComments(SEXP nets) {
-  //RN_Define_Symbols();
-  R_len_t n, nn = length(nets);
+SEXP RN_SetNetTitle(SEXP bn, SEXP newtitle) {
+  const char *title;
+  stream_ns *file;
+  net_bn* netica_handle;
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    title = CHAR(STRING_ELT(newtitle,0));
+    SetNetTitle_bn(netica_handle,title);
+  } else {
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  return(bn);
+}
+
+SEXP RN_GetNetComment(SEXP bn) {
   const char *comment;
   stream_ns *file;
   net_bn* netica_handle;
-  SEXP result, bn;
+  SEXP result;
 
-  PROTECT(result = allocVector(STRSXP,nn));
+  PROTECT(result = allocVector(STRSXP,1));
 
-  for (n=0; n < nn; n++) {
-    PROTECT(bn = VECTOR_ELT(nets,n));
-    netica_handle = GetNeticaHandle(bn);
+  netica_handle = GetNeticaHandle(bn);
+  if (netica_handle) {
+    comment = GetNetComment_bn(netica_handle);
+    SET_STRING_ELT(result,0,mkChar(comment));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  UNPROTECT(1);
+  return(result);
+}
 
-    if (netica_handle) {
-      comment = GetNetTitle_bn(netica_handle);
-      SET_STRING_ELT(result,n,mkChar(comment));
+SEXP RN_SetNetComment(SEXP bn, SEXP newcomment) {
+  const char *comment;
+  stream_ns *file;
+  net_bn* netica_handle;
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    comment = CHAR(STRING_ELT(newcomment,0));
+    SetNetComment_bn(netica_handle,comment);
+  } else {
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  return(bn);
+}
+
+SEXP RN_GetNetAutoUpdate(SEXP bn) {
+  int update;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(LGLSXP,1));
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    update = GetNetAutoUpdate_bn(netica_handle);
+    //Netica docs appear to be wrong here.  They seem to indicate we
+    //should test against, BELIEF_UPDATE(=256) but actual value is 1.
+    LOGICAL(result)[0] = update > 0;
+  } else {
+    LOGICAL(result)[0] = NA_LOGICAL;
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNetAutoUpdate(SEXP bn, SEXP newflags) {
+  int update, old_update;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(LGLSXP,1));
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    update = LOGICAL(newflags)[0];
+    if (update) update = BELIEF_UPDATE;
+    old_update = SetNetAutoUpdate_bn(netica_handle,update);
+    //Netica docs appear to be wrong here.  They seem to indicate we
+    //should test against, BELIEF_UPDATE(=256) but actual value is 1.
+    LOGICAL(result)[0] = old_update > 0;
+  } else {
+    LOGICAL(result)[0] = NA_LOGICAL;
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_GetNetUserField(SEXP bn, SEXP fieldnames) {
+  const char *value, *fieldname;
+  int valuelen;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    fieldname = CHAR(STRING_ELT(fieldnames,0));
+    value = GetNetUserField_bn(netica_handle,fieldname,&valuelen,0);
+    if (valuelen<0) { // No object returned.
+      SET_STRING_ELT(result,0,NA_STRING);
     } else {
-      SET_STRING_ELT(result,n,NA_STRING);
-      warning("Could not find network %s.",BN_NAME(bn));
+      SET_STRING_ELT(result,0,mkChar(value));
     }
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_GetAllNetUserFields(SEXP bn) {
+  R_len_t n, nn;
+  const char *value, *fieldname;
+  int valuelen;
+  stream_ns *file;
+  net_bn* netica_handle;
+  SEXP result, fieldnames;
+
+  netica_handle = GetNeticaHandle(bn);
+  if (!netica_handle) {
+    error("Could not find network %s.",BN_NAME(bn));
+    PROTECT(result=allocVector(STRSXP,1));
+    SET_STRING_ELT(result,0,NA_STRING);
+  } else {
+    //Count number of fields.
+    nn = 0;
+    while (TRUE) {
+      GetNetNthUserField_bn(netica_handle, nn, &fieldname, &value,
+                         &valuelen, 0);
+      if (strlen(fieldname) <1 && valuelen <0) break;
+      nn++;
+    }
+    PROTECT(result = allocVector(STRSXP,nn));
+    PROTECT(fieldnames = allocVector(STRSXP,nn));
+
+    for (n=0; n < nn; n++) {
+      GetNetNthUserField_bn(netica_handle, n, &fieldname, &value,
+                         &valuelen, 0);
+      SET_STRING_ELT(fieldnames,n,mkChar(fieldname));
+      SET_STRING_ELT(result,n,mkChar(value));
+    }
+    namesgets(result,fieldnames);
     UNPROTECT(1);
   }
   UNPROTECT(1);
-  //RN_Free_Symbols();
+  return(result);
+}
+
+
+SEXP RN_SetNetUserField(SEXP bn, SEXP fieldnames, SEXP newvals) {
+  const char *value, *fieldname;
+  int valuelen;
+  stream_ns *file;
+  net_bn* netica_handle;
+
+  netica_handle = GetNeticaHandle(bn);
+
+  if (netica_handle) {
+    fieldname = CHAR(STRING_ELT(fieldnames,0));
+    value = CHAR(STRING_ELT(newvals,0));
+    SetNetUserField_bn(netica_handle,fieldname,value, strlen(value),0);
+  } else {
+    warning("Could not find network %s.",BN_NAME(bn));
+  }
+  return(bn);
+}
+
+SEXP RN_Undo(SEXP bn) {
+  net_bn* netica_handle;
+  SEXP result;
+  
+  PROTECT(result = allocVector(INTSXP,1));
+
+  netica_handle = GetNeticaHandle(bn);
+  if (!netica_handle) {
+    INTEGER(result)[0] = NA_INTEGER;
+    UNPROTECT(1);
+    error("Could not find network %s.",BN_NAME(bn));
+    return(result);
+  }
+  INTEGER(result)[0] = UndoNetLastOper_bn(netica_handle,-1.0);
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_Redo(SEXP bn) {
+  net_bn* netica_handle;
+  SEXP result;
+  
+  PROTECT(result = allocVector(INTSXP,1));
+
+  netica_handle = GetNeticaHandle(bn);
+  if (!netica_handle) {
+    INTEGER(result)[0] = NA_INTEGER;
+    UNPROTECT(1);
+    error("Could not find network %s.",BN_NAME(bn));
+    return(result);
+  }
+  INTEGER(result)[0] = RedoNetOper_bn(netica_handle,-1.0);
+  UNPROTECT(1);
   return(result);
 }
 
