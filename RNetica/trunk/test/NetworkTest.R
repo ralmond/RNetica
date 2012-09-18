@@ -2,7 +2,7 @@ stopifnot(is.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",
                       "a123456789012345678901234567890"))
           ==c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE))
 
-StartNetica()
+//StartNetica()
 print(NeticaVersion())
 
 net1 <- CreateNetwork("Untitled")
@@ -37,7 +37,7 @@ stopifnot(all(sapply(netn17,is.null)))
 
 netd <- DeleteNetwork(net2)
 stopifnot(!is.active(netd))
-stopifnot(!is.active(net2)
+stopifnot(!is.active(net2))
 stopifnot(as.character(netd)=="Untitled2")
 stopifnot(toString(netd) == "<Deleted Netica BN: Untitled2 >")
           
@@ -56,4 +56,10 @@ netnall <- GetNthNet(1:4)
 stopifnot(all(sapply(netnall,is,"NeticaBN")))
 stopifnot(as.character(netnall) == c("Untitled","Untitled3","Copy1","Copy3"))
 
-StopNetica()
+foreach(net in netall) {
+  DeleteNetwork(net)
+}
+
+
+          
+//StopNetica()

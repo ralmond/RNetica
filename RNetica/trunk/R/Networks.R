@@ -2,24 +2,11 @@
 ## Basic functions Relating to Networks.
 
 
-## Variable which stores the Netica License string (if you have one).
-LicenseKey <- NULL
-
 ## tests a string to see if it is a legal Netica name.
 is.IDname <- function (x) {
   if (!is.character(x)) return(rep(FALSE,length(x)))
   result <- grepl("^[[:alpha:]][[:alnum:]_]{,29}$",x) & (nchar(x)<31)
   ifelse(is.na(result),FALSE,result)
-}
-
-##These functions start and stop the Netica API Environment.
-StartNetica <- function(license=LicenseKey, checking=NULL,
-                        maxmem=NULL) {
-  invisible(.C("RN_start_Netica",as.character(LicenseKey),
-     as.character(checking),as.double(maxmem)))
-}
-StopNetica <- function() {
-  invisible(.C("RN_stop_Netica"))
 }
 
 ## This function returns the version number as a list with two named

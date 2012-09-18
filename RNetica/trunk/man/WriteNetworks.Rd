@@ -74,8 +74,6 @@ GetNetworkFileName(net)
   \code{\link{NeticaBN}}, \code{\link{CreateNetwork}()}
 }
 \examples{
-StartNetica()
-
 peanut <- CreateNetwork("peanut")
 NetworkTitle(peanut) <- "The Peanut Network"
 peanutFile <- tempfile("peanut",fileext=".dne")
@@ -109,10 +107,8 @@ stopifnot(is.NeticaBN(almond),is.active(almond))
 DeleteNetwork(peanut)
 DeleteNetwork(nets[[1]])
 DeleteNetwork(almond)
-
-StopNetica()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ interface }
+\keyword{ IO }% __ONLY ONE__ keyword per line

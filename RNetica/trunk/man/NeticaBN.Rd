@@ -91,7 +91,6 @@ e1 != e2
   \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()}
 }
 \examples{
-StartNetica()
 
 net1 <- CreateNetwork("Untitled")
 stopifnot(is.NeticaBN(net1))
@@ -115,8 +114,6 @@ stopifnot(netd == net1)
 ## Warning:  The following expression is true!
 net1 != net2
 
-
-StopNetica()
 }
 \keyword{ classes }
 \keyword{ interface }% __ONLY ONE__ keyword per line
