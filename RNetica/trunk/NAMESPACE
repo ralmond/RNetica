@@ -19,10 +19,33 @@ export(WriteNetworks, ReadNetworks,
        NetworkUndo, NetworkRedo
        )
 
+export(
+  NewDiscreteNode, NewContinuousNode, DeleteNodes, CopyNodes,
+  NodeNet, NodeName, "NodeName<-",
+  print.NeticaNode, toString.NeticaNode, is.NeticaNode,
+  is.discrete, is.continuous,
+  NetworkAllNodes, NetworkFindNode
+#  NodeKind, "NodeKind<-", 
+#  NodeTitle, "NodeTitle<-",
+#  NodeDescription, "NodeDescription<-",
+#  NodeUserField, "NodeUserField<-", NodeAllUserFields,
+#  NodeVisStyle, "NodeVisStyle<-",
+#  NodeVisPos, "NodeVicPos<-",
 
+  )
+
+export(
+#  NodeStates, "NodeStates<-"
+#  NodeStateTitles, "NodeStateTitles<-",
+#  NodeStateComments, "NodeStateComments<-",
+#  NodeLevels, "NodeLevels<-"
+  )
 
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)
 S3method(Ops, NeticaBN)
+S3method(print, NeticaNode)
+S3method(toString, NeticaNode)
+S3method(Ops, NeticaNode)
 
        

@@ -22,11 +22,11 @@ function(libname, pkgname)
 .onAttach <- function(libname, pkgname) {
   if(exists("NeticaLicenseKey",mode="character"))
     LicenseKey <- NeticaLicenseKey
-  StartNetica()
+  ##StartNetica()
 }
 
 .Last.lib <- function(libpath) {
-  StopNetica()
+  ##StopNetica()
 }
 
 .onUnload <- function(libpath) {
