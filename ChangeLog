@@ -1,0 +1,9 @@
+2012-09-20  Russell G. Almond  <ralmond@Limu>
+
+	* DESCRIPTION (Version): Version 0.1-1 -- First experiments, used
+	string IDs.
+	Version 0.1-2 -- Second experiment, added backpointers for
+	Networks
+	Version 0.1-3 -- Added .onLoad methods, complete Network only.
+	Version 0.1-4 -- Preliminary Node Functions
+
