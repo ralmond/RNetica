@@ -48,7 +48,7 @@ CreateNetwork <- function (names) {
   if (any(!goodNames)) {
     stop("Illegal Netica Names, ",names[!goodNames])
   }
-  handles <- .Call("RN_New_Net",names)
+  handles <- .Call("RN_New_Nets",names)
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -61,8 +61,11 @@ CreateNetwork <- function (names) {
 ## Tests to see if the handle attached to a BN object is live or not.
 ## Returns NA if the object is not a network.
 is.active <- function (bn) {
-  if(!is.NeticaBN(bn)) return(NA)
-  return(.Call("RN_isBNActive",bn))
+  if(is.NeticaBN(bn)) 
+     return(.Call("RN_isBNActive",bn))
+  if (is.NeticaNode(bn))
+     return(.Call("RN_isNodeActive",bn))
+  return(NA)
 }
 
 toString.NeticaBN <- function(x,...) {
@@ -107,7 +110,7 @@ DeleteNetwork <- function (nets) {
   if (any(!sapply(nets,is.NeticaBN))) {
     stop("Expected a list of Netica networks, got, ",nets)
   }
-  handles <- .Call("RN_Delete_Net",nets)
+  handles <- .Call("RN_Delete_Nets",nets)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("DeleteNetwork: Netica Errors Encountered, see console for details.")
@@ -225,8 +228,8 @@ GetNetworkFileName <- function (net) {
 ################################################################
 
 NetworkName <- function (net) {
-  if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
   }
   name <- .Call("RN_GetNetName",net)
   ecount <- ReportErrors()
@@ -237,8 +240,8 @@ NetworkName <- function (net) {
 }
 
 "NetworkName<-" <- function (net, value) {
-  if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
   }
   if (length(value)>1 || !is.IDname(value)) {
     stop("Illegal Netica Name, ",value)
