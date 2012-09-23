@@ -50,10 +50,16 @@ DeleteNetwork(nets)
   
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{NewNet_bn()}, \code{DeleteNet_bn()}
 }
 \author{
   Russell Almond
+}
+\note{
+  The function \code{DeleteNetwork()} implicitly deletes any nodes
+  assocaited with the network.  Therefore, any nodes associated with
+  this network will become inactive (see \code{\link{is.active}()}).
 }
 \section{Implementation Note}{
   Currently, the \code{NeticaBN} object uses the name of the networks as

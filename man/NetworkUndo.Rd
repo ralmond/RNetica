@@ -20,7 +20,8 @@ NetworkRedo(net)
 }
 \details{
   The details of which operations are undoable is not clearly
-  documented in Netica.
+  documented in Netica.  Some obvious things, like adding nodes, do not
+  appear to work.
 }
 \value{
   Returns an invisible integer which is the return code from the
@@ -28,7 +29,8 @@ NetworkRedo(net)
   it will be negative if the undo/redo stack is empty.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{UndoNetLastOper_bn()}, \code{RedoNetOper_bn()}
 }
 \author{
   Russell Almond
@@ -37,23 +39,26 @@ NetworkRedo(net)
   \code{\link{NeticaBN}}, \code{\link{CreateNetwork}}
 }
 \examples{
+\dontrun{
 activeNet <- CreateNetwork("undoRedoTest")
 
-## This test doesn't work, because setting the comment/title
-## is not undoable.  Need to add a test later.
-NetworkTitle(activeNet) <- "State 1"
-NetworkTitle(activeNet) <- "State 2"
-NetworkTitle(activeNet) <- "State 3"
+NewContinuousNode(activeNet,"Node1")
+NewContinuousNode(activeNet,"Node2")
+NewContinuousNode(activeNet,"Node3")
+
+## These tests don't actually work, I'm not sure
+## what constitutes an undoable action in Netica.
+print(NetworkUndo(activeNet))
+stopifnot(length(NetworkAllNodes(activeNet))==2)
 
 print(NetworkUndo(activeNet))
-##stopifnot(NetworkTitle(activeNet)=="State2")
-
-print(NetworkUndo(activeNet))
-##stopifnot(NetworkTitle(activeNet)=="State1")
+stopifnot(length(NetworkAllNodes(activeNet))==1)
 
 print(NetworkRedo(activeNet))
-##stopifnot(NetworkTitle(activeNet)=="State2")
+stopifnot(length(NetworkAllNodes(activeNet))==2)
 
+DeleteNetwork(activeNet)
+}
 }
 \keyword{ interface }
 \keyword{ utility }% __ONLY ONE__ keyword per line

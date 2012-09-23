@@ -31,7 +31,7 @@ is.IDname(x)
   A logical vector of the same length of \code{x}.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}
 }
 \author{
   Russell Almond

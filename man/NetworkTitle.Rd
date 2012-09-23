@@ -40,7 +40,9 @@ NetworkComment(net) <- value
   A character vector of length 1 providing the title or comment.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{GetNetTitle_bn()}, \code{SetNetTitle_bn()},
+  \code{GetNetComments_bn()}, \code{SetNetComments_bn()}
 }
 \author{
   Russell Almond
@@ -61,6 +63,7 @@ stopifnot(NetworkComment(firstNet) ==
 
 ## Print here escapes the newline, so is harder to read
 cat(NetworkComment(firstNet),"\n")
+
 DeleteNetwork(firstNet)
 }
 \keyword{ interface }

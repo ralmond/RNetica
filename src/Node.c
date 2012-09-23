@@ -87,6 +87,7 @@ void RN_Free_Node(node_bn* node_handle) {
 }
 
 void RN_Free_Nodes(const nodelist_bn* nodelist) {
+  //Rprintf("Freeing nodes.\n");
   int k, kk=LengthNodeList_bn(nodelist);
   for (k=0; k<kk; k++) {
     RN_Free_Node(NthNode_bn(nodelist,k));
@@ -106,7 +107,7 @@ void RN_Free_Nodes(const nodelist_bn* nodelist) {
 /**
  * Calling function should probably portect result.
  */
-SEXP RN_AS_RLIST(nodelist_bn* nodelist) {
+SEXP RN_AS_RLIST(const nodelist_bn* nodelist) {
   int k, kk=LengthNodeList_bn(nodelist);
   SEXP result;
 
@@ -222,6 +223,7 @@ SEXP RN_Delete_Nodes(SEXP nodelist) {
     if (node_handle) {
       RN_Free_Node(node_handle);
       DeleteNode_bn(node_handle);
+      SET_VECTOR_ELT(result,n,node);
     } else {
       SET_VECTOR_ELT(result,n,R_NilValue);
       warning("Did not find a node named %s.", NODE_NAME(node));
@@ -257,7 +259,7 @@ SEXP RN_Find_Node(SEXP net, SEXP namesxp) {
 SEXP RN_Network_AllNodes(SEXP net) {
   const char* name;
   net_bn* net_handle;
-  nodelist_bn* foundNodes;
+  const nodelist_bn* foundNodes;
 
   net_handle = GetNeticaHandle(net);
   if (net_handle) {
@@ -281,8 +283,9 @@ SEXP RN_Network_AllNodes(SEXP net) {
 SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
   R_len_t nn = length(nodelist);
   net_bn *new_net, *old_net;
-  char *opt;
-  nodelist_bn *old_nodes, *new_nodes;
+  const char *opt;
+  nodelist_bn *old_nodes;
+  const nodelist_bn *new_nodes;
 
   new_net = GetNeticaHandle(destNet);
   if (!new_net) {
@@ -297,6 +300,7 @@ SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
   }
   old_nodes = RN_AS_NODELIST(nodelist, old_net);
   new_nodes = CopyNodes_bn(old_nodes, new_net, opt);
+  DeleteNodeList_bn(old_nodes);
 
   return RN_AS_RLIST(new_nodes);
 }
@@ -340,8 +344,14 @@ SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   if (node_handle) {
     newname = CHAR(STRING_ELT(newnames,0)); 
     other_node = GetNodeNamed_bn(newname, GetNodeNet_bn(node_handle));
-    if ( other_node && other_node != node_handle) {
-      warning("There is already a node named %s.",newname);
+    if ( other_node ) {
+      if (other_node != node_handle) {
+        warning("There is already a node named %s.",newname);
+      } else {
+        //We are renaming this node to itself, probably to fix
+        //a bad cached name.  Return the correct R object.
+        nd = GetNode_RRef(other_node);
+      }
     } else {
       SetNodeName_bn(node_handle,newname);
       // We need to change the nd object to reflect the new name.

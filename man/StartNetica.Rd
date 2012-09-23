@@ -85,7 +85,10 @@ StopNetica()
   meaningful values.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{NewNeticaEnviron_ns()}, \code{InitNetica2_bn()},
+  \code{CloseNetica_bn()}, \code{LimitMemoryUsage_ns()},
+  \code{ArgumentChecking_ns()} 
 }
 \author{Russell Almond
 }
@@ -118,15 +121,17 @@ StopNetica()
   \code{\link{NeticaVersion}()}, \code{\link{CreateNetwork}()}
 }
 \examples{
-StartNetica()
+\dontrun{
+## Restart licensed version
+StopNetica()
+StartNetica("License key from Norsys")                  
 ## Get the version of Netica.
 print(NeticaVersion())
 
 ## Commonly done next step is to create a network.
 net1 <- CreateNetwork("myNet")
 
-## Lots of other operations, then when done.
-StopNetica()
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

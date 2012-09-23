@@ -60,11 +60,14 @@ CreateNetwork <- function (names) {
 
 ## Tests to see if the handle attached to a BN object is live or not.
 ## Returns NA if the object is not a network.
-is.active <- function (bn) {
-  if(is.NeticaBN(bn)) 
-     return(.Call("RN_isBNActive",bn))
-  if (is.NeticaNode(bn))
-     return(.Call("RN_isNodeActive",bn))
+is.active <- function (x) {
+  if(is.NeticaBN(x)) 
+     return(.Call("RN_isBNActive",x))
+  if (is.NeticaNode(x))
+     return(.Call("RN_isNodeActive",x))
+  if (is.list(x)) {
+    return(sapply(x,is.active))
+  }
   return(NA)
 }
 
@@ -90,6 +93,13 @@ Ops.NeticaBN <- function(e1, e2) {
     return(NA)
   }
   truth <- (ok == 0)  ## inversts sign of truth for !=
+  if (is.list(e2)) { ##Comparing scalar to list
+    if (all(sapply(e2,is.NeticaBN))) {
+      return (sapply(e2,function(ee) e1==ee))
+    } else {
+      return (!truth)
+    }
+  }
   bothdeleted <- !is.active(e1) && !is.active(e2)
   if (is.na(bothdeleted)) return(!truth) ## At least one non-bn
   if (bothdeleted) {
@@ -149,7 +159,7 @@ GetNamedNetworks <- function (namelist) {
 }
 
 CopyNetworks <- function (nets, newnamelist, options=character(0)) {
-  if (is.NeticaBN(nets) && length(nets) ==1) nets <-list(nets)
+  if (is.NeticaBN(nets)) nets <-list(nets)
   if (!all(sapply(nets,is.NeticaBN))) {
     stop("Expected a list of Netica networks, got, ",nets)
   }
@@ -193,17 +203,35 @@ WriteNetworks <- function (nets, paths) {
   if (ecount[1]>0) {
     stop("WriteNetwork: Netica Errors Encountered, see console for details.")
   }
+  ## Save filenames for later recovery of network.
+  for (i in 1:length(handles)) {
+    if (!is.null(handles[[i]]))
+      attr(handles[[i]],"Filename") <- paths[i]
+  }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
 }
 
+
 ReadNetworks <- function (paths) {
+  ##If they pass a network object, try to extract a path attribute.
+  if (is.NeticaBN(paths) && !is.null(attr(paths,"Filename"))) {
+    return(ReadNetworks(attr(paths,"Filename")))
+  }
+  if (is.list(paths) && length(paths) >0 && is.NeticaBN(paths[[1]])) {
+    return(lapply(paths,ReadNetworks))
+  }
   paths <- as.character(paths)
   if (any(is.na(paths))) {
     stop("Expected a list of pathnames, got, ",paths)
   }
   handles <- .Call("RN_Read_Nets",paths)
   ecount <- ReportErrors()
+  ## Save filenames for later recovery of network.
+  for (i in 1:length(handles)) {
+    if (!is.null(handles[[i]]))
+      attr(handles[[i]],"Filename") <- paths[i]
+  }
   if (ecount[1]>0) {
     stop("WriteNetwork: Netica Errors Encountered, see console for details.")
   }

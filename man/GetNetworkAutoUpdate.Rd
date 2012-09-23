@@ -52,7 +52,8 @@ WithoutAutoUpdate(net,expr)
   returns a \code{try-error}.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{SetNetAutoUpdate_bn()}, \code{GetNetAutoUpdate_bn()}
 }
 \author{
   Russell Almond

@@ -15,8 +15,8 @@ export(WriteNetworks, ReadNetworks,
        NetworkComment, "NetworkComment<-",
        GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
        NetworkUserField, "NetworkUserField<-",
-       NetworkAllUserFields,
-       NetworkUndo, NetworkRedo
+       NetworkAllUserFields
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
        )
 
 export(
@@ -30,7 +30,7 @@ export(
 #  NodeDescription, "NodeDescription<-",
 #  NodeUserField, "NodeUserField<-", NodeAllUserFields,
 #  NodeVisStyle, "NodeVisStyle<-",
-#  NodeVisPos, "NodeVicPos<-",
+#  NodeVisPos, "NodeVisPos<-",
 
   )
 
