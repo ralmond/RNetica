@@ -17,9 +17,12 @@
 /**
  * Common Symbols so we don't need to keep redefining them.
  */
-char* NeticaClass = "NeticaBN";
-char* NodeClass = "NeticaNode";
-char* EmptyString = "";
+const char* NeticaClass = "NeticaBN";
+const char* BNATT = "Netica_bn";
+const char* NodeClass = "NeticaNode";
+const char* NODEATT = "Netica_Node";
+const char* DISCRETEATT = "node_discrete";
+const char* EmptyString = "";
 
 SEXP bnclass=NULL;
 SEXP nodeclass=NULL;
@@ -35,21 +38,22 @@ static int symbolRegCount=0;
 void RN_Define_Symbols() {
   //printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
   if (bnclass==NULL) {
-    R_PreserveObject(bnclass = allocVector(STRSXP,1));
+    bnclass = allocVector(STRSXP,1);
+    R_PreserveObject(bnclass);
     SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
   }
   if (bnatt==NULL) { 
-    R_PreserveObject(bnatt = install("Netica_bn"));  
+    R_PreserveObject(bnatt = install(BNATT));  
   } 
   if (nodeclass==NULL) {
     R_PreserveObject(nodeclass = allocVector(STRSXP,1));
     SET_STRING_ELT(nodeclass,0,mkChar(NodeClass));
   }
   if (nodeatt==NULL) { 
-    R_PreserveObject(nodeatt = install("Netica_node"));  
+    R_PreserveObject(nodeatt = install(NODEATT));  
   } 
   if (nodediscatt==NULL) { 
-    R_PreserveObject(nodediscatt = install("node_discrete"));  
+    R_PreserveObject(nodediscatt = install(DISCRETEATT));  
   } 
   if (TRUEV==NULL) {
     R_PreserveObject(TRUEV = allocVector(LGLSXP,1));
@@ -60,10 +64,10 @@ void RN_Define_Symbols() {
     LOGICAL(FALSEV)[0]=FALSE;
   }
   if (NAV==NULL) {
-    R_PreserveObject(FALSEV = allocVector(REALSXP,1));
-    REAL(NAV)[0]=NA_REAL;
+    R_PreserveObject(NAV = allocVector(INTSXP,1));
+    INTEGER(NAV)[0]=NA_INTEGER;
   }
-
+  //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
 
@@ -191,14 +195,16 @@ void RN_stop_Netica() {
     warning("Netica not running, nothing to do.");
     return;
   }
-  
-  // Shut down any remaining nets
+
+
+  Rprintf("Shut down any remaining nets.\n");
   int nth = 0;
   net_bn* net;
   SEXP bn, bnPointer;
   while (TRUE) {
     net = GetNthNet_bn (nth++, RN_netica_env);
     if (!net) break;
+    RN_Free_Nodes(GetNetNodes_bn(net));
     PROTECT(bn = (SEXP) GetNetUserData_bn(net,0));
     PROTECT(bnPointer = getAttrib(bn,bnatt));
     R_ClearExternalPtr(bnatt);
