@@ -1,3 +1,11 @@
+2012-09-22  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (ReadNetworks, WriteNetworks): Changed these
+	functions so that they tag the return object with the filename.
+	Thus, net <- ReadNetworks(net) should restore a network after an R
+	session is exited.
+	
+
 2012-09-20  Russell G. Almond  <ralmond@Limu>
 
 	* DESCRIPTION (Version): Version 0.1-1 -- First experiments, used
