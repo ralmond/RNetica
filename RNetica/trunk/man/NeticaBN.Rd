@@ -1,13 +1,12 @@
 \name{NeticaBN}
 \alias{NeticaBN}
-\alias{NeticaBN.toString}
-\alias{NeticaBN.print}
+\alias{toString.NeticaBN}
+\alias{print.NeticaBN}
 \alias{is.NeticaBN}
-\alias{is.active}
 \alias{Ops.NeticaBN}
 
 \title{
-An object referencing a Bayesian network.
+An object referencing a Bayesian network in Netica.
 }
 \description{
   This object is returned by various RNetica functions which create or
@@ -18,10 +17,9 @@ An object referencing a Bayesian network.
 
 }
 \usage{
-NeticaBN.toString(x, ...)
-NeticaBN.print(x, ...)
 is.NeticaBN(x)
-is.active(bn)
+toString.NeticaBN(x, ...)
+print.NeticaBN(x, ...)
 Ops.NeticaBN(e1, e2)
 e1 == e2
 e1 != e2
@@ -33,28 +31,26 @@ e1 != e2
   \item{\dots}{Other arguments to \code{\link[base]{print}()} or
     \code{\link[base]{toString}()}
   }
-  \item{bn}{A \code{NeticaBN} object to test.
-  }
   \item{e1}{A \code{NeticaBN} object to test.
   }
   \item{e2}{A \code{NeticaBN} object to test.
   }
 }
 \details{
-  This is an argument of class \code{NeticaBN}.  It consists of a name,
+  This is an object of class \code{NeticaBN}.  It consists of a name,
   and an invisible handle to a Netica network.  The function
-  \code{is.active()} test the state of that handle and returns
+  \code{\link{is.active}()} tests the state of that handle and returns
   \code{FALSE} if the network is no longer in active memory (usually
-  because of a call to \code{DeleteNetwork()}.
+  because of a call to \code{DeleteNetwork()}.  The printed
+  representation depends on whether or not it is active (inactive nodes
+  print as \code{"<Deleted Network: Name >"}).
 
   For active networks, the equality test tests to see if both object
   point to the same object in Netica memory.  Not that the name of the
   network is embedded in the object implementation and may get out of
   sync with the network, so the printed representations may be unequal
-  even if it points to the same neetwork.  For inactive networks, the
+  even if it points to the same network.  For inactive networks, the
   objects are compared using the cached names.
-
-  
 
 }
 \value{
@@ -64,19 +60,21 @@ e1 != e2
   The function \code{is.NeticaBN()} returns a logical scalar depending
   on whether or not its argument is a \code{NeticaBN}.
 
-  The function \code{is.active()} returns \code{TRUE} if the argument
-  still points to a network loaded in Netica's memory, and \code{FALSE}
-  if that network has been deleted.  It returns \code{NA} if the
-  argument is not a \code{NeticaBN}.
-
+  The function \code{Ops.NeticaBN()} returns a logical value dending on
+  whether the objects are equal.
+}
+\references{
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{GetNetUserData_bn()}, \code{SetNetUserData_bn()} (these are used
+  to maintain the back pointers to the R object).
 }
 \author{
   Russell Almond
 }
 \note{
-  Internally, the \code{NeticaBN} and \code{DeletedNeticaBN} objects are
+  Internally, the \code{NeticaBN} objects are
   character strings with extra attributes.  So \code{as.character(net)}
-  will return the name of the network.
+  will return the name of the network.  
 
   Note that if a \code{NeticaBN} object is stored in an R object, and
   the network is subsquently renamed (with a call to the set method of
@@ -85,20 +83,29 @@ e1 != e2
   are different but \code{net1==net2} returns true.  This can be fixed
   with the code \code{NetworkName(net) <- NetworkName(net)}.
 
+  \code{NeticaBN} objects are all rendered inactive when
+  \code{StopNetica()} is called, therefore they do not persist across R
+  sessions.  Generally speaking, the network should be saved, using
+  \code{\link{WriteNetworks}()} and then reloaded in the new session
+  using \code{\link{ReadNetworks}()}.  When a network is saved or loaded
+  the \code{"Filename"} attribute is set, to provide a mechanism for
+  storing the filename across R sessions.
 }
 \seealso{
   \code{\link{CreateNetwok}()},\code{\link{DeleteNetwork}()},
-  \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()}
+  \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()},
+  \code{\link{is.active()}, \code{NetworkAllNodes}()},
+  \code{\link{WriteNetworks}()}, \code{NetworkFilename}()}
 }
 \examples{
 
-net1 <- CreateNetwork("Untitled")
+net1 <- CreateNetwork("aNet")
 stopifnot(is.NeticaBN(net1))
 stopifnot(is.active(net1))
-stopifnot(as.character(net1)=="Untitled")
+stopifnot(as.character(net1)=="aNet")
 
-net2 <- GetNamedNetworks("Untitled")
-stopifnot(as.character(net2)=="Untitled")
+net2 <- GetNamedNetworks("aNet")
+stopifnot(as.character(net2)=="aNet")
 stopifnot(net1==net2)
 
 NetworkName(net1) <- "Unused"

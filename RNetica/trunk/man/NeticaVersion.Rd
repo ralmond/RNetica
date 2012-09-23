@@ -17,7 +17,8 @@ NeticaVersion()
   \item{message }{String defining Netica version.}
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{GetNeticaVersion_bn()} 
 }
 \author{
   Russell Almond
@@ -31,7 +32,7 @@ NeticaVersion()
 }
 \examples{
 print(NeticaVersion()$message)
-stopifnot(NeticaVersion$number>409) ## Version 4.09 is a popular one.
+stopifnot(NeticaVersion()$number > 409) ## Version 4.09 is a popular one.
 }
 \keyword{ interface }
 \keyword{ environment }% __ONLY ONE__ keyword per line

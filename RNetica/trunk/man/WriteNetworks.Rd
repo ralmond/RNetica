@@ -20,16 +20,16 @@ GetNetworkFileName(net)
 \arguments{
   \item{nets}{
     A single \code{\link{NeticaBN}} object or a list of such objects.
-}
+  }
   \item{net}{
     A single \code{\link{NeticaBN}} object.
-}
+  }
   \item{paths}{
     A character vector of pathnames to \code{.neta} files.  For
     \code{ReadNetworks()}, the pathnames must exist. For
     \code{WriteNetworks()}, the \code{length(paths)} must equal
     \code{length(nets)} .
-}
+  }
 }
 \details{
   This method invokes the native Netica open and save functions to read
@@ -43,7 +43,20 @@ GetNetworkFileName(net)
   The function \code{GetNetworkFileName()} returns the name of the last
   file this network was saved to or read from.  It cannot be set other
   than through the \code{WriteNetworks()} or \code{ReadNetworks()}
-  functions. 
+  functions.
+
+  To facilitate saving and restoring files across R sessions, both
+  \code{ReadNetworks()} and \code{WriteNetworks()} attach a
+  \code{"Filename"} attribute to the object, which records the file just
+  read or written.  \code{GetNetworkFileName(net)} will not work after
+  quitting and restarting Netica, but \code{attr(net,"Filename")} should
+  contain the same pathname.  If \code{ReadNetworks()} is passed a
+  \code{NeticaBN} object (or a list of such objects), it will attempt to
+  read from the file referenced by the \code{"Filename"} attribute.
+  Thus, calling \code{net <- WriteNetworks(net,path)} right before
+  shutting down R and \code{net <- ReadNetworks(net)} right after the
+  call to \code{library(RNetica)}, should restore the network.
+  
 }
 \value{
   Both \code{ReadNetworks()} and \code{WriteNetworks()} return a list of
@@ -51,9 +64,14 @@ GetNetworkFileName(net)
   case of a problem with one of the networks, the corresponding entry
   will be set to \code{NULL}.  If the return list has length 1, a single
   \code{NeticaBN} object will be returned instead of a list.
+
+  A \code{"Filename"} attribute is added to the \code{NeticaBN} object
+  that is returned.  This can be used to restore \code{NeticaBN} objects
+  after an R session is restarted.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{WriteNet_bn()}, \code{ReadNet_bn()} 
 }
 \author{
   Russell Almond
@@ -71,7 +89,9 @@ GetNetworkFileName(net)
   but may produce unexpected behavior in certain coding circumstances.
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{CreateNetwork}()}
+  \code{\link{NeticaBN}}, \code{\link{CreateNetwork}()},
+  \code{\link{NetworkFindNode}()} (for recreating links to nodes after
+  restoring a net)
 }
 \examples{
 peanut <- CreateNetwork("peanut")
@@ -107,6 +127,17 @@ stopifnot(is.NeticaBN(almond),is.active(almond))
 DeleteNetwork(peanut)
 DeleteNetwork(nets[[1]])
 DeleteNetwork(almond)
+
+\dontrun{
+## Safe way to preserve node and network objects across R sessions.
+tnet <- WriteNetworks(tnet,"Tnet.neta")
+q(save="yes")
+# R
+library(RNetica)
+tnet <- ReadNetworks(tnet)
+nodes <- NetworkFindNodes(tnet,as.character(nodes))
+}
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

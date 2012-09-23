@@ -33,6 +33,9 @@ GetNamedNetworks(namelist)
   \code{NeticaBN} related to the corresponding name or \code{NULL} if
   the name does not refer to a network.
 }
+\references{
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:  \code{GetNthNet_bn()}
+}
 \author{
   Russell Almond
 }
@@ -50,10 +53,13 @@ net1 <- CreateNetwork("myNet")
 net2 <- GetNamedNetworks("myNet")
 stopifnot(is(net2,"NeticaBN"))
 stopifnot(as.character(net1)==as.character(net2))
+stopifnot(net1==net2)
 
 ## No network named "fish", this should return NULL
 fish <- GetNamedNetworks("fish")
 stopifnot(all(sapply(fish,is.null)))
+
+DeleteNetwork(net2)
 
 }
 \keyword{ interface }

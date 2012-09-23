@@ -36,7 +36,8 @@ ClearAllErrors(severity="XXX_ERR")
   severity \code{"ERROR_ERROR"} or higher.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{GetError_ns()}, \code{ClearError_ns()}
 }
 \author{
   Russell Almond

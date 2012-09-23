@@ -1,5 +1,5 @@
-\name{CopyNets}
-\alias{CopyNets}
+\name{CopyNetworks}
+\alias{CopyNetworks}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Makes copies of Netica networks.
@@ -10,7 +10,7 @@
   much information is copied.
 }
 \usage{
-CopyNets(nets, newnamelist, options = character(0))
+CopyNetworks(nets, newnamelist, options = character(0))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,7 +51,7 @@ CopyNets(nets, newnamelist, options = character(0))
   \code{nets} does not exit.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:  \code{CopyNet_bn()}
 }
 \author{
   Russell Almond
@@ -62,16 +62,19 @@ CopyNets(nets, newnamelist, options = character(0))
 }
 \examples{
 
-net1 <- CreateNetwork("Untitled1")
-nets <- CreateNetwork(paste("Untitled",2:3,sep=""))
+net1 <- CreateNetwork("Original")
+nets <- CreateNetwork(paste("Original",2:3,sep=""))
 
-copy1 <-CopyNets("Untitled1","Copy1")
+copy1 <-CopyNetworks(net1,"Copy1")
 stopifnot(is(copy1,"NeticaBN"))
 stopifnot(as.character(copy1) == "Copy1")
+stopifnot(copy1 != net1)
 
-netc <- CopyNets(netnn,paste("Copy",2:3,sep=""))
+netc <- CopyNetworks(nets,paste("Copy",2:3,sep=""))
 stopifnot(all(sapply(netc,is,"NeticaBN")))
 stopifnot(as.character(netc) == c("Copy2","Copy3"))
+
+DeleteNetwork(c(netc,nets,list(copy1,net1)))
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

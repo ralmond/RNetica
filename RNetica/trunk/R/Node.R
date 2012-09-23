@@ -43,10 +43,17 @@ is.NeticaNode <- function (x) {
 Ops.NeticaNode <- function(e1, e2) {
   ok <- switch(.Generic, "=="=0, "!=" =1, -1)
   if (ok<0) {
-    warning(.Generic, " not implemented for Netica networks.")
+    warning(.Generic, " not implemented for Netica nodes.")
     return(NA)
   }
   truth <- (ok == 0)  ## inversts sign of truth for !=
+  if (is.list(e2)) { ##Comparing scalar to list
+    if (all(sapply(e2,is.NeticaNode))) {
+      return (sapply(e2,function(ee) e1==ee))
+    } else {
+      return (!truth)
+    }
+  }
   bothdeleted <- !is.active(e1) && !is.active(e2)
   if (is.na(bothdeleted)) return(!truth) ## At least one non-bn
   if (bothdeleted) {
@@ -55,7 +62,7 @@ Ops.NeticaNode <- function(e1, e2) {
   }
   ## Okay have two valid NeticaNodes or one valid one and one inactive.
   ## Either way we can get by by comparing pointers.
-  return(ifelse(identical(attr(e1,"Netica_node"),attr(e2,"Netica_node")),
+  return(ifelse(identical(attr(e1,"Netica_Node"),attr(e2,"Netica_Node")),
                 truth,!truth))
 }
 
@@ -83,7 +90,7 @@ NewContinuousNode <- function (net, names) {
   handles
 }
 
-NewDiscreteNode <- function (net, names, states) {
+NewDiscreteNode <- function (net, names, states = c("Yes","No")) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Bayes net, got ",net)
   }
@@ -184,8 +191,8 @@ NetworkFindNode <- function (net,name) {
   if (length(net)>1 || !is.NeticaBN(net) || !is.active(net)) {
     stop ("Expected an active Netica network, got ",net)
   }
-  if (length(name) > 0) {
-    return (lapply(name,function(n) FindNode(net,n)))
+  if (length(name) > 1) {
+    return (lapply(name,function(n) NetworkFindNode(net,n)))
   } else {
     if(!is.IDname(name)) {
       stop("Expected a Netica name, got ",name)
@@ -203,7 +210,7 @@ NetworkAllNodes <- function(net) {
   if (length(net)>1 || !is.NeticaBN(net) || !is.active(net)) {
     stop ("Expected an active Netica network, got ",net)
   }
-  handles <- .Call("RN_Netwok_AllNodes",net)
+  handles <- .Call("RN_Network_AllNodes",net)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NetworkAllNodes: Netica Errors Encountered, see console for details.")
@@ -212,9 +219,10 @@ NetworkAllNodes <- function(net) {
 }
   
 NodeNet <- function(node) {
-  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+  if (length(node)>1 || !is.NeticaNode(node)) {
     stop ("Expected an active Netica node, got ",node)
   }
+  if (!is.active(node)) return(NULL)
   handle <- .Call("RN_NodeNet",node)
   ecount <- ReportErrors()
   if (ecount[1]>0) {

@@ -1,5 +1,5 @@
-\name{GetNthNet}
-\alias{GetNthNet}
+\name{GetNthNetwork}
+\alias{GetNthNetwork}
 \title{
   Fetch a Netica network by its position in the Netica list.
 }
@@ -9,9 +9,8 @@
   number of currently defined networks, this function will return \code{NULL}
 }
 \usage{
-GetNthNet(n)
+GetNthNetwork(n)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{n}{A vector of integers greater than 1.
 }
@@ -36,7 +35,8 @@ GetNthNet(n)
   the number of open networks.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \link{http://norsys.com/onLineAPI/Manual/index.html}:
+  \code{GetNthNet_bn()} 
 }
 \author{
   Russell Almond
@@ -50,16 +50,14 @@ GetNthNet(n)
   \code{\link{CreateNetwork}()}, \code{\link{GetNamedNets}()}
 }
 \examples{
-StartNetica()
 
 count <- 1
-while ((net <- GetNthNet(count)) != NULL) {
+while (!is.null(net <- GetNthNetwork(count))) {
   cat("Network number ",count," is ",net,".\n")
-  count++
+  count <- count +1
 }
 cat("Found ",count-1," networks.\n")
 
-StopNetica()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -1,12 +1,12 @@
 \name{NetworkName}
 \alias{NetworkName}
 \alias{NetworkName<-}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-  Gets or Sets the name of the network.
+  Gets or Sets the name of a Netica network.
 }
 \description{
-  Gets or sets the name of the network.
+  Gets or sets the name of the network. Names must conform to the
+  \code{\link{IDname}} rules.
 }
 \usage{
 NetworkName(net)
@@ -26,6 +26,9 @@ NetworkName(net) <- value
   Netica identifiers.  Trying to set the network to a name that does not
   conform to the rules will produce an error, as will trying to set the
   network name to a name that corresponds to another different network.
+
+  The \code{\link{NetworkTitle}()} function provides another way to name
+  a network which is not subject to the \code{IDname} restrictions.
 }
 \value{
   The name of the network as a character vector of length 1.
@@ -33,13 +36,14 @@ NetworkName(net) <- value
   The setter method returns the modified object.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}
+    \link{http://norsys.com/onLineAPI/Manual/index.html}:
+    \code{GetNetName_bn()}, \code{SetNetName_bn()}
 }
 \author{
   Russell Almond
 }
 \note{
-  Netica BN objects are internally implemented as character vectors
+  \code{NeticaBN} objects are internally implemented as character vectors
   giving the name of the network.  If a network is renamed, then it is
   possible that R will hold onto an old reference that still using the
   old name.  In this case, \code{NetworkName(net)} will give the correct
@@ -51,10 +55,10 @@ NetworkName(net) <- value
   \code{\link{GetNamedNetworks}()}, \code{\link{NetworkTitle}()} 
 }
 \examples{
-net <- CreateNetwork("myNet")
+net <- CreateNetwork("funNet")
 netcached <- net
 
-stopifnot(NetworkName(net)=="myNet")
+stopifnot(NetworkName(net)=="funNet")
 
 NetworkName(net)<-"SomethingElse"
 stopifnot(as.character(net)=="SomethingElse")
@@ -68,7 +72,9 @@ stopifnot(net==netcached)
 
 ## This fixes the problem
 NetworkName(netcached) <- NetworkName(netcached)
-stopifnot(as.character(netcached) != NetworkName(netcached))
+stopifnot(as.character(netcached) == NetworkName(netcached))
+
+DeleteNetwork(net)
 }
 \keyword{ interface }
 \keyword{ attribute }% __ONLY ONE__ keyword per line

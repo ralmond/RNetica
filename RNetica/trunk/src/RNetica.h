@@ -40,7 +40,7 @@ extern void RN_Free_Nodes(const nodelist_bn* nodelist);
  * Converts between Netica nodelists and R lists.  Calling programs
  * are responsible for freeing/unprotecting the results.
  */
-extern SEXP RN_AS_RLIST(nodelist_bn* nodelist);
+extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist);
 extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
 
 
@@ -56,7 +56,7 @@ extern SEXP nodediscatt;
 extern SEXP TRUEV;  //Length 1 logical vector containing TRUE
 extern SEXP FALSEV;
 extern SEXP NAV;
-extern char* EmptyString;
+extern const char* EmptyString;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 

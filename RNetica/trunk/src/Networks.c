@@ -109,7 +109,7 @@ SEXP RN_Delete_Nets(SEXP netlist) {
   for (n=0; n < nn; n++) {
     PROTECT(bn = VECTOR_ELT(netlist,n));
     PROTECT(bnhandle = getAttrib(bn,bnatt));
-    netica_handle = GetNeticaHandle(bnhandle);
+    netica_handle = (net_bn*) R_ExternalPtrAddr(bnhandle);
     if (netica_handle) {
       //Find and delete all node.
       RN_Free_Nodes(GetNetNodes_bn(netica_handle));
@@ -150,7 +150,7 @@ SEXP RN_Named_Nets(SEXP namelist) {
       SET_VECTOR_ELT(bnhandlelist,n,bn);
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
-      warning("Did not find a network named %s.",name);
+      //warning("Did not find a network named %s.",name);
     }
   }
   UNPROTECT(1);
