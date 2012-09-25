@@ -241,7 +241,7 @@ ReadNetworks <- function (paths) {
 
 GetNetworkFileName <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",nets)
+    stop("Expected a Netica network, got, ",nets)
   }
   pathname <- .Call("RN_GetNetFilename",net)
   ecount <- ReportErrors()
@@ -284,7 +284,7 @@ NetworkName <- function (net) {
 
 NetworkTitle <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   title <- .Call("RN_GetNetTitle",net)
   ecount <- ReportErrors()
@@ -296,7 +296,7 @@ NetworkTitle <- function (net) {
 
 "NetworkTitle<-" <- function (net, value) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   if (length(value)>1) {
     warning("Only first element used as title.")
@@ -313,7 +313,7 @@ NetworkTitle <- function (net) {
 
 NetworkComment <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   comment <- .Call("RN_GetNetComment",net)
   ecount <- ReportErrors()
@@ -325,7 +325,7 @@ NetworkComment <- function (net) {
 
 "NetworkComment<-" <- function (net, value) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   value <- as.character(value)
   if (any(is.na(value))) {
@@ -342,7 +342,7 @@ NetworkComment <- function (net) {
 
 GetNetworkAutoUpdate <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   autoupdate <- .Call("RN_GetNetAutoUpdate",net)
   ecount <- ReportErrors()
@@ -354,7 +354,7 @@ GetNetworkAutoUpdate <- function (net) {
 
 SetNetworkAutoUpdate <- function (net, newautoupdate) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   if (length(newautoupdate) >1) {
     warning("Additional newautoupdate values ignored.")
@@ -377,7 +377,7 @@ WithoutAutoUpdate <- function (net,expr) {
 
 NetworkUserField <- function (net, fieldname) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   if (length(fieldname)>1 || !is.IDname(fieldname)) {
     stop("Illegal Netica Field Name, ",fieldname)
@@ -392,7 +392,7 @@ NetworkUserField <- function (net, fieldname) {
 
 "NetworkUserField<-" <- function (net, fieldname, value) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   if (length(fieldname)>1 || !is.IDname(fieldname)) {
     stop("Illegal Netica Field Name, ",fieldname)
@@ -411,7 +411,7 @@ NetworkUserField <- function (net, fieldname) {
 
 NetworkAllUserFields <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   values <- .Call("RN_GetAllNetUserFields",net)
   ecount <- ReportErrors()
@@ -423,7 +423,7 @@ NetworkAllUserFields <- function (net) {
 
 NetworkUndo <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   flag <- .Call("RN_Undo",net)
   ecount <- ReportErrors()
@@ -438,7 +438,7 @@ NetworkUndo <- function (net) {
 
 NetworkRedo <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica networks, got, ",net)
+    stop("Expected a Netica network, got, ",net)
   }
   flag <- .Call("RN_Redo",net)
   ecount <- ReportErrors()

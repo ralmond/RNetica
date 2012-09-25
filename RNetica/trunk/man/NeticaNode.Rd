@@ -93,7 +93,7 @@ e1 != e2
   sessions.  Generally speaking, the network should be saved, using
   \code{\link{WriteNetworks}()} and then reloaded in the new session
   using \code{\link{ReadNetworks}()}.  The node objects should then be
-  recreated via a call to \code{NetworkFindNode}()}.
+  recreated via a call to \code{\link{NetworkFindNode}()}.
 
   Note that RNetica is lazy about creating \code{NeticaNode} objects for
   nodes when a network is read from a file.  Probably users should avoid
@@ -102,11 +102,11 @@ e1 != e2
   
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{NetworkFindNode}()},
+  \code{\link{NeticaBN}}, \code{\link{NetworkFindNode}()},
   \code{\link{is.active}()}, \code{\link{is.discrete}()}, 
   \code{\link{NewContinuousNode}()}, \code{\link{NewDiscreteNode}()},
   \code{\link{DeleteNode}()}, \code{\link{NodeName}()},
-  \code{\link{NodeStates}()}, \code{NodeLevels}()}
+  \code{\link{NodeStates}()}, \code{\link{NodeLevels}()}
 
 }
 \examples{

@@ -305,7 +305,6 @@ SEXP RN_GetNetFilename(SEXP bn) {
 
 SEXP RN_GetNetName(SEXP bn) {
   const char *netname;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -325,7 +324,6 @@ SEXP RN_GetNetName(SEXP bn) {
 
 SEXP RN_SetNetName(SEXP bn, SEXP newnames) {
   const char *newname;
-  stream_ns *file;
   net_bn *netica_handle, *other_net;
   SEXP result;
 
@@ -351,7 +349,6 @@ SEXP RN_SetNetName(SEXP bn, SEXP newnames) {
 
 SEXP RN_GetNetTitle(SEXP bn) {
   const char *title;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -372,7 +369,6 @@ SEXP RN_GetNetTitle(SEXP bn) {
 
 SEXP RN_SetNetTitle(SEXP bn, SEXP newtitle) {
   const char *title;
-  stream_ns *file;
   net_bn* netica_handle;
 
   netica_handle = GetNeticaHandle(bn);
@@ -388,7 +384,6 @@ SEXP RN_SetNetTitle(SEXP bn, SEXP newtitle) {
 
 SEXP RN_GetNetComment(SEXP bn) {
   const char *comment;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -408,7 +403,6 @@ SEXP RN_GetNetComment(SEXP bn) {
 
 SEXP RN_SetNetComment(SEXP bn, SEXP newcomment) {
   const char *comment;
-  stream_ns *file;
   net_bn* netica_handle;
 
   netica_handle = GetNeticaHandle(bn);
@@ -424,7 +418,6 @@ SEXP RN_SetNetComment(SEXP bn, SEXP newcomment) {
 
 SEXP RN_GetNetAutoUpdate(SEXP bn) {
   int update;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -447,7 +440,6 @@ SEXP RN_GetNetAutoUpdate(SEXP bn) {
 
 SEXP RN_SetNetAutoUpdate(SEXP bn, SEXP newflags) {
   int update, old_update;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -473,7 +465,6 @@ SEXP RN_SetNetAutoUpdate(SEXP bn, SEXP newflags) {
 SEXP RN_GetNetUserField(SEXP bn, SEXP fieldnames) {
   const char *value, *fieldname;
   int valuelen;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result;
 
@@ -501,7 +492,6 @@ SEXP RN_GetAllNetUserFields(SEXP bn) {
   R_len_t n, nn;
   const char *value, *fieldname;
   int valuelen;
-  stream_ns *file;
   net_bn* netica_handle;
   SEXP result, fieldnames;
 
@@ -539,7 +529,6 @@ SEXP RN_GetAllNetUserFields(SEXP bn) {
 SEXP RN_SetNetUserField(SEXP bn, SEXP fieldnames, SEXP newvals) {
   const char *value, *fieldname;
   int valuelen;
-  stream_ns *file;
   net_bn* netica_handle;
 
   netica_handle = GetNeticaHandle(bn);

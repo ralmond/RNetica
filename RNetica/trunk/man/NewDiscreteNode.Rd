@@ -17,22 +17,22 @@ DeleteNodes(nodes)
   \item{net}{
     A \code{\link{NeticaBN}} object point to the network where the nodes
     will be created.
-}
+  }
   \item{names}{
     A character vector containing the name or names of the new nodes to
     be created.  The names must follow the \code{\link{IDname}} rules.
-}
+  }
   \item{states}{
     Either or character vector, or a list of character vectors.  If it
     is a list, its length should be the same as the length of
     \code{names}.  The character vectors give the names of the states
     for the corresponding node.  The entries should all correspond to
     the \code{IDname} rules.
-}
+  }
   \item{nodes}{
     A \code{\link{NeticaNode}} or list of \code{NeticaNode} objects to
     be deleted.  If a list of nodes, all must be from the same network.
-}
+  }
 }
 \details{
   Both \code{NewDiscreteNode()} and \code{NewContinuousNode()} both
@@ -106,9 +106,49 @@ DeleteNodes(nodes)
 \examples{
 safetyNet <- CreateNetwork("safetyNet")
 
-noded1 <- CreateDiscreteNode(safetyNet, frayed) ## Yes/No
+noded1 <- NewDiscreteNode(safetyNet, "frayed") ## Yes/No
+stopifnot(
+ NodeName(noded1) == "frayed",
+ NodeStates(noded1) == c("Yes", "No"),
+ is.discrete(noded1)
+ )
 
-stop("Test not finished.")
+## Both variables should have the same set of states
+noded23 <- NewDiscreteNode(safetyNet,c("TensionNS","TensionEW"),
+            c("High","Med","Low"))
+stopifnot(
+  all(sapply(noded23,is.active)),
+  all(sapply(noded23,is.discrete)),
+  NodeNumStates(noded23[[1]]) == 3,
+  NodeStates(noded23[[1]])==NodeStates(noded23[[2]])
+)
+
+noded45 <- NewDiscreteNode(safetyNet,c("MeshSize","RopeThickness"),
+            list(c("Coarse","Fine"),c("Thick","Medium","Thin")))
+stopifnot(
+  all(sapply(noded45,is.active)),
+  all(sapply(noded45,is.discrete)),
+  NodeNumStates(noded45[[1]]) == 2,
+  NodeNumStates(noded45[[2]]) == 3,
+  NodeStates(noded45[[1]])!=NodeStates(noded45[[2]])
+)
+
+nodec <- NewContinuousNode(safetyNet, "Area")
+stopifnot(
+  is.active(nodec),
+  is.continuous(nodec),
+  NodeName(nodec) == "Area"
+)
+
+stopifnot(length(NetworkAllNodes(safetyNet))==6)
+
+DeleteNodes(nodec)
+stopifnot(length(NetworkAllNodes(safetyNet))==5)
+
+DeleteNodes(noded45)
+stopifnot(length(NetworkAllNodes(safetyNet))==3)
+
+DeleteNetwork(safetyNet)  
 
 }
 \keyword{ interface }

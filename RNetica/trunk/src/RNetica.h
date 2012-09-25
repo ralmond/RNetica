@@ -56,9 +56,12 @@ extern SEXP nodediscatt;
 extern SEXP TRUEV;  //Length 1 logical vector containing TRUE
 extern SEXP FALSEV;
 extern SEXP NAV;
+extern SEXP XYnames;
 extern const char* EmptyString;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 
                                 //a call basis.
 
+extern SEXP RN_KindToChar (nodekind_bn kind);
+extern nodekind_bn RN_CharToKind (SEXP csxp);
