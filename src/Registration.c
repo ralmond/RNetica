@@ -4,6 +4,7 @@
  */
 
 #include <string.h>
+#include <ctype.h>
 #include <R.h>
 #include <Rdefines.h>
 #include <R_ext/Rdynload.h>
@@ -32,6 +33,8 @@ SEXP nodediscatt=NULL;
 SEXP TRUEV=NULL;
 SEXP FALSEV=NULL;
 SEXP NAV=NULL;
+SEXP NodeKinds = NULL;
+SEXP XYnames = NULL;
 
 static int symbolRegCount=0;
 
@@ -66,6 +69,19 @@ void RN_Define_Symbols() {
   if (NAV==NULL) {
     R_PreserveObject(NAV = allocVector(INTSXP,1));
     INTEGER(NAV)[0]=NA_INTEGER;
+  }
+  if (NodeKinds==NULL) {
+    R_PreserveObject(NodeKinds = allocVector(STRSXP,5));
+    SET_STRING_ELT(NodeKinds,0,mkChar("Nature"));
+    SET_STRING_ELT(NodeKinds,1,mkChar("Decision"));
+    SET_STRING_ELT(NodeKinds,2,mkChar("Utility"));
+    SET_STRING_ELT(NodeKinds,3,mkChar("Constant"));
+    SET_STRING_ELT(NodeKinds,4,mkChar("Stub"));
+  }
+  if (XYnames==NULL) {
+    R_PreserveObject(XYnames = allocVector(STRSXP,2));
+    SET_STRING_ELT(XYnames,0,mkChar("x"));
+    SET_STRING_ELT(XYnames,1,mkChar("y"));
   }
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
@@ -105,6 +121,14 @@ void RN_Free_Symbols() {
     if (NAV != NULL) { 
       R_ReleaseObject(NAV); 
       NAV = NULL; 
+    } 
+    if (NodeKinds != NULL) { 
+      R_ReleaseObject(NodeKinds); 
+      NodeKinds = NULL; 
+    } 
+    if (XYnames != NULL) { 
+      R_ReleaseObject(XYnames); 
+      XYnames = NULL; 
     } 
   }
 }
@@ -345,6 +369,54 @@ void RN_ClearAllErrors(char** sev) {
 
 }
 
+/////////////////////////////////////////////////////////////////
+// Translation Utilities
+/////////////////////////////////////////////////////////////////
+
+SEXP RN_KindToChar (nodekind_bn kind) {
+  switch (kind) {
+  case NATURE_NODE:
+    return STRING_ELT(NodeKinds,0);
+  case DECISION_NODE:
+    return STRING_ELT(NodeKinds,1);
+  case UTILITY_NODE:
+    return STRING_ELT(NodeKinds,2);
+  case CONSTANT_NODE:
+    return STRING_ELT(NodeKinds,3);
+  case DISCONNECTED_NODE:
+    return STRING_ELT(NodeKinds,4);
+  default:
+    error("Unknown node kind");
+    return(NA_STRING);
+  }
+
+}
+
+nodekind_bn RN_CharToKind (SEXP csxp) {
+  const char* kind = CHAR(csxp);
+  if (isNull(csxp)) {
+    error("Illegal node kind");
+    return 0;
+  }
+  switch (toupper(kind[0])) {
+  case 'N':
+    return NATURE_NODE;
+  case 'D':
+    return DECISION_NODE;
+  case 'U':
+    return UTILITY_NODE;
+  case 'C':
+    return CONSTANT_NODE;
+  case 'S': //S for stub, rather than D for Disconnected
+    return DISCONNECTED_NODE;
+  default:
+    error("Unknown node kind");
+    return 0;
+  }
+
+}
+
+
 
 /////////////////////////////////////////////////////////////////////
 // .Call Methods
@@ -383,10 +455,26 @@ extern SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options);
 extern SEXP RN_NodeNet(SEXP node);
 extern SEXP RN_GetNodeName(SEXP nd);
 extern SEXP RN_SetNodeName(SEXP nd, SEXP newnames);
-
-
-
-
+extern SEXP RN_GetNodeTitle(SEXP nd);
+extern SEXP RN_SetNodeTitle(SEXP nd, SEXP newtitle);
+extern SEXP RN_GetNodeComment(SEXP nd);
+extern SEXP RN_SetNodeComment(SEXP nd, SEXP newcomment);
+extern SEXP RN_GetNodeUserField(SEXP nd, SEXP fieldnames);
+extern SEXP RN_GetAllNodeUserFields(SEXP nd);
+extern SEXP RN_SetNodeUserField(SEXP nd, SEXP fieldnames, SEXP newvals);
+extern SEXP RN_GetNodeKind(SEXP nd);
+extern SEXP RN_SetNodeKind(SEXP nd, SEXP newKind);
+extern SEXP RN_GetNodeVisStyle(SEXP nd);
+extern SEXP RN_SetNodeVisStyle(SEXP nd, SEXP newStyle);
+extern SEXP RN_GetNodeVisPos(SEXP nd);
+extern SEXP RN_SetNodeVisPos(SEXP nd, SEXP newPos);
+extern SEXP RN_GetNodeNumStates(SEXP nd);
+extern SEXP RN_GetNodeStates(SEXP nd);
+extern SEXP RN_SetNodeStates(SEXP nd, SEXP newvals);
+extern SEXP RN_GetNodeStateTitles(SEXP nd);
+extern SEXP RN_SetNodeStateTitles(SEXP nd, SEXP newvals);
+extern SEXP RN_GetNodeStateComments(SEXP nd);
+extern SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals);
 
 
 R_CallMethodDef callMethods[] = {
@@ -422,6 +510,26 @@ R_CallMethodDef callMethods[] = {
   {"RN_NodeNet", (DL_FUNC) &RN_NodeNet, 1},
   {"RN_GetNodeName", (DL_FUNC) &RN_GetNodeName, 1},
   {"RN_SetNodeName", (DL_FUNC) &RN_SetNodeName, 2},
+  {"RN_GetNodeTitle", (DL_FUNC) &RN_GetNodeTitle, 1},
+  {"RN_GetNodeComment", (DL_FUNC) &RN_GetNodeComment, 1},
+  {"RN_SetNodeName", (DL_FUNC) &RN_SetNodeName, 2},
+  {"RN_SetNodeTitle", (DL_FUNC) &RN_SetNodeTitle, 2},
+  {"RN_GetNodeUserField", (DL_FUNC) &RN_GetNodeUserField, 2},
+  {"RN_SetNodeUserField", (DL_FUNC) &RN_SetNodeUserField, 3},
+  {"RN_GetAllNodeUserFields", (DL_FUNC) &RN_GetAllNodeUserFields, 1},
+  {"RN_GetNodeKind", (DL_FUNC) &RN_GetNodeKind, 1},
+  {"RN_SetNodeKind", (DL_FUNC) &RN_SetNodeKind, 2},
+  {"RN_GetNodeVisStyle", (DL_FUNC) &RN_GetNodeVisStyle, 1},
+  {"RN_SetNodeVisStyle", (DL_FUNC) &RN_SetNodeVisStyle, 2},
+  {"RN_GetNodeVisPos", (DL_FUNC) &RN_GetNodeVisPos, 1},
+  {"RN_SetNodeVisPos", (DL_FUNC) &RN_SetNodeVisPos, 2},
+  {"RN_GetNodeStates", (DL_FUNC) &RN_GetNodeStates, 1},
+  {"RN_GetNodeNumStates", (DL_FUNC) &RN_GetNodeNumStates, 1},
+  {"RN_SetNodeStates", (DL_FUNC) &RN_SetNodeStates, 2},
+  {"RN_GetNodeStateTitles", (DL_FUNC) &RN_GetNodeStateTitles, 1},
+  {"RN_SetNodeStateTitles", (DL_FUNC) &RN_SetNodeStateTitles, 2},
+  {"RN_GetNodeStateComments", (DL_FUNC) &RN_GetNodeStateComments, 1},
+  {"RN_SetNodeStateComments", (DL_FUNC) &RN_SetNodeStateComments, 2},
   {NULL, NULL, 0},
 };
 

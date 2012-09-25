@@ -315,7 +315,6 @@ SEXP RN_NodeNet(SEXP node) {
 
 SEXP RN_GetNodeName(SEXP nd) {
   const char *nodename;
-  stream_ns *file;
   node_bn* node_handle;
   SEXP result;
 
@@ -335,7 +334,6 @@ SEXP RN_GetNodeName(SEXP nd) {
 
 SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   const char *newname;
-  stream_ns *file;
   node_bn *node_handle, *other_node;
   SEXP result;
 
@@ -364,3 +362,421 @@ SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   return(nd);
 }
 
+SEXP RN_GetNodeTitle(SEXP nd) {
+  const char *title;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    title = GetNodeTitle_bn(node_handle);
+    SET_STRING_ELT(result,0,mkChar(title));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeTitle(SEXP nd, SEXP newtitle) {
+  const char *title;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    title = CHAR(STRING_ELT(newtitle,0));
+    SetNodeTitle_bn(node_handle,title);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+SEXP RN_GetNodeComment(SEXP nd) {
+  const char *comment;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+  if (node_handle) {
+    comment = GetNodeComment_bn(node_handle);
+    SET_STRING_ELT(result,0,mkChar(comment));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeComment(SEXP nd, SEXP newcomment) {
+  const char *comment;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    comment = CHAR(STRING_ELT(newcomment,0));
+    SetNodeComment_bn(node_handle,comment);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+SEXP RN_GetNodeUserField(SEXP nd, SEXP fieldnames) {
+  const char *value, *fieldname;
+  int valuelen;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    fieldname = CHAR(STRING_ELT(fieldnames,0));
+    value = GetNodeUserField_bn(node_handle,fieldname,&valuelen,0);
+    if (valuelen<0) { // No object returned.
+      SET_STRING_ELT(result,0,NA_STRING);
+    } else {
+      SET_STRING_ELT(result,0,mkChar(value));
+    }
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_GetAllNodeUserFields(SEXP nd) {
+  R_len_t n, nn;
+  const char *value, *fieldname;
+  int valuelen;
+  node_bn* node_handle;
+  SEXP result, fieldnames;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=allocVector(STRSXP,1));
+    SET_STRING_ELT(result,0,NA_STRING);
+  } else {
+    //Count number of fields.
+    nn = 0;
+    while (TRUE) {
+      GetNodeNthUserField_bn(node_handle, nn, &fieldname, &value,
+                         &valuelen, 0);
+      if (strlen(fieldname) <1 && valuelen <0) break;
+      nn++;
+    }
+    PROTECT(result = allocVector(STRSXP,nn));
+    PROTECT(fieldnames = allocVector(STRSXP,nn));
+
+    for (n=0; n < nn; n++) {
+      GetNodeNthUserField_bn(node_handle, n, &fieldname, &value,
+                         &valuelen, 0);
+      SET_STRING_ELT(fieldnames,n,mkChar(fieldname));
+      SET_STRING_ELT(result,n,mkChar(value));
+    }
+    namesgets(result,fieldnames);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+
+SEXP RN_SetNodeUserField(SEXP nd, SEXP fieldnames, SEXP newvals) {
+  const char *value, *fieldname;
+  int valuelen;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    fieldname = CHAR(STRING_ELT(fieldnames,0));
+    value = CHAR(STRING_ELT(newvals,0));
+    SetNodeUserField_bn(node_handle,fieldname,value, strlen(value),0);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+
+SEXP RN_GetNodeKind(SEXP nd) {
+  nodekind_bn kind;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+  if (node_handle) {
+    kind = GetNodeKind_bn(node_handle);
+    SET_STRING_ELT(result,0,RN_KindToChar(kind));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeKind(SEXP nd, SEXP newkind) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    SetNodeKind_bn(node_handle,RN_CharToKind(STRING_ELT(newkind,0)));
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+
+SEXP RN_GetNodeVisStyle(SEXP nd) {
+  const char *visStyle;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+  if (node_handle) {
+    visStyle = GetNodeVisStyle_bn(node_handle,NULL);
+    SET_STRING_ELT(result,0,mkChar(visStyle));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeVisStyle(SEXP nd, SEXP newvisStyle) {
+  const char *visStyle;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    visStyle = CHAR(STRING_ELT(newvisStyle,0));
+    SetNodeVisStyle_bn(node_handle,NULL,visStyle);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+SEXP RN_GetNodeVisPos(SEXP nd) {
+  double x,y;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(REALSXP,2));
+  namesgets(result,XYnames);
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    GetNodeVisPosition_bn(node_handle,NULL,&x,&y);
+    REAL(result)[0] = x;
+    REAL(result)[1] = y;
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+    REAL(result)[0] = R_NaReal;
+    REAL(result)[1] = R_NaReal;
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeVisPos(SEXP nd, SEXP newPos) {
+  double x,y;
+  node_bn* node_handle;
+  
+  PROTECT(newPos = AS_NUMERIC(newPos));
+
+  node_handle = GetNodeHandle(nd);
+  x = REAL(newPos)[0];
+  y = REAL(newPos)[1];
+  if (node_handle) {
+    SetNodeVisPosition_bn(node_handle,NULL,x,y);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(nd);
+}
+
+SEXP RN_GetNodeNumStates(SEXP nd) {
+  node_bn* node_handle;
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    return ScalarInteger(R_NaInt);
+  } 
+  return ScalarInteger(GetNodeNumberStates_bn(node_handle));
+}
+
+SEXP RN_GetNodeStates(SEXP nd) {
+  R_len_t n, nn;
+  const char *value, *statename;
+  node_bn* node_handle;
+  SEXP result, statenames;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=allocVector(STRSXP,1));
+    SET_STRING_ELT(result,0,NA_STRING);
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+    PROTECT(result = allocVector(STRSXP,nn));
+    PROTECT(statenames = allocVector(STRSXP,nn));
+
+    for (n=0; n < nn; n++) {
+      statename = GetNodeStateName_bn(node_handle, n);
+      value = statename;
+      SET_STRING_ELT(statenames,n,mkChar(statename));
+      SET_STRING_ELT(result,n,mkChar(value));
+    }
+    namesgets(result,statenames);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+
+SEXP RN_SetNodeStates(SEXP nd, SEXP newvals) {
+  const char *value;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    value = CHAR(STRING_ELT(newvals,0));
+    SetNodeStateNames_bn(node_handle,value);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+SEXP RN_GetNodeStateTitles(SEXP nd) {
+  R_len_t n, nn;
+  const char *value, *statename;
+  node_bn* node_handle;
+  SEXP result, statenames;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=allocVector(STRSXP,1));
+    SET_STRING_ELT(result,0,NA_STRING);
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+    PROTECT(result = allocVector(STRSXP,nn));
+    PROTECT(statenames = allocVector(STRSXP,nn));
+
+    for (n=0; n < nn; n++) {
+      statename = GetNodeStateName_bn(node_handle, n);
+      value = GetNodeStateTitle_bn(node_handle, n);
+      SET_STRING_ELT(statenames,n,mkChar(statename));
+      SET_STRING_ELT(result,n,mkChar(value));
+    }
+    namesgets(result,statenames);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeStateTitles(SEXP nd, SEXP newvals) {
+  R_len_t n, nn;
+  const char *value;
+  node_bn* node_handle;
+  SEXP result;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    return (R_NilValue);
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+
+    for (n=0; n < nn; n++) {
+      value = CHAR(STRING_ELT(newvals,n));
+      SetNodeStateTitle_bn(node_handle, n, value);
+    }
+  }
+  return(nd);
+}
+
+SEXP RN_GetNodeStateComments(SEXP nd) {
+  R_len_t n, nn;
+  const char *value, *statename;
+  node_bn* node_handle;
+  SEXP result, statenames;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=allocVector(STRSXP,1));
+    SET_STRING_ELT(result,0,NA_STRING);
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+    PROTECT(result = allocVector(STRSXP,nn));
+    PROTECT(statenames = allocVector(STRSXP,nn));
+
+    for (n=0; n < nn; n++) {
+      statename = GetNodeStateName_bn(node_handle, n);
+      value = GetNodeStateComment_bn(node_handle, n);
+      SET_STRING_ELT(statenames,n,mkChar(statename));
+      SET_STRING_ELT(result,n,mkChar(value));
+    }
+    namesgets(result,statenames);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals) {
+  R_len_t n, nn;
+  const char *value;
+  node_bn* node_handle;
+  SEXP result;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    return (R_NilValue);
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+
+    for (n=0; n < nn; n++) {
+      value = CHAR(STRING_ELT(newvals,n));
+      SetNodeStateComment_bn(node_handle, n, value);
+    }
+  }
+  return(nd);
+}

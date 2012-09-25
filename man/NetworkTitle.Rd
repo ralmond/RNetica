@@ -3,7 +3,6 @@
 \alias{NetworkTitle<-}
 \alias{NetworkComment}
 \alias{NetworkComment<-}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Gets the title or comments associated with a Netica network.
 }

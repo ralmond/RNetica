@@ -1,3 +1,18 @@
+2012-09-24  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NodeNumStates, NodeStates, NodeStates<-)
+	(NodeStateTitles, NodeStateTitles<-, NodeStateDescriptions)
+	(NodeStateDescriptions<-): Added but not tested.
+
+2012-09-23  Russell G. Almond  <ralmond@Limu>
+	
+	* src/Registration.c (RN_Define_Symbols, RN_Free_Symbols): Added
+	NodeKinds, and XYnames vectors.
+
+	* R/Node.R (NodeKind, NodeKind<-, NodeVisStyle, NodeVisStyle<-)
+	(NodeVisPos, NodeVisPos):  Added and tested.
+
+
 2012-09-22  Russell G. Almond  <ralmond@Limu>
 
 	* R/Networks.R (ReadNetworks, WriteNetworks): Changed these

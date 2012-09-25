@@ -24,21 +24,20 @@ export(
   NodeNet, NodeName, "NodeName<-",
   print.NeticaNode, toString.NeticaNode, is.NeticaNode,
   is.discrete, is.continuous,
-  NetworkAllNodes, NetworkFindNode
-#  NodeKind, "NodeKind<-", 
-#  NodeTitle, "NodeTitle<-",
-#  NodeDescription, "NodeDescription<-",
-#  NodeUserField, "NodeUserField<-", NodeAllUserFields,
-#  NodeVisStyle, "NodeVisStyle<-",
-#  NodeVisPos, "NodeVisPos<-",
-
+  NetworkAllNodes, NetworkFindNode,
+  NodeTitle, "NodeTitle<-",
+  NodeDescription, "NodeDescription<-",
+  NodeUserField, "NodeUserField<-", NodeAllUserFields,
+  NodeKind, "NodeKind<-", 
+  NodeVisStyle, "NodeVisStyle<-",
+  NodeVisPos, "NodeVisPos<-"
   )
 
 export(
-#  NodeStates, "NodeStates<-"
-#  NodeStateTitles, "NodeStateTitles<-",
-#  NodeStateComments, "NodeStateComments<-",
-#  NodeLevels, "NodeLevels<-"
+  NodeStates, NodeNumStates, "NodeStates<-",
+  NodeStateTitles, "NodeStateTitles<-",
+  NodeStateComments, "NodeStateComments<-"
+##  NodeLevels, "NodeLevels<-"
   )
 
 S3method(print, NeticaBN)

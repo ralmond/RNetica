@@ -41,7 +41,7 @@ e1 != e2
   and an invisible handle to a Netica network.  The function
   \code{\link{is.active}()} tests the state of that handle and returns
   \code{FALSE} if the network is no longer in active memory (usually
-  because of a call to \code{DeleteNetwork()}.  The printed
+  because of a call to \code{DeleteNetwork()}).  The printed
   representation depends on whether or not it is active (inactive nodes
   print as \code{"<Deleted Network: Name >"}).
 
@@ -95,7 +95,7 @@ e1 != e2
   \code{\link{CreateNetwok}()},\code{\link{DeleteNetwork}()},
   \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()},
   \code{\link{is.active()}, \code{NetworkAllNodes}()},
-  \code{\link{WriteNetworks}()}, \code{NetworkFilename}()}
+  \code{\link{WriteNetworks}()}, \code{\link{NetworkFilename}()}
 }
 \examples{
 

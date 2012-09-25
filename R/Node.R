@@ -261,3 +261,305 @@ NodeName <- function (node) {
 ################################################################
 ## Getters and Setters for High Level Net properities
 ################################################################
+
+NodeTitle <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  title <- .Call("RN_GetNodeTitle",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeTitle: Netica Errors Encountered, see console for details.")
+  }
+  title
+}
+
+"NodeTitle<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  if (length(value)>1) {
+    warning("Only first element used as title.")
+  }
+  value <- as.character(value)
+
+  handle <- .Call("RN_SetNodeTitle",node,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeTitle: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+NodeDescription <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  description <- .Call("RN_GetNodeComment",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeDescription: Netica Errors Encountered, see console for details.")
+  }
+  description
+}
+
+"NodeDescription<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Non-character titles in ", value)
+  }
+  value <- paste(value,collapse="\n")
+  handle <- .Call("RN_SetNodeComment",node,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeDescription: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+
+NodeUserField <- function (node, fieldname) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  if (length(fieldname)>1 || !is.IDname(fieldname)) {
+    stop("Illegal Netica Field Name, ",fieldname)
+  }
+  value <- .Call("RN_GetNodeUserField",node,fieldname)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeUserField: Netica Errors Encountered, see console for details.")
+  }
+  value
+}
+
+"NodeUserField<-" <- function (node, fieldname, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  if (length(fieldname)>1 || !is.IDname(fieldname)) {
+    stop("Illegal Netica Field Name, ",fieldname)
+  }
+  value <- as.character(value)
+  if (length(value)>1 || is.na(value)) {
+    stop("Illegal field value.")
+  }
+  handle <- .Call("RN_SetNodeUserField",node,fieldname,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeUserField: Netica Errors Encountered, see console for details.")
+  }
+  handle
+}
+
+NodeAllUserFields <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected a Netica node, got, ",node)
+  }
+  values <- .Call("RN_GetAllNodeUserFields",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeUserField: Netica Errors Encountered, see console for details.")
+  }
+  values
+}
+
+NodeKind <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  kind <- .Call("RN_GetNodeKind",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeKind: Netica Errors Encountered, see console for details.")
+  }
+  kind
+}
+
+"NodeKind<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Non-character kinds in ", value)
+  }
+  if (length(value) >1) {
+    warning("Value has length greater than 1, only first value used.")
+  }
+  handle <- .Call("RN_SetNodeKind",node,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeKind: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+NodeVisStyle <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  style <- .Call("RN_GetNodeVisStyle",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeVisStyle: Netica Errors Encountered, see console for details.")
+  }
+  style
+}
+
+"NodeVisStyle<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Non-character styles in ", value)
+  }
+  if (length(value) >1) {
+    warning("Value has length greater than 1, only first value used.")
+  }
+  handle <- .Call("RN_SetNodeVisStyle",node,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeVisStyle: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+NodeVisPos <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  pos <- .Call("RN_GetNodeVisPos",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeVisPos: Netica Errors Encountered, see console for details.")
+  }
+  pos
+}
+
+"NodeVisPos<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.numeric(value)
+  if (length(value) >2 || any(is.na(value))) {
+    stop("Expected a vector of 2 numbers, got", value)
+  }
+  handle <- .Call("RN_SetNodeVisPos",node,value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeVisPos: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+NodeNumStates <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  nstates <- .Call("RN_GetNodeNumStates",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeNumStates: Netica Errors Encountered, see console for details.")
+  }
+  nstates
+}
+
+
+NodeStates <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  states <- .Call("RN_GetNodeStates",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStates: Netica Errors Encountered, see console for details.")
+  }
+  states
+}
+
+"NodeStates<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value)) || any(!is.IDname(value))) {
+    stop("Illegal state names: ", value)
+  }
+  ## if (length(value) != NodeNumStates(node)) {
+  ##   stop("Expected exactly ", NodeNumStates(node), " states")
+  ## }
+  handle <- .Call("RN_SetNodeStates",node, paste(value,collapse=","))
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStates: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+NodeStateTitles <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  titles <- .Call("RN_GetNodeStateTitles",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStateTitles: Netica Errors Encountered, see console for details.")
+  }
+  titles
+}
+
+"NodeStateTitles<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Illegal state names: ", value)
+  }
+  if (length(value) != NodeNumStates(node)) {
+     stop("Expected exactly ", NodeNumStates(node), " titles")
+  }
+  handle <- .Call("RN_SetNodeStateTitles",node, value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStateTitles: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
+
+NodeStateComments <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  comments <- .Call("RN_GetNodeStateComments",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStateComments: Netica Errors Encountered, see console for details.")
+  }
+  comments
+}
+
+"NodeStateComments<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Illegal state names: ", value)
+  }
+  if (length(value) != NodeNumStates(node)) {
+     stop("Expected exactly ", NodeNumStates(node), " comments")
+  }
+  handle <- .Call("RN_SetNodeStateComments",node, value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeStateComments: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
