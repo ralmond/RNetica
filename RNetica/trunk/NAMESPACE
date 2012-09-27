@@ -36,9 +36,54 @@ export(
 export(
   NodeStates, NodeNumStates, "NodeStates<-",
   NodeStateTitles, "NodeStateTitles<-",
-  NodeStateComments, "NodeStateComments<-"
-##  NodeLevels, "NodeLevels<-"
+  NodeStateComments, "NodeStateComments<-",
+  NodeLevels, "NodeLevels<-"
   )
+
+## export(
+##   GetNodeParents, GetNodeChildren,
+##   AddLink, DeleteLink,
+##   SwitchNodeParent, AbsorbNode,
+##   GetRelatedNodes, [GetRelatedNodesMult], IsNodeRelated,
+##   SetNodeInputName, GetNodeInputName
+##   )
+
+## export(
+##   GetNodeProbs, SetNodeExperience,
+##   GetNodeExperience, SetNodeExperience,
+##   MapStateList, ReorderNodeStates,
+##   IsNodeDeterministic, HasNodeTable,
+##   DeleteNodeTables, 
+##   )
+
+##export (
+##   ReviseCPTsByFindings,
+##   GetNodeEquation, SetNodeEquation
+##   GetNodeFuncState, SetNodeFuncState,
+##   GetNodeFuncRead, SetNodeFuncReal,
+##   FadeCPTTable, EquationToTable
+##   )
+
+## export(
+##   CompileNet, UncompileNet, SizeCompiledNet, ReportJunctionTree,
+##   GetNodeFinding, EnterFinding, EnterFindingNot, 
+##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
+##   EnterIntervalFinding,
+##   RetractNetFindings, RetractNodeFindings,
+##   GetNodeBeliefs, IsBeliefUpdated,
+##   GetNodeLikelihood, EnterNodeLikelihood,
+##   GetNodeExpectedValue, GetNodeExpectedUtils,
+##  )
+
+
+## export(
+##   GetNetElimOrder, SetNetElimOrder
+##   JointProbability, FindingsProbability, MostProbableConfig,
+##   GetVarianceOfReal,
+##   CalcNodeState, CalcNodeValue,
+##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
+##  )
+
 
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)

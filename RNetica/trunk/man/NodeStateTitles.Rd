@@ -22,9 +22,10 @@ NodeStateComments(node) <- value
     An active \code{NeticaNode} object whose state titles or coments will be
     accessed. 
   }
-  \item(value){
+  \item{value}{
     A character vector of length \code{\link{NodeNumStates}(node)} which
     provides the new state titles or names.
+  }
 }
 \details{
   The titles are meant to be a more human readable version of the state
@@ -56,7 +57,7 @@ NodeStateComments(node) <- value
 \seealso{
   \code{\link{NeticaNode}}, \code{\link{NodeStateNames}()},
   \code{\link{NodeLevels}()}
-
+}
 \examples{
 cnet <- CreateNetwork("CreativeNet")
 

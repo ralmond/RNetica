@@ -65,3 +65,7 @@ extern void RN_Free_Symbols();  //Seems we can only allocate them on
 
 extern SEXP RN_KindToChar (nodekind_bn kind);
 extern nodekind_bn RN_CharToKind (SEXP csxp);
+
+//Takes care of conversion of infinities
+extern level_bn RN_RnumToNnum (double x);
+extern double RN_NnumToRnum (level_bn x);

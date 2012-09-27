@@ -563,3 +563,48 @@ NodeStateComments <- function (node) {
   }
   invisible(handle)
 }
+
+NodeLevels <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  if (is.discrete(node)) {
+    ## Returns a named vector of length NodeNumStates(node)
+    levels <- .Call("RN_GetNodeLevelsDiscrete",node)
+  } else {
+    ## Returns an unnamed vector of length NodeNumStates(node)+1
+    levels <- .Call("RN_GetNodeLevelsContinuous",node)
+  }
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeLevels: Netica Errors Encountered, see console for details.")
+  }
+  levels
+}
+
+"NodeLevels<-" <- function (node, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.numeric(value)
+  if (any(is.na(value))) {
+    stop("Illegal levels: ", paste(value,collapse=", "))
+  }
+  ## Different rules for error checking in the two cases.
+  if (is.discrete(node)) {
+    if (length(value) != NodeNumStates(node)) {
+      stop("Expected exactly ", NodeNumStates(node), " levels")
+    }
+  } else {
+    if (is.unsorted(value)) {
+      stop("Level cut points must be in increasing or decreasing order.")
+    }
+  }
+  handle <- .Call("RN_SetNodeLevels",node, value)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeLevels: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}
+
