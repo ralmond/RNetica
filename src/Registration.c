@@ -416,6 +416,22 @@ nodekind_bn RN_CharToKind (SEXP csxp) {
 
 }
 
+level_bn RN_RnumToNnum (double x) {
+  double result = (double) x;
+  if (x == R_PosInf) result = INFINITY_ns;
+  if (x == R_NegInf) result = -INFINITY_ns;
+  return x;
+}
+
+double RN_NnumToRnum (level_bn x) {
+  double result = (double) x;
+  if (x == INFINITY_ns) result = R_PosInf;
+  if (x == -INFINITY_ns) result = R_NegInf;
+  return x;
+}
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////
@@ -475,6 +491,9 @@ extern SEXP RN_GetNodeStateTitles(SEXP nd);
 extern SEXP RN_SetNodeStateTitles(SEXP nd, SEXP newvals);
 extern SEXP RN_GetNodeStateComments(SEXP nd);
 extern SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals);
+extern SEXP RN_GetNodeLevelsDiscrete(SEXP nd);
+extern SEXP RN_GetNodeLevelsContinuous(SEXP nd);
+extern SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals);
 
 
 R_CallMethodDef callMethods[] = {
@@ -530,6 +549,9 @@ R_CallMethodDef callMethods[] = {
   {"RN_SetNodeStateTitles", (DL_FUNC) &RN_SetNodeStateTitles, 2},
   {"RN_GetNodeStateComments", (DL_FUNC) &RN_GetNodeStateComments, 1},
   {"RN_SetNodeStateComments", (DL_FUNC) &RN_SetNodeStateComments, 2},
+  {"RN_GetNodeLevelsDiscrete", (DL_FUNC) &RN_GetNodeLevelsDiscrete, 1},
+  {"RN_GetNodeLevelsContinuous", (DL_FUNC) &RN_GetNodeLevelsContinuous, 1},
+  {"RN_SetNodeLevels", (DL_FUNC) &RN_SetNodeLevels, 2},
   {NULL, NULL, 0},
 };
 

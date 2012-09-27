@@ -1,3 +1,15 @@
+2012-09-25  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R ("NodeLevels<-", NodeLevels): Created functions.
+
+	* src/Node.c (RN_GetNodeLevelsDiscrete)
+	(RN_GetNodeLevelsContinuous, RN_SetNodeLevels): Added linking
+	code.  Separate getter methods because one returns named object
+	the other does not.
+
+	* src/Registration.c (RN_RnumToNnum, RN_NnumToRnum): Added
+	conversion functions to take care of converting infinities.
+
 2012-09-24  Russell G. Almond  <ralmond@Limu>
 
 	* R/Node.R (NodeNumStates, NodeStates, NodeStates<-)

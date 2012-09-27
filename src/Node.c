@@ -780,3 +780,94 @@ SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals) {
   }
   return(nd);
 }
+
+//R code switches between continuous and discrete versions.
+SEXP RN_GetNodeLevelsDiscrete(SEXP nd) {
+  R_len_t n, nn;
+  const char *statename;
+  node_bn* node_handle;
+  const level_bn* levels;
+  SEXP result, statenames;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=ScalarReal(R_NaReal));
+  } else {
+    //Count number of fields.
+    nn = GetNodeNumberStates_bn(node_handle);
+    PROTECT(result = allocVector(REALSXP,nn));
+    PROTECT(statenames = allocVector(STRSXP,nn));
+    levels = GetNodeLevels_bn(node_handle);
+    for (n=0; n < nn; n++) {
+      statename = GetNodeStateName_bn(node_handle, n);
+      SET_STRING_ELT(statenames,n,mkChar(statename));
+      if (levels == NULL) {
+        REAL(result)[n] = R_NaReal;
+      } else {
+        REAL(result)[n] = RN_NnumToRnum(levels[n]);
+      }
+    }
+    namesgets(result,statenames);
+    UNPROTECT(1);
+  }
+  UNPROTECT(1);
+  return(result);
+}
+//Switching between discrete and continuous is done at R level.
+SEXP RN_GetNodeLevelsContinuous(SEXP nd) {
+  R_len_t n, nn;
+  node_bn* node_handle;
+  const level_bn* levels;
+  SEXP result;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+    PROTECT(result=ScalarReal(R_NaReal));
+  } else {
+    //Count number of fields.
+    levels = GetNodeLevels_bn(node_handle);
+    if (levels == NULL) {
+      nn = 0;
+    } else {
+      nn = GetNodeNumberStates_bn(node_handle)+1;
+    }
+    PROTECT(result = allocVector(REALSXP,nn));
+    for (n=0; n < nn; n++) {
+      REAL(result)[n] = RN_NnumToRnum(levels[n]);
+    }
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+
+//Different error checking, but setting routine is similar.
+SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals) {
+  R_len_t n, nn = length(newvals);
+  node_bn* node_handle;
+  level_bn* levels;
+  SEXP result;
+
+  node_handle = GetNodeHandle(nd);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(nd));
+  } else {
+    //Count number of fields.
+    if (nn == 0 ) {
+      levels = NULL;
+    } else {
+      levels = (level_bn *) R_alloc(nn,sizeof(level_bn));
+      for (n=0; n < nn; n++) {
+        levels[n] = RN_RnumToNnum(REAL(newvals)[n]);
+      }
+    }
+    //Continuous have number of states equal to length(newvals)-1
+    if (GetNodeType_bn(node_handle) == CONTINUOUS_TYPE && nn > 0) nn--; 
+    SetNodeLevels_bn(node_handle, nn, levels);
+  }
+  return(nd);
+}
+
+

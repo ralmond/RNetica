@@ -31,9 +31,10 @@ NodeStates(node) <- value
   represented by the node can take on one of the values represented by
   \code{NodeStates(node)}.
 
-  The number of states for a discrete node is determined when the node
-  is created (through a call to \code{\link{NewDiscreteNode}()}).  The
-  number of states may not be changed, but they can be renamed.
+  \bold{Discrete.} The number of states for a discrete node is
+  determined when the node is created (through a call to
+  \code{\link{NewDiscreteNode}()}).  The number of states may not be
+  changed, but they can be renamed.
 
   The states are important when building conditional probability
   tables (CPTs).  In particular, the state names are used to label the columns
@@ -44,6 +45,14 @@ NodeStates(node) <- value
   \code{\link{NodeStateTitles}()}, and \code{\link{NodeLevels}()} (for
   discrete nodes).
 
+  \bold{Continuous.}  States for a continuous node are determined by the
+  \code{\link{NodeLevels}()} of the node, which describe a series of
+  endpoints for intervals that cut the continuous space into the
+  states.  The function \code{NodeNumStates(node)} should return
+  \code{length(NodeLevels(node))-1} unless the levels have not been set
+  in which case it will be zero.  If \code{NodeStates} are set for a
+  continuous node, they must have length
+  \code{length(NodeLevels(node))-1}. 
   
 }
 \value{
@@ -73,6 +82,7 @@ NodeStates(node) <- value
 \examples{
 anet <- CreateNetwork("Annette")
 
+## Discrete Nodes
 nodel2 <- NewDiscreteNode(anet,"TwoLevelNode")
 stopifnot(
   NodeNumStates(nodel2)==2,
@@ -101,6 +111,21 @@ NodeStates(nodel3)["Median"] <- "Medium"
 stopifnot(
   NodeStates(nodel3)[2]=="Medium"
 )
+
+## Continuous Nodes
+wnode <- NewContinuousNode(anet,"Weight")
+
+\dontrun{
+## Don't run this until the levels for wnode have been set,
+## it will generate an error.
+NodeStates(vnode) <- c("Low","Medium","High")
+}
+
+## First set levels of node.
+NodeLevels(wnode) <- c(0, 0.1, 10, Inf)
+## Then can set States.
+NodeStates(wnode) <- c("Low","Medium","High")
+
 
 DeleteNetwork(anet)
 
