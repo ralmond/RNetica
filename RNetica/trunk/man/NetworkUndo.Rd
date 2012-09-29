@@ -61,4 +61,4 @@ DeleteNetwork(activeNet)
 }
 }
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ utilities }% __ONLY ONE__ keyword per line

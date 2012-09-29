@@ -20,7 +20,8 @@ export(WriteNetworks, ReadNetworks,
        )
 
 export(
-  NewDiscreteNode, NewContinuousNode, DeleteNodes, CopyNodes,
+  NewDiscreteNode, NewContinuousNode, DeleteNodes,
+  CopyNodes,  ## No Rd or test for this
   NodeNet, NodeName, "NodeName<-",
   print.NeticaNode, toString.NeticaNode, is.NeticaNode,
   is.discrete, is.continuous,
@@ -40,27 +41,27 @@ export(
   NodeLevels, "NodeLevels<-"
   )
 
-## export(
-##   GetNodeParents, GetNodeChildren,
-##   AddLink, DeleteLink,
-##   SwitchNodeParent, AbsorbNode,
-##   GetRelatedNodes, [GetRelatedNodesMult], IsNodeRelated,
-##   SetNodeInputName, GetNodeInputName
-##   )
+ export(
+   AddLink, DeleteLink, ReverseLink,
+   NodeParents, "NodeParents<-", NodeChildren,
+   AbsorbNodes,
+   is.NodeRelated, GetRelatedNodes,  ## Untested
+   NodeInputNames, "NodeInputNames<-" ## Untested
+   )
 
 ## export(
-##   GetNodeProbs, SetNodeExperience,
-##   GetNodeExperience, SetNodeExperience,
-##   MapStateList, ReorderNodeStates,
+##   NodeProbs, "NodeProbs<-"
+##   NodeExperience, "NodeExperience<-",
+##   ReorderNodeStates,
 ##   IsNodeDeterministic, HasNodeTable,
 ##   DeleteNodeTables, 
+##   GetNodeFuncState, SetNodeFuncState,
+##   GetNodeFuncRead, SetNodeFuncReal,
 ##   )
 
 ##export (
 ##   ReviseCPTsByFindings,
 ##   GetNodeEquation, SetNodeEquation
-##   GetNodeFuncState, SetNodeFuncState,
-##   GetNodeFuncRead, SetNodeFuncReal,
 ##   FadeCPTTable, EquationToTable
 ##   )
 

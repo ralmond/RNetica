@@ -1,5 +1,5 @@
 /**
- * Nodes.c --- These files describe functions for creating,
+ * Node.c --- This file contains functions for creating,
  * destroying, and modifying states of nodes.
  */
 
@@ -111,22 +111,45 @@ SEXP RN_AS_RLIST(const nodelist_bn* nodelist) {
   int k, kk=LengthNodeList_bn(nodelist);
   SEXP result;
 
-  PROTECT(result = allocVector(VECSXP,kk));
+  PROTECT(result = allocVector(VECSXP, (R_len_t) kk));
   for (k=0; k<kk; k++) {
-    SET_VECTOR_ELT(result,k,GetNode_RRef(NthNode_bn(nodelist,k)));
+    SET_VECTOR_ELT(result,(R_len_t) k,GetNode_RRef(NthNode_bn(nodelist,k)));
   }
   UNPROTECT(1);
   return result;
 }
 
+//If net_handle is null, will try to figure ot from first node in
+//list.
+
 nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net_handle) {
   R_len_t n, nn = length(nodes);
   SEXP node;
+  
+  if (!net_handle) { 
+    if (nn) {
+      node_bn *node1 = GetNodeHandle(VECTOR_ELT(nodes,0));
+      if (node1) {
+        net_handle = GetNodeNet_bn(node1);
+      } else {
+        error("as.nodelist: Can't find source network.\n");
+        return NULL;
+      }
+    } else {
+      error("as.nodelist: Can't find source network.\n");
+      return NULL;
+    }
+  }
+
   nodelist_bn* result = NewNodeList2_bn(nn,net_handle);
   
   for (n=0; n<nn; n++) {
     PROTECT(node = VECTOR_ELT(nodes,n));
-    SetNthNode_bn(result,n,GetNodeHandle(node));
+    if (isNull(node)) {
+      SetNthNode_bn(result,n,NULL);
+    } else {
+      SetNthNode_bn(result,n,GetNodeHandle(node));
+    }
     UNPROTECT(1);
   }
   return result;
@@ -293,12 +316,8 @@ SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
   }
 
   opt = CHAR(STRING_ELT(options,0));
-  if (nn) {
-    old_net=GetNeticaHandle(VECTOR_ELT(nodelist,0));
-  } else {
-    old_net = new_net;
-  }
-  old_nodes = RN_AS_NODELIST(nodelist, old_net);
+
+  old_nodes = RN_AS_NODELIST(nodelist, NULL);
   new_nodes = CopyNodes_bn(old_nodes, new_net, opt);
   DeleteNodeList_bn(old_nodes);
 

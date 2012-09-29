@@ -138,4 +138,5 @@ node1 != node2
 DeleteNetwork(nety)
 }
 \keyword{ classes }
+\keyword{ graphs }
 \keyword{ interface }% __ONLY ONE__ keyword per line

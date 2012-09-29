@@ -67,4 +67,4 @@ stopifnot(is.continuous(rnode))
 DeleteNetwork(netx)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ logic }% __ONLY ONE__ keyword per line

@@ -80,5 +80,5 @@ DeleteNetwork(c(netc,nets,list(copy1,net1)))
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ interface }
-\keyword{ utility }
-\keyword{ models }% __ONLY ONE__ keyword per line
+\keyword{ utilities }
+

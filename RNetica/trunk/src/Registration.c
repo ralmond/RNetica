@@ -460,6 +460,7 @@ extern SEXP RN_GetAllNetUserFields(SEXP bn);
 extern SEXP RN_SetNetUserField(SEXP bn, SEXP fieldnames, SEXP newvals);
 extern SEXP RN_Undo(SEXP bn);
 extern SEXP RN_Redo(SEXP bn);
+
 // File = Nodes.c
 extern SEXP RN_NewDiscreteNodes(SEXP net, SEXP namelist, SEXP nslist,
                                SEXP statelist);
@@ -494,6 +495,20 @@ extern SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals);
 extern SEXP RN_GetNodeLevelsDiscrete(SEXP nd);
 extern SEXP RN_GetNodeLevelsContinuous(SEXP nd);
 extern SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals);
+
+//Edges.c
+extern SEXP RN_AddLink(SEXP parent, SEXP child);
+extern SEXP RN_ReverseLink(SEXP parent, SEXP child);
+extern SEXP RN_DeleteLink(SEXP parent, SEXP child);
+extern SEXP RN_GetNodeParents(SEXP node);
+extern SEXP RN_GetNodeChildren(SEXP node);
+extern SEXP RN_SetNodeParents(SEXP node, SEXP value);
+extern SEXP RN_GetNodeInputNames(SEXP nd);
+extern SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals);
+extern SEXP RN_AbsorbNodes(SEXP nodelist);
+extern SEXP RN_IsNodeRelated(SEXP n1, SEXP relation, SEXP n2);
+extern SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation);
+
 
 
 R_CallMethodDef callMethods[] = {
@@ -552,6 +567,17 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNodeLevelsDiscrete", (DL_FUNC) &RN_GetNodeLevelsDiscrete, 1},
   {"RN_GetNodeLevelsContinuous", (DL_FUNC) &RN_GetNodeLevelsContinuous, 1},
   {"RN_SetNodeLevels", (DL_FUNC) &RN_SetNodeLevels, 2},
+  {"RN_AddLink", (DL_FUNC) &RN_AddLink, 2},
+  {"RN_DeleteLink", (DL_FUNC) &RN_DeleteLink, 2},
+  {"RN_ReverseLink", (DL_FUNC) &RN_ReverseLink, 2},
+  {"RN_GetNodeChildren", (DL_FUNC) &RN_GetNodeChildren, 1},
+  {"RN_GetNodeParents", (DL_FUNC) &RN_GetNodeParents, 1},
+  {"RN_SetNodeParents", (DL_FUNC) &RN_SetNodeParents, 2},
+  {"RN_GetNodeInputNames", (DL_FUNC) &RN_GetNodeInputNames, 1},
+  {"RN_SetNodeInputNames", (DL_FUNC) &RN_SetNodeInputNames, 2},
+  {"RN_AbsorbNodes", (DL_FUNC) &RN_AbsorbNodes, 1},
+  {"RN_IsNodeRelated", (DL_FUNC) &RN_IsNodeRelated, 3},
+  {"RN_GetRelatedNodes", (DL_FUNC) &RN_GetRelatedNodes, 2},
   {NULL, NULL, 0},
 };
 
