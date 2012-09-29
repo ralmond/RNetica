@@ -88,4 +88,4 @@ DeleteNetwork(autoNet)
 \keyword{ interface }
 \keyword{ programming }
 \keyword{ attribute }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ utilities }% __ONLY ONE__ keyword per line

@@ -49,4 +49,4 @@ stopifnot(is.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",
           ==c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE))
 }
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ utilities }% __ONLY ONE__ keyword per line

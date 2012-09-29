@@ -72,4 +72,4 @@ DeleteNet(list(neta,netb))
 
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ graphs }% __ONLY ONE__ keyword per line

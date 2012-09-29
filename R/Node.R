@@ -148,7 +148,7 @@ DeleteNodes <- function (nodes) {
 ## options should be one of no_links, or no_tables.
 CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
                        options=character(0)) {
-  if (is.NeticaNode(node) && length(node) ==1) nodes <-list(nodes)
+  if (is.NeticaNode(nodes) && length(nodes) ==1) nodes <-list(nodes)
   if (!all(sapply(nets,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nets)
   }

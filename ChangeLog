@@ -1,3 +1,18 @@
+2012-09-26  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_SetNodeInputNames, RN_GetNodeInputNames)
+	(RN_GetRelatedNodes, RN_InNodeRelated, RN_AbsorbNodes)
+	(RN_SetNodeParents):  Added.
+
+	* src/Node.c (RN_Copy_Nodes): Fixed issue with AS_NODELIST, note
+	untested. 
+
+	* src/Edges.c (RN_AddLink, RN_DeleteLink, RN_GetNodeParents)
+	(RN_GetNodeChildren): Added
+
+	* src/Node.c (RN_AS_NODELIST): Changed so that will still NULL in
+	the NODELIST for locations corresponding to NULLs in the R list.
+
 2012-09-25  Russell G. Almond  <ralmond@Limu>
 
 	* R/Node.R ("NodeLevels<-", NodeLevels): Created functions.

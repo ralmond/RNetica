@@ -67,7 +67,8 @@ NodeKind(node) <- value
   a unique letter.
 }
 \seealso{
-  \code{\link{NeticaNode}}
+  \code{\link{NeticaNode}}, \code{\link{is.discrete}()},
+  \code{\link{NodeParents}()} 
 }
 \examples{
 knet <- CreateNetwork("kNet")

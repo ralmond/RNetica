@@ -87,5 +87,4 @@ stopifnot(as.character(netd)=="EmptyNet")
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ interface }
-\keyword{ utility }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ utilities }

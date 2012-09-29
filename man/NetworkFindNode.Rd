@@ -81,4 +81,6 @@ nodes <- NetworkFindNodes(tnet,as.character(nodes))
 DeleteNetwork(tnet)
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ graphs }
+\keyword{ utilities }
+
