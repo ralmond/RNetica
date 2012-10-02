@@ -69,3 +69,10 @@ extern nodekind_bn RN_CharToKind (SEXP csxp);
 //Takes care of conversion of infinities
 extern level_bn RN_RnumToNnum (double x);
 extern double RN_NnumToRnum (level_bn x);
+
+//Takes care of conversion between state indexes and prob vectors and
+//R SEXPs.
+extern state_bn *RN_AS_STATE_BN(SEXP states);
+extern prob_bn *RN_AS_PROB_BN(SEXP vals);
+extern SEXP RN_AS_PROBSXP(const prob_bn *vals, int nn);
+

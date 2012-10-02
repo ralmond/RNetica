@@ -214,3 +214,167 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   }
   handle
 }
+
+## Using 0 based indexing, as that is consistent with
+## Netica behavior.  Fairly easy to add 1 to get R indexing.
+nextconfig <- function (current, maxvals) {
+  ## Base case
+  if (current[1] < 0) return (rep(0,length(maxvals)))
+  whichDim = length(maxvals)
+  while (whichDim > 0) {
+    current[whichDim] <- current[whichDim] +1
+    if (current[whichDim] < maxvals[whichDim]) {
+      return (current)
+    } else {
+      current[whichDim] <- 0
+      whichDim <- whichDim-1
+    }
+  }
+  ## Dropped off of the end of the list, return NA as a signal
+  ## we are done
+  return(NA)
+}
+
+## Converts an index into a matrix that can be used to
+## access the corresponding row of the array.
+configindex <- function(config,nstates) {
+  ind <- matrix(0,nstates,length(config)+1)
+  for (p in 1:length(config)) {
+    ind[,p] <- config[p]+1
+  }
+  ind[,length(config)+1] <- 1:nstates
+  return(ind)
+}
+
+##This function is meant to do minimal checking so it will be fast.
+pStates <- function (node) {
+  result <- lapply(NodeParents(node),NodeStates)
+  parnames <- sapply(NodeParents(node),NodeName)
+  inames <- NodeInputNames(node)
+  names(result) <- ifelse (nchar(inames)==0,parnames,inames)
+  result
+}
+
+NodeProbs <- function (node) {
+  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+  parnames <- pStates(node)
+  statecounts <- sapply(parnames,length)
+  
+  childnames <- list(NodeStates(node))
+  names(childnames) <- NodeName(node)
+  nstates <- length(childnames[[1]])
+
+  dimnames <- c(parnames,childnames)
+  dims <- sapply(dimnames,length)
+  result <- array(NA,dim=dims,dimnames=dimnames)
+
+  if (length(statecounts)>0) {
+    config <- -1
+    while (!is.na((config <- nextconfig(config,statecounts))[1])) {
+      result[configindex(config,nstates)] <-
+        .Call("RN_GetNodeProbs",node,config)
+    }
+  } else { ## Prior node, no parents.
+    result[] <- .Call("RN_GetNodeProbs",node,NULL)
+  }
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("GetNodeProbs: Netica Errors Encountered, see console for details.")
+  }
+  result
+}
+
+"NodeProbs<-" <- function (node,value) {
+  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+  if (!is.numeric(value)) {
+    stop("Value must be numeric")
+  }
+  if (any(is.na(value)) || !all(is.finite(value))) {
+    stop("NAs or infinte values in probability table.")
+  }
+  if (any(value >1 | value <0)) {
+    stop("Values outside of range [0,1] in probability table.")
+  }
+
+  statecounts <- sapply(NodeParents(node),NodeNumStates)
+  nstates <- NodeNumStates(node)
+  dims <- c(statecounts,nstates)
+  if (any (dim(value) != dims)) {
+    stop("Dimensions not correct for this node.")
+  }
+
+  if (length(statecounts)>0) {
+    config <- -1
+    while (!is.na((config <- nextconfig(config,statecounts))[1])) {
+      .Call("RN_SetNodeProbs",node,config,
+            value[configindex(config,nstates)])
+    }
+  } else { ## Prior node with no parents.
+    .Call("RN_SetNodeProbs",node,NULL,value)
+  }
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeProbs: Netica Errors Encountered, see console for details.")
+  }
+  invisible(node)
+}
+
+## This function interprets the various input modes and returns an
+## integer matrix which does the selection.
+parseDims <- function (pstates,inames,...) {
+  pnames <- names(pstates)
+  pdim <- sapply(pstates,length)
+  ndim <- length(pdim)
+
+  ## This creates a call object with the arguments
+  clist <- substitute(list(...))
+  ## Need to find and irradicate stray marks
+  if (length(clist) == ndim+1) {
+    ## positional form must have number of entries equal to number of
+    ## parents.
+    for (idim in 2:ndim) {
+      if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
+        ## Blank entry, replace with 1:n
+        clist[idim] <- list(1:pdim[idim])
+      }
+    }
+  }
+ eval(clist)
+}
+
+normCPT <- function (cpt) {
+  ndim <- length(dim(cpt))
+  if (ndim <= 1) return(cpt/sum(cpt))
+  ndim <- ndim-1
+  sweep(cpt,1:ndim,apply(cpt,1:ndim,sum),"/")
+}
+
+
+"[.NeticaNode" <- function (x, ...) {
+ if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+ result <- NULL
+ nparstates <- sapply(NodeParents(node),NodeNumStates)
+ subscript <- alist(...)
+ if (length(subscript) == 1) {
+   ## Subsetting by simple index, array or matrix
+
+ } else {
+   selected <- nparstates
+   if (length(subscript) ==1 && as.character(subscript)="...") {
+     ## If zero, select all, so we are good.
+   } else {
+     
+
+     if (!length(subscript) == length(nparstates)) {
+       stop("Expected ", length(nparstates), " dimensions.")
+     }
+
+ }
+ result
+}

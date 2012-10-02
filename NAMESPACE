@@ -45,21 +45,21 @@ export(
    AddLink, DeleteLink, ReverseLink,
    NodeParents, "NodeParents<-", NodeChildren,
    AbsorbNodes,
-   is.NodeRelated, GetRelatedNodes,  ## Untested
-   NodeInputNames, "NodeInputNames<-" ## Untested
+   is.NodeRelated, GetRelatedNodes,  
+   NodeInputNames, "NodeInputNames<-" 
    )
 
-## export(
-##   NodeProbs, "NodeProbs<-"
-##   NodeExperience, "NodeExperience<-",
+export(
+   NodeProbs, "NodeProbs<-", normCPT
 ##   ReorderNodeStates,
 ##   IsNodeDeterministic, HasNodeTable,
 ##   DeleteNodeTables, 
 ##   GetNodeFuncState, SetNodeFuncState,
 ##   GetNodeFuncRead, SetNodeFuncReal,
-##   )
+   )
 
 ##export (
+##   NodeExperience, "NodeExperience<-",
 ##   ReviseCPTsByFindings,
 ##   GetNodeEquation, SetNodeEquation
 ##   FadeCPTTable, EquationToTable

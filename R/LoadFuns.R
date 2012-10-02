@@ -19,10 +19,15 @@ function(libname, pkgname)
  library.dynam("RNetica", pkgname, libname)
 }  
 
+## Give it starter value so it can be found
+EVERY_STATE <- -Inf
+
 .onAttach <- function(libname, pkgname) {
   if(exists("NeticaLicenseKey",mode="character"))
     LicenseKey <- NeticaLicenseKey
   StartNetica()
+  ## Deep voodoo needed to get around R safeguards
+  assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState"),"RNetica")
 }
 
 .Last.lib <- function(libpath) {

@@ -508,6 +508,9 @@ extern SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals);
 extern SEXP RN_AbsorbNodes(SEXP nodelist);
 extern SEXP RN_IsNodeRelated(SEXP n1, SEXP relation, SEXP n2);
 extern SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation);
+extern SEXP RN_GetEveryState();
+extern SEXP RN_GetNodeProbs(SEXP node, SEXP states);
+extern SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals);
 
 
 
@@ -578,6 +581,9 @@ R_CallMethodDef callMethods[] = {
   {"RN_AbsorbNodes", (DL_FUNC) &RN_AbsorbNodes, 1},
   {"RN_IsNodeRelated", (DL_FUNC) &RN_IsNodeRelated, 3},
   {"RN_GetRelatedNodes", (DL_FUNC) &RN_GetRelatedNodes, 2},
+  {"RN_GetEveryState", (DL_FUNC) &RN_GetEveryState, 0},
+  {"RN_GetNodeProbs", (DL_FUNC) &RN_GetNodeProbs, 2},
+  {"RN_SetNodeProbs", (DL_FUNC) &RN_SetNodeProbs, 3},
   {NULL, NULL, 0},
 };
 
