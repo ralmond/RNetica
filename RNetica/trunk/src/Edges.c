@@ -264,3 +264,82 @@ SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals) {
   }
   return(nd);
 }
+
+
+//Expose this Netica constant to R.
+SEXP RN_GetEveryState() {
+  return ScalarInteger(EVERY_STATE);
+}
+
+state_bn *RN_AS_STATE_BN(SEXP states) {
+  R_len_t n, nn=length(states);
+  if (!nn) return NULL;
+
+  state_bn *result = (state_bn *) R_alloc(nn,sizeof(state_bn));
+
+  PROTECT(states = AS_INTEGER(states));
+  for (n=0; n<nn; n++) {
+    result[n] = (state_bn) INTEGER(states)[n];
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+prob_bn *RN_AS_PROB_BN(SEXP vals) {
+  R_len_t n, nn=length(vals);
+  if (!nn) return NULL;
+
+  prob_bn *result = (prob_bn *) R_alloc(nn,sizeof(prob_bn));
+  PROTECT(vals = AS_NUMERIC(vals));
+  for (n=0; n<nn; n++) {
+    result[n] = (prob_bn) REAL(vals)[n];
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+SEXP RN_AS_PROBSXP(const prob_bn *vals, int nn) {
+  int n;
+  SEXP result; 
+
+  if (!vals) return R_NilValue;
+  
+  PROTECT(result = allocVector(REALSXP,nn));
+  for (n=0; n<nn; n++) {
+    REAL(result)[n] = vals[n];
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+
+// Return without names, as we may be part of a loop, let 
+// R code handle the names.
+SEXP RN_GetNodeProbs(SEXP node, SEXP states) {
+  node_bn* node_handle;
+  SEXP result;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+    return(R_NilValue);
+  } else {
+    return RN_AS_PROBSXP(GetNodeProbs_bn(node_handle,
+                                         RN_AS_STATE_BN(states)),
+                         GetNodeNumberStates_bn(node_handle));
+  }
+}
+
+SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+  } else {
+    SetNodeProbs_bn(node_handle, RN_AS_STATE_BN(states),
+                    RN_AS_PROB_BN(vals));
+  }
+  return node;
+}
+
