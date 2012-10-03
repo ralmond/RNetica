@@ -24,12 +24,13 @@ NodeProbs(node) <- value
   }
   \item{value}{
     The new conditional probability table.  See details for the expected
-    dimensions. 
+    dimensions.
+  }
 }
 \details{
 
-  Let \code{node} be the node of interest and \code{parent\textit{1}},
-  \code{parent\textit{2}}, ..., \code{parent\textit{p}}, where $p$ is
+  Let \code{node} be the node of interest and \code{parent\emph{1}},
+  \code{parent\emph{2}}, ..., \code{parent\emph{p}}, where $p$ is
   the number of parents.  Let \code{pdim = sapply(\link{NodeParents}(node),
   \link{NodeNumStates})} be a vector with the number of states for each parent.
   A parent configuration is defined by assigning each of the parent
@@ -68,6 +69,10 @@ NodeProbs(node) <- value
   This doc file is still pretty lame.  Probably need to redo output as a
   CPT class.
 }
+\seealso{
+  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()}
+}
 \examples{
 abc <- CreateNetwork("ABC")
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
@@ -86,6 +91,7 @@ NodeProbs(A)
 NodeProbs(B)
 NodeProbs(C)
 
+DeleteNetwork(abc)
 }
 \keyword{ interface }
 \keyword{ model }% __ONLY ONE__ keyword per line

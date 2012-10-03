@@ -511,6 +511,9 @@ extern SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation);
 extern SEXP RN_GetEveryState();
 extern SEXP RN_GetNodeProbs(SEXP node, SEXP states);
 extern SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals);
+extern SEXP RN_IsNodeDeterministic(SEXP n1);
+extern SEXP RN_HasNodeTable(SEXP n1);
+extern SEXP RN_DeleteNodeTable(SEXP n1);
 
 
 
@@ -584,6 +587,9 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetEveryState", (DL_FUNC) &RN_GetEveryState, 0},
   {"RN_GetNodeProbs", (DL_FUNC) &RN_GetNodeProbs, 2},
   {"RN_SetNodeProbs", (DL_FUNC) &RN_SetNodeProbs, 3},
+  {"RN_IsNodeDeterministic", (DL_FUNC) &RN_IsNodeDeterministic, 1},
+  {"RN_HasNodeTable", (DL_FUNC) &RN_HasNodeTable, 1},
+  {"RN_DeleteNodeTable", (DL_FUNC) &RN_DeleteNodeTable, 1},
   {NULL, NULL, 0},
 };
 
