@@ -292,7 +292,11 @@ prob_bn *RN_AS_PROB_BN(SEXP vals) {
   prob_bn *result = (prob_bn *) R_alloc(nn,sizeof(prob_bn));
   PROTECT(vals = AS_NUMERIC(vals));
   for (n=0; n<nn; n++) {
-    result[n] = (prob_bn) REAL(vals)[n];
+    if (ISNA(REAL(vals)[n])) {
+      return NULL;
+    } else {
+      result[n] = (prob_bn) REAL(vals)[n];
+    }
   }
   UNPROTECT(1);
   return result;
@@ -306,7 +310,11 @@ SEXP RN_AS_PROBSXP(const prob_bn *vals, int nn) {
   
   PROTECT(result = allocVector(REALSXP,nn));
   for (n=0; n<nn; n++) {
-    REAL(result)[n] = vals[n];
+    if (vals[n]==UNDEF_DBL) {
+      REAL(result)[n] = NA_REAL;
+    } else {
+      REAL(result)[n] = vals[n];
+    }
   }
   UNPROTECT(1);
   return result;
@@ -343,3 +351,43 @@ SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals) {
   return node;
 }
 
+SEXP RN_IsNodeDeterministic(SEXP n1) {
+  node_bn* n1_handle = GetNodeHandle(n1);
+
+  if(n1_handle) {
+    return ScalarLogical(IsNodeDeterministic_bn(n1_handle));
+  } else {
+    error("IsNodeDeterministic:  Naughty node %s\n",NODE_NAME(n1));
+    return ScalarInteger(R_NaInt);
+  }
+}
+
+SEXP RN_HasNodeTable(SEXP n1) {
+  node_bn* n1_handle = GetNodeHandle(n1);
+  bool_ns complete;
+  SEXP result;
+  PROTECT(result = allocVector(LGLSXP,2));
+
+  if(n1_handle) {
+    LOGICAL(result)[0] = HasNodeTable_bn(n1_handle, &complete);
+    LOGICAL(result)[1] = complete;
+  } else {
+    error("HasNodeTable:  Naughty node %s\n",NODE_NAME(n1));
+    LOGICAL(result)[0] = R_NaInt;
+    LOGICAL(result)[1] = R_NaInt;
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+SEXP RN_DeleteNodeTable(SEXP n1) {
+  node_bn* n1_handle = GetNodeHandle(n1);
+
+  if(n1_handle) {
+    DeleteNodeTables_bn(n1_handle);
+  } else {
+    error("DeleteNodeTables:  Naughty node %s\n",NODE_NAME(n1));
+    return ScalarInteger(R_NaInt);
+  }
+  return n1;
+}

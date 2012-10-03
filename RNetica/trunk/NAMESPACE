@@ -50,10 +50,10 @@ export(
    )
 
 export(
-   NodeProbs, "NodeProbs<-", normCPT
-##   ReorderNodeStates,
-##   IsNodeDeterministic, HasNodeTable,
-##   DeleteNodeTables, 
+   NodeProbs, "NodeProbs<-", normCPT,
+##   ReorderNodeStates, RemoveNodeState,
+   IsNodeDeterministic, HasNodeTable,
+   DeleteNodeTable
 ##   GetNodeFuncState, SetNodeFuncState,
 ##   GetNodeFuncRead, SetNodeFuncReal,
    )
@@ -66,19 +66,20 @@ export(
 ##   )
 
 ## export(
-##   CompileNet, UncompileNet, SizeCompiledNet, ReportJunctionTree,
+##   CompileNet, UncompileNet, 
 ##   GetNodeFinding, EnterFinding, EnterFindingNot, 
 ##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
 ##   EnterIntervalFinding,
 ##   RetractNetFindings, RetractNodeFindings,
-##   GetNodeBeliefs, IsBeliefUpdated,
+##   GetNodeBeliefs, IsBeliefUpdated
 ##   GetNodeLikelihood, EnterNodeLikelihood,
 ##   GetNodeExpectedValue, GetNodeExpectedUtils,
 ##  )
 
 
 ## export(
-##   GetNetElimOrder, SetNetElimOrder
+##   GetNetElimOrder, SetNetElimOrder,
+##   SizeCompiledNet, ReportJunctionTree,
 ##   JointProbability, FindingsProbability, MostProbableConfig,
 ##   GetVarianceOfReal,
 ##   CalcNodeState, CalcNodeValue,

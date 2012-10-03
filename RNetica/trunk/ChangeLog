@@ -1,3 +1,23 @@
+2012-10-02  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (DeleteNodeTable, HasNodeTable, IsNodeDeterministic):
+	Added. 
+
+2012-10-01  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_IsNodeDeterministic, RN_HasNodeTable)
+	(RN_DeleteNodeTable): Addes these table information functions.
+
+	* R/Edges.R (pStates): Added this function for faster conversions.
+	(nextconfig): Changed to use -1 as the start (as 0 is a legal
+	value with just one parent).
+	(normCPT): Added this function, as we often need it.
+	(parseDims): Started this.  Figured out the substitute(list(...))
+	trick which captures unparsed argument list.
+
+	* src/Edges.c (RN_AS_PROB_BN, RN_AS_PROBSXP): Modified to convert
+	NAs to UNDEFINED_DBL and vise versa.
+
 2012-09-26  Russell G. Almond  <ralmond@Limu>
 
 	* src/Edges.c (RN_SetNodeInputNames, RN_GetNodeInputNames)

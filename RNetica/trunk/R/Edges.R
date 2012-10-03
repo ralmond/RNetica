@@ -215,6 +215,7 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   handle
 }
 
+## To start, pass -1.
 ## Using 0 based indexing, as that is consistent with
 ## Netica behavior.  Fairly easy to add 1 to get R indexing.
 nextconfig <- function (current, maxvals) {
@@ -293,10 +294,7 @@ NodeProbs <- function (node) {
   if (!is.numeric(value)) {
     stop("Value must be numeric")
   }
-  if (any(is.na(value)) || !all(is.finite(value))) {
-    stop("NAs or infinte values in probability table.")
-  }
-  if (any(value >1 | value <0)) {
+  if (any(value >1 | value <0, na.rm=TRUE)) {
     stop("Values outside of range [0,1] in probability table.")
   }
 
@@ -323,6 +321,7 @@ NodeProbs <- function (node) {
   invisible(node)
 }
 
+## Unfinished
 ## This function interprets the various input modes and returns an
 ## integer matrix which does the selection.
 parseDims <- function (pstates,inames,...) {
@@ -353,7 +352,7 @@ normCPT <- function (cpt) {
   sweep(cpt,1:ndim,apply(cpt,1:ndim,sum),"/")
 }
 
-
+## Unfinished.
 "[.NeticaNode" <- function (x, ...) {
  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
@@ -366,7 +365,7 @@ normCPT <- function (cpt) {
 
  } else {
    selected <- nparstates
-   if (length(subscript) ==1 && as.character(subscript)="...") {
+   if (length(subscript) ==1 && as.character(subscript)=="...") {
      ## If zero, select all, so we are good.
    } else {
      
@@ -375,6 +374,44 @@ normCPT <- function (cpt) {
        stop("Expected ", length(nparstates), " dimensions.")
      }
 
+   }
  }
  result
+}
+
+IsNodeDeterministic <- function (node) {
+  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+  handle <- .Call("RN_IsNodeDeterministic",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("IsNodeDeterministic: Netica Errors Encountered, see console for details.")
+  }
+  handle
+}
+
+HasNodeTable <- function (node) {
+  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+  result <- .Call("RN_HasNodeTable",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("HasNodeTable: Netica Errors Encountered, see console for details.")
+  }
+  names(result) <- c("exists","complete")
+  result
+}
+
+DeleteNodeTable <- function (node) {
+  if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
+    stop ("Node is not an active Netica node", node)
+  }
+  handle <- .Call("RN_DeleteNodeTable",node)
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("DeleteNodeTable: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
 }
