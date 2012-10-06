@@ -44,7 +44,7 @@ EnterNegativeFinding(node, eliminatedVals)
 }
 \references{
   \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \node{EnterFindingNot_bn()}
+  \code{EnterFindingNot_bn()}
 }
 \author{
   Russell Almond
@@ -58,7 +58,7 @@ EnterNegativeFinding(node, eliminatedVals)
   Unlike the Netica function \code{EnterFindingNot_bn()} the function
   \code{EnterNegativeFinding()} internally calls \code{RetractFindings}.  So
   there is no need to do this manually.  Also, the internal Netica
-  function multiplies multiple calls to \node{EnterFindingNod_bn()} add
+  function multiplies multiple calls to \code{EnterFindingNod_bn()} add
   to the list of negative findings, while in the R version takes the
   entire list.
 }
