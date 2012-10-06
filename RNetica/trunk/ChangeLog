@@ -1,7 +1,30 @@
+2012-10-05  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (EnterNegativeFinding, "NodeFinding<-")
+	(NodeFinding): Fixed problem with 0-based coding instead of
+	1-based coding, and with real rather than integer value setting.
+
+
+	* src/Inference.c (RN_SetNodeLikelihood, RN_GetNodeLikelihood):
+	Added functions.
+
+	* R/Inference.R (NodeLikelihood, "NodeLikelihood<-"): Added
+	functions. 
+
 2012-10-02  Russell G. Almond  <ralmond@Limu>
 
+	* R/Inference.R (CompileNet, UncompileNet, RetractNetFindings)
+	(NodeFinding, "NodeFinding<-", EnterNegativeFinding)
+	(IsBeliefUpdated, NodeBeliefs): 
+
+	* src/Inference.c (RN_CompileNet, RN_UncompileNet)
+	(RN_RetractNetFindings, RN_GetNodeFinding)
+	(RN_RetractNodeFinding, RN_SetNodeFinding, RN_SetNodeFindingNot)
+	(RN_IsBeliefUpdated, RN_GetNodeBeliefs): Wrote these functions
+
 	* R/Edges.R (DeleteNodeTable, HasNodeTable, IsNodeDeterministic):
-	Added. 
+	Added. Preliminary test complete.  Note cannot currently set
+	incomplete table.
 
 2012-10-01  Russell G. Almond  <ralmond@Limu>
 

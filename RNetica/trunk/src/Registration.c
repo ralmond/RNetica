@@ -515,6 +515,20 @@ extern SEXP RN_IsNodeDeterministic(SEXP n1);
 extern SEXP RN_HasNodeTable(SEXP n1);
 extern SEXP RN_DeleteNodeTable(SEXP n1);
 
+//Inference.c
+extern SEXP RN_CompileNet(SEXP net);
+extern SEXP RN_UncompileNet(SEXP net);
+extern SEXP RN_RetractNetFindings(SEXP net);
+extern SEXP RN_GetNodeFinding(SEXP node);
+extern SEXP RN_RetractNodeFinding(SEXP node);
+extern SEXP RN_SetNodeFinding(SEXP node, SEXP value);
+extern SEXP RN_SetNodeFindingNot(SEXP node, SEXP value);
+extern SEXP RN_IsBeliefUpdated(SEXP n1);
+extern SEXP RN_GetNodeBeliefs(SEXP node);
+extern SEXP RN_GetNodeLikelihood(SEXP node);
+extern SEXP RN_SetNodeLikelihood(SEXP node, SEXP value);
+
+
 
 
 R_CallMethodDef callMethods[] = {
@@ -590,6 +604,17 @@ R_CallMethodDef callMethods[] = {
   {"RN_IsNodeDeterministic", (DL_FUNC) &RN_IsNodeDeterministic, 1},
   {"RN_HasNodeTable", (DL_FUNC) &RN_HasNodeTable, 1},
   {"RN_DeleteNodeTable", (DL_FUNC) &RN_DeleteNodeTable, 1},
+  {"RN_CompileNet", (DL_FUNC) &RN_CompileNet, 1},
+  {"RN_UncompileNet", (DL_FUNC) &RN_UncompileNet, 1},
+  {"RN_RetractNetFindings", (DL_FUNC) &RN_RetractNetFindings, 1},
+  {"RN_GetNodeFinding", (DL_FUNC) &RN_GetNodeFinding, 1},
+  {"RN_RetractNodeFinding", (DL_FUNC) &RN_RetractNodeFinding, 1},
+  {"RN_SetNodeFinding", (DL_FUNC) &RN_SetNodeFinding, 2},
+  {"RN_SetNodeFindingNot", (DL_FUNC) &RN_SetNodeFindingNot, 2},
+  {"RN_IsBeliefUpdated", (DL_FUNC) &RN_IsBeliefUpdated, 1},
+  {"RN_GetNodeBeliefs", (DL_FUNC) &RN_GetNodeBeliefs, 1},
+  {"RN_GetNodeLikelihood", (DL_FUNC) &RN_GetNodeLikelihood, 1},
+  {"RN_SetNodeLikelihood", (DL_FUNC) &RN_SetNodeLikelihood, 2},
   {NULL, NULL, 0},
 };
 

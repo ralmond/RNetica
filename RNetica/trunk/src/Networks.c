@@ -281,7 +281,7 @@ SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
  * Reading or Writing file.
  */
 SEXP RN_GetNetFilename(SEXP bn) {
-  const char *name, *filename;
+  const char *filename;
   net_bn* netica_handle;
   SEXP result;
 
@@ -293,7 +293,7 @@ SEXP RN_GetNetFilename(SEXP bn) {
     SET_STRING_ELT(result,0,mkChar(filename));
   } else {
     SET_STRING_ELT(result,0,NA_STRING);
-    warning("Could not find network %s.",name);
+    warning("Could not find network %s.",BN_NAME(bn));
   }
   UNPROTECT(1);
   return(result);
