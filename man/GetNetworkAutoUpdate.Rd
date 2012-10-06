@@ -65,7 +65,8 @@ WithoutAutoUpdate(net,expr)
 }
 
 \seealso{
-  \code{\link{NeticaBN}}
+  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\link{NodeFindings}()} 
 }
 \examples{
 

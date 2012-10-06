@@ -241,7 +241,7 @@ ReadNetworks <- function (paths) {
 
 GetNetworkFileName <- function (net) {
   if (!is.NeticaBN(net)) {
-    stop("Expected a Netica network, got, ",nets)
+    stop("Expected a Netica network, got, ",net)
   }
   pathname <- .Call("RN_GetNetFilename",net)
   ecount <- ReportErrors()

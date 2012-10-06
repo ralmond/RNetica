@@ -54,8 +54,6 @@ export(
 ##   ReorderNodeStates, RemoveNodeState,
    IsNodeDeterministic, HasNodeTable,
    DeleteNodeTable
-##   GetNodeFuncState, SetNodeFuncState,
-##   GetNodeFuncRead, SetNodeFuncReal,
    )
 
 ##export (
@@ -65,24 +63,29 @@ export(
 ##   FadeCPTTable, EquationToTable
 ##   )
 
-## export(
-##   CompileNet, UncompileNet, 
-##   GetNodeFinding, EnterFinding, EnterFindingNot, 
+export(
+   CompileNetwork, UncompileNetwork, 
+   NodeFinding, "NodeFinding<-", EnterNegativeFinding, 
 ##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
 ##   EnterIntervalFinding,
-##   RetractNetFindings, RetractNodeFindings,
-##   GetNodeBeliefs, IsBeliefUpdated
-##   GetNodeLikelihood, EnterNodeLikelihood,
+   RetractNetFindings, RetractNodeFinding,
+   NodeBeliefs, IsBeliefUpdated,
+   NodeLikelihood, "NodeLikelihood<-"
+##   GetVarianceOfReal,
+##   CalcNodeState, CalcNodeValue,
 ##   GetNodeExpectedValue, GetNodeExpectedUtils,
-##  )
+##   WriteNetFindings, ReadNetFindings
+ )
 
+##export(
+  ##   GetNodeFuncState, SetNodeFuncState,
+  ##   GetNodeFuncRead, SetNodeFuncReal,
+##)
 
 ## export(
 ##   GetNetElimOrder, SetNetElimOrder,
 ##   SizeCompiledNet, ReportJunctionTree,
 ##   JointProbability, FindingsProbability, MostProbableConfig,
-##   GetVarianceOfReal,
-##   CalcNodeState, CalcNodeValue,
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
 ##  )
 
