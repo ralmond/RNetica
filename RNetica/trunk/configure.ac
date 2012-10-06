@@ -11,7 +11,7 @@ dnl ======================================================
 
 dnl DEFAULT_NETICA_HOME="/home/ralmond/software/Netica_API_504"
 DEFAULT_NETICA_HOME="/opt/Netica_API_504"
-AC_ARG_WITH([netica-home],
+AC_ARG_WITH([netica],
             AC_HELP_STRING([--with-netica=PATH],
                            [the path to the Netica API directory]),
             [NETICA_HOME=${withval}],
@@ -19,8 +19,8 @@ AC_ARG_WITH([netica-home],
             )
 NETICA_LIB="${NETICA_HOME}/lib"
 dnl Netica has non-standard path to lib64 directory.
-AC_CHECK_SIZEOF([long]);
-AS_IF([test $ac_cv_sizeof_long" -eq 8],
+AC_CHECK_SIZEOF([long])
+AS_IF([test $ac_cv_sizeof_long -eq 8],
       [NETICA_LIB="${NETICA_HOME}/lib/64bit"])
 NETICA_INCDIR="${NETICA_HOME}/src"
 AC_SUBST(NETICA_LIB)
@@ -31,7 +31,7 @@ echo "Configuration information:"
 echo ""
 echo "Netica settings"
 echo ""
-echo "Netica API DIRECTORY:     ${R_ARCHb}"
+echo "R Architecture:     ${R_ARCH}"
 echo "Netica API DIRECTORY:     ${NETICA_HOME}"
 echo "Netica Lib DIRECTORY:     ${NETICA_LIB}"
 echo "Netica Include Directory: ${NETICA_INCDIR}"
