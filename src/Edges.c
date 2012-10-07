@@ -161,8 +161,7 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
 }
 
 SEXP RN_AbsorbNodes(SEXP nodelist) {
-  net_bn* net;
-  nodelist_bn* deleteme = RN_AS_NODELIST(nodelist,net);
+  nodelist_bn* deleteme = RN_AS_NODELIST(nodelist,NULL);
 
   if (deleteme) {
     RN_Free_Nodes(deleteme);  //Will be deleted, free handles
@@ -195,7 +194,7 @@ SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation) {
   const char* rel = CHAR(STRING_ELT(relation,0));
   const nodelist_bn* nodes;
   nodelist_bn* related;
-  net_bn *net_handle;
+  net_bn *net_handle=NULL;
   SEXP result;
 
   if (length(nodelist)) {
@@ -222,9 +221,9 @@ SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation) {
 
 SEXP RN_GetNodeInputNames(SEXP nd) {
   R_len_t n, nn;
-  const char *value, *parname;
+  const char *value;
   node_bn* node_handle;
-  SEXP result, statenames;
+  SEXP result;
 
   node_handle = GetNodeHandle(nd);
   if (!node_handle) {
@@ -325,7 +324,6 @@ SEXP RN_AS_PROBSXP(const prob_bn *vals, int nn) {
 // R code handle the names.
 SEXP RN_GetNodeProbs(SEXP node, SEXP states) {
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(node);
   if (!node_handle) {

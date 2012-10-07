@@ -100,7 +100,6 @@ SEXP RN_New_Nets(SEXP namelist) {
 SEXP RN_Delete_Nets(SEXP netlist) {
 
   R_len_t n, nn = length(netlist);
-  const char* name;
   net_bn* netica_handle;
   SEXP bn, bnhandle, result;
 
@@ -160,9 +159,8 @@ SEXP RN_Named_Nets(SEXP namelist) {
 SEXP RN_GetNth_Nets(SEXP nlist) {
   R_len_t n, nn = length(nlist);
   int *netno;
-  const char* name;
   net_bn* netica_handle;
-  SEXP bnhandlelist, bn, bnhandle;
+  SEXP bnhandlelist, bn;
 
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
@@ -249,7 +247,7 @@ SEXP RN_Read_Nets(SEXP filelist) {
 
 SEXP RN_Write_Nets(SEXP nets, SEXP filelist) {
   R_len_t n, nn = length(filelist);
-  const char *name, *filename;
+  const char *filename;
   stream_ns *file;
   SEXP bn;
   net_bn* netica_handle;
@@ -325,7 +323,6 @@ SEXP RN_GetNetName(SEXP bn) {
 SEXP RN_SetNetName(SEXP bn, SEXP newnames) {
   const char *newname;
   net_bn *netica_handle, *other_net;
-  SEXP result;
 
   netica_handle = GetNeticaHandle(bn);
 
@@ -528,7 +525,6 @@ SEXP RN_GetAllNetUserFields(SEXP bn) {
 
 SEXP RN_SetNetUserField(SEXP bn, SEXP fieldnames, SEXP newvals) {
   const char *value, *fieldname;
-  int valuelen;
   net_bn* netica_handle;
 
   netica_handle = GetNeticaHandle(bn);

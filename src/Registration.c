@@ -533,7 +533,7 @@ extern SEXP RN_SetNodeLikelihood(SEXP node, SEXP value);
 
 R_CallMethodDef callMethods[] = {
   {"RN_Netica_Version", (DL_FUNC) &RN_Netica_Version, 0},
-  {"RN_isBNActive", (DL_FUNC) &RN_Netica_Version, 1},
+  {"RN_isBNActive", (DL_FUNC) &RN_isBNActive, 1},
   {"RN_New_Nets", (DL_FUNC) &RN_New_Nets, 1},
   {"RN_Delete_Nets", (DL_FUNC) &RN_Delete_Nets, 1},
   {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 1},
@@ -639,7 +639,7 @@ R_CMethodDef cMethods[] = {
 };
 
 
-void R_init_RNEtica(DllInfo *info) {
+void R_init_RNetica(DllInfo *info) {
   R_registerRoutines(info, cMethods, callMethods, NULL, NULL);
   RN_Define_Symbols();
 }
