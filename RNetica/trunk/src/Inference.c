@@ -117,7 +117,6 @@ SEXP RN_IsBeliefUpdated(SEXP n1) {
 
 SEXP RN_GetNodeBeliefs(SEXP node) {
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(node);
   if (!node_handle) {
@@ -132,7 +131,6 @@ SEXP RN_GetNodeBeliefs(SEXP node) {
 
 SEXP RN_GetNodeLikelihood(SEXP node) {
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(node);
   if (!node_handle) {
@@ -146,7 +144,6 @@ SEXP RN_GetNodeLikelihood(SEXP node) {
 
 SEXP RN_SetNodeLikelihood(SEXP node, SEXP value) {
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(node);
   if (!node_handle) {

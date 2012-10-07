@@ -234,7 +234,6 @@ SEXP RN_NewContinuousNodes(SEXP net, SEXP namelist) {
 SEXP RN_Delete_Nodes(SEXP nodelist) {
 
   R_len_t n, nn = length(nodelist);
-  const char* name;
   node_bn* node_handle;
   SEXP node, result;
 
@@ -280,7 +279,6 @@ SEXP RN_Find_Node(SEXP net, SEXP namesxp) {
 }
 
 SEXP RN_Network_AllNodes(SEXP net) {
-  const char* name;
   net_bn* net_handle;
   const nodelist_bn* foundNodes;
 
@@ -304,8 +302,7 @@ SEXP RN_Network_AllNodes(SEXP net) {
  * options should be one of no_links, or no_tables.
  */
 SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
-  R_len_t nn = length(nodelist);
-  net_bn *new_net, *old_net;
+  net_bn *new_net;
   const char *opt;
   nodelist_bn *old_nodes;
   const nodelist_bn *new_nodes;
@@ -354,7 +351,6 @@ SEXP RN_GetNodeName(SEXP nd) {
 SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   const char *newname;
   node_bn *node_handle, *other_node;
-  SEXP result;
 
   node_handle = GetNodeHandle(nd);
 
@@ -516,7 +512,6 @@ SEXP RN_GetAllNodeUserFields(SEXP nd) {
 
 SEXP RN_SetNodeUserField(SEXP nd, SEXP fieldnames, SEXP newvals) {
   const char *value, *fieldname;
-  int valuelen;
   node_bn* node_handle;
 
   node_handle = GetNodeHandle(nd);
@@ -730,7 +725,6 @@ SEXP RN_SetNodeStateTitles(SEXP nd, SEXP newvals) {
   R_len_t n, nn;
   const char *value;
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(nd);
   if (!node_handle) {
@@ -782,7 +776,6 @@ SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals) {
   R_len_t n, nn;
   const char *value;
   node_bn* node_handle;
-  SEXP result;
 
   node_handle = GetNodeHandle(nd);
   if (!node_handle) {
@@ -867,7 +860,6 @@ SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals) {
   R_len_t n, nn = length(newvals);
   node_bn* node_handle;
   level_bn* levels;
-  SEXP result;
 
   node_handle = GetNodeHandle(nd);
   if (!node_handle) {
