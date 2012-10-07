@@ -3281,6 +3281,9 @@ _ACEOF
 if test $ac_cv_sizeof_long -eq 8; then :
   NETICA_LIB="${NETICA_HOME}/lib/64bit"
 fi
+if test ! -d "${NETICA_LIB}"; then
+  NETICA_LIB="${NETICA_HOME}/lib"
+fi
 NETICA_INCDIR="${NETICA_HOME}/src"
 
 

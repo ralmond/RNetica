@@ -22,6 +22,10 @@ dnl Netica has non-standard path to lib64 directory.
 AC_CHECK_SIZEOF([long])
 AS_IF([test $ac_cv_sizeof_long -eq 8],
       [NETICA_LIB="${NETICA_HOME}/lib/64bit"])
+dnl Fallback for MacOS X which does not have a separate 64 bit directory
+if test ! -d "${NETICA_LIB}"; then
+  NETICA_LIB="${NETICA_HOME}/lib"
+fi
 NETICA_INCDIR="${NETICA_HOME}/src"
 AC_SUBST(NETICA_LIB)
 AC_SUBST(NETICA_INCDIR)
