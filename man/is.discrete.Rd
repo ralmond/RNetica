@@ -1,7 +1,6 @@
 \name{is.discrete}
 \alias{is.discrete}
 \alias{is.continuous}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Determines whether a Netica node is discrete or continuous.
 }
@@ -17,7 +16,7 @@ is.continuous(node)
 \arguments{
   \item{node}{
     A \code{NeticaNode} object to test.
-}
+  }
 }
 \details{
   While in the Netica GUI, one first creates a node and then determines
@@ -37,8 +36,9 @@ is.continuous(node)
   continuous. 
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeType_bn()}, \code{SetNodeLevels_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeType_bn}, \nref{SetNodeLevels_bn}
 }
 \author{
   Russell Almond
@@ -51,7 +51,7 @@ is.continuous(node)
 \seealso{
   \code{\link{NewDiscreteNode}()}, \code{\link{NewContinuousNode}()},
   \code{\link{NeticaNode}}, \code{\link{NodeLevels}()},
-  \code{\link{NodeStates()}} 
+  \code{\link{NodeStates}()} 
 }
 \examples{
 netx <- CreateNetwork("netx")

@@ -32,15 +32,16 @@ NodeChildren(parent)
   children of \code{parent}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeChildren_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeChildren_bn}
 }
 \author{
   Russell Almond
 }
 \seealso{
   \code{\link{NeticaNode}}, \code{\link{AddLink}()},
-  \code{\link{Nodeparents}()}, \code{\link{GetRelatedNodes}()}
+  \code{\link{NodeParents}()}, \code{\link{GetRelatedNodes}()}
 }
 \examples{
 

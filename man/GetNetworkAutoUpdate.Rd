@@ -2,7 +2,6 @@
 \alias{GetNetworkAutoUpdate}
 \alias{SetNetworkAutoUpdate}
 \alias{WithoutAutoUpdate}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Turns Netica automatic updating on or off for a network.
 }
@@ -52,8 +51,9 @@ WithoutAutoUpdate(net,expr)
   returns a \code{try-error}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{SetNetAutoUpdate_bn()}, \code{GetNetAutoUpdate_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{SetNetAutoUpdate_bn}, \nref{GetNetAutoUpdate_bn}
 }
 \author{
   Russell Almond
@@ -66,7 +66,7 @@ WithoutAutoUpdate(net,expr)
 
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
-  \code{\link{NodeFindings}()} 
+  \code{\link{NodeFinding}()} 
 }
 \examples{
 

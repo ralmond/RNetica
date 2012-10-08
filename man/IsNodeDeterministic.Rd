@@ -26,8 +26,9 @@ IsNodeDeterministic(node)
   there is otherwise an error it returns \code{NA}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{IsNodeDeterministic_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{IsNodeDeterministic_bn}
 }
 \author{
   Russell Almond

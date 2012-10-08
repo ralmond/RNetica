@@ -2,7 +2,6 @@
 \alias{StartNetica}
 \alias{StopNetica}
 \alias{LicenseKey}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Starting and stopping the Netica shared library.
 }
@@ -44,7 +43,7 @@ StopNetica()
   installs the demonstration version of Netica which is limited in its
   functionality (particularly in the size of the networks it handles).
   Unlocking the full version of Netica requires a license key which can
-  be purchased from Norsys (\link{http://www.Norsys.com/}).  They will
+  be purchased from Norsys (\url{http://www.Norsys.com/}).  They will
   send a license key which unlocks the full capabilities of the shared
   library.  This can be passed as the first argument to
   \code{StartNetica()}.  If the value of the first argument is
@@ -85,10 +84,11 @@ StopNetica()
   meaningful values.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{NewNeticaEnviron_ns()}, \code{InitNetica2_bn()},
-  \code{CloseNetica_bn()}, \code{LimitMemoryUsage_ns()},
-  \code{ArgumentChecking_ns()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{NewNeticaEnviron_ns}, \nref{InitNetica2_bn},
+  \nref{CloseNetica_bn}, \nref{LimitMemoryUsage_ns},
+  \nref{ArgumentChecking_ns} 
 }
 \author{Russell Almond
 }
@@ -101,7 +101,7 @@ StopNetica()
   The Netica API is also not free-as-in-beer software.  The demonstration
   version of the Netica API, however, is.  In order for you to make full
   use of the RNetica API, you must purchase a Netica API license from
-  Norsys (\link{http://norsys.com/}).
+  Norsys (\url{http://norsys.com/}).
 
   RNetica itself (the glue layers between R and Netica) is free (in both
   the speech and beer senses) software.  Suggestions for improvements

@@ -26,6 +26,7 @@ normCPT(cpt)
   across the last dimension is equal to 1.
 }
 \references{
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
 }
 \author{
   Russell Almond
@@ -34,7 +35,7 @@ normCPT(cpt)
   May be other functions for CPTs later.
 }
 \seealso{
-  \code{\link{NodeProb}}
+  \code{\link{NodeProbs}()}
 }
 \examples{
 normCPT(1:4)

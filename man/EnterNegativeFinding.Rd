@@ -43,8 +43,9 @@ EnterNegativeFinding(node, eliminatedVals)
   This function returns \code{node} invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{EnterFindingNot_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{EnterFindingNot_bn}
 }
 \author{
   Russell Almond

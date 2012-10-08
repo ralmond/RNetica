@@ -33,7 +33,8 @@ NodeNet(node)
   \code{NULL} if \code{node} is not active.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}: \code{GetNodeNet_bn}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+    \url{http://norsys.com/onLineAPI/Manual/index.html}: \nref{GetNodeNet_bn}
 }
 \author{
   Russell Almond
@@ -66,7 +67,7 @@ DeleteNodes(nodea)
 ## Now:
 stopifnot(nodea == nodeb)
 
-DeleteNet(list(neta,netb))
+DeleteNetwork(list(neta,netb))
 
 
 

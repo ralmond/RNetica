@@ -37,8 +37,9 @@ UncompileNetwork(net)
   The \code{NeticaBN} object \code{net} is returned invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{CompileNet_bn()}, \code{UncompileNet_bn()}, 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{CompileNet_bn}, \nref{UncompileNet_bn}, 
 
 }
 \author{

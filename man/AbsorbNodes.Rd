@@ -4,7 +4,7 @@
   Delete a Netica nodes in a way that maintains the connectivity.
 }
 \description{
-  This function deletes \code{\link{NetciaNode}} connecting
+  This function deletes \code{\link{NeticaNode}} connecting
   the parents of the deleted node to its children.  If multiple nodes
   are passed as the argument, then all of the nodes are absorbed.  The
   joint probability distribution over the remaining nodes should be the
@@ -30,8 +30,9 @@ AbsorbNodes(nodes)
   Returns \code{NULL}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{AbsorbNodes_bn}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{AbsorbNodes_bn}
 }
 \author{
   Russell Almond

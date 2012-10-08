@@ -31,14 +31,14 @@ DeleteLink(parent, child)
 \details{
   After adding a link \code{parent --> child}, it be the case that
   \code{parent} is in \code{\link{NodeParents}(child)} and \code{child}
-  is a member of \code{\link{NodeChildren(parent)}}.  If \code{child}
+  is a member of \code{\link{NodeChildren}(parent)}.  If \code{child}
   already has other parents, then the new parent will be added to the
   end of the list.  The order of the parents can be set by setting
   \code{NodeParents(child)}.  
 
   In general, the Bayesian network must always be an acyclic directed
   graph.  Therefore, if \code{parent} is a decendent of \code{child}
-  (that is if \code{\link{is.RelatedNode}(child)}, "decendent",
+  (that is if \code{\link{is.NodeRelated}(child)}, "decendent",
   \code{child} is \code{TRUE}), then Netica will generate an error.
 
   The function \code{DeleteLink()} removes the relationship, and the
@@ -55,8 +55,9 @@ DeleteLink(parent, child)
   The function \code{DeleteLink} invisibly returns the child node.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{AddLink_bn()}, \code{DeleteLink_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{AddLink_bn}, \nref{DeleteLink_bn}
 }
 \author{
   Russell Almond

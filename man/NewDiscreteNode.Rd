@@ -6,7 +6,10 @@
   Creates (or destroys) a node in a Netica Bayesian network.
 }
 \description{
-  
+  Creates a new node in the \code{\link{NeticaBN} net}.  Netica Nodes
+  can be either discrete, in which case a list of states must be given,
+  or continuous, where states are not given.  The function
+  \code{DeleteNodes()} deletes a single node or a list of nodes.
 }
 \usage{
 NewDiscreteNode(net, names, states = c("Yes","No"))
@@ -74,9 +77,10 @@ DeleteNodes(nodes)
   a value of \code{NULL} will be returned instead.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{NewNode_bn()}, \code{DeleteNode_bn()}, \code{GetNodeType_bn()},
-  \code{SetNodeLevels_bn()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{NewNode_bn}, \nref{DeleteNode_bn}, \nref{GetNodeType_bn},
+  \nref{SetNodeLevels_bn} 
 }
 \author{
   Russell Almond

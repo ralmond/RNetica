@@ -81,7 +81,7 @@ NewContinuousNode <- function (net, names) {
   if (any(!goodNames)) {
     stop("Illegal Netica Names, ",names[!goodNames])
   }
-  handles <- .Call("RN_NewContinuousNodes",net,names)
+  handles <- .Call("RN_NewContinuousNodes",net,names,PACKAGE="RNetica")
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -119,7 +119,7 @@ NewDiscreteNode <- function (net, names, states = c("Yes","No")) {
     stop("Unexpected object for states")
   }
     
-  handles <- .Call("RN_NewDiscreteNodes",net,names,nslist,statelist)
+  handles <- .Call("RN_NewDiscreteNodes",net,names,nslist,statelist,PACKAGE="RNetica")
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -136,7 +136,7 @@ DeleteNodes <- function (nodes) {
   if (any(!sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
-  handles <- .Call("RN_Delete_Nodes",nodes)
+  handles <- .Call("RN_Delete_Nodes",nodes,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("DeleteNodes: Netica Errors Encountered, see console for details.")
@@ -150,7 +150,7 @@ CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
                        options=character(0)) {
   if (is.NeticaNode(nodes) && length(nodes) ==1) nodes <-list(nodes)
   if (!all(sapply(nets,is.NeticaNode))) {
-    stop("Expected a list of Netica nodes, got, ",nets)
+    stop("Expected a list of Netica nodes, got, ",nodes)
   }
   options <- paste(options,collapse=",")
   if (is.null(newnet)) {
@@ -159,7 +159,7 @@ CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
   if (!is.NeticaBN(newnet) || !is.active(newnet)) {
     stop("Expected an active Bayes net, got ",newnet)
   }
-  handles <- .Call("RN_Copy_Nets",newnet, nodes, newnamelist,options)
+  handles <- .Call("RN_Copy_Nets",newnet, nodes, newnamelist,options,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("CopyNetworks: Netica Errors Encountered, see console for details.")
@@ -172,8 +172,8 @@ CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
     }
     newnamelist <- as.character(newnamelist)
     for (n in 1:length(handles)) {
-      if (!is.IDname(newnamelist[i])) {
-        stop("String ",newnamelist[i]," is not a legal Netica Name.")
+      if (!is.IDname(newnamelist[n])) {
+        stop("String ",newnamelist[n]," is not a legal Netica Name.")
       }
       NodeName(handles[[n]]) <- newnamelist[n]
     }
@@ -197,7 +197,7 @@ NetworkFindNode <- function (net,name) {
     if(!is.IDname(name)) {
       stop("Expected a Netica name, got ",name)
     }
-    handle <- .Call("RN_Find_Node",net,name)
+    handle <- .Call("RN_Find_Node",net,name,PACKAGE="RNetica")
     ecount <- ReportErrors()
     if (ecount[1]>0) {
       stop("FindNode: Netica Errors Encountered, see console for details.")
@@ -210,7 +210,7 @@ NetworkAllNodes <- function(net) {
   if (length(net)>1 || !is.NeticaBN(net) || !is.active(net)) {
     stop ("Expected an active Netica network, got ",net)
   }
-  handles <- .Call("RN_Network_AllNodes",net)
+  handles <- .Call("RN_Network_AllNodes",net,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NetworkAllNodes: Netica Errors Encountered, see console for details.")
@@ -223,7 +223,7 @@ NodeNet <- function(node) {
     stop ("Expected an active Netica node, got ",node)
   }
   if (!is.active(node)) return(NULL)
-  handle <- .Call("RN_NodeNet",node)
+  handle <- .Call("RN_NodeNet",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeNet: Netica Errors Encountered, see console for details.")
@@ -235,7 +235,7 @@ NodeName <- function (node) {
   if (!is.NeticaNode(node) || !is.active(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  name <- .Call("RN_GetNodeName",node)
+  name <- .Call("RN_GetNodeName",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeName: Netica Errors Encountered, see console for details.")
@@ -250,7 +250,7 @@ NodeName <- function (node) {
   if (length(value)>1 || !is.IDname(value)) {
     stop("Illegal Netica Name, ",value)
   }
-  handle <- .Call("RN_SetNodeName",node,value)
+  handle <- .Call("RN_SetNodeName",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeName: Netica Errors Encountered, see console for details.")
@@ -266,7 +266,7 @@ NodeTitle <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  title <- .Call("RN_GetNodeTitle",node)
+  title <- .Call("RN_GetNodeTitle",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeTitle: Netica Errors Encountered, see console for details.")
@@ -283,7 +283,7 @@ NodeTitle <- function (node) {
   }
   value <- as.character(value)
 
-  handle <- .Call("RN_SetNodeTitle",node,value)
+  handle <- .Call("RN_SetNodeTitle",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeTitle: Netica Errors Encountered, see console for details.")
@@ -295,7 +295,7 @@ NodeDescription <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  description <- .Call("RN_GetNodeComment",node)
+  description <- .Call("RN_GetNodeComment",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeDescription: Netica Errors Encountered, see console for details.")
@@ -312,7 +312,7 @@ NodeDescription <- function (node) {
     stop("Non-character titles in ", value)
   }
   value <- paste(value,collapse="\n")
-  handle <- .Call("RN_SetNodeComment",node,value)
+  handle <- .Call("RN_SetNodeComment",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeDescription: Netica Errors Encountered, see console for details.")
@@ -328,7 +328,7 @@ NodeUserField <- function (node, fieldname) {
   if (length(fieldname)>1 || !is.IDname(fieldname)) {
     stop("Illegal Netica Field Name, ",fieldname)
   }
-  value <- .Call("RN_GetNodeUserField",node,fieldname)
+  value <- .Call("RN_GetNodeUserField",node,fieldname,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeUserField: Netica Errors Encountered, see console for details.")
@@ -347,7 +347,7 @@ NodeUserField <- function (node, fieldname) {
   if (length(value)>1 || is.na(value)) {
     stop("Illegal field value.")
   }
-  handle <- .Call("RN_SetNodeUserField",node,fieldname,value)
+  handle <- .Call("RN_SetNodeUserField",node,fieldname,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeUserField: Netica Errors Encountered, see console for details.")
@@ -359,7 +359,7 @@ NodeAllUserFields <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected a Netica node, got, ",node)
   }
-  values <- .Call("RN_GetAllNodeUserFields",node)
+  values <- .Call("RN_GetAllNodeUserFields",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeUserField: Netica Errors Encountered, see console for details.")
@@ -371,7 +371,7 @@ NodeKind <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  kind <- .Call("RN_GetNodeKind",node)
+  kind <- .Call("RN_GetNodeKind",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeKind: Netica Errors Encountered, see console for details.")
@@ -390,7 +390,7 @@ NodeKind <- function (node) {
   if (length(value) >1) {
     warning("Value has length greater than 1, only first value used.")
   }
-  handle <- .Call("RN_SetNodeKind",node,value)
+  handle <- .Call("RN_SetNodeKind",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeKind: Netica Errors Encountered, see console for details.")
@@ -402,7 +402,7 @@ NodeVisStyle <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  style <- .Call("RN_GetNodeVisStyle",node)
+  style <- .Call("RN_GetNodeVisStyle",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeVisStyle: Netica Errors Encountered, see console for details.")
@@ -421,7 +421,7 @@ NodeVisStyle <- function (node) {
   if (length(value) >1) {
     warning("Value has length greater than 1, only first value used.")
   }
-  handle <- .Call("RN_SetNodeVisStyle",node,value)
+  handle <- .Call("RN_SetNodeVisStyle",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeVisStyle: Netica Errors Encountered, see console for details.")
@@ -433,7 +433,7 @@ NodeVisPos <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  pos <- .Call("RN_GetNodeVisPos",node)
+  pos <- .Call("RN_GetNodeVisPos",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeVisPos: Netica Errors Encountered, see console for details.")
@@ -449,7 +449,7 @@ NodeVisPos <- function (node) {
   if (length(value) >2 || any(is.na(value))) {
     stop("Expected a vector of 2 numbers, got", value)
   }
-  handle <- .Call("RN_SetNodeVisPos",node,value)
+  handle <- .Call("RN_SetNodeVisPos",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("SetNodeVisPos: Netica Errors Encountered, see console for details.")
@@ -461,7 +461,7 @@ NodeNumStates <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  nstates <- .Call("RN_GetNodeNumStates",node)
+  nstates <- .Call("RN_GetNodeNumStates",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeNumStates: Netica Errors Encountered, see console for details.")
@@ -474,7 +474,7 @@ NodeStates <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  states <- .Call("RN_GetNodeStates",node)
+  states <- .Call("RN_GetNodeStates",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStates: Netica Errors Encountered, see console for details.")
@@ -493,7 +493,7 @@ NodeStates <- function (node) {
   ## if (length(value) != NodeNumStates(node)) {
   ##   stop("Expected exactly ", NodeNumStates(node), " states")
   ## }
-  handle <- .Call("RN_SetNodeStates",node, paste(value,collapse=","))
+  handle <- .Call("RN_SetNodeStates",node, paste(value,collapse=","),PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStates: Netica Errors Encountered, see console for details.")
@@ -505,7 +505,7 @@ NodeStateTitles <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  titles <- .Call("RN_GetNodeStateTitles",node)
+  titles <- .Call("RN_GetNodeStateTitles",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStateTitles: Netica Errors Encountered, see console for details.")
@@ -524,7 +524,7 @@ NodeStateTitles <- function (node) {
   if (length(value) != NodeNumStates(node)) {
      stop("Expected exactly ", NodeNumStates(node), " titles")
   }
-  handle <- .Call("RN_SetNodeStateTitles",node, value)
+  handle <- .Call("RN_SetNodeStateTitles",node, value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStateTitles: Netica Errors Encountered, see console for details.")
@@ -537,7 +537,7 @@ NodeStateComments <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  comments <- .Call("RN_GetNodeStateComments",node)
+  comments <- .Call("RN_GetNodeStateComments",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStateComments: Netica Errors Encountered, see console for details.")
@@ -556,7 +556,7 @@ NodeStateComments <- function (node) {
   if (length(value) != NodeNumStates(node)) {
      stop("Expected exactly ", NodeNumStates(node), " comments")
   }
-  handle <- .Call("RN_SetNodeStateComments",node, value)
+  handle <- .Call("RN_SetNodeStateComments",node, value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeStateComments: Netica Errors Encountered, see console for details.")
@@ -570,10 +570,10 @@ NodeLevels <- function (node) {
   }
   if (is.discrete(node)) {
     ## Returns a named vector of length NodeNumStates(node)
-    levels <- .Call("RN_GetNodeLevelsDiscrete",node)
+    levels <- .Call("RN_GetNodeLevelsDiscrete",node,PACKAGE="RNetica")
   } else {
     ## Returns an unnamed vector of length NodeNumStates(node)+1
-    levels <- .Call("RN_GetNodeLevelsContinuous",node)
+    levels <- .Call("RN_GetNodeLevelsContinuous",node,PACKAGE="RNetica")
   }
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -600,7 +600,7 @@ NodeLevels <- function (node) {
       stop("Level cut points must be in increasing or decreasing order.")
     }
   }
-  handle <- .Call("RN_SetNodeLevels",node, value)
+  handle <- .Call("RN_SetNodeLevels",node, value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeLevels: Netica Errors Encountered, see console for details.")

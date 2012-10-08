@@ -1,7 +1,6 @@
 \name{CreateNetwork}
 \alias{CreateNetwork}
 \alias{DeleteNetwork}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Creates (destroys) a new Netica network.
 }
@@ -50,8 +49,9 @@ DeleteNetwork(nets)
   
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{NewNet_bn()}, \code{DeleteNet_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{NewNet_bn()}, \nref{DeleteNet_bn()}
 }
 \author{
   Russell Almond

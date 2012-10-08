@@ -29,8 +29,9 @@ NetworkRedo(net)
   it will be negative if the undo/redo stack is empty.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{UndoNetLastOper_bn()}, \code{RedoNetOper_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{UndoNetLastOper_bn}, \nref{RedoNetOper_bn}
 }
 \author{
   Russell Almond

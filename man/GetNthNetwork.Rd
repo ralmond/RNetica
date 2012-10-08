@@ -35,8 +35,9 @@ GetNthNetwork(n)
   the number of open networks.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNthNet_bn()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNthNet_bn} 
 }
 \author{
   Russell Almond
@@ -47,7 +48,7 @@ GetNthNetwork(n)
   a one-based reference system (the first net is 1).
 }
 \seealso{
-  \code{\link{CreateNetwork}()}, \code{\link{GetNamedNets}()}
+  \code{\link{CreateNetwork}()}, \code{\link{GetNamedNetworks}()}
 }
 \examples{
 

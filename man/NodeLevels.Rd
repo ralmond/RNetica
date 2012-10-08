@@ -69,10 +69,11 @@ NodeLevels(node) <- value
   \code{NodeNumStates()+1} with no names, or \code{character(0)}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{SetNodeLevels_bn()}, \code{GetNodeLevels_bn()},
-  \code{GetNodeNumberStates_bn()}, \code{GetNodeStateName_bn()},
-  \code{SetNodeStateNames_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{SetNodeLevels_bn()}, \nref{GetNodeLevels_bn},
+  \nref{GetNodeNumberStates_bn}, \nref{GetNodeStateName_bn},
+  \nref{SetNodeStateNames_bn}
 }
 \author{
   Russell Almond
@@ -136,7 +137,7 @@ NodeLevels(wnode) <- c(0, 0.1, 10, 100, Inf)
 stopifnot(
  length(NodeStates(wnode))==4,
  NodeNumStates(wnode)==4,
- all(nchar(NodeStates)==0)
+ all(nchar(NodeStates(wnode))==0)
 )
 ## Clear levels
 NodeLevels(wnode) <- c()

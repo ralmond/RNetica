@@ -36,8 +36,9 @@ NetworkName(net) <- value
   The setter method returns the modified object.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}:
-    \code{GetNetName_bn()}, \code{SetNetName_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+    \nref{GetNetName_bn}, \nref{SetNetName_bn}
 }
 \author{
   Russell Almond

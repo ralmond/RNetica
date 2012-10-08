@@ -47,15 +47,16 @@ NodeStateComments(node) <- value
   The setter methods return the modified \code{NeticaNode} object invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeStateTitle_bn()},\code{SetNodeStateTitle_bn()},  
-  \code{GetNodeStateComment_bn()},\code{SetNodeStateComment_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeStateTitle_bn},\nref{SetNodeStateTitle_bn},  
+  \nref{GetNodeStateComment_bn},\nref{SetNodeStateComment_bn}
 }
 \author{
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeStateNames}()},
+  \code{\link{NeticaNode}}, \code{\link{NodeStates}()},
   \code{\link{NodeLevels}()}
 }
 \examples{

@@ -39,8 +39,9 @@ NetworkAllNodes(net)
   \code{NetworkAllNodes()}.
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html},
-    \code{GetNodeNamed_bn()}, \code{GetNetNodes_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html},
+    \nref{GetNodeNamed_bn}, \nref{GetNetNodes_bn}
 }
 \author{
   Russell Almond

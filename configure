@@ -2046,13 +2046,10 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
   #AC_PROG_CC
 
 
-DEFAULT_NETICA_HOME="/opt/Netica_API_504"
 
 # Check whether --with-netica was given.
 if test "${with_netica+set}" = set; then :
   withval=$with_netica; NETICA_HOME=${withval}
-else
-  NETICA_HOME=${DEFAULT_NETICA_HOME}
 
 fi
 

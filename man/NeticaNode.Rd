@@ -16,9 +16,9 @@
 }
 \usage{
 is.NeticaNode(x)
-print.NeticaNode(x, ...)
-print.NeticaNode(x, ...)
-Ops.NeticaNode(e1, e2)
+\method{print}{NeticaNode}(x, ...)
+\method{print}{NeticaNode}(x, ...)
+\method{Ops}{NeticaNode}(e1, e2)
 e1 == e2
 e1 != e2
 }
@@ -43,7 +43,7 @@ e1 != e2
   \code{NeticaNode}s come in two types:  discrete and continuous (see
   \code{\link{is.discrete}()}).  The two types give slightly different
   meanings to the \code{\link{NodeStates}()} and
-  \code{\link{NodeLevel}()} attributes of the node.  The printed
+  \code{\link{NodeLevels}()} attributes of the node.  The printed
   representation shows whether the node is discrete, continuous or
   inactive (deleted).  
 
@@ -69,8 +69,9 @@ e1 != e2
 
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeUserData_bn()}, \code{SetNodeUserData_bn()} (these are used
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLurl/Manual/index.html}:
+  \nref{GetNodeUserData_bn}, \nref{SetNodeUserData_bn} (these are used
   to maintain the back pointers to the R object).
 }
 \author{
@@ -105,7 +106,7 @@ e1 != e2
   \code{\link{NeticaBN}}, \code{\link{NetworkFindNode}()},
   \code{\link{is.active}()}, \code{\link{is.discrete}()}, 
   \code{\link{NewContinuousNode}()}, \code{\link{NewDiscreteNode}()},
-  \code{\link{DeleteNode}()}, \code{\link{NodeName}()},
+  \code{\link{DeleteNodes}()}, \code{\link{NodeName}()},
   \code{\link{NodeStates}()}, \code{\link{NodeLevels}()}
 
 }
@@ -127,7 +128,7 @@ stopifnot(node1==node2)
 ## Warning:  The following expression is true!
 as.character(node1) != as.character(node2)
 
-node <- DeleteNode(node1)
+noded <- DeleteNodes(node1)
 stopifnot(!is.active(node1))
 stopifnot(!is.active(node2))
 stopifnot(as.character(noded)=="Unused")

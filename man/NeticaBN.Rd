@@ -18,9 +18,9 @@ An object referencing a Bayesian network in Netica.
 }
 \usage{
 is.NeticaBN(x)
-toString.NeticaBN(x, ...)
-print.NeticaBN(x, ...)
-Ops.NeticaBN(e1, e2)
+\method{toString}{NeticaBN}(x, ...)
+\method{print}{NeticaBN}(x, ...)
+\method{Ops}{NeticaBN}(e1, e2)
 e1 == e2
 e1 != e2
 
@@ -64,8 +64,9 @@ e1 != e2
   whether the objects are equal.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNetUserData_bn()}, \code{SetNetUserData_bn()} (these are used
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIurl/index.html}:
+  \nref{GetNetUserData_bn}, \nref{SetNetUserData_bn} (these are used
   to maintain the back pointers to the R object).
 }
 \author{
@@ -92,10 +93,10 @@ e1 != e2
   storing the filename across R sessions.
 }
 \seealso{
-  \code{\link{CreateNetwok}()},\code{\link{DeleteNetwork}()},
+  \code{\link{CreateNetwork}()},\code{\link{DeleteNetwork}()},
   \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()},
-  \code{\link{is.active()}, \code{NetworkAllNodes}()},
-  \code{\link{WriteNetworks}()}, \code{\link{NetworkFilename}()}
+  \code{\link{is.active}()}, \code{\link{NetworkAllNodes}()},
+  \code{\link{WriteNetworks}()}, \code{\link{GetNetworkFileName}()}
 }
 \examples{
 

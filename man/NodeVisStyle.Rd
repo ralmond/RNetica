@@ -39,8 +39,9 @@ NodeVisStyle(node) <- value
   The setter method returns the modified \code{node} object.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeVisStyle_bn()}, \code{SetNodeVisStyle_bn()}, 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeVisStyle_bn}, \nref{SetNodeVisStyle_bn}, 
 
 }
 \author{

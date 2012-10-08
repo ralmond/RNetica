@@ -32,8 +32,9 @@ NodeVisPos(node) <- value
   A numeric vector of length 2 with names \code{"x"} and \code{"y"}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeVisPosition_bn()}, \code{SetNodeVisPosition_bn()}, 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeVisPosition_bn}, \nref{SetNodeVisPosition_bn}, 
 }
 \author{
   Russell Almond
@@ -77,7 +78,7 @@ stopifnot(
   pos["y"] >1
 )
 
-DeleteNetwork(snet)
+DeleteNetwork(pnet)
 
 
 }

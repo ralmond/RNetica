@@ -56,8 +56,9 @@ IsBeliefUpdated(node)
   being updated.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeBeliefs_bn()}, \code{IsBeliefUpdated_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeBeliefs_bn}, \nref{IsBeliefUpdated_bn}
 }
 \author{
   Russell Almond
@@ -68,7 +69,7 @@ IsBeliefUpdated(node)
 }
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeProbs}()},
-  \code{\link{NodeFindings}()} 
+  \code{\link{NodeFinding}()} 
 }
 \examples{
 irt5 <- ReadNetworks(paste(library(help="RNetica")$path,

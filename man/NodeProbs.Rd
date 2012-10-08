@@ -1,6 +1,6 @@
 \name{NodeProbs}
 \alias{NodeProbs}
-\alias{NodeProbs <-}
+\alias{NodeProbs<-}
 \title{
   Gets or sets the conditional probability table associated with a
   Netica node.
@@ -16,7 +16,6 @@
 NodeProbs(node)
 NodeProbs(node) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
     An active, discrete \code{\link{NeticaNode}} whose conditional
@@ -29,8 +28,8 @@ NodeProbs(node) <- value
 }
 \details{
 
-  Let \code{node} be the node of interest and \code{parent\emph{1}},
-  \code{parent\emph{2}}, ..., \code{parent\emph{p}}, where $p$ is
+  Let \code{node} be the node of interest and \code{parent\var{1}},
+  \code{parent\var{2}}, ..., \code{parent\var{p}}, where $p$ is
   the number of parents.  Let \code{pdim = sapply(\link{NodeParents}(node),
   \link{NodeNumStates})} be a vector with the number of states for each parent.
   A parent configuration is defined by assigning each of the parent
@@ -39,8 +38,8 @@ NodeProbs(node) <- value
   states of \code{node}.
 
   The result of \code{NodeProbs(node)} will be an array with dimensions
-  \code{c(pdim, NodeNumStates(node))}.  The first $p$ states will be
-  named according to the \code{\link{NodeInputStates}(node)} or the
+  \code{c(pdim, NodeNumStates(node))}.  The first $p$ dimensions will be
+  named according to the \code{\link{NodeInputNames}(node)} or the
   \code{\link{NodeName}(parent)} if the input names are not set.  The
   last dimension will be named according to the node itself.  The
   \code{dimnames} for the resulting array will correspond to the state
@@ -54,8 +53,9 @@ NodeProbs(node) <- value
   A honkin' great array.  See details.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeProbs_bn()}, \code{SetNodeProbs_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeProbs_bn}, \nref{SetNodeProbs_bn}
 }
 \author{
   Russell Almond

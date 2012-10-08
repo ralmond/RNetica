@@ -55,8 +55,9 @@ NodeKind(node) <- value
   \code{"Constant"}, or \code{"Stub"}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeKind_bn()}, \code{SetNodeKind_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeKind_bn}, \nref{SetNodeKind_bn}
 }
 \author{
   Russell Almond
@@ -108,8 +109,15 @@ stopifnot(
  NodeKind(pretestCost) == "Utility",
  NodeKind(pretestR) == "Constant"
  )
- 
-stop("Need a test for Stubs.")
+
+## To make stub node, need links
+AddLink(skills[[1]],pretestScore)
+NodeInputNames(pretestScore) <- "SkillTested"
+## Detatch node
+NodeParents(pretestScore)$SkillTested <- list(NULL)
+stopifnot(
+  NodeKind(NodeParents(pretestScore)$SkillTested) == "Stub"
+)
 
 DeleteNetwork(knet)
 }

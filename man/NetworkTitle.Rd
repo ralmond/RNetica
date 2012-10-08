@@ -39,9 +39,10 @@ NetworkComment(net) <- value
   A character vector of length 1 providing the title or comment.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNetTitle_bn()}, \code{SetNetTitle_bn()},
-  \code{GetNetComments_bn()}, \code{SetNetComments_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNetTitle_bn}, \nref{SetNetTitle_bn},
+  \nref{GetNetComments_bn}, \nref{SetNetComments_bn}
 }
 \author{
   Russell Almond

@@ -62,8 +62,9 @@ NodeLikelihood(node) <- value
   node invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeLikelihood_bn()}, \code{EnterNodeLikelihood_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeLikelihood_bn}, \nref{EnterNodeLikelihood_bn}
 }
 \author{
   Russell Almond
