@@ -7,10 +7,10 @@ LicenseKey <- NULL
 StartNetica <- function(license=LicenseKey, checking=NULL,
                         maxmem=NULL) {
   invisible(.C("RN_start_Netica",as.character(LicenseKey),
-     as.character(checking),as.double(maxmem)))
+     as.character(checking),as.double(maxmem), PACKAGE="RNetica"))
 }
 StopNetica <- function() {
-  invisible(.C("RN_stop_Netica"))
+  invisible(.C("RN_stop_Netica",PACKAGE="RNetica"))
 }
 
 .onLoad =
@@ -27,7 +27,7 @@ EVERY_STATE <- -Inf
     LicenseKey <- NeticaLicenseKey
   StartNetica()
   ## Deep voodoo needed to get around R safeguards
-  assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState"),"RNetica")
+  assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE="RNetica"),"RNetica")
 }
 
 .Last.lib <- function(libpath) {

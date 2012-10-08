@@ -1,7 +1,6 @@
 \name{IDname}
 \alias{is.IDname}
 \alias{IDname}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Tests to see if a string is a valid as a Netica Identifier.
 }
@@ -14,11 +13,10 @@
 \usage{
 is.IDname(x)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
     A character vector of possible identifier names.
-}
+  }
 }
 \details{
 
@@ -31,7 +29,7 @@ is.IDname(x)
   A logical vector of the same length of \code{x}.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}
 }
 \author{
   Russell Almond
@@ -41,7 +39,9 @@ is.IDname(x)
   functions that require a Netica IDname.
 }
 \seealso{
-  \code{\link{CreateNets}()}
+  \code{\link{CreateNetwork}()}, \code{\link{NewDiscreteNode}()},
+  \code{\link{NodeStates}()}, \code{\link{NodeName}()},
+  \code{\link{NodeInputNames}()},
 }
 \examples{
 stopifnot(is.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",

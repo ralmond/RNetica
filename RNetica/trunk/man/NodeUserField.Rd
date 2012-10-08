@@ -44,16 +44,17 @@ NodeAllUserFields(node)
   result are the names of the fields.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
-  \code{GetNodeUserField_bn()}, \code{SetNodeUserField_bn()},
-  \code{GetNodeNthUserField_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}
+  \nref{GetNodeUserField_bn}, \nref{SetNodeUserField_bn},
+  \nref{GetNodeNthUserField_bn}
 
 }
 \author{
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeComment}()}
+  \code{\link{NeticaBN}}, \code{\link{NodeDescription}()}
 }
 \examples{
 usedNet <- CreateNetwork("UsedNet")

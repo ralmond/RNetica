@@ -65,10 +65,11 @@ NodeStates(node) <- value
   \code{node} object.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeNumberStates_bn()}, \code{GetNodeStateName_bn()},
-  \code{SetNodeStateNames_bn()},  \code{GetNodeLevels_bn()} 
-  \code{SetNodeLevels_bn()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeNumberStates_bn}, \nref{GetNodeStateName_bn},
+  \nref{SetNodeStateNames_bn},  \nref{GetNodeLevels_bn} 
+  \nref{SetNodeLevels_bn} 
 }
 \author{
   Russell Almond

@@ -70,8 +70,9 @@ GetNetworkFileName(net)
   after an R session is restarted.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{WriteNet_bn()}, \code{ReadNet_bn()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{WriteNet_bn}, \nref{ReadNet_bn} 
 }
 \author{
   Russell Almond
@@ -80,7 +81,7 @@ GetNetworkFileName(net)
   The demonstration version of Netica is limited to the size of the
   networks it will write (the limit is somewhere around 10 nodes).  If
   you are running across errors saving large networks, you need to
-  purchase a Netica API license from Norsys (\link{http://norsys.com/}).
+  purchase a Netica API license from Norsys (\url{http://norsys.com/}).
   
   \code{ReadNetworks()} and \code{WriteNetworks()} are vectorized, and
   can take either scalars or vectors as arguments (thus, a whole

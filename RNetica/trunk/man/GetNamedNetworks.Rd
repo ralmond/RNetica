@@ -34,7 +34,8 @@ GetNamedNetworks(namelist)
   the name does not refer to a network.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:  \code{GetNthNet_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:  \nref{GetNthNet_bn}
 }
 \author{
   Russell Almond

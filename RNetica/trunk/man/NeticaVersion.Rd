@@ -8,7 +8,6 @@ The version number of Netica is returned as both an integer and a string.
 \usage{
 NeticaVersion()
 }
-%- maybe also 'usage' for other objects documented here.
 \details{
   This must be called after the call to \code{\link{StartNetica}()}.  
 }
@@ -17,8 +16,9 @@ NeticaVersion()
   \item{message }{String defining Netica version.}
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNeticaVersion_bn()} 
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNeticaVersion_bn} 
 }
 \author{
   Russell Almond

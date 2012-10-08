@@ -12,7 +12,7 @@
 }
 \usage{
 is.NodeRelated(node1, node2, relation = "connected")
-GetRelatedNode(nodelist, relation = "connected")
+GetRelatedNodes(nodelist, relation = "connected")
 }
 \arguments{
   \item{node1}{
@@ -97,9 +97,10 @@ GetRelatedNode(nodelist, relation = "connected")
   \code{nodelist}.  There may be duplicates in this list.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{IsNodeRelated_bn}, \code{GetRelatedNodes_bn},
-  \code{GetRelatedNodesMult_bn}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{IsNodeRelated_bn}, \nref{GetRelatedNodes_bn},
+  \nref{GetRelatedNodesMult_bn}
 
   Pearl, J. (1988).  \emph{Probabilistic Reasoning in Intelligent
     Systems.}  Morgan--Kaufmann.

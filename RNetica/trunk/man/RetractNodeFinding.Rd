@@ -14,7 +14,7 @@
 }
 \usage{
 RetractNodeFinding(node)
-RetractNodeFinding(net)
+RetractNetFindings(net)
 }
 \arguments{
   \item{node}{
@@ -36,8 +36,9 @@ RetractNodeFinding(net)
   Returns its argument invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{RetractNetFindings_bn()}, \code{RetractNodeFindings_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{RetractNetFindings_bn}, \nref{RetractNodeFindings_bn}
 }
 \author{
   Russell Almond

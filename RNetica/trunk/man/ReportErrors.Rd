@@ -12,7 +12,6 @@
 ReportErrors(maxreport = 999999, clear = TRUE)
 ClearAllErrors(severity="XXX_ERR")
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{maxreport}{An integer giving the maximum number errors to report.
 }
@@ -36,8 +35,9 @@ ClearAllErrors(severity="XXX_ERR")
   severity \code{"ERROR_ERROR"} or higher.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetError_ns()}, \code{ClearError_ns()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetError_ns}, \nref{ClearError_ns}
 }
 \author{
   Russell Almond

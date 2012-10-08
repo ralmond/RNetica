@@ -44,9 +44,10 @@ NetworkAllUserFields(net)
   result are the names of the fields.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}
-  \code{GetNetUserField_bn()}, \code{SetNetUserField_bn()},
-  \code{GetNetNthUserField_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}
+  \nref{GetNetUserField_bn}, \nref{SetNetUserField_bn},
+  \nref{GetNetNthUserField_bn}
 
 }
 \author{

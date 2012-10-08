@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rm -f *~ src/*~ src/*.o src/*.so man/*~ R/*~ config.* src/Makevars 

@@ -40,8 +40,9 @@ NodeName(node)<- value
   The setter method returns the \code{NeticaNode} object
 }
 \references{
-    \link{http://norsys.com/onLineAPI/Manual/index.html}:
-    \code{GetNodeName_bn()}, \code{SetNodeName_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeName_bn}, \nref{SetNodeName_bn}
 }
 \author{
   Russell Almond

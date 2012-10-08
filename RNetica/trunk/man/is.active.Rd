@@ -20,7 +20,7 @@ is.active(x)
 \details{
   Internally, both \code{NeticaBN} and \code{NeticaNode} objects contian
   pointers to the corresponding Netica objects. The
-  \code{\link{DeleteNetwork}()} and \code{\link{DeleteNode}()}
+  \code{\link{DeleteNetwork}()} and \code{\link{DeleteNodes}()}
   functions deletes the Netica objects (and clears the pointers in the R
   objects).  It is difficult to control when R objects are deleted,
   especially if they are protected in data structures that are saved in
@@ -47,8 +47,8 @@ is.active(x)
   each one.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html},
-  \link{http://lib.stat.cmu.edu/R/CRAN/doc/manuals/R-exts.html}
+  \url{http://norsys.com/onLineAPI/Manual/index.html},
+  \url{http://lib.stat.cmu.edu/R/CRAN/doc/manuals/R-exts.html}
 }
 \author{
   Russell Almond
@@ -56,7 +56,7 @@ is.active(x)
 \seealso{
   \code{\link{StopNetica}()}, \code{\link{NeticaBN}},
   \code{\link{DeleteNetwork}()}, \code{\link{NeticaNode}},
-  \code{\link{DeleteNode}()}
+  \code{\link{DeleteNodes}()}
 }
 \examples{
 anet <- CreateNetwork("ActiveNet")

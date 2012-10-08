@@ -13,14 +13,13 @@
 }
 \usage{
 NodeTitle(node)
-NodeTitle(net) <- value
-NodeDescription(net)
-NodeDescription(net) <- value
+NodeTitle(node) <- value
+NodeDescription(node)
+NodeDescription(node) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{net}{
-    A \code{\link{NeticaBN}} object.
+  \item{node}{
+    A \code{\link{NeticaNode}} object.
   }
   \item{value}{
     A character object giving the new title or description.
@@ -39,9 +38,10 @@ NodeDescription(net) <- value
   A character vector of length 1 providing the title or description.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeTitle_bn()}, \code{SetNodeTitle_bn()},
-  \code{GetNodeComments_bn()}, \code{SetNodeComments_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeTitle_bn}, \nref{SetNodeTitle_bn},
+  \nref{GetNodeComments_bn}, \nref{SetNodeComments_bn}
 }
 \author{
   Russell Almond
@@ -51,7 +51,7 @@ NodeDescription(net) <- value
   "Comments" in the API.
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodekName}()} 
+  \code{\link{NeticaNode}}, \code{\link{NodeName}()} 
 }
 \examples{
 net2 <- CreateNetwork("secondNet")

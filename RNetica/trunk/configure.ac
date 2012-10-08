@@ -10,12 +10,11 @@ AC_INIT([RNetica], 1.1) dnl RNetica, 1.1-8
 dnl ======================================================
 
 dnl DEFAULT_NETICA_HOME="/home/ralmond/software/Netica_API_504"
-DEFAULT_NETICA_HOME="/opt/Netica_API_504"
+dnl DEFAULT_NETICA_HOME="/opt/Netica_API_504"
 AC_ARG_WITH([netica],
             AC_HELP_STRING([--with-netica=PATH],
                            [the path to the Netica API directory]),
-            [NETICA_HOME=${withval}],
-            [NETICA_HOME=${DEFAULT_NETICA_HOME}]
+            [NETICA_HOME=${withval}]
             )
 NETICA_LIB="${NETICA_HOME}/lib"
 dnl Netica has non-standard path to lib64 directory.

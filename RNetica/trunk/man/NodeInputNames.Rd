@@ -56,9 +56,10 @@ NodeInputNames(node) <- value
   The setter function returns the node object invisibly.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:
-  \code{GetNodeInputNames_bn()}, \code{SetNodeInputNames_bn()},
-  \code{SwitchNodeParent_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \nref{GetNodeInputNames_bn}, \nref{SetNodeInputNames_bn},
+  \nref{SwitchNodeParent_bn}
 }
 \author{
   Russell Almond

@@ -1,6 +1,5 @@
 \name{CopyNetworks}
 \alias{CopyNetworks}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Makes copies of Netica networks.
 }
@@ -51,14 +50,16 @@ CopyNetworks(nets, newnamelist, options = character(0))
   \code{nets} does not exit.
 }
 \references{
-  \link{http://norsys.com/onLineAPI/Manual/index.html}:  \code{CopyNet_bn()}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+\url{http://norsys.com/onLineAPI/Manual/index.html}:
+\nref{CopyNet_bn}
 }
 \author{
   Russell Almond
 }
 
 \seealso{
-  \code{\link{DeleteNet}()}
+  \code{\link{DeleteNetwork}()}
 }
 \examples{
 
