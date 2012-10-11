@@ -1,3 +1,7 @@
+2012-10-08  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (as.CPF): Added.
+
 2012-10-05  Russell G. Almond  <ralmond@Limu>
 
 	* R/Inference.R (EnterNegativeFinding, "NodeFinding<-")

@@ -23,8 +23,10 @@ function(libname, pkgname)
 EVERY_STATE <- -Inf
 
 .onAttach <- function(libname, pkgname) {
-  if(exists("NeticaLicenseKey",mode="character"))
-    LicenseKey <- NeticaLicenseKey
+  if(exists("NeticaLicenseKey",mode="character")) {
+    assignInNamespace("LicenseKey", NeticaLicenseKey, "RNetica")
+    cat("License Key Installed.")
+  }
   StartNetica()
   ## Deep voodoo needed to get around R safeguards
   assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE="RNetica"),"RNetica")

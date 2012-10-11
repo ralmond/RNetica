@@ -192,6 +192,12 @@ WriteNetworks <- function (nets, paths) {
   if (any(!sapply(nets,is.NeticaBN))) {
     stop("Expected a list of Netica networks, got, ",nets)
   }
+  if (missing(paths)) {
+    paths <- sapply(nets,GetNetworkFileName)
+    if (any(nchar(paths)==0)) {
+      stop("File names missing for net with no associated file name.")
+    }
+  }
   paths <- as.character(paths)
   if (any(is.na(paths))) {
     stop("Expected a list of pathnames, got, ",paths)

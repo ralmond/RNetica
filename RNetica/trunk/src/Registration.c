@@ -170,7 +170,11 @@ void RN_start_Netica(char** license, char** checking, double* maxmem) {
     lic = license[0];
   }
   RN_netica_env = NewNeticaEnviron_ns(lic,NULL,NULL);
-  
+
+  if(!RN_netica_env) {
+    error("Netica License Key not accepted. \n Make sure key starts with a + and ends with five digit security code.");
+  }
+
   res = InitNetica2_bn(RN_netica_env,mesg);
   if (res < 0) {
     error("%s",mesg);

@@ -51,7 +51,8 @@ export(
    )
 
 export(
-   NodeProbs, "NodeProbs<-", normCPT,
+   NodeProbs, "NodeProbs<-",
+   normCPT, as.CPF, 
 ##   ReorderNodeStates, RemoveNodeState,
    IsNodeDeterministic, HasNodeTable,
    DeleteNodeTable

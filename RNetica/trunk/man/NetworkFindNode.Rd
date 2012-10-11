@@ -36,7 +36,8 @@ NetworkAllNodes(net)
 \value{
   The \code{\link{NeticaNode}} object or list of \code{NeticaNode}
   objects corresponding to \code{names}, or a list of all node objects for
-  \code{NetworkAllNodes()}.
+  \code{NetworkAllNodes()}.  In the latter case, the names will be set
+  to the node names.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
