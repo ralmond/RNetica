@@ -28,7 +28,9 @@ GetNetworkFileName(net)
     A character vector of pathnames to \code{.neta} files.  For
     \code{ReadNetworks()}, the pathnames must exist. For
     \code{WriteNetworks()}, the \code{length(paths)} must equal
-    \code{length(nets)} .
+    \code{length(nets)}.  For \code{WriteNetworks()} if \code{paths} are
+    missing, then \code{GetNetworkFileName()} will be called to try and
+    determine any path associated with the node.
   }
 }
 \details{

@@ -269,13 +269,14 @@ NodeProbs <- function (node) {
 
   dimnames <- c(parnames,childnames)
   dims <- sapply(dimnames,length)
-  result <- array(NA,dim=dims,dimnames=dimnames)
+  result <- array(NA_real_,dim=dims,dimnames=dimnames)
 
   if (length(statecounts)>0) {
     config <- -1
     while (!is.na((config <- nextconfig(config,statecounts))[1])) {
-      result[configindex(config,nstates)] <-
-        .Call("RN_GetNodeProbs",node,config,PACKAGE="RNetica")
+      row <- .Call("RN_GetNodeProbs",node,config,PACKAGE="RNetica")
+      if (!is.null(row))
+        result[configindex(config,nstates)] <- row
     }
   } else { ## Prior node, no parents.
     result[] <- .Call("RN_GetNodeProbs",node,NULL,PACKAGE="RNetica")
@@ -301,7 +302,7 @@ NodeProbs <- function (node) {
   statecounts <- sapply(NodeParents(node),NodeNumStates)
   nstates <- NodeNumStates(node)
   dims <- c(statecounts,nstates)
-  if (any (dim(value) != dims)) {
+  if (length(dims) != length(dim(value)) || any (dim(value) != dims)) {
     stop("Dimensions not correct for this node.")
   }
 
@@ -321,63 +322,6 @@ NodeProbs <- function (node) {
   invisible(node)
 }
 
-## Unfinished
-## This function interprets the various input modes and returns an
-## integer matrix which does the selection.
-parseDims <- function (pstates,inames,...) {
-  pnames <- names(pstates)
-  pdim <- sapply(pstates,length)
-  ndim <- length(pdim)
-
-  ## This creates a call object with the arguments
-  clist <- substitute(list(...))
-  ## Need to find and irradicate stray marks
-  if (length(clist) == ndim+1) {
-    ## positional form must have number of entries equal to number of
-    ## parents.
-    for (idim in 2:ndim) {
-      if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
-        ## Blank entry, replace with 1:n
-        clist[idim] <- list(1:pdim[idim])
-      }
-    }
-  }
- eval(clist)
-}
-
-normCPT <- function (cpt) {
-  ndim <- length(dim(cpt))
-  if (ndim <= 1) return(cpt/sum(cpt))
-  ndim <- ndim-1
-  sweep(cpt,1:ndim,apply(cpt,1:ndim,sum),"/")
-}
-
-## Unfinished.
-## "[.NeticaNode" <- function (x, ...) {
-##  if (length(x)>1 || !is.NeticaNode(x) || !is.active(x)) {
-##     stop ("Node is not an active Netica node", x)
-##   }
-##  result <- NULL
-##  nparstates <- sapply(NodeParents(node),NodeNumStates)
-##  subscript <- alist(...)
-##  if (length(subscript) == 1) {
-##    ## Subsetting by simple index, array or matrix
-
-##  } else {
-##    selected <- nparstates
-##    if (length(subscript) ==1 && as.character(subscript)=="...") {
-##      ## If zero, select all, so we are good.
-##    } else {
-     
-
-##      if (!length(subscript) == length(nparstates)) {
-##        stop("Expected ", length(nparstates), " dimensions.")
-##      }
-
-##    }
-##  }
-##  result
-## }
 
 IsNodeDeterministic <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
@@ -415,3 +359,131 @@ DeleteNodeTable <- function (node) {
   }
   invisible(handle)
 }
+
+
+#############################################################################
+##  Conditional Probability Frames versus Tables
+############################################################################
+
+## There are two reasonable ways to store a conditional probility
+## table.  The first is a multi-dimensional array with each dimension
+## corresponding to a parent variable, and the last dimension
+## corresponding to the child variable.  Call this method the CPT.
+
+## The second way is to make a data frame where the first couple of
+## variables are factor variables that indicate the state of the
+## parent variables.  The last couple of variables are real variables
+## that indicate the probabilities associated with the states of the
+## child variable.  Call that the CPF
+
+is.CPF <- function (x) {
+  is(x,"CPF")
+}
+
+as.CPF <- function(x) {
+  if (is.array(x)) {
+    if (length(dim(x)) > 1) {
+      dnames <- dimnames(x)
+      npar <- length(dnames) -1L
+      parfactors <- do.call(expand.grid,dnames[1:npar])
+      probs <- data.frame(matrix(x,nrow(parfactors)))
+      ## This counts on the fact that "." is not a legal name char in Netica
+      names(probs) <-
+        paste(names(dnames)[npar+1],dnames[[npar+1]],sep=".")
+      result <- data.frame(parfactors,probs)
+      class(result) <- c("CPF",class(result))
+      return (result)
+    } else {
+      probs <- data.frame(matrix(x,1))
+      names(probs) <- names(x)
+      class(probs) <- c("CPF",class(probs))
+      return (probs)
+    }
+  } else if (is.data.frame(x)) {
+    ## Resort columns so factors are in front.
+    facts <- sapply(x,is.factor)
+    result <- data.frame(x[facts],x[!facts])
+    if (!is.CPF(x)) {
+      class(x) <- c("CPF",class(x))
+    }
+    return(x)
+  } else {
+    stop("Don't know how to turn a ",class(x), " into a CPF.")
+  }
+}
+
+as.CPT <- function (x) {
+  if (is.array(x)) {
+    return(x) ## Hope this really is a CPT
+  } else  if (is.data.frame(x)) {
+    ## TODO
+
+  } else {
+    stop("Don't know how to turn a ",class(x), " into a CPT.")
+  }
+}
+
+normCPT <- function (cpt) {
+  ndim <- length(dim(cpt))
+  if (ndim <= 1) return(cpt/sum(cpt))
+  ndim <- ndim-1
+  sweep(cpt,1:ndim,apply(cpt,1:ndim,sum),"/")
+}
+
+
+
+## Unfinished
+## This function interprets the various input modes and returns an
+## integer matrix which does the selection.
+parseDims <- function (pstates,inames,...) {
+  pnames <- names(pstates)
+  pdim <- sapply(pstates,length)
+  ndim <- length(pdim)
+
+  ## This creates a call object with the arguments
+  clist <- substitute(list(...))
+  ## Need to find and irradicate stray marks
+  if (length(clist) == ndim+1) {
+    ## positional form must have number of entries equal to number of
+    ## parents.
+    for (idim in 2:ndim) {
+      if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
+        ## Blank entry, replace with 1:n
+        clist[idim] <- list(1:pdim[idim])
+      }
+    }
+  }
+ eval(clist)
+}
+
+
+## Unfinished.
+## "[.NeticaNode" <- function (x, ...) {
+##  if (length(x)>1 || !is.NeticaNode(x) || !is.active(x)) {
+##     stop ("Node is not an active Netica node", x)
+##   }
+##  result <- NULL
+##  nparstates <- sapply(NodeParents(node),NodeNumStates)
+##  subscript <- alist(...)
+##  if (length(subscript) == 1) {
+##    ## Subsetting by simple index, array or matrix
+
+##  } else {
+##    selected <- nparstates
+##    if (length(subscript) ==1 && as.character(subscript)=="...") {
+##      ## If zero, select all, so we are good.
+##    } else {
+     
+
+##      if (!length(subscript) == length(nparstates)) {
+##        stop("Expected ", length(nparstates), " dimensions.")
+##      }
+
+##    }
+##  }
+##  result
+## }
+
+
+
+

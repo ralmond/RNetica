@@ -215,6 +215,7 @@ NetworkAllNodes <- function(net) {
   if (ecount[1]>0) {
     stop("NetworkAllNodes: Netica Errors Encountered, see console for details.")
   }
+  names(handles) <- sapply(handles,as.character)
   handles
 }
   
