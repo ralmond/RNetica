@@ -302,8 +302,14 @@ NodeProbs <- function (node) {
   statecounts <- sapply(NodeParents(node),NodeNumStates)
   nstates <- NodeNumStates(node)
   dims <- c(statecounts,nstates)
-  if (length(dims) != length(dim(value)) || any (dim(value) != dims)) {
-    stop("Dimensions not correct for this node.")
+  if (length(dims) == 1) {
+    if (length(value) != dims) {
+      stop("Dimensions not correct for this node.")
+    }
+  } else {
+    if (length(dims) != length(dim(value)) || any (dim(value) != dims)) {
+      stop("Dimensions not correct for this node.")
+    }
   }
 
   if (length(statecounts)>0) {
