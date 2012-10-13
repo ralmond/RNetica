@@ -1,0 +1,6 @@
+ifeq "$(WIN)" "64"
+PKG_LIBS= -L"${NETICA_HOME}/lib/64 bit" -lnetica 
+else
+PKG_LIBS= -L"${NETICA_HOME}/lib" -lnetica 
+endif
+PKG_CFLAGS= -I. -I"${NETICA_HOME}/src"

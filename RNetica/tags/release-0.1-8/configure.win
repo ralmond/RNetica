@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+## Check to make sure environmental varaible set to point to 
+## Netica API
+#
+if test -z "$NETICA_HOME"; then
+  echo "Please define NETICA_HOME to Netica API directory."
+  exit 1
+fi
+mkdir "$R_PACKAGE_DIR/libs"
+mkdir "$R_PACKAGE_DIR/libs/i386" "$R_PACKAGE_DIR/libs/x64"
+cp "$NETICA_HOME/lib/Netica.dll" "$R_PACKAGE_DIR/libs/i386" 
+cp "$NETICA_HOME/lib/64 bit/Netica.dll" "$R_PACKAGE_DIR/libs/x64" 
+
+echo "****************************************"
+echo "Configuration information:"
+echo ""
+echo "Netica settings"
+echo ""
+echo "R Architecture:     ${R_ARCH}"
+echo "Netica API DIRECTORY:     ${NETICA_HOME}"

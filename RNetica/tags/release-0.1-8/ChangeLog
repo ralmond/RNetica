@@ -1,0 +1,106 @@
+2012-10-08  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (as.CPF): Added.
+
+2012-10-05  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (EnterNegativeFinding, "NodeFinding<-")
+	(NodeFinding): Fixed problem with 0-based coding instead of
+	1-based coding, and with real rather than integer value setting.
+
+
+	* src/Inference.c (RN_SetNodeLikelihood, RN_GetNodeLikelihood):
+	Added functions.
+
+	* R/Inference.R (NodeLikelihood, "NodeLikelihood<-"): Added
+	functions. 
+
+2012-10-02  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (CompileNet, UncompileNet, RetractNetFindings)
+	(NodeFinding, "NodeFinding<-", EnterNegativeFinding)
+	(IsBeliefUpdated, NodeBeliefs): 
+
+	* src/Inference.c (RN_CompileNet, RN_UncompileNet)
+	(RN_RetractNetFindings, RN_GetNodeFinding)
+	(RN_RetractNodeFinding, RN_SetNodeFinding, RN_SetNodeFindingNot)
+	(RN_IsBeliefUpdated, RN_GetNodeBeliefs): Wrote these functions
+
+	* R/Edges.R (DeleteNodeTable, HasNodeTable, IsNodeDeterministic):
+	Added. Preliminary test complete.  Note cannot currently set
+	incomplete table.
+
+2012-10-01  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_IsNodeDeterministic, RN_HasNodeTable)
+	(RN_DeleteNodeTable): Addes these table information functions.
+
+	* R/Edges.R (pStates): Added this function for faster conversions.
+	(nextconfig): Changed to use -1 as the start (as 0 is a legal
+	value with just one parent).
+	(normCPT): Added this function, as we often need it.
+	(parseDims): Started this.  Figured out the substitute(list(...))
+	trick which captures unparsed argument list.
+
+	* src/Edges.c (RN_AS_PROB_BN, RN_AS_PROBSXP): Modified to convert
+	NAs to UNDEFINED_DBL and vise versa.
+
+2012-09-26  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_SetNodeInputNames, RN_GetNodeInputNames)
+	(RN_GetRelatedNodes, RN_InNodeRelated, RN_AbsorbNodes)
+	(RN_SetNodeParents):  Added.
+
+	* src/Node.c (RN_Copy_Nodes): Fixed issue with AS_NODELIST, note
+	untested. 
+
+	* src/Edges.c (RN_AddLink, RN_DeleteLink, RN_GetNodeParents)
+	(RN_GetNodeChildren): Added
+
+	* src/Node.c (RN_AS_NODELIST): Changed so that will still NULL in
+	the NODELIST for locations corresponding to NULLs in the R list.
+
+2012-09-25  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R ("NodeLevels<-", NodeLevels): Created functions.
+
+	* src/Node.c (RN_GetNodeLevelsDiscrete)
+	(RN_GetNodeLevelsContinuous, RN_SetNodeLevels): Added linking
+	code.  Separate getter methods because one returns named object
+	the other does not.
+
+	* src/Registration.c (RN_RnumToNnum, RN_NnumToRnum): Added
+	conversion functions to take care of converting infinities.
+
+2012-09-24  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NodeNumStates, NodeStates, NodeStates<-)
+	(NodeStateTitles, NodeStateTitles<-, NodeStateDescriptions)
+	(NodeStateDescriptions<-): Added but not tested.
+
+2012-09-23  Russell G. Almond  <ralmond@Limu>
+	
+	* src/Registration.c (RN_Define_Symbols, RN_Free_Symbols): Added
+	NodeKinds, and XYnames vectors.
+
+	* R/Node.R (NodeKind, NodeKind<-, NodeVisStyle, NodeVisStyle<-)
+	(NodeVisPos, NodeVisPos):  Added and tested.
+
+
+2012-09-22  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (ReadNetworks, WriteNetworks): Changed these
+	functions so that they tag the return object with the filename.
+	Thus, net <- ReadNetworks(net) should restore a network after an R
+	session is exited.
+	
+
+2012-09-20  Russell G. Almond  <ralmond@Limu>
+
+	* DESCRIPTION (Version): Version 0.1-1 -- First experiments, used
+	string IDs.
+	Version 0.1-2 -- Second experiment, added backpointers for
+	Networks
+	Version 0.1-3 -- Added .onLoad methods, complete Network only.
+	Version 0.1-4 -- Preliminary Node Functions
+

@@ -1,0 +1,102 @@
+import(methods)
+import(utils)
+
+export(StartNetica, StopNetica, NeticaVersion,
+       ReportErrors, ClearAllErrors,
+       CreateNetwork, DeleteNetwork,
+       print.NeticaBN, toString.NeticaBN, is.active,
+       is.IDname, is.NeticaBN,
+       GetNthNetwork, GetNamedNetworks, CopyNetworks,
+       .Last.lib)
+
+export(WriteNetworks, ReadNetworks,
+       GetNetworkFileName,
+       NetworkName, "NetworkName<-",
+       NetworkTitle, "NetworkTitle<-",
+       NetworkComment, "NetworkComment<-",
+       GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
+       NetworkUserField, "NetworkUserField<-",
+       NetworkAllUserFields
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+       )
+
+export(
+  NewDiscreteNode, NewContinuousNode, DeleteNodes,
+  CopyNodes,  ## No Rd or test for this
+  NodeNet, NodeName, "NodeName<-",
+  print.NeticaNode, toString.NeticaNode, is.NeticaNode,
+  is.discrete, is.continuous,
+  NetworkAllNodes, NetworkFindNode,
+  NodeTitle, "NodeTitle<-",
+  NodeDescription, "NodeDescription<-",
+  NodeUserField, "NodeUserField<-", NodeAllUserFields,
+  NodeKind, "NodeKind<-", 
+  NodeVisStyle, "NodeVisStyle<-",
+  NodeVisPos, "NodeVisPos<-"
+  )
+
+export(
+  NodeStates, NodeNumStates, "NodeStates<-",
+  NodeStateTitles, "NodeStateTitles<-",
+  NodeStateComments, "NodeStateComments<-",
+  NodeLevels, "NodeLevels<-"
+  )
+
+ export(
+   AddLink, DeleteLink, ReverseLink,
+   NodeParents, "NodeParents<-", NodeChildren,
+   AbsorbNodes,
+   is.NodeRelated, GetRelatedNodes,  
+   NodeInputNames, "NodeInputNames<-" 
+   )
+
+export(
+   NodeProbs, "NodeProbs<-",
+   normCPT, as.CPF, 
+##   ReorderNodeStates, RemoveNodeState,
+   IsNodeDeterministic, HasNodeTable,
+   DeleteNodeTable
+   )
+
+##export (
+##   NodeExperience, "NodeExperience<-",
+##   ReviseCPTsByFindings,
+##   GetNodeEquation, SetNodeEquation
+##   FadeCPTTable, EquationToTable
+##   )
+
+export(
+   CompileNetwork, UncompileNetwork, 
+   NodeFinding, "NodeFinding<-", EnterNegativeFinding, 
+##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
+##   EnterIntervalFinding,
+   RetractNetFindings, RetractNodeFinding,
+   NodeBeliefs, IsBeliefUpdated,
+   NodeLikelihood, "NodeLikelihood<-"
+##   GetVarianceOfReal,
+##   CalcNodeState, CalcNodeValue,
+##   GetNodeExpectedValue, GetNodeExpectedUtils,
+##   WriteNetFindings, ReadNetFindings
+ )
+
+##export(
+  ##   GetNodeFuncState, SetNodeFuncState,
+  ##   GetNodeFuncRead, SetNodeFuncReal,
+##)
+
+## export(
+##   GetNetElimOrder, SetNetElimOrder,
+##   SizeCompiledNet, ReportJunctionTree,
+##   JointProbability, FindingsProbability, MostProbableConfig,
+##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
+##  )
+
+
+S3method(print, NeticaBN)
+S3method(toString, NeticaBN)
+S3method(Ops, NeticaBN)
+S3method(print, NeticaNode)
+S3method(toString, NeticaNode)
+S3method(Ops, NeticaNode)
+
+       
