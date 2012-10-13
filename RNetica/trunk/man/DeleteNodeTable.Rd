@@ -41,7 +41,7 @@ DeleteNodeTable(node)
 a1 <- CreateNetwork("AB1")
 A <- NewDiscreteNode(a1,"A",c("A1","A2"))
 
-NodeProbs(A) <- c(0,1,0)
+NodeProbs(A) <- c(0,1)
 stopifnot(
   all(HasNodeTable(A))==TRUE
 )
