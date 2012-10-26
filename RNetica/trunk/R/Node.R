@@ -149,7 +149,7 @@ DeleteNodes <- function (nodes) {
 CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
                        options=character(0)) {
   if (is.NeticaNode(nodes) && length(nodes) ==1) nodes <-list(nodes)
-  if (!all(sapply(nets,is.NeticaNode))) {
+  if (!all(sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
   options <- paste(options,collapse=",")
@@ -608,4 +608,6 @@ NodeLevels <- function (node) {
   }
   invisible(handle)
 }
+
+
 

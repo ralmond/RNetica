@@ -39,7 +39,7 @@ export(
   NodeStates, NodeNumStates, "NodeStates<-",
   NodeStateTitles, "NodeStateTitles<-",
   NodeStateComments, "NodeStateComments<-",
-  NodeLevels, "NodeLevels<-"
+  NodeLevels, "NodeLevels<-", ParentStates, ParentNames
   )
 
  export(
@@ -51,8 +51,10 @@ export(
    )
 
 export(
-   NodeProbs, "NodeProbs<-",
-   normCPT, as.CPF, 
+  NodeProbs, "NodeProbs<-", normalize.matrix,
+  normalize, normalize.array, normalize.data.frame,
+  is.CPA, as.CPA, normalize.CPA, normalize.default,
+  as.CPF, is.CPF, normalize.CPF, EVERY_STATE,
 ##   ReorderNodeStates, RemoveNodeState,
    IsNodeDeterministic, HasNodeTable,
    DeleteNodeTable
@@ -79,11 +81,6 @@ export(
 ##   WriteNetFindings, ReadNetFindings
  )
 
-##export(
-  ##   GetNodeFuncState, SetNodeFuncState,
-  ##   GetNodeFuncRead, SetNodeFuncReal,
-##)
-
 ## export(
 ##   GetNetElimOrder, SetNetElimOrder,
 ##   SizeCompiledNet, ReportJunctionTree,
@@ -98,5 +95,8 @@ S3method(Ops, NeticaBN)
 S3method(print, NeticaNode)
 S3method(toString, NeticaNode)
 S3method(Ops, NeticaNode)
+S3method("[", NeticaNode)
+S3method("[[", NeticaNode)
+S3method("[<-", NeticaNode)
 
        

@@ -50,7 +50,8 @@ NodeProbs(node) <- value
   
 }
 \value{
-  A honkin' great array.  See details.
+  A conditional probability array of class
+  \code{c("\link{CPA}","array")}.  See details
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
@@ -71,7 +72,8 @@ NodeProbs(node) <- value
 }
 \seealso{
   \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
-  \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()}
+  \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
+  \code{\link{CPA}}, \code{\link{CPF}}, \code{\link{normalize}()}
 }
 \examples{
 abc <- CreateNetwork("ABC")
@@ -84,12 +86,17 @@ AddLink(A,C)
 AddLink(B,C)
 
 NodeProbs(A)<-c(.1,.2,.3,.4)
-NodeProbs(B) <- normCPT(matrix(1:12,4,3))
-NodeProbs(C) <- normCPT(array(1:24,c(4,3,2)))
+NodeProbs(B) <- normalize(matrix(1:12,4,3))
+NodeProbs(C) <- normalize(array(1:24,c(4,3,2)))
 
-NodeProbs(A)
-NodeProbs(B)
-NodeProbs(C)
+Aprobs <- NodeProbs(A)
+Bprobs <- NodeProbs(B)
+Cprobs <- NodeProbs(C)
+stopifnot(
+  is.CPA(Aprobs),
+  is.CPA(Bprobs),
+  is.CPA(Cprobs)
+)
 
 DeleteNetwork(abc)
 }

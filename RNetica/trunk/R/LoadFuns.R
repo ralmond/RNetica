@@ -17,6 +17,9 @@ StopNetica <- function() {
 function(libname, pkgname)
 {
  library.dynam("RNetica", pkgname, libname)
+  ## Deep voodoo needed to get around R safeguards
+  ## Need to do it in Load before export
+  assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE="RNetica"),"RNetica")
 }  
 
 ## Give it starter value so it can be found
@@ -28,8 +31,6 @@ EVERY_STATE <- -Inf
     #cat("License Key Installed.")
   }
   StartNetica()
-  ## Deep voodoo needed to get around R safeguards
-  assignInNamespace("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE="RNetica"),"RNetica")
 }
 
 .Last.lib <- function(libpath) {
