@@ -267,7 +267,8 @@ SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals) {
 
 //Expose this Netica constant to R.
 SEXP RN_GetEveryState() {
-  return ScalarInteger(EVERY_STATE);
+  // We will later subtract 1 from this, so add 1 here.
+  return ScalarInteger(EVERY_STATE+1);
 }
 
 state_bn *RN_AS_STATE_BN(SEXP states) {
@@ -278,7 +279,7 @@ state_bn *RN_AS_STATE_BN(SEXP states) {
 
   PROTECT(states = AS_INTEGER(states));
   for (n=0; n<nn; n++) {
-    result[n] = (state_bn) INTEGER(states)[n];
+    result[n] = (state_bn) INTEGER(states)[n]-1;
   }
   UNPROTECT(1);
   return result;
@@ -388,4 +389,59 @@ SEXP RN_DeleteNodeTable(SEXP n1) {
     return ScalarInteger(R_NaInt);
   }
   return n1;
+}
+
+
+SEXP RN_GetNodeFuncState(SEXP node, SEXP states) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+    return(R_NilValue);
+  } else {
+    return ScalarInteger(GetNodeFuncState_bn(node_handle,
+                                             RN_AS_STATE_BN(states))
+                         +1);
+  }
+}
+
+SEXP RN_SetNodeFuncState(SEXP node, SEXP states, SEXP val) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+  } else {
+    SetNodeFuncState_bn(node_handle, RN_AS_STATE_BN(states),
+                        INTEGER(val)[0]-1);
+  }
+  return node;
+}
+
+
+SEXP RN_GetNodeFuncReal(SEXP node, SEXP states) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+    return(R_NilValue);
+  } else {
+    return ScalarReal(GetNodeFuncReal_bn(node_handle,
+                                             RN_AS_STATE_BN(states)));
+  }
+}
+
+SEXP RN_SetNodeFuncReal(SEXP node, SEXP states, SEXP val) {
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(node);
+  if (!node_handle) {
+    error("Could not find node %s.",NODE_NAME(node));
+  } else {
+    SetNodeFuncReal_bn(node_handle, RN_AS_STATE_BN(states),
+                        REAL(val)[0]);
+  }
+  return node;
 }

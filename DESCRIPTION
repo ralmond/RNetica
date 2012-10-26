@@ -1,6 +1,6 @@
 Package: RNetica
-Version: 0.1-8
-Date: 2012/09/17
+Version: 0.2-1
+Date: 2012/10/16
 Title: R interface to Netica Bayesian Network Engine
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
@@ -9,4 +9,4 @@ Description: This provides an R interface to the Netica
 (http://norsys.com/) Bayesian network library API
 License: Artistic-2.0 + file LICENSE
 URL: http://ralmond.net/RNetica
-Packaged:  Fri Sep 22 12:15:32 2006; ralmond 
+
