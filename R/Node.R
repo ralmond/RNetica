@@ -128,7 +128,6 @@ NewDiscreteNode <- function (net, names, states = c("Yes","No")) {
   handles
 }
 
-
 DeleteNodes <- function (nodes) {
   if (is.NeticaNode(nodes) && length(nodes) ==1) {
     nodes <- list(nodes)
@@ -610,4 +609,120 @@ NodeLevels <- function (node) {
 }
 
 
+###########################################################################
+##  Node Sets
+###########################################################################
 
+NetworkNodeSets <- function(net, incSystem=FALSE) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  incSystem <- as.logical(incSystem)[1]
+  sets <- .Call("RN_NetworkNodeSets",net,incSystem, PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NetworkNodeSets: Netica Errors Encountered, see console for details.")
+  }
+  sets
+}
+
+NodeSets <- function(node, incSystem=FALSE) {
+  if (!is.NeticaNode(node) || !is.active(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  incSystem <- as.logical(incSystem)[1]
+  sets <- .Call("RN_GetNodeSets",node, incSystem, PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeSets: Netica Errors Encountered, see console for details.")
+  }
+  ## Strip out zero length strings.
+  sets[nchar(sets)>0]
+}
+
+"NodeSets<-" <- function(node, value) {
+  if (!is.NeticaNode(node) || !is.active(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (length(grep(",",value)) > 0) {
+    stop("Commas not allowed in node set names.")
+  }
+  sysvals <- grep("^:",value)
+  if (length(sysvals) >0) {
+    warning("Ignoring node sets  begining with ':' (reserved for Netica use).")
+    value <- value[-sysvals]
+  }
+  .Call("RN_SetNodeSets",node,value,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeSets: Netica Errors Encountered, see console for details.")
+  }
+  invisible(node)
+}
+
+NetworkNodesInSet <- function(net, setname) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  if (length(setname)>1) {
+    warning("NetworkNodeSets: Ignoring all but first set name.")
+  }
+  setname <- as.character(setname)[1]
+  nodes <- .Call("RN_NetworkNodesInSet",net,setname, PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NetworkNodesInSet: Netica Errors Encountered, see console for details.")
+  }
+  nodes
+}
+
+NetworkSetPriority <- function(net, setlist) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  setlist <- as.character(setlist)
+  .Call("RN_NetworkSetPriority",net,paste(setlist,collapse=","),
+        PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NetworkSetPriority: Netica Errors Encountered, see console for details.")
+  }
+  invisible(net)
+}
+
+NetworkNodeSetColor <- function(net, setname, newcolor) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  if (length(setname)>1) {
+    warning("NetworkNodeSets: Ignoring all but first set name.")
+  }
+  setname <- as.character(setname)[1]
+  if (missing(newcolor)) {
+    ## No replacement, must be a request 
+    result <- .Call("RN_NetworkNodeGetColor",net,setname, PACKAGE="RNetica")
+  } else {
+    if (length(newcolor)>1) {
+      warning("NetworkNodeSets: Ignoring all but first color.")
+    }
+    if (is.na(newcolor)) {
+      col <- -2L
+    } else {
+      col <- as.numeric(col2rgb(newcolor))
+      col <- as.integer(sum(col*256^(2:0)))
+    }
+    result <- .Call("RN_NetworkNodeSetColor",net,setname, col,
+                    PACKAGE="RNetica")
+  }
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NetworkNodesInSet: Netica Errors Encountered, see console for details.")
+  }
+  if (result==-2) {
+    result <- NA_character_
+  } else {
+    result <- paste("#",as.hexmode(result),sep="")
+  }
+  result
+}
