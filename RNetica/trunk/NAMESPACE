@@ -88,6 +88,12 @@ export(
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
 ##  )
 
+ export (
+   NodeSets, "NodeSets<-",
+   NetworkNodeSets, NetworkSetPriority,
+   NetworkNodesInSet, NetworkNodeSetColor
+ )
+
 
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)

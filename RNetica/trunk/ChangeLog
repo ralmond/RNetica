@@ -1,3 +1,41 @@
+2012-10-27  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkNodeSetColor): 
+	* src/Node.c (RN_NetworkNodeSetColor): Changed return value to
+	return set color as integer.
+
+	* R/Node.R (NetworkNodeSets, NodeSets, "NodeSets<-")
+	(NetworkNodesInSet, NetworkSetPriority, NetworkNodeSetColor): 
+	Created.
+
+	* src/Node.c (RN_SetNodeSets, RN_NetworkNodesInSet)
+	(RN_NetworkSetPriority, RN_NetworkNodeSetColor)
+	(RN_NetworkNodeGetColor): Created.
+	
+
+2012-10-26  Russell G. Almond  <ralmond@Limu>
+
+	* src/Node.c (RN_NetworkNodesSets, RN_ParseNodeString)
+	(RN_GetNodeSets): Added these functions
+	
+2012-10-20  Russell G. Almond  <ralmond@Limu>
+	
+	* R/Edges.R (is.CPF, as.CPF, is.CPA, as.CPA, parseDims)
+	(integerIndex, selectionToConfig, "[.NeticaNode")
+	("[[.NeticaNode", "[<-.NeticaNode"):   node[] redesign.  See
+	Extract.NeticaNode.Rd.
+
+	* src/Edges.c (RN_GetNodeFuncState, RN_SetNodeFuncState)
+	(RN_GetNodeFuncReal, RN_SetNodeFuncReal):  Added as part of the
+	node[] redesign.
+	
+2012-10-14  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (is.CPF, as.CPF, is.CPA, as.CPA):   Reworked in
+	preparation for node[] Redesign.
+
+	
+
 2012-10-08  Russell G. Almond  <ralmond@Limu>
 
 	* R/Edges.R (as.CPF): Added.

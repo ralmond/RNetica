@@ -882,3 +882,129 @@ SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals) {
 }
 
 
+//////////////////////////////////////////////////////////////////
+// Node Sets
+
+SEXP RN_ParseNodeSetString(net_bn *nt, bool_ns incSystem) {
+  const char*rawsets=GetAllNodesets_bn(nt,incSystem,NULL);
+  if (rawsets==NULL || strlen(rawsets)==0) {
+    // Trap for zero length
+    return (allocVector(STRSXP,0));
+  }
+  char *sets = R_alloc(strlen(rawsets),sizeof(char));
+  sets = strcpy(sets,rawsets);
+  SEXP result;
+  int i, nsets = 1;
+  
+  for (i=0; i<strlen(sets); i++) {
+    if (sets[i]==',') nsets++;
+  }
+
+  PROTECT(result=allocVector(STRSXP,nsets));
+  char *setname =strtok(sets,",");
+  i = 0;
+  while (setname) {
+    SET_STRING_ELT(result,i++,mkChar(setname));
+    setname=strtok(NULL,",");
+  }
+  UNPROTECT(1);
+  return (result);
+}
+
+SEXP RN_NetworkNodeSets(SEXP net, SEXP incSystem) {
+  net_bn *nt = GetNeticaHandle(net);
+  return RN_ParseNodeSetString(nt,LOGICAL(incSystem)[0]);
+}
+
+
+
+
+SEXP RN_GetNodeSets(SEXP node, SEXP incSystem) {
+  node_bn *nd = GetNodeHandle(node);
+  net_bn *nt = GetNodeNet_bn(nd);
+  SEXP setList, result;
+  const char* setname;
+  int nsets,i,nfound=0;
+
+  PROTECT(setList = RN_ParseNodeSetString(nt,LOGICAL(incSystem)[0]));
+  nsets = length(setList);
+  if (nsets==0) { //Empty list, escape!
+    UNPROTECT(1);
+    return (setList);
+  }
+  //I'm hoping R will do something sensible with the extra length
+  PROTECT(result = allocVector(STRSXP,nsets));
+  for (i=0; i<nsets; i++) {
+    setname = CHAR(STRING_ELT(setList,i));
+    if(IsNodeInNodeset_bn(nd,setname)) {
+      SET_STRING_ELT(result,nfound++,STRING_ELT(setList,i));
+    }
+  }
+  UNPROTECT(2);
+  return (result);
+}
+
+SEXP RN_SetNodeSets(SEXP node, SEXP sets) {
+  node_bn *nd = GetNodeHandle(node);
+  net_bn *nt = GetNodeNet_bn(nd);
+  SEXP setList;
+  const char* setname;
+  int i, nsets;
+
+  PROTECT(setList = RN_ParseNodeSetString(nt, FALSE));
+  nsets= length(setList);
+  for (i=0; i<nsets; i++) {
+    setname = CHAR(STRING_ELT(setList,i));
+    if(IsNodeInNodeset_bn(nd,setname)) {
+      RemoveNodeFromNodeset_bn(nd,setname);
+    }
+  }
+  UNPROTECT(1);
+  nsets= length(sets);
+  for (i=0; i<nsets; i++) {
+    setname = CHAR(STRING_ELT(sets,i));
+    AddNodeToNodeset_bn(nd,setname);
+  }
+  return (node);
+}
+
+SEXP RN_NetworkNodesInSet(SEXP net, SEXP set) {
+  net_bn *nt = GetNeticaHandle(net);
+  SEXP result = R_NilValue;
+  const char* setname = CHAR(STRING_ELT(set,0));
+  const nodelist_bn *allNodes= GetNetNodes_bn(nt);
+  int nnodes = LengthNodeList_bn(allNodes);
+  int i;
+  for (i=0; i<nnodes; i++) {
+    node_bn *nd = NthNode_bn(allNodes,i);
+    if (IsNodeInNodeset_bn(nd,setname)) {
+      PROTECT(result);
+      result = CONS(GetNode_RRef(nd),result);
+      UNPROTECT(1);
+    }
+  }
+  
+  return (result);
+  
+}
+
+SEXP RN_NetworkSetPriority(SEXP net, SEXP setlist) {
+  net_bn *nt = GetNeticaHandle(net);
+  ReorderNodesets_bn(nt,CHAR(STRING_ELT(setlist,0)),NULL);
+  return (net);
+}
+
+SEXP RN_NetworkNodeSetColor(SEXP net, SEXP set, SEXP color) {
+  net_bn *nt = GetNeticaHandle(net);
+  const char* setname =CHAR(STRING_ELT(set,0));
+  color_ns icol = (color_ns) INTEGER(color)[0];
+  icol = SetNodesetColor_bn(setname,icol,nt,NULL);
+  return ScalarInteger(icol);
+}
+
+SEXP RN_NetworkNodeGetColor(SEXP net, SEXP set) {
+  net_bn *nt = GetNeticaHandle(net);
+  const char* setname =CHAR(STRING_ELT(set,0));
+  color_ns color = SetNodesetColor_bn(setname,QUERY_ns,nt,NULL);
+  return ScalarInteger(color);
+}

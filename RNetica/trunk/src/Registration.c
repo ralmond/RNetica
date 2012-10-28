@@ -499,6 +499,13 @@ extern SEXP RN_SetNodeStateComments(SEXP nd, SEXP newvals);
 extern SEXP RN_GetNodeLevelsDiscrete(SEXP nd);
 extern SEXP RN_GetNodeLevelsContinuous(SEXP nd);
 extern SEXP RN_SetNodeLevels(SEXP nd, SEXP newvals);
+extern SEXP RN_NetworkNodeSets(SEXP net, SEXP incSystem);
+extern SEXP RN_GetNodeSets(SEXP node, SEXP incSystem);
+extern SEXP RN_SetNodeSets(SEXP node, SEXP sets);
+extern SEXP RN_NetworkNodesInSet(SEXP net, SEXP set);
+extern SEXP RN_NetworkSetPriority(SEXP net, SEXP setlist);
+extern SEXP RN_NetworkNodeSetColor(SEXP net, SEXP set, SEXP color);
+extern SEXP RN_NetworkNodeGetColor(SEXP net, SEXP set);
 
 //Edges.c
 extern SEXP RN_AddLink(SEXP parent, SEXP child);
@@ -591,6 +598,13 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNodeLevelsDiscrete", (DL_FUNC) &RN_GetNodeLevelsDiscrete, 1},
   {"RN_GetNodeLevelsContinuous", (DL_FUNC) &RN_GetNodeLevelsContinuous, 1},
   {"RN_SetNodeLevels", (DL_FUNC) &RN_SetNodeLevels, 2},
+  {"RN_NetworkNodeSets", (DL_FUNC) &RN_NetworkNodeSets, 2},
+  {"RN_GetNodeSets", (DL_FUNC) &RN_GetNodeSets, 2},
+  {"RN_SetNodeSets", (DL_FUNC) &RN_SetNodeSets, 2},
+  {"RN_NetworkNodesInSet", (DL_FUNC) &RN_NetworkNodesInSet, 2},
+  {"RN_NetworkSetPriority", (DL_FUNC) &RN_NetworkSetPriority, 2},
+  {"RN_NetworkNodeSetColor", (DL_FUNC) &RN_NetworkNodeSetColor, 3},
+  {"RN_NetworkNodeGetColor", (DL_FUNC) &RN_NetworkNodeGetColor, 2},
   {"RN_AddLink", (DL_FUNC) &RN_AddLink, 2},
   {"RN_DeleteLink", (DL_FUNC) &RN_DeleteLink, 2},
   {"RN_ReverseLink", (DL_FUNC) &RN_ReverseLink, 2},
