@@ -117,6 +117,22 @@ RetractNodeFinding <- function (node) {
   invisible(handle)
 }
 
+EnterFindings <- function(net,findings) {
+  if (is.null(names(findings))) {
+    stop("Findings need names to indicate which nodes to set.")
+  }
+  WithoutAutoUpdate(net,
+    for (i in 1:length(findings)) {
+      node <- NetworkFindNode(net,names(findings)[i])
+      if (is.null(node)) {
+        warning("No node found for name ",names(findings)[i])
+      } else {
+        NodeFinding(node) <- findings[i]
+      }
+    })
+  invisible(net)
+}
+
 IsBeliefUpdated <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
