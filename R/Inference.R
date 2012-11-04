@@ -174,3 +174,121 @@ NodeLikelihood <- function (node) {
 }
 
 
+JointProbability <- function(nodelist) {
+  if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
+                                          is.active(nd)}))) { 
+    stop("Expected a list of Netica nodes, got, ",nodelist)
+  }
+  result <- .Call("RN_JointProbability",nodelist,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1L]>0) {
+    stop("JointProbability: Netica Errors Encountered, see console for details.")
+  }
+  dnames <- lapply(nodelist,NodeStates)
+  names(dnames) <- sapply(nodelist,NodeName)
+  dimnames(result) <- dnames
+  result
+}
+
+FindingsProbability <- function(net) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  result <- .Call("RN_FindingsProbability",net,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("FindingsProbability: Netica Errors Encountered, see console for details.")
+  }
+  result
+}
+
+MostProbableConfig <- function(net, nth=0) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected a list of Netica nodes, got, ",nodelist)
+  }
+  config <- .Call("RN_MostProbableConfig",net,as.integer(nth),PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1L]>0) {
+    stop("JointProbability: Netica Errors Encountered, see console for details.")
+  }
+  nodelist <- NetworkAllNodes(net)
+  result <- vector(mode="list",length=length(nodelist))
+  for (i in 1:length(nodelist)) {
+    result[[i]] <- factor(config[i],NodeStates(nodelist[[i]]))
+  }
+  names(result) <- sapply(nodelist,NodeName)
+  as.data.frame(result,row.names="Most Probable")
+}
+
+JunctionTreeReport <- function (net) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  report <- .Call("RN_JunctionTreeReport",net,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("JunctionTreeReport: Netica Errors Encountered, see console for details.")
+  }
+  ##TODO Parse the report into a table.
+  report
+}
+
+NetworkCompiledSize <- function(net) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NetworkCompiledSize: Netica Errors Encountered, see console for details.")
+  }
+  result
+}
+
+## Currently, I'm abusing the function SizeCompiledNetwork, which
+## raises an error but sesnsibly returns a negative value if the net
+## is not compiled.
+is.NetworkCompiled <- function(net) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE="RNetica")
+  ClearAllErrors("ERROR_ERR")
+  result > 0
+}
+
+
+
+EliminationOrder <- function (net) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  result <- .Call("RN_GetEliminationOrder",net,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("EliminationOrder: Netica Errors Encountered, see console for details.")
+  }
+  result
+}
+
+"EliminationOrder<-" <- function (net, value) {
+  if (!is.NeticaBN(net) || !is.active(net)) {
+    stop("Expected an active Netica network, got, ",net)
+  }
+  if (is.null(value) || length(value)==0) {
+    value <- NULL
+  } else {
+    if (length(value) != length(NetworkAllNodes(net))) {
+      stop("All nodes must be included in network order.")
+    }
+    if (!all(sapply(value,is.active))) {
+      stop("All elements of value must be active nodes.")
+    }
+  }
+  handle <- .Call("RN_SetEliminationOrder",net,value, PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("EliminationOrder: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
+}

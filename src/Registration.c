@@ -23,13 +23,17 @@ const char* BNATT = "Netica_bn";
 const char* NodeClass = "NeticaNode";
 const char* NODEATT = "Netica_Node";
 const char* DISCRETEATT = "node_discrete";
+const char* CliqueNodeClass = "CliqueNode";
+const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
 
 SEXP bnclass=NULL;
 SEXP nodeclass=NULL;
+SEXP cliquenodeclass=NULL;
 SEXP bnatt=NULL;
 SEXP nodeatt=NULL;
 SEXP nodediscatt=NULL;
+SEXP cliqueatt=NULL;
 SEXP TRUEV=NULL;
 SEXP FALSEV=NULL;
 SEXP NAV=NULL;
@@ -83,6 +87,14 @@ void RN_Define_Symbols() {
     SET_STRING_ELT(XYnames,0,mkChar("x"));
     SET_STRING_ELT(XYnames,1,mkChar("y"));
   }
+  if (cliquenodeclass==NULL) {
+    R_PreserveObject(cliquenodeclass = allocVector(STRSXP,2));
+    SET_STRING_ELT(cliquenodeclass,1,mkChar(NodeClass));
+    SET_STRING_ELT(cliquenodeclass,0,mkChar(CliqueNodeClass));
+  }
+  if (cliqueatt==NULL) { 
+    R_PreserveObject(cliqueatt = install(CLIQUEATT));  
+  } 
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
@@ -129,6 +141,14 @@ void RN_Free_Symbols() {
     if (XYnames != NULL) { 
       R_ReleaseObject(XYnames); 
       XYnames = NULL; 
+    } 
+    if (cliquenodeclass != NULL) {
+      R_ReleaseObject(cliquenodeclass);
+      cliquenodeclass = NULL;
+    }
+    if (cliqueatt != NULL) { 
+      R_ReleaseObject(cliqueatt); 
+      cliqueatt = NULL; 
     } 
   }
 }
@@ -525,6 +545,7 @@ extern SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals);
 extern SEXP RN_IsNodeDeterministic(SEXP n1);
 extern SEXP RN_HasNodeTable(SEXP n1);
 extern SEXP RN_DeleteNodeTable(SEXP n1);
+extern SEXP RN_MakeCliqueNode(SEXP nodelist);
 
 //Inference.c
 extern SEXP RN_CompileNet(SEXP net);
@@ -538,6 +559,13 @@ extern SEXP RN_IsBeliefUpdated(SEXP n1);
 extern SEXP RN_GetNodeBeliefs(SEXP node);
 extern SEXP RN_GetNodeLikelihood(SEXP node);
 extern SEXP RN_SetNodeLikelihood(SEXP node, SEXP value);
+extern SEXP RN_MostProbableConfig(SEXP net, SEXP nth);
+extern SEXP RN_FindingsProbability(SEXP net);
+extern SEXP RN_JointProbability(SEXP nodelist);
+extern SEXP RN_JunctionTreeReport(SEXP net);
+extern SEXP RN_SetEliminationOrder(SEXP net, SEXP order);
+extern SEXP RN_GetEliminationOrder(SEXP net);
+extern SEXP RN_SizeCompiledNetwork(SEXP net);
 
 
 
@@ -622,6 +650,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_IsNodeDeterministic", (DL_FUNC) &RN_IsNodeDeterministic, 1},
   {"RN_HasNodeTable", (DL_FUNC) &RN_HasNodeTable, 1},
   {"RN_DeleteNodeTable", (DL_FUNC) &RN_DeleteNodeTable, 1},
+  {"RN_MakeCliqueNode", (DL_FUNC) &RN_MakeCliqueNode, 1},
   {"RN_CompileNet", (DL_FUNC) &RN_CompileNet, 1},
   {"RN_UncompileNet", (DL_FUNC) &RN_UncompileNet, 1},
   {"RN_RetractNetFindings", (DL_FUNC) &RN_RetractNetFindings, 1},
@@ -633,6 +662,13 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNodeBeliefs", (DL_FUNC) &RN_GetNodeBeliefs, 1},
   {"RN_GetNodeLikelihood", (DL_FUNC) &RN_GetNodeLikelihood, 1},
   {"RN_SetNodeLikelihood", (DL_FUNC) &RN_SetNodeLikelihood, 2},
+  {"RN_MostProbableConfig", (DL_FUNC) &RN_MostProbableConfig, 2},
+  {"RN_FindingsProbability", (DL_FUNC) &RN_FindingsProbability, 1},
+  {"RN_JointProbability", (DL_FUNC) &RN_JointProbability, 1},
+  {"RN_JunctionTreeReport", (DL_FUNC) &RN_JunctionTreeReport, 1},
+  {"RN_SetEliminationOrder", (DL_FUNC) &RN_SetEliminationOrder, 2},
+  {"RN_GetEliminationOrder", (DL_FUNC) &RN_GetEliminationOrder, 1},
+  {"RN_SizeCompiledNetwork", (DL_FUNC) &RN_SizeCompiledNetwork, 1},
   {NULL, NULL, 0},
 };
 

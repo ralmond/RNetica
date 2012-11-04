@@ -1,7 +1,45 @@
-Test CopyNodes
+
+Parse the junction tree report
+
+Functions for
+##   ReorderNodeStates, RemoveNodeState,
+These seem to be redundant with current definition of NodeStates<-
+
+
+Node Experience
+Equations
+##export (
+##   NodeExperience, "NodeExperience<-",
+##   ReviseCPTsByFindings,
+##   GetNodeEquation, SetNodeEquation
+##   FadeCPTTable, EquationToTable
+##   )
+Learning from Data
+Casefile support
+
+Continuous Node support
+Decision Net support
+##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
+##   EnterIntervalFinding,
+##   CalcNodeState, CalcNodeValue,
+##   GetNodeExpectedValue, GetNodeExpectedUtils,
+Database Connectivity
+##   WriteNetFindings, ReadNetFindings
+Sensitivity
+## export(
+##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
+##   GetVarianceOfReal,
+##  )
+Random Generation
+DBNs
+
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+
 
 Ask Brent:
-
-IsNetCompiled function?
-GetNodesets for Node, Nodes in NodeSet?
-
+1. NodeLikelihood and MPE and FindingsProbability
+2. IsNetCompiled function?
+3. GetNodesets for Node, Nodes in NodeSet?
+4. CopyNodes does not copy NodeSet information?
+5. EnterLikelihoodFindingClique
+6. NetworkUndo, Redo

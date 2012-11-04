@@ -11,7 +11,6 @@
 \usage{
 CopyNetworks(nets, newnamelist, options = character(0))
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{nets}{
     A list of \code{\link{NeticaBN}} objects.

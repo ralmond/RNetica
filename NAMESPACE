@@ -22,7 +22,7 @@ export(WriteNetworks, ReadNetworks,
 
 export(
   NewDiscreteNode, NewContinuousNode, DeleteNodes,
-  CopyNodes,  ## No Rd or test for this
+  CopyNodes,  
   NodeNet, NodeName, "NodeName<-",
   print.NeticaNode, toString.NeticaNode, is.NeticaNode,
   is.discrete, is.continuous,
@@ -45,9 +45,11 @@ export(
  export(
    AddLink, DeleteLink, ReverseLink,
    NodeParents, "NodeParents<-", NodeChildren,
-   AbsorbNodes,
+   AbsorbNodes, MakeCliqueNode, is.CliqueNode,
+   GetClique,
    is.NodeRelated, GetRelatedNodes,  
-   NodeInputNames, "NodeInputNames<-" 
+   NodeInputNames, "NodeInputNames<-",
+   AdjoinNetwork, NetworkFootprint
    )
 
 export(
@@ -55,40 +57,23 @@ export(
   normalize, normalize.array, normalize.data.frame,
   is.CPA, as.CPA, normalize.CPA, normalize.default,
   as.CPF, is.CPF, normalize.CPF, EVERY_STATE,
-##   ReorderNodeStates, RemoveNodeState,
-   IsNodeDeterministic, HasNodeTable,
-   DeleteNodeTable
+  IsNodeDeterministic, HasNodeTable,
+  DeleteNodeTable
    )
 
-##export (
-##   NodeExperience, "NodeExperience<-",
-##   ReviseCPTsByFindings,
-##   GetNodeEquation, SetNodeEquation
-##   FadeCPTTable, EquationToTable
-##   )
-
 export(
-   CompileNetwork, UncompileNetwork, 
+   CompileNetwork, UncompileNetwork, is.NetworkCompiled,
+   EliminationOrder, "EliminationOrder<-",
+   NetworkCompiledSize, JunctionTreeReport,
    NodeFinding, "NodeFinding<-", EnterNegativeFinding, 
-##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
-##   EnterIntervalFinding,
    RetractNetFindings, RetractNodeFinding,
    NodeBeliefs, IsBeliefUpdated,
-   NodeLikelihood, "NodeLikelihood<-"
-##   GetVarianceOfReal,
-##   CalcNodeState, CalcNodeValue,
-##   GetNodeExpectedValue, GetNodeExpectedUtils,
+   NodeLikelihood, "NodeLikelihood<-",
+   JointProbability, FindingsProbability, MostProbableConfig
 ##   WriteNetFindings, ReadNetFindings
  )
 
-## export(
-##   GetNetElimOrder, SetNetElimOrder,
-##   SizeCompiledNet, ReportJunctionTree,
-##   JointProbability, FindingsProbability, MostProbableConfig,
-##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
-##  )
-
- export (
+export (
    NodeSets, "NodeSets<-",
    NetworkNodeSets, NetworkSetPriority,
    NetworkNodesInSet, NetworkNodeSetColor

@@ -1,6 +1,42 @@
+2012-11-03  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkNodesInSet): Changed return to be a true list
+	rather than a pairlist, as the latter was causing problems.
+
+	* R/Edges.R (AdjoinNetwork): Moved this function here.
+	(NetworkFootprint): Added this function.
+
+	* R/Networks.R (AdjoinNetwork): Added this function, in
+	preparation for EMSM test.
+
+2012-10-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (JunctionTreeReport, "EliminationOrder<-")
+	(EliminationOrder, NetworkCompiledSize): Created.
+
+	* src/Inference.c (RN_SizeCompiledNetwork)
+	(RN_GetEliminationOrder, RN_SetEliminationOrder)
+	(RN_JunctionTreeReport, RN_SplitReport): SplitReport is an
+	auxiliary for JunctionTreeReport which splits report into lines.
+	
+
+2012-10-28  Russell G. Almond  <ralmond@Limu>
+
+	* src/Inference.c (RN_NextStates, RN_JointProbability): Created.
+	(RN_MostProbableConfig, RN_FindingProbability): Created.
+
+	* R/Edges.R (MakeCliqueNode, is.CliqueNode, GetClique): Created.
+
+	* src/Edges.c (RN_MakeCliqueNode): Created patterned after
+	FormCliqueWith from NeticaEx.c
+
+	* src/Registration.c (RN_Define_Symbols, RN_Free_Symbols): Added
+	new classes and properties for clique nodes.
+
 2012-10-27  Russell G. Almond  <ralmond@Limu>
 
-	* R/Node.R (NetworkNodeSetColor): 
+	* R/Node.R (NetworkNodeSetColor): Changed return value to return
+	set color as a hex string.
 	* src/Node.c (RN_NetworkNodeSetColor): Changed return value to
 	return set color as integer.
 

@@ -203,7 +203,7 @@ SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation) {
       net_handle = GetNodeNet_bn(node1);
     } else {
       error("as.nodelist: Can't find source network.\n");
-      return NULL;
+      return R_NilValue;
     }
   } else {
     error("as.nodelist: Can't find source network.\n");
@@ -263,6 +263,35 @@ SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals) {
   }
   return(nd);
 }
+
+//This is a special node that forces all of the other variables into a
+//clique.  Loosely patterned off the NeticaEx function FormCliqueWith
+SEXP RN_MakeCliqueNode(SEXP nodelist) {
+  net_bn* nt;
+  node_bn *node_handle, *new_node;
+  int i, num_nodes=length(nodelist);
+  SEXP cliquenode;
+
+  node_handle = GetNodeHandle(VECTOR_ELT(nodelist,0));
+  if (!node_handle) {
+    error("Could not find node %s.", NODE_NAME(VECTOR_ELT(nodelist,0)));
+    return(R_NilValue);
+  }
+  nt = GetNodeNet_bn(node_handle);
+  new_node = NewNode_bn("CliqueNode*",1,nt);
+  for (i=0; i< num_nodes; i++) {
+    AddLink_bn(GetNodeHandle(VECTOR_ELT(nodelist,i)),new_node);
+  }
+  PROTECT(cliquenode = GetNode_RRef(new_node));
+  SET_CLASS(cliquenode,cliquenodeclass);
+  setAttrib(cliquenode,cliqueatt,nodelist);
+  UNPROTECT(1);
+  return (cliquenode);
+}
+
+//////////////////////////////////////////////////////////////
+// Probabilities
+/////////////////////////////////////////////////////////////
 
 
 //Expose this Netica constant to R.

@@ -457,3 +457,4 @@ NetworkRedo <- function (net) {
   }
   invisible(flag)
 }
+

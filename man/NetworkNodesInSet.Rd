@@ -42,7 +42,7 @@ NetworkNodesInSet(net, setname)
 
 }
 \value{
-  A pairlist of nodes which are associated with
+  A list of nodes which are associated with the named node set.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}

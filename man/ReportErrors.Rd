@@ -19,9 +19,9 @@ ClearAllErrors(severity="XXX_ERR")
     they are reported (default is to clear errors).
 }
   \item{severity}{A string giving one of the Netica error levels (in
-    order of severity):  \code{"NOTHING_ERROR"}, \code{"REPORT_ERROR"},
-    \code{"NOTICE_ERROR"}, \code{"WARNING_ERROR"}, \code{"ERROR_ERROR"},
-    \code{"XXX_ERROR"}.
+    order of severity):  \code{"NOTHING_ERR"}, \code{"REPORT_ERR"},
+    \code{"NOTICE_ERR"}, \code{"WARNING_ERR"}, \code{"ERROR_ERR"},
+    \code{"XXX_ERR"}.
 }
 }
 \details{
@@ -32,7 +32,7 @@ ClearAllErrors(severity="XXX_ERR")
 }
 \value{
   \code{ReportErrors()} returns a count of the number of errors of
-  severity \code{"ERROR_ERROR"} or higher.
+  severity \code{"ERROR_ERR"} or higher.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}

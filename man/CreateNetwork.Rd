@@ -69,7 +69,7 @@ DeleteNetwork(nets)
   Future versions may actually use pointers to the Netica objects.
 }
 \seealso{
-  \code{\link{CopyNets}()}, \code{\link{is.active}()}
+  \code{\link{CopyNetworks}()}, \code{\link{is.active}()}
 }
 \examples{
 
