@@ -69,7 +69,8 @@ IsBeliefUpdated(node)
 }
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeProbs}()},
-  \code{\link{NodeFinding}()} 
+  \code{\link{NodeFinding}()}, \code{\link{JointProbability}()},
+  \code{\link{MostProbableConfig}()}, \code{\link{FindingsProbability}()}
 }
 \examples{
 irt5 <- ReadNetworks(paste(library(help="RNetica")$path,

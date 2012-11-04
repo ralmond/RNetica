@@ -933,6 +933,7 @@ SEXP RN_GetNodeSets(SEXP node, SEXP incSystem) {
     return (setList);
   }
   //I'm hoping R will do something sensible with the extra length
+  //Set to "", need to trim in R code.
   PROTECT(result = allocVector(STRSXP,nsets));
   for (i=0; i<nsets; i++) {
     setname = CHAR(STRING_ELT(setList,i));

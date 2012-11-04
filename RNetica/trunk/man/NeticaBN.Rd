@@ -4,7 +4,6 @@
 \alias{print.NeticaBN}
 \alias{is.NeticaBN}
 \alias{Ops.NeticaBN}
-
 \title{
 An object referencing a Bayesian network in Netica.
 }

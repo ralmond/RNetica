@@ -231,6 +231,33 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   handle
 }
 
+MakeCliqueNode <- function(nodelist) {
+  if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
+                                          is.active(nd)}))) { 
+    stop("Expected a list of Netica nodes, got, ",nodelist)
+  }
+  handle <- .Call("RN_MakeCliqueNode",nodelist,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1L]>0) {
+    stop("MakeCliqueNode: Netica Errors Encountered, see console for details.")
+  }
+  handle
+}
+
+is.CliqueNode <- function (x) {
+  is(x,"CliqueNode")
+}
+
+GetClique <- function (cliquenode) {
+  attr(cliquenode,"clique")
+}
+
+
+#####################################################################
+## Probability Calculations
+#####################################################################
+
+
 ## To start, pass -1.
 ## Using 1 based indexing, but Netica uses 1-based.  Convert inside C code. 
 nextconfig <- function (current, maxvals) {
@@ -938,8 +965,46 @@ normalize.CPF <- function (cpt) {
   cpt
 }
 
+############################################################################
+## Merging Networks:  EM -- SM algorithm
+###########################################################################
 
-  
+AdjoinNetwork <- function (sm, em, setname=character()) {
+  emnodes <- NetworkAllNodes(em)
+  smnodes <- NetworkAllNodes(sm)
+  newnodes <- CopyNodes(emnodes,newnet=sm)
+  if (is.NeticaNode(newnodes)) {
+    ## Singleton response from copy-nodes might have been unlisted.
+    newnodes <- list (newnodes)
+  }
+  for (node in newnodes) {
+    stubs <- sapply(NodeParents(node),NodeKind) == "Stub"
+    if (any(stubs)) {
+      NodeParents(node)[stubs] <- smnodes[NodeInputNames(node)[stubs]]
+      if (any(sapply(NodeParents(node),NodeKind) == "Stub")) {
+        warning("Node ",as.character(node)," has unresolved stub parents.")
+      }
+    }
+    enode <- emnodes[[NodeName(node)]]
+    NodeSets(node) <- c(setname,NodeSets(enode))
+  }
+  names(newnodes) <- sapply(newnodes,NodeName)
+  newnodes
+}
+
+
+NetworkFootprint <- function(net) {
+  allnodes <- NetworkAllNodes(net)
+  result <- character()
+  for (node in allnodes) {
+    stubs <- sapply(NodeParents(node),NodeKind) == "Stub"
+    if (any(stubs)) {
+      result <- unique(c(result,NodeInputNames(node)[stubs]))
+    }
+  }
+  result
+}
+
 
 
 

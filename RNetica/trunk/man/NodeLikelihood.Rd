@@ -79,11 +79,27 @@ NodeLikelihood(node) <- value
   \code{"NodFinding<-"} internally calls \code{RetractFindings}.  So
   there is no need to do this manually.
 }
+\section{Warning}{
+
+  The documentation for the Netica function \nref{MostProbableConfig_bn}
+  states that likelihood findings are not
+  properly taken into accont in \code{\link{MostProbableConfig}()}.
+  Some quick tests indicate that it is doing something sensible, but
+  more extensive testing and/or clarification is needed.
+
+  The documentation for the Netica function
+  \nref{FindingsProbability_bn} also provides a warning about likelihood
+  evidnece.  The function \code{\link{FindingsProbability}(net)} still
+  gives a result, but it is the normalization constant for the network,
+  and not necessarily a probability.
+
+}
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeFinding}()}
-}
+  \code{\link{JointProbability}()},
+  \code{\link{MostProbableConfig}()}, \code{\link{FindingsProbability}()}}
 \examples{
 irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
                            "sampleNets","IRT5.dne",

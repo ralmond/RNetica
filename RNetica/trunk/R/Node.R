@@ -26,7 +26,11 @@ toString.NeticaNode <- function(x,...) {
     if (is.continuous(x)) {
       paste("<Continuous Node:",as.character(x),">")
     } else {
-      paste("<Discrete Node:",as.character(x),">")
+      if (is.CliqueNode(x)) {
+        paste("<Clique Node:",as.character(x),">")
+      } else {
+        paste("<Discrete Node:",as.character(x),">")
+      }
     }
   else 
     paste("<Deleted Netica Node:",as.character(x),">")
@@ -158,7 +162,7 @@ CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
   if (!is.NeticaBN(newnet) || !is.active(newnet)) {
     stop("Expected an active Bayes net, got ",newnet)
   }
-  handles <- .Call("RN_Copy_Nets",newnet, nodes, newnamelist,options,PACKAGE="RNetica")
+  handles <- .Call("RN_Copy_Nodes",newnet, nodes, options,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("CopyNetworks: Netica Errors Encountered, see console for details.")
@@ -178,12 +182,16 @@ CopyNodes <- function (nodes, newnamelist=NULL, newnet=NULL,
     }
   }
 
-  if (length(handles)==1) handles <- handles[[1]]
-  handles
+  if (length(handles)==1) {
+    handles[[1]]
+  } else {
+    names(handles) <- sapply(handles,NodeName)
+    handles
+  }
 }
 
 #########################################################################
-## Utility level not operations.
+## Utility level node operations.
 #########################################################################
 
 NetworkFindNode <- function (net,name) {
@@ -674,6 +682,8 @@ NetworkNodesInSet <- function(net, setname) {
   if (ecount[1]>0) {
     stop("NetworkNodesInSet: Netica Errors Encountered, see console for details.")
   }
+  nodes <- as.list(nodes)
+  names(nodes) <- sapply(nodes,NodeName)
   nodes
 }
 
@@ -696,7 +706,7 @@ NetworkNodeSetColor <- function(net, setname, newcolor) {
     stop("Expected an active Netica network, got, ",net)
   }
   if (length(setname)>1) {
-    warning("NetworkNodeSets: Ignoring all but first set name.")
+    warning("NetworkNodeSetColor: Ignoring all but first set name.")
   }
   setname <- as.character(setname)[1]
   if (missing(newcolor)) {
@@ -704,7 +714,7 @@ NetworkNodeSetColor <- function(net, setname, newcolor) {
     result <- .Call("RN_NetworkNodeGetColor",net,setname, PACKAGE="RNetica")
   } else {
     if (length(newcolor)>1) {
-      warning("NetworkNodeSets: Ignoring all but first color.")
+      warning("NetworkNodeSetColor: Ignoring all but first color.")
     }
     if (is.na(newcolor)) {
       col <- -2L
@@ -717,7 +727,7 @@ NetworkNodeSetColor <- function(net, setname, newcolor) {
   }
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NetworkNodesInSet: Netica Errors Encountered, see console for details.")
+    stop("NetworkNodeSetColor: Netica Errors Encountered, see console for details.")
   }
   if (result==-2) {
     result <- NA_character_

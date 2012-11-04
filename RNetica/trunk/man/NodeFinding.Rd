@@ -84,6 +84,9 @@ NodeFinding(node) <- value
   \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()}
+  \code{\link{JointProbability}()},
+  \code{\link{MostProbableConfig}()},
+  \code{\link{FindingsProbability}()}
 }
 \examples{
 irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
