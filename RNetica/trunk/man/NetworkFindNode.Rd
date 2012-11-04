@@ -5,9 +5,12 @@
   Finds nodes in a Netica network.
 }
 \description{
+
   The funciton \code{NetworkFindNode} finds a node in a
-  \code{\link{NeticaBN}} with the given name.  The function
+  \code{\link{NeticaBN}} with the given name.  If no node with the
+  specified name found, it will return \code{NULL}. The function
   \code{NetworkAllNodes()} returns a list of all nodes in the network.
+
 }
 \usage{
 NetworkFindNode(net, name)
