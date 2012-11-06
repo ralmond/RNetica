@@ -6,33 +6,49 @@ Functions for
 These seem to be redundant with current definition of NodeStates<-
 
 
-Node Experience
 Equations
 ##export (
-##   NodeExperience, "NodeExperience<-",
-##   ReviseCPTsByFindings,
 ##   GetNodeEquation, SetNodeEquation
-##   FadeCPTTable, EquationToTable
+##   EquationToTable
+##   CalcNodeState, CalcNodeValue,
 ##   )
 Learning from Data
+##   NodeExperience, "NodeExperience<-",
+##   ReviseCPTsByFindings, FadeCPT
+##   ReviseCPTsByFindings_bn, ReviseCPTsByCaseFile_bn
+##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
+##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support
+##   WriteNetFindings, ReadNetFindings
+##   WriteNetFindings_bn, ReadNetFindings2_bn
+##   SetCaseFileDelimChar_ns, SetMissingDataChar_ns
+##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
+##   TestWithCaseset_bn, GenerateRandomCase_bn
 
 Continuous Node support
 Decision Net support
 ##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
 ##   EnterIntervalFinding,
-##   CalcNodeState, CalcNodeValue,
 ##   GetNodeExpectedValue, GetNodeExpectedUtils,
 Database Connectivity
-##   WriteNetFindings, ReadNetFindings
+##  NewDBManager_cs, DeleteDBManager_cs
+##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
+##  ExcecuteDBSql_cs, AddNodesFromDB_bn
 Sensitivity
 ## export(
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
 ##   GetVarianceOfReal,
 ##  )
+Testing
+## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
+## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
+## GetTestQuadradicLoss_bn
 Random Generation
+## NewRandomGenerator_ns, DeleteRandomGenerator_ns
+## GenerateRandomeNumbers_ns, GetRandomGenState_ns
+## SetNetRandomGen_bn
 DBNs
-
+## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
 
 
