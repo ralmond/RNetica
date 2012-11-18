@@ -1,3 +1,6 @@
+Nasty bug where RReference gets overwritten in network.  Not sure
+where this is coming from, as they should be preserved.
+
 
 Parse the junction tree report
 
