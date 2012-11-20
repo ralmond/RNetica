@@ -80,8 +80,6 @@ stopifnot(
 DeleteNetwork(anet)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
 \keyword{ graphs }
 \keyword{ manip }% __ONLY ONE__ keyword per line

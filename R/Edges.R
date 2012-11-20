@@ -977,7 +977,8 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
     ## Singleton response from copy-nodes might have been unlisted.
     newnodes <- list (newnodes)
   }
-  for (node in newnodes) {
+  for (i in 1:length(newnodes)) {
+    node <- newnodes[[i]]
     stubs <- sapply(NodeParents(node),NodeKind) == "Stub"
     if (any(stubs)) {
       NodeParents(node)[stubs] <- smnodes[NodeInputNames(node)[stubs]]
@@ -985,7 +986,8 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
         warning("Node ",as.character(node)," has unresolved stub parents.")
       }
     }
-    enode <- emnodes[[NodeName(node)]]
+    ## Node may have been renamed.
+    enode <- emnodes[[i]]
     NodeSets(node) <- c(setname,NodeSets(enode))
   }
   names(newnodes) <- sapply(newnodes,NodeName)

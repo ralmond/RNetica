@@ -29,6 +29,27 @@ SEXP RN_isNodeActive(SEXP node) {
 }
 
 /**
+ * Tests whether or not an object is a Netica Node.
+ */
+int isNeticaNode(SEXP obj) {
+  SEXP klass;
+  int result = FALSE;
+  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
+  R_len_t k, kk=length(klass);
+  for (k=0; k<kk; k++) {
+    if(strcmp(NodeClass,CHAR(STRING_ELT(klass,k))) == 0) {
+      result =TRUE;
+      break;
+    } else {
+    }
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+
+
+/**
  * This function allocates a back pointer R object
  * for a newly created net.
  */
@@ -57,7 +78,7 @@ SEXP MakeNode_RRef(node_bn* node, const char* name, int isDiscrete) {
  */
 SEXP GetNode_RRef(node_bn *node) {
   SEXP nd = FastGetNode_RRef(node);
-  if (nd) return nd;            /* Already got one */
+  if (nd && isNeticaNode(nd)==TRUE) return nd;            // Already got one
   const char *name = GetNodeName_bn(node);
   int isDiscrete = (int) (GetNodeType_bn(node) == DISCRETE_TYPE);
   return MakeNode_RRef(node,name,isDiscrete);
@@ -70,7 +91,6 @@ SEXP GetNode_RRef(node_bn *node) {
 void RN_Free_Node(node_bn* node_handle) {
   SEXP node, nodehandle;
   if (!node_handle) return; //Void pointer, nothing to do.
-
   node = GetNodeUserData_bn(node_handle,0);
   if (!node) return; //No R object, created nothing to do.
   PROTECT(node);
@@ -87,7 +107,6 @@ void RN_Free_Node(node_bn* node_handle) {
 }
 
 void RN_Free_Nodes(const nodelist_bn* nodelist) {
-  //Rprintf("Freeing nodes.\n");
   int k, kk=LengthNodeList_bn(nodelist);
   for (k=0; k<kk; k++) {
     RN_Free_Node(NthNode_bn(nodelist,k));

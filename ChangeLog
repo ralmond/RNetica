@@ -1,3 +1,19 @@
+2012-11-19  Russell G. Almond  <ralmond@Limu>
+
+	* src/Networks.c (RN_Named_Nets, RN_GetNth_Nets, isNeticaBN):
+	Added a check for corrupted references which will hopefully
+	prevent a similar problem at the node level.
+
+	* src/Node.c (isNeticaNode, GetNode_RRef): Added a check to the
+	node reference function which will hopefully fix bogus references.
+
+2012-11-18  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkFindNode): Fixed names of return value.
+
+	* R/Edges.R (AdjoinNetwork): added a fix for when new nodes are
+	renamed. 
+
 2012-11-03  Russell G. Almond  <ralmond@Limu>
 
 	* R/Node.R (NetworkNodesInSet): Changed return to be a true list
