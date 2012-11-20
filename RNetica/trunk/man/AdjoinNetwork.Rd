@@ -104,6 +104,12 @@ EMTask2a <- ReadNetworks(paste(library(help="RNetica")$path,
                            "sampleNets","EMTask2a.dne",
                            sep=.Platform$file.sep))
 
+## Evidence model for Task 2b
+EMTask2b <- ReadNetworks(paste(library(help="RNetica")$path,
+                           "sampleNets","EMTask2b.dne",
+                           sep=.Platform$file.sep))
+
+
 ## Task 1a has a footprint of Skill1 and Skill2 (those are the
 ## referenced student model nodes.  So we want joint the footprint into
 ## a single clique.
@@ -159,8 +165,13 @@ stopifnot(
   sum(abs(student1.probt1a2a-student1.probt1a2ax)) <.0001
 )
 
+## Adjoining networks twice should result in copies with incremented
+##   numbers.
+AdjoinNetwork(student1,EMTask2b)
+AdjoinNetwork(student1,EMTask2b)
 
 DeleteNetwork(student1)
+DeleteNetwork(EMTask2b)
 DeleteNetwork(EMSMSystem)
 
 }

@@ -16,6 +16,7 @@ extern environ_ns* RN_netica_env;
 #define GetNet_RRef(n)		(SEXP) GetNetUserData_bn(n,0)
 #define GetNeticaHandle(b)      (net_bn*) R_ExternalPtrAddr(getAttrib(b,bnatt))
 #define BN_NAME(b)              CHAR(STRING_ELT(AS_CHARACTER(b),0))
+extern int isNeticaBN(SEXP obj);
 //Now for node.
 #define SetNode_RRef(n,r)	SetNodeUserData_bn(n,0,(void *)r)
 /* This function automatically allocations an object for the node if
@@ -24,6 +25,7 @@ extern SEXP GetNode_RRef(node_bn* node);
 #define FastGetNode_RRef(n)		(SEXP) GetNodeUserData_bn(n,0)
 #define GetNodeHandle(n)        (node_bn*) R_ExternalPtrAddr(getAttrib(n,nodeatt))
 #define NODE_NAME(n)            CHAR(STRING_ELT(AS_CHARACTER(n),0))
+extern int isNeticaNode(SEXP obj);
 
 /**
  * Converts from name to network.  
@@ -49,8 +51,10 @@ extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
  * Defined in Registration.c
  */
 extern SEXP bnclass;
+const char* NeticaClass;
 extern SEXP bnatt;
 extern SEXP nodeclass;
+const char* NodeClass;
 extern SEXP nodeatt;
 extern SEXP nodediscatt;
 extern SEXP cliquenodeclass;

@@ -199,7 +199,9 @@ NetworkFindNode <- function (net,name) {
     stop ("Expected an active Netica network, got ",net)
   }
   if (length(name) > 1) {
-    return (lapply(name,function(n) NetworkFindNode(net,n)))
+    result <- lapply(name,function(n) NetworkFindNode(net,n))
+    names(result) <- name
+    return (result)
   } else {
     if(!is.IDname(name)) {
       stop("Expected a Netica name, got ",name)

@@ -38,6 +38,25 @@ SEXP RN_isBNActive(SEXP bn) {
   return result;
 }
 
+/**
+ * Tests whether or not an object is a Netica Node.
+ */
+int isNeticaBN(SEXP obj) {
+  SEXP klass;
+  int result = FALSE;
+  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
+  R_len_t k, kk=length(klass);
+  for (k=0; k<kk; k++) {
+    if(strcmp(NeticaClass,CHAR(STRING_ELT(klass,k))) == 0) {
+      result = TRUE;
+      break;
+    }
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+
 // Copyied from NETICA API manual because it looks useful.
 // This is now key to the new strategy.  
 net_bn* RN_AS_NET (const char* name){
@@ -145,6 +164,10 @@ SEXP RN_Named_Nets(SEXP namelist) {
     if (netica_handle) {
       /* Fetch the bn object. */
       bn = GetNet_RRef(netica_handle);
+      if (!bn || !isNeticaBN(bn)) {
+        //Corrupted pointer, rebuild it.
+        bn = MakeNet_RRef(netica_handle,GetNetName_bn(netica_handle));
+      }
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
     } else {
@@ -170,6 +193,10 @@ SEXP RN_GetNth_Nets(SEXP nlist) {
     if (netica_handle) {
       /* Get corresponding R object */
       bn = GetNet_RRef(netica_handle);
+      if (!bn || !isNeticaBN(bn)) {
+        //Corrupted pointer, rebuild it.
+        bn = MakeNet_RRef(netica_handle,GetNetName_bn(netica_handle));
+      }
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
       //UNPROTECT(1); //bn is preserved, so don't need protection.
