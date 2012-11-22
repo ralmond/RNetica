@@ -46,8 +46,8 @@ is.NetworkCompiled(net)
   The \code{NeticaBN} object \code{net} is returned invisibly.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{CompileNet_bn}, \nref{UncompileNet_bn}, \nref{SizeCompiledNet_bn}, 
 
 }

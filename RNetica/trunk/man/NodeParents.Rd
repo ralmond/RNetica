@@ -66,8 +66,8 @@ NodeParents(child) <- value
   The setting variant returns the modified \code{child} object.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeParents_bn}, \nref{SwitchNodeParent_bn}
 }
 \author{

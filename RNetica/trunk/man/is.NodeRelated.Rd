@@ -97,8 +97,8 @@ GetRelatedNodes(nodelist, relation = "connected")
   \code{nodelist}.  There may be duplicates in this list.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{IsNodeRelated_bn}, \nref{GetRelatedNodes_bn},
   \nref{GetRelatedNodesMult_bn}
 

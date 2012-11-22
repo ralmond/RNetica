@@ -34,8 +34,8 @@ HasNodeTable(node)
   tests whether or not the table has been completely specified.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{HasNodeTable_bn}
 }
 \author{

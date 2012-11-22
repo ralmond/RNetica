@@ -32,8 +32,8 @@ NodeVisPos(node) <- value
   A numeric vector of length 2 with names \code{"x"} and \code{"y"}.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeVisPosition_bn}, \nref{SetNodeVisPosition_bn}, 
 }
 \author{

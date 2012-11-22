@@ -36,8 +36,8 @@ RetractNetFindings(net)
   Returns its argument invisibly.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{RetractNetFindings_bn}, \nref{RetractNodeFindings_bn}
 }
 \author{

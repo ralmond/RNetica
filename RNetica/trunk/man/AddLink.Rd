@@ -55,8 +55,8 @@ DeleteLink(parent, child)
   The function \code{DeleteLink} invisibly returns the child node.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{AddLink_bn}, \nref{DeleteLink_bn}
 }
 \author{

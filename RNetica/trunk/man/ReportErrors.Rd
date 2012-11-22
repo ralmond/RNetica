@@ -9,7 +9,7 @@
   needed at the user level.
 }
 \usage{
-ReportErrors(maxreport = 999999, clear = TRUE)
+ReportErrors(maxreport = 9, clear = TRUE)
 ClearAllErrors(severity="XXX_ERR")
 }
 \arguments{
@@ -35,8 +35,8 @@ ClearAllErrors(severity="XXX_ERR")
   severity \code{"ERROR_ERR"} or higher.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetError_ns}, \nref{ClearError_ns}
 }
 \author{

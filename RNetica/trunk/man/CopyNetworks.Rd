@@ -49,8 +49,8 @@ CopyNetworks(nets, newnamelist, options = character(0))
   \code{nets} does not exit.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-\url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+\url{http://norsys.com/onLineAPIManual/index.html}:
 \nref{CopyNet_bn}
 }
 \author{
