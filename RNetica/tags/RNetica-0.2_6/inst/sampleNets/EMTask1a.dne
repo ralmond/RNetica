@@ -1,0 +1,118 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 11/03/2012 at 03:44:39 PM.
+
+bnet EMTask1a {
+autoupdate = TRUE;
+whenchanged = 1351971792;
+
+visual V3 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (144, 196, 1066, 652);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00E1E1E1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet Observable {Disabled = 1; Color = 0x00C8C8C8;};
+	NodeSet Task1a {Disabled = 1; Color = 0x00C8C8C8;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Skill2_2 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	states = (High, Low);
+	title = "Skill2";
+	whenchanged = 1351557045;
+	};
+
+param X_Skill1_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	states = (High, Medium, Low);
+	title = "Skill1";
+	whenchanged = 1351557045;
+	};
+
+param X_Skill2_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	states = (High, Low);
+	title = "Skill2";
+	whenchanged = 1351557045;
+	};
+
+node Obs1a1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Skill1, Skill2);
+	parents = (X_Skill1_1, X_Skill2_1);
+	probs = 
+		// Right        Wrong         // Skill1 Skill2 
+		  (0.9,         0.1,          // High   High   
+		   0.7,         0.3,          // High   Low    
+		   0.7,         0.3,          // Medium High   
+		   0.6,         0.4,          // Medium Low    
+		   0.6,         0.4,          // Low    High   
+		   0.4,         0.6);         // Low    Low    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	visual V3 {
+		center = (108, 198);
+		height = 1;
+		link 1 {
+			labelposn = (84, 139, 114, 153);
+			path = ((74, 139), (94, 173));
+			};
+		link 2 {
+			labelposn = (140, 148, 170, 162);
+			path = ((138, 148), (123, 173));
+			};
+		};
+	};
+
+node Obs1a2 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (, Skill2);
+	parents = (Obs1a1, X_Skill2_2);
+	probs = 
+		// Right        Wrong         // Obs1a1 Skill2 
+		  (0.8,         0.2,          // Right  High   
+		   0.6,         0.4,          // Right  Low    
+		   0.1,         0.9,          // Wrong  High   
+		   0.1,         0.9);         // Wrong  Low    ;
+	whenchanged = 2147483647;
+	visual V3 {
+		center = (300, 180);
+		height = 2;
+		link 2 {
+			labelposn = (276, 121, 306, 135);
+			path = ((266, 121), (286, 155));
+			};
+		};
+	};
+NodeSet Observable {Nodes = (Obs1a1, Obs1a2);};
+NodeSet Task1a {Nodes = (Obs1a1, Obs1a2);};
+};
