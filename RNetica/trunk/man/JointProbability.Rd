@@ -36,12 +36,12 @@ JointProbability(nodelist)
 }
 \references{
 Almond, R. G. & Mislevy, R. J. (1999) Graphical models and computerized
-adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223-238.
+adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223--238.
 
 Almond, R., Herskovits, E., Mislevy, R. J., & Steinberg,
 L. S. (1999). Transfer of information between system and evidence
 models. In Artificial Intelligence and Statistics 99, Proceedings
-(pp. 181–186). Morgan-Kauphman
+(pp. 181--186). Morgan-Kauphman
 
 \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPI/Manual/index.html}:

@@ -47,11 +47,11 @@ AdjoinNetwork(sm, em, setname = character())
   first using \code{\link{CopyNetworks}(sm)} if this is not the
   intention).  It then the parents of each node, \code{emnode}, in
   \code{em} looking for stub nodes (cases where
-  \code{\link{NodeParents}(emnode)[i]} has been set to \code{NULL} for some
+  \code{\link{NodeParents}(emnode)[j]} has been set to \code{NULL} for some
   parent.  \code{AdjoinNetworks(sm,em)} then tries to find a 
   matching parent by searching for a system model node, \code{smnode}
-  named \code{\link{NodeInputNames}(emnode)[i]}.  If it finds one, it
-  sets \code{NodeParents(emnode)[i] <- smnode}; if not, it issues a
+  named \code{\link{NodeInputNames}(emnode)[j]}.  If it finds one, it
+  sets \code{NodeParents(emnode)[j] <- smnode}; if not, it issues a
   warning.
   
   The function \code{AdjoinNetwork(sm,em)} also copies node set
@@ -70,12 +70,12 @@ AdjoinNetwork(sm, em, setname = character())
 }
 \references{
   Almond, R. G. & Mislevy, R. J. (1999) Graphical models and computerized
-adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223-238.
+adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223--238.
 
 Almond, R., Herskovits, E., Mislevy, R. J., & Steinberg,
 L. S. (1999). Transfer of information between system and evidence
 models. In Artificial Intelligence and Statistics 99, Proceedings
-(pp. 181–186). Morgan-Kaufman
+(pp. 181--186). Morgan-Kaufman
 
 }
 \author{

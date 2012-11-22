@@ -106,7 +106,7 @@ NodeParents <- function (child) {
   newindex <- 1L:length(value)
   oldindex <- match(value, oldpar)
   if( any(newindex<oldindex,na.rm=TRUE)) {
-    cat("Reorder nulling. \n")
+    ##cat("Reorder nulling. \n")
     ##Okay, safest thing to do is to set to a vector of NULLs first,
     ##Then add new links.
     oldnames <- names(oldpar)
@@ -116,7 +116,6 @@ NodeParents <- function (child) {
     ## what was wanted, so clear names.
     .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE="RNetica")
   }
-  
   handle <- .Call("RN_SetNodeParents",child, value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {

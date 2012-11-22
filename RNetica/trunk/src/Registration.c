@@ -310,8 +310,8 @@ SEXP RN_Netica_Version() {
  * errors, warnings, notices and reports.
  */
 void RN_report_errors(int* maxreport, int* clear, int* counts) {
-  int maxerr = 999999;
-  int clearit = 1;
+  int maxerr = *maxreport;
+  int clearit = *clear;
 
   report_ns* err = NULL;
   int ecount = 0;
@@ -324,7 +324,7 @@ void RN_report_errors(int* maxreport, int* clear, int* counts) {
     if (clearit) ClearError_ns(err);
   }
   if (ecount >0) {
-    error("Fatal errors encountered, recomment restarting Netica");
+    error("Fatal errors encountered, recommend restarting Netica");
   }
 
   while ((err = GetError_ns(RN_netica_env, ERROR_ERR, err))!=NULL) {
@@ -444,14 +444,14 @@ level_bn RN_RnumToNnum (double x) {
   double result = (double) x;
   if (x == R_PosInf) result = INFINITY_ns;
   if (x == R_NegInf) result = -INFINITY_ns;
-  return x;
+  return result;
 }
 
 double RN_NnumToRnum (level_bn x) {
   double result = (double) x;
   if (x == INFINITY_ns) result = R_PosInf;
   if (x == -INFINITY_ns) result = R_NegInf;
-  return x;
+  return result;
 }
 
 
