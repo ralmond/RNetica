@@ -40,8 +40,8 @@ NodeName(node)<- value
   The setter method returns the \code{NeticaNode} object
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeName_bn}, \nref{SetNodeName_bn}
 }
 \author{
@@ -85,6 +85,9 @@ snode <- NewContinuousNode(net,"sleep")
 NodeName(snode) <- "work" ## This should issue a warning
 ## And not change the name.
 stopifnot(NodeName(snode)=="sleep")
+
+allNodes <- NetworkAllNodes(net)
+NodeName(allNodes$work) <- "effort"
 
 
 DeleteNetwork(net)

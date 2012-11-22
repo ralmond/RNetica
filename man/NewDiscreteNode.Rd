@@ -77,8 +77,8 @@ DeleteNodes(nodes)
   a value of \code{NULL} will be returned instead.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{NewNode_bn}, \nref{DeleteNode_bn}, \nref{GetNodeType_bn},
   \nref{SetNodeLevels_bn} 
 }

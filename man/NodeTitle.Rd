@@ -38,8 +38,8 @@ NodeDescription(node) <- value
   A character vector of length 1 providing the title or description.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeTitle_bn}, \nref{SetNodeTitle_bn},
   \nref{GetNodeComments_bn}, \nref{SetNodeComments_bn}
 }

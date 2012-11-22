@@ -65,8 +65,8 @@ NodeStates(node) <- value
   \code{node} object.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeNumberStates_bn}, \nref{GetNodeStateName_bn},
   \nref{SetNodeStateNames_bn},  \nref{GetNodeLevels_bn} 
   \nref{SetNodeLevels_bn} 

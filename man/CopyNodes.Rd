@@ -71,8 +71,8 @@ CopyNodes(nodes, newnamelist = NULL, newnet = NULL, options = character(0))
     only one).
   }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{CopyNodes_bn}
 }
 \author{

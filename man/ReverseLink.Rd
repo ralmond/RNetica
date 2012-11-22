@@ -37,8 +37,8 @@ ReverseLink(parent, child)
   Returns \code{NULL} if successful and \code{NA} if there was a problem.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{ReverseLink_bn}
 
   Shachter, R. D. (1986) "Evaluating Influence Diagrams."

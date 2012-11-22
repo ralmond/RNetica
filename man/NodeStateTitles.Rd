@@ -47,8 +47,8 @@ NodeStateComments(node) <- value
   The setter methods return the modified \code{NeticaNode} object invisibly.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeStateTitle_bn},\nref{SetNodeStateTitle_bn},  
   \nref{GetNodeStateComment_bn},\nref{SetNodeStateComment_bn}
 }

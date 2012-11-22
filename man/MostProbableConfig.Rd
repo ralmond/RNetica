@@ -54,8 +54,8 @@ MostProbableConfig(net,nth = 0)
   Pearl, J. (1988) \emph{Probabilistic Reasoning in Intelligent Systems:
     Networks of Plausible Inference.} Morgan Kaufmann.
 
-  \newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+  \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{MostProbableConfig_bn}
 }
 \author{

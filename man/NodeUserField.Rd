@@ -44,8 +44,8 @@ NodeAllUserFields(node)
   result are the names of the fields.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}
   \nref{GetNodeUserField_bn}, \nref{SetNodeUserField_bn},
   \nref{GetNodeNthUserField_bn}
 

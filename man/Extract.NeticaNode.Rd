@@ -327,8 +327,8 @@ EVERY_STATE
   The form \code{node[\ldots]<-value} returns \code{node} invisibly.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-  \url{http://norsys.com/onLineAPI/Manual/index.html}:
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+  \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeProbs_bn}, \nref{SetNodeProbs_bn},
   \nref{GetNodeFuncState_bn}, \nref{SetNodeFuncState_bn},
   \nref{GetNodeFuncReal_bn}, \nref{SetNodeFuncReal_bn},

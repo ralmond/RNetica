@@ -58,7 +58,7 @@ NetworkNodeSetColor(net, setname, newcolor)
   form \code{"#rrggbb"}. 
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLurl/Manual/index.html}:
   \nref{ReorderNodesets_bn}, \nref{SetNodesetColor_bn}
 }

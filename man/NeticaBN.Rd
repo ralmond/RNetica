@@ -63,7 +63,7 @@ e1 != e2
   whether the objects are equal.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIurl/index.html}:
   \nref{GetNetUserData_bn}, \nref{SetNetUserData_bn} (these are used
   to maintain the back pointers to the R object).

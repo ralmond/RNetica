@@ -33,8 +33,8 @@ NodeNet(node)
   \code{NULL} if \code{node} is not active.
 }
 \references{
-\newcommand{\nref}{\href{http://norsys.com/onLineAPI/functions/#1.html}{#1()}}
-    \url{http://norsys.com/onLineAPI/Manual/index.html}: \nref{GetNodeNet_bn}
+\newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
+    \url{http://norsys.com/onLineAPIManual/index.html}: \nref{GetNodeNet_bn}
 }
 \author{
   Russell Almond

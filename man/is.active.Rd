@@ -47,7 +47,7 @@ is.active(x)
   each one.
 }
 \references{
-  \url{http://norsys.com/onLineAPI/Manual/index.html},
+  \url{http://norsys.com/onLineAPIManual/index.html},
   \url{http://lib.stat.cmu.edu/R/CRAN/doc/manuals/R-exts.html}
 }
 \author{
