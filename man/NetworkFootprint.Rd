@@ -54,7 +54,7 @@ adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223-238.
 Almond, R., Herskovits, E., Mislevy, R. J., & Steinberg,
 L. S. (1999). Transfer of information between system and evidence
 models. In Artificial Intelligence and Statistics 99, Proceedings
-(pp. 181–186). Morgan-Kaufman
+(pp. 181--186). Morgan-Kaufman
 
 }
 \author{

@@ -1,3 +1,13 @@
+2012-11-21    <ralmond@TECH-PC>
+
+	* src/Edges.c (RN_SetNodeParents): Fixed problem with 32 bit
+	version related to parentlist getting overwritten during
+	operation.
+	
+	* src/Registration.c (RN_report_errors): Fixed so that this
+	actually respects number of errors.  Also, Fixed in calling
+	program to make default number more like 10.
+
 2012-11-19  Russell G. Almond  <ralmond@Limu>
 
 	* src/Networks.c (RN_Named_Nets, RN_GetNth_Nets, isNeticaBN):

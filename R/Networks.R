@@ -23,7 +23,7 @@ NeticaVersion <- function () {
 ## various types.  This is mostly used internally:  The R functions
 ## call Netica through .Call and the call ReportErrors to report on
 ## errors. 
-ReportErrors <- function(maxreport=999999,clear=TRUE) {
+ReportErrors <- function(maxreport=9,clear=TRUE) {
   counts <- .C("RN_report_errors",as.integer(maxreport),
                 as.integer(clear),counts=integer(4),
                PACKAGE="RNetica")$counts

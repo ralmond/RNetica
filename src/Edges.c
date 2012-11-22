@@ -103,7 +103,7 @@ SEXP RN_GetNodeChildren(SEXP node) {
  
 
 SEXP RN_SetNodeParents(SEXP node, SEXP value) {
-  int n, nn, nv = (int) length(value);
+  R_len_t n, nn, nv = length(value);
   SEXP parent;  
   node_bn *oldpar, *newpar;
   node_bn* node_handle = GetNodeHandle(node);
@@ -112,12 +112,16 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
     const nodelist_bn* parlist = GetNodeParents_bn(node_handle);
     int np = LengthNodeList_bn(parlist);
     nn = (np < nv) ? np : nv;
+    //Rprintf("np=%d, nv=%d, nn=%d\n",np,nv,nn);
 
     //Replace nodes
     for (n =0; n< nn; n++) {
+      //Refetch this each time as it may have changed.
+      parlist = GetNodeParents_bn(node_handle);
       oldpar = NthNode_bn(parlist,n);
       parent = VECTOR_ELT(value,n);
       if (isNull(parent)) {
+        //Rprintf("Setting parent %d to NULL\n",n);
         newpar = NULL;
       } else {
         newpar = GetNodeHandle(parent);
@@ -125,15 +129,20 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
           error("NodeParents: Bad parent %s.\n", NODE_NAME(node));
           return(node);
         }
+        //Rprintf("Setting parent %d to %s\n",n,GetNodeName_bn(newpar));
       }
       if (newpar != oldpar) {
+        //Rprintf("Switching parent %d\n",n);
         SwitchNodeParent_bn(n,node_handle,newpar);
-      } 
+      } else {
+        //Rprintf("No need to swap %s and %s\n",GetNodeName_bn(oldpar),GetNodeName_bn(newpar));
+      }
     }
     //If necessary, remove additional nodes
     if (np > nv) {
       //Delete Links from end, otherwise numbers will change.
       for (n=np; --n >= nv; ) {
+        //Rprintf("Switching deleting parent %d\n",n);
         DeleteLink_bn(n,node_handle);
       }
     }
@@ -151,6 +160,7 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
             return(node);
           }
         }
+        //Rprintf("Adding parent %d\n",n);
         AddLink_bn(newpar,node_handle);
       }
     }
