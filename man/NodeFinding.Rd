@@ -33,7 +33,7 @@ NodeFinding(node) <- value
   character name of one of the states, or an integer giving the index
   into the state table.
 
-  Note that setting \code{NodeFining(node) <- value} clears any previous
+  Note that setting \code{NodeFinding(node) <- value} clears any previous
   findings (including virutal findings set through
   \code{\link{NodeLikelihood}()} or
   \code{\link{EnterNegativeFinding}()}), that may have been set.  The
