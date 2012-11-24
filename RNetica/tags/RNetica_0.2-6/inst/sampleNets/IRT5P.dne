@@ -1,0 +1,301 @@
+// ~->[DNET-1]->~
+
+// File created by AlmondR at FloridaStateU using Netica 4.16 on Aug 21, 2012 at 11:55:43.
+
+bnet IRT5P {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1345564482;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (467, 39, 1187, 554);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0xc0c0c0;};
+	NodeSet Nature {BuiltIn = 1; Color = 0xf8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0xd3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0xc8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0xffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0xffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0xffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0xdee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0xf0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0xffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		landscape = FALSE;
+		magnify = 1;
+		};
+	};
+
+node Theta {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (pos2, pos1, Zero, neg1, neg2);
+	levels = (2, 1, 0, -1, -2);
+	parents = ();
+	probs = 
+		// pos2         pos1         Zero         neg1         neg2         
+		  (0.1,         0.2,         0.4,         0.2,         0.1);
+	EqnDirty = TRUE;
+	title = "Theta";
+	whenchanged = 1345561672;
+	belief = (0.1, 0.2, 0.4, 0.2, 0.1);
+	visual V1 {
+		center = (132, 198);
+		height = 6;
+		};
+	};
+
+node Item_1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.9974009,   0.002599068,  // pos2  
+		   0.9859363,   0.01406363,   // pos1  
+		   0.9275735,   0.07242648,   // Zero  
+		   0.7005671,   0.2994328,    // neg1  
+		   0.2994328,   0.7005671);   // neg2  ;
+	numcases = 1;
+	equation = "P(Item_1|Theta) = Item_1==Right ? 1/(1+exp(-1.7*A*(  (Theta) - B_1))): 1 -  1/(1+exp(-1.7*A*(  \
+		(Theta) - B_1)))";
+	title = "Item_1";
+	comment = "P(Item_1|Theta) = 1/(1+exp(-1.7*A*(  (Theta) - B_1)))";
+	whenchanged = 1345564482;
+	belief = (0.8380135, 0.1619865);
+	visual V1 {
+		center = (432, 36);
+		height = 5;
+		link 1 {
+			path = ((208, 158), (383, 64));
+			};
+		};
+	};
+
+node Item_2 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.9907606,   0.009239363,  // pos2  
+		   0.9514319,   0.04856816,   // pos1  
+		   0.7815974,   0.2184025,    // Zero  
+		   0.3953209,   0.6046791,    // neg1  
+		   0.1066906,   0.8933094);   // neg2  ;
+	numcases = 1;
+	equation = "P(Item_2|Theta) = Item_2==Right ? 1/(1+exp(-1.7*A*(  (Theta) - B_2))): 1 -  1/(1+exp(-1.7*A*(  \
+		(Theta) - B_2)))";
+	title = "Item_2";
+	whenchanged = 1345564482;
+	belief = (0.6917347, 0.3082654);
+	visual V1 {
+		center = (432, 120);
+		height = 4;
+		link 1 {
+			path = ((208, 179), (352, 141));
+			};
+		};
+	};
+
+node Item_3 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.9677045,   0.03229547,   // pos2  
+		   0.8455347,   0.1544653,    // pos1  
+		   0.5,         0.5,          // Zero  
+		   0.1544653,   0.8455347,    // neg1  
+		   0.03229547,  0.9677045);   // neg2  ;
+	numcases = 1;
+	equation = "P(Item_3|Theta) = Item_3==Right ? 1/(1+exp(-1.7*A*(  (Theta) - B_3))): 1 -  1/(1+exp(-1.7*A*(  \
+		(Theta) - B_3)))";
+	title = "Item_3";
+	whenchanged = 1345564482;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (432, 198);
+		height = 1;
+		};
+	};
+
+node Item_4 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.8933094,   0.1066906,    // pos2  
+		   0.6046791,   0.3953209,    // pos1  
+		   0.2184025,   0.7815974,    // Zero  
+		   0.04856816,  0.9514319,    // neg1  
+		   0.009239363, 0.9907606);   // neg2  ;
+	numcases = 1;
+	equation = "P(Item_4|Theta) = Item_4==Right ? 1/(1+exp(-1.7*A*(  (Theta) - B_4))): 1 -  1/(1+exp(-1.7*A*(  \
+		(Theta) - B_4)))";
+	title = "Item_4";
+	whenchanged = 1345564482;
+	belief = (0.3082654, 0.6917347);
+	visual V1 {
+		center = (432, 282);
+		height = 2;
+		};
+	};
+
+node Item_5 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.7005671,   0.2994328,    // pos2  
+		   0.2994328,   0.7005671,    // pos1  
+		   0.07242648,  0.9275735,    // Zero  
+		   0.01406363,  0.9859363,    // neg1  
+		   0.002599068, 0.9974009);   // neg2  ;
+	numcases = 1;
+	equation = "P(Item_5|Theta) = Item_5==Right ? \n\
+		\|       1/(1+exp(-1.7*A*(  (Theta) - B_5))) : \n\
+		\| 1 -  1/(1+exp(-1.7*A*(  (Theta) - B_5)))";
+	title = "Item_5";
+	whenchanged = 1345564482;
+	belief = (0.1619865, 0.8380135);
+	visual V1 {
+		center = (432, 366);
+		height = 3;
+		link 1 {
+			path = ((208, 239), (385, 339));
+			};
+		};
+	};
+
+node A {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (1, 1);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Common Discrimination";
+	whenchanged = 1345562153;
+	evidence = #0;
+	value = 1;
+	visual V1 {
+		center = (246, 36);
+		height = 7;
+		};
+	};
+
+node B_1 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (-5, 5);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Difficulty, Item 1";
+	whenchanged = 1345563822;
+	evidence = #0;
+	value = -1.5;
+	visual V1 {
+		center = (600, 42);
+		height = 12;
+		};
+	};
+
+node B_2 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (-5, 5);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Difficulty, Item 1";
+	whenchanged = 1345563830;
+	evidence = #0;
+	value = -0.75;
+	visual V1 {
+		center = (600, 132);
+		height = 10;
+		};
+	};
+
+node B_3 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (-5, 5);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Difficulty, Item 1";
+	whenchanged = 1345563527;
+	evidence = #0;
+	value = 0;
+	visual V1 {
+		center = (600, 198);
+		height = 11;
+		};
+	};
+
+node B_4 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (-5, 5);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Difficulty, Item 1";
+	whenchanged = 1345563840;
+	evidence = #0;
+	value = 0.75;
+	visual V1 {
+		center = (600, 294);
+		height = 8;
+		};
+	};
+
+node B_5 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (-5, 5);
+	parents = ();
+	EqnDirty = TRUE;
+	comment = "Difficulty, Item 1";
+	whenchanged = 1345563966;
+	evidence = #0;
+	value = 1.5;
+	visual V1 {
+		center = (600, 372);
+		height = 9;
+		};
+	};
+ElimOrder = (Item_1, Item_2, Item_3, Item_4, Theta, Item_5);
+};

@@ -1,0 +1,171 @@
+These are some notes on the internals of RNetica which hopefully will
+be of use to anybody trying to write extensions.
+
+1.  R handles for Netica objects.
+
+The key netica functions return pointers for two kinds of Netica
+objects:  nets (net_bn) and nodes (node_bn).  Both nets and nodes
+support a UserData field which is a (void *) pointer.  The basic idea
+of the system is that when a netica net or node is created, a corresponding
+R object (class NeticaBN or NeticaNode) is created and installed in
+the User Data slot.  The R object has a pointer to the node installed
+in one of its attributes (using R_ExternalPtrAddr()) and the Netica
+has the R object installed in its UserData field (SEXPs are pointers,
+so this is straightforward).  The function is.active() tests for a null
+pointer, which indicates that the corresponding Netica object is not
+present.
+
+NeticaNode and NeticaBN objects are preserved (R_PreserveObject) when
+created and released (R_ReleaseObject) when the corresponding Netica
+object is deleted.  Generally speaking these objects don't need to be
+protected (as the are already on the precious list).  
+
+The equal functions for NeticaBN and NeticaNode objects tests the
+pointers (if the object is active) and only returns true if the
+pointers are the same.
+
+Internally, both NeticaBN and NeticaNode objects are created by taking
+the name of the net or node, attaching the class, the handle to the
+Netica object, and other class specific data.  This means that
+as.character(net) or as.character(node) will usually return the name
+of the net or node.  
+
+When nodes and nets are renamed, RNetica returns a modified NeticaNode
+or NeticaBN object that is based around the new name.  However, due to
+R's copy on modify policy, R insists on copying rather than modifying
+the handle, so stale copies of the objects could exist for which
+as.character(node) != NodeName(node).  This can be fixed with
+NodeName(node) <- NodeName(node) (and similar for networks).
+
+Note tht when Netica is unloaded (or R is shut down) all pointers will
+become Null and need to be reestablished.
+
+1a.  Networks
+
+In addition to the other attributes, NeticaBN objects have a
+"Filename" attribute, which stores the pathname of the file most
+recently used to read/write the network.  This exists in the R object
+and is maintained separately from the pathname stored in the Netica
+object.  The purpose is to facilitate restoring the handle to the
+network when R is restarted.   In particular, net <- ReadNetworks(net)
+should reload the network and restore the pointer (at least that
+instance of it).
+
+The following macros are useful manipulating the relationship between
+NeticaBN and net_bn objects.
+SetNet_RRef(n,r)	Sets NeticaBN SEXP for net_bn* 
+GetNet_RRef(n)		Returns NeticaBN SEXP for net_bn* 
+GetNeticaHandle(b)      Returns net_bn* for NeticaBN SEXP
+BN_NAME(b)              Returns cached name of NeticaBN object
+                        (primarily used in reporting errors).
+
+1b. Netica Nodes
+
+The Netica API seems to make a big distinction between discrete and
+continuous nodes:  I can't seem to find an API function which will
+change the type of the node.  The "node_discrete" attribute is used to
+cache information about the node type, so that we don't need to call
+into C code to find that out.
+
+The protocol for creation of NeticaNode objects is a little bit
+different.  RNetica normally creates a NeticaNode object when the node
+is referenced in a function call.  However, when a network is read
+from a file, RNetica does not create NeticaNode objects until a link
+to that node is created, say via a call to NetworkFindNode() or
+NetworkAllNodes().  The function MakeNode_RRef() does the actual
+work of creating the object and the function GetNode_RRef() creates
+the NeticaNode object if necessary.  The function RN_FreeNode() and
+RN_FreeNodes() are used to clear the NeticaNode object associated with
+a node_bn*.  The latter function is called by RN_DeleteNetworks() to
+free the NeticaNodes associated with the network.
+
+The following macros are useful manipulating the relationship between
+NeticaBN and net_bn objects.
+SetNode_RRef(n,r)	Sets NeticaNode SEXP for node_bn* 
+GetNode_RRef(n)		Returns NeticaNode SEXP for node_bn* 
+FastGetNode_RRef(n)	Returns NeticaNode SEXP for node_bn*, or NULL
+                        if it has not been created.
+GetNodeHandle(b)        Returns node_bn* for NeticaBN SEXP
+NODE_NAME(b)            Returns cached name of NeticaNODE object
+                        (primarily used in reporting errors).
+
+2. The Netica Environment
+
+RNetica creates a global variable RN_netica_env which stashes the
+global environment.  This variable is set by StartNetica() and cleared
+by StopNetica().  I don't see vary many use cases where you need more
+than one (and many of those can be handled with multiple R sessions).
+
+3. API references and License Keys
+
+This is primarily still a TODO.  Right now the path to the Netica API
+headers and .a file is hard coded into the configuration files.  There
+is a command line switch in the autoconf, but I haven't tested it.
+
+It would be kool if RNetica downloaded the latest Netica API at
+compile time (if the switch was not set).  I will probably need to ask
+Brent Borlange to set up a special link so I can always get the most
+recent API, without needing to update the package every time Norsys
+releases a new version.
+
+License keys are obtained from Norsys.  Currently, they are passed as
+an argument into StartNetica(), and there is some untested code for
+getting them from a special variable in the R workspace.  An
+alternative approach would be to install the key at compile time.
+
+TODO:  Look at the R license mechanism to make sure everybody is clear
+on the RNetica vs Netica license as we are on the properitary/open
+source line.
+
+4. Error Handling
+
+The most obvious way to handle errors seems to be to simply report all
+the errors and then clear them.  I've created two simple functions
+ReportErrors() and ClearAllErrors() which do that.  Actually, the
+reporting function clears the errors, so there is no need to do
+anything else. 
+
+In the current design, the error handling does not take place in the
+main .Call(), but rather the calling R function calls ReportErrors()
+and tests its return values to see if there were serious errors or
+not.  It is possible that more sophisticated error mechanisms are
+possible, but I haven't seen the need.
+
+5. Node Lists and Node Sets
+
+Node lists are collections of nodes used for various purposes.  There
+is no need for a special object on the R side, as existing lists work
+perfectly.  The one catch is that all nodes in a node list must be
+from the same network.  Failing this criteria will likely generate an
+error deep inside the RNetica C code.
+
+The following C functions may be useful:
+
+extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist);
+       Converts a nodelist_bn* to a R vector
+extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
+       Converts a R vector to a nodelist_bn*.  It is an error if not
+       all nodes are associated with net.
+
+Netica also defines Node Sets, which are distinct from Node lists, but
+the only function that uses them is SetNodeSetColor_bn().  I'm not
+implementing them at this time.
+
+6. Registration
+
+The Registration of C functions is done in the file Registration.c
+
+7. Cached Symbols
+
+The functions RN_Define_Symbols() and RN_FreeSymbols() are used to
+define a certain number of R constants that can be used over and over
+again (for example, the attributes used for storing handles, and the
+class names for NeticaBN and NeticaNode classes.  The objects are
+preserved using R_PreserveObject() and R_ReleaseObject(), so don't
+need to be protected.  These functions are called by StartNetica() and
+StopNetica() respectively.
+
+
+Further questions:  Email telling me how clever I am can be sent to
+almond@acm.org.  Questions can be sent to the same place, but not
+guarentees on the response time.  Complaints can be sent to /dev/null.
