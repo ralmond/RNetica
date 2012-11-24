@@ -1,3 +1,0 @@
-#!/bin/sh
-
-rm -f *~ src/*~ src/*.o src/*.so src/symbols.rds man/*~ R/*~ config.* src/Makevars 
