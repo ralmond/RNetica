@@ -1,3 +1,10 @@
+2013-01-04    <ralmond@ADVENT>
+
+	* R/Edges.R ("[<-.NeticaNode", parseDims, "[.NeticaNode"): added
+	env argument to parseDims to fix problem with this not getting
+	called right inside a function.
+	
+
 2012-11-21    <ralmond@TECH-PC>
 
 	* src/Edges.c (RN_SetNodeParents): Fixed problem with 32 bit
