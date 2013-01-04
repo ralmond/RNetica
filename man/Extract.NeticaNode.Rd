@@ -638,6 +638,20 @@ C2[dfselbak] <- c(.9,.1)
 stopifnot(
   sum(abs(C2[[]][,1] - c(.5,.7,.5,.5, .5,.5,.5,.9, .9,.5,.6,.5))) < .0001
 )
+## Test for error with using variables in selection inside of a
+## function.
+testSel <- function(node,sel1,sel2, val) {
+ localselvar <- data.frame(sel1,sel2)
+ names(localselvar) <- ParentNames(node)
+ node[localselvar]
+ node[localselvar]<-val
+ invisible(node)
+}
+ 
+testSel(C2,factor(c("A2","A3"),levels=NodeStates(A)),
+           factor(c("B1","B3"),levels=NodeStates(B)),
+           matrix(c(.7,.6,.3,.4),2))
+
 
 ## Array-like selection
 stopifnot(

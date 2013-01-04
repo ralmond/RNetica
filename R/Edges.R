@@ -500,7 +500,9 @@ as.CPA <- function (x) {
 
 ## This function interprets the various input modes and returns an
 ## integer matrix which does the selection.
-parseDims <- function (node,...) {
+## env is frame in which to do the evaluation, which is probably the
+## parent frame of the calling funciton 
+parseDims <- function (node,...,env) {
   ## This creates a call object with the arguments
   clist <- substitute(list(...))
   ## Empty condition
@@ -513,7 +515,7 @@ parseDims <- function (node,...) {
       clist[idim] <- RNetica:::EVERY_STATE 
     }
   }
-  selection <- eval(clist)
+  selection <- eval(clist,env)
   ## Unwrap selections by data frame and matrix.
   if (length(selection) == 1L) {
     if (is.data.frame(selection[[1]])) {
@@ -653,7 +655,7 @@ selectionToConfig <- function(node,selection) {
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
-  selection <- parseDims(x,...)
+  selection <- parseDims(x,...,env=parent.frame(1))
   if (is.null(selection) && length(NodeParents(x))>0) {
     selection <- rep(EVERY_STATE,length(NodeParents(x)))
   }
@@ -767,8 +769,8 @@ selectionToConfig <- function(node,selection) {
 
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are handled specially by Netica, so leave them in place.
-  
-  selection <- parseDims(x,...)
+  ## env is where
+  selection <- parseDims(x,...,env=parent.frame(1))
   npar <- length(NodeParents(x))
   nstate <- NodeNumStates(x)
   if (is.null(selection) && is.data.frame(value)) {
