@@ -1,0 +1,78 @@
+FALSE-node bug (Netica Node object is replaced with FALSE).
+Nasty bug where RReference gets overwritten in network.  Not sure
+where this is coming from, as they should be preserved.
+      Nodelist <- NetworkNodesInSet(LevelMotif,"EMVars")
+      NodeName(Nodelist$LeverTrohies) <- "LeverTrophies"
+The corresponding element of the list is now FALSE and
+    NetworkFindNode(LevelMotif,"LeverTrophies")
+returns FALSE.
+I'm having trouble reproducing this with a small example.  Maybe some
+interaction with the garbage collector?  I've added a check for bad
+object caches in the Net/Node/UserData field, now check to make sure
+the returned object is of the right class, and if not recreates it.  I
+wish I could more reliably reproduce the bugs so I can see if this
+fixed the problem.
+
+R stack error in BN_SetNodeProbs when passed a matrix of NA's as
+probability table.
+
+Parse the junction tree report
+
+Functions for
+##   ReorderNodeStates, RemoveNodeState,
+These seem to be redundant with current definition of NodeStates<-
+
+
+Equations
+##export (
+##   GetNodeEquation, SetNodeEquation
+##   EquationToTable
+##   CalcNodeState, CalcNodeValue,
+##   )
+Learning from Data
+##   NodeExperience, "NodeExperience<-",
+##   ReviseCPTsByFindings, FadeCPT
+##   ReviseCPTsByFindings_bn, ReviseCPTsByCaseFile_bn
+##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
+##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
+Casefile support
+##   WriteNetFindings, ReadNetFindings
+##   WriteNetFindings_bn, ReadNetFindings2_bn
+##   SetCaseFileDelimChar_ns, SetMissingDataChar_ns
+##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
+##   TestWithCaseset_bn, GenerateRandomCase_bn
+
+Continuous Node support
+Decision Net support
+##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
+##   EnterIntervalFinding,
+##   GetNodeExpectedValue, GetNodeExpectedUtils,
+Database Connectivity
+##  NewDBManager_cs, DeleteDBManager_cs
+##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
+##  ExcecuteDBSql_cs, AddNodesFromDB_bn
+Sensitivity
+## export(
+##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
+##   GetVarianceOfReal,
+##  )
+Testing
+## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
+## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
+## GetTestQuadradicLoss_bn
+Random Generation
+## NewRandomGenerator_ns, DeleteRandomGenerator_ns
+## GenerateRandomeNumbers_ns, GetRandomGenState_ns
+## SetNetRandomGen_bn
+DBNs
+## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+
+
+Ask Brent:
+1. NodeLikelihood and MPE and FindingsProbability
+2. IsNetCompiled function?
+3. GetNodesets for Node, Nodes in NodeSet?
+4. CopyNodes does not copy NodeSet information?
+5. EnterLikelihoodFindingClique
+6. NetworkUndo, Redo

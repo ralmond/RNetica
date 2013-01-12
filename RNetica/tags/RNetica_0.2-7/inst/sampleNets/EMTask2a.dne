@@ -1,0 +1,91 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 11/03/2012 at 03:44:39 PM.
+
+bnet EMTask2a {
+autoupdate = TRUE;
+whenchanged = 1351971829;
+
+visual V5 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (176, 176, 1098, 632);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00E1E1E1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet Observable {Disabled = 1; Color = 0x00C8C8C8;};
+	NodeSet Task2a {Disabled = 1; Color = 0x00C8C8C8;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Skill3_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Low);
+	probs = 
+		// High         Low          
+		  (0.52,        0.48);
+	title = "Skill3";
+	whenchanged = 1351557211;
+	};
+
+param X_Skill2_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Low);
+	probs = 
+		// High         Low          
+		  (0.3,         0.7);
+	title = "Skill2";
+	whenchanged = 1351557211;
+	};
+
+node Obs2a {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Half, Wrong);
+	inputs = (Skill2, Skill3);
+	parents = (X_Skill2_1, X_Skill3_1);
+	probs = 
+		// Right        Half         Wrong         // Skill2 Skill3 
+		  (0.6,         0.3,         0.1,          // High   High   
+		   0.4,         0.3,         0.3,          // High   Low    
+		   0.2,         0.4,         0.4,          // Low    High   
+		   0.2,         0.3,         0.5);         // Low    Low    ;
+	whenchanged = 2147483647;
+	visual V5 {
+		center = (378, 186);
+		height = 1;
+		link 1 {
+			labelposn = (354, 128, 384, 142);
+			path = ((344, 128), (360, 155));
+			};
+		link 2 {
+			labelposn = (413, 130, 443, 144);
+			path = ((411, 130), (396, 155));
+			};
+		};
+	};
+NodeSet Observable {Nodes = (Obs2a);};
+NodeSet Task2a {Nodes = (Obs2a);};
+};
