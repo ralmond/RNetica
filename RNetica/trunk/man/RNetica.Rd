@@ -2,7 +2,7 @@
 \alias{RNetica-package}
 \alias{RNetica}
 \docType{package}
-\title{R interface to Netica Bayesian Network Engine}
+\title{R interface to Netica(R) Bayesian Network Engine}
 \description{
 This provides an R interface to the Netica, in particular, it binds many
 of the functions in the Netica C API into the R langauge.  RNetica can
@@ -26,7 +26,7 @@ Built: \tab R 2.15.2; x86_64-pc-linux-gnu; 2012-11-22 19:38:18 UTC; unix\cr
   While RNetica (the combination of R and C code that connects R and
   Netica) is free software, as is \R, Netica is a commercial product.
   Users of RNetica will need to purchase a Netica API license key (which
-  is different from the GUI license key) from Norsys
+  is different from the GUI license key) from Norsys(R)
   (\url{http://www.norsys.com/}).
 
   Once you have a license key, you can use it in one of two ways.
@@ -42,7 +42,7 @@ Built: \tab R 2.15.2; x86_64-pc-linux-gnu; 2012-11-22 19:38:18 UTC; unix\cr
   to a student/demonstration mode with limited functionality.  Note that
   all of the example code (and hence \code{R CMD check RNetica}) can be
   run using the limited version.
-  
+
 }
 \section{Index}{
 \preformatted{
@@ -399,6 +399,15 @@ will load all of the nodes in \code{net}, and the expression
   Please send information about both serious and not-so-serious problems
   to the maintainer.
   
+}
+\section{Legal Stuff}{
+  Netica and Norsys are registered trademarks of Norsys, LLC, used by
+  permission. 
+
+  Although Norsys is generally supportive of the RNetica project, it
+  does not officially support RNetica, and all questions should be sent
+  to the package maintainers.
+
 }
 \author{
 Russell Almond
