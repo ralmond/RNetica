@@ -13,6 +13,8 @@ the returned object is of the right class, and if not recreates it.  I
 wish I could more reliably reproduce the bugs so I can see if this
 fixed the problem.
 
+R stack error in BN_SetNodeProbs when passed a matrix of NA's as
+probability table.
 
 Parse the junction tree report
 

@@ -1,3 +1,7 @@
+2013-01-12  Russell G. Almond  <ralmond@Limu>
+
+	* man/RNetica.Rd: Added trademarks.
+
 2013-01-04    <ralmond@ADVENT>
 
 	* R/Edges.R ("[<-.NeticaNode", parseDims, "[.NeticaNode"): added
