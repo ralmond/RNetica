@@ -4,10 +4,10 @@
 <h1>About RNetica</h1>
 
 RNetica is best thought of as a "glue" layer between the open source
-stasticial programing language
+statistical programing language
 R <a href="http://www.r-project.org/">http://www.r-project.org/</a>
 and the proprietary Bayesian network engine
-Netica <a href="http://www.norsys.com">http://www.norsys.com/</a>.
+Netica &reg; <a href="http://www.norsys.com">http://www.norsys.com/</a>.
 Although there are some minor extensions to the Netica API, the
 primary purpose of RNetica is to provide a binding for the Netica API
 functions inside of R.  
@@ -36,8 +36,8 @@ their own licensing terms.
   the <a href="http://cran.r-project.org/doc/FAQ/R-FAQ.html#Can-I-use-R-for-commercial-purposes_003f">R
   FAQ</a> for more information.
 
-  <li>The Netica API is a commerical product.  License terms can be
-  found on the <a href="http://www.norsys.com">Norsys</a> web site.
+  <li>The Netica API is a commercial product.  License terms can be
+  found on the <a href="http://www.norsys.com">Norsys&reg;</a> web site.
 
   <li>RNetica itself (the combination of R and C code that provides
   the glue between R and Netica) is made available under
@@ -47,14 +47,14 @@ their own licensing terms.
 </ol>
 
 I am not a lawyer, and therefore this should not be considered formal
-legal advise, but my understanding is that for most uses, the use of
-RNetica requires the purchase of a Netica API license (which is different from
-the Netica GUI license) from Norsys.
+legal advise, but my understanding is that for most uses the use of
+RNetica requires the purchase of a Netica API license (which is
+different from the Netica GUI license) from Norsys.
 
 Once you have obtained a license key from Norsys, you can use it in
 one of two ways.  First, it can be passed as an argument to the
 function <code>StartNetica(<i>license key</i>)</code> (you may need to
-call <code>StopNetica()</code> first).  Second, if you exectue the
+call <code>StopNetica()</code> first).  Second, if you execute the
 command <code>NeticaLicenseKey &lt;- <i>license key</i></code> in the
 main R workspace (the default namespace), then RNetica will use that
 value when loaded through <code>library(RNetica)</code>.  
@@ -65,10 +65,10 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 
-The current version (0.2-6) incorporates approximately 3/5 of the
+The current version (0.2-7) incorporates approximately 3/5 of the
 Netica C API Version 5.04.  This is sufficient functionality to build,
 compile and carry out inferences with a Bayesian network.  Some of the
-more advances functionality, including support for case files,
+more advanced functionality, including support for case files,
 influence diagrams, and dynamic Bayesian networks is not yet
 developed. 
 <p>
@@ -79,7 +79,7 @@ has taken place.  It is probably best considered somewhere between an
 alpha and a beta release.  Note that because it uses calls to C code,
 it is possible for RNetica to crash R.  Plan your work accordingly.
 <p>
-Most of the development has been with R version 2.15.2 under Ubunto
+Most of the development has been with R version 2.15.2 under Ubuntu
 12.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
 runs under Mac OS X and Windows 7 without errors.  Almost all of the
 testing has been with the 64 bit versions of R and Netica.  There may
@@ -91,28 +91,34 @@ The following releases are archived here:
 
 <table border="1">
 <tr>
-<th>Release</th><th>Source</th><th>ManualX</th><th>Notes</th>
+<th>Release</th><th>Source</th><th>Manual</th><th>Notes</th>
+</tr>
 <tr>
 <td>0.1-8</td><td><a href="RNetica_0.1-8.tar.gz">RNetica_0.1-8.tar.gz</a></td>
-<td></td><td>First reasonably functional version.</td>
+<td></td><td>First reasonably functional version.</td></tr>
+<tr>
 <td>0.2-5</td><td><a href="RNetica_0.2-5.tar.gz">RNetica_0.2-5.tar.gz</a></td>
-<td></td><td>Initial version used for Newton's Playground</td>
+<td></td><td>Initial version used for Newton's Playground</td></tr>
+<tr>
 <td>0.2-6</td><td><a href="RNetica_0.2-6.tar.gz">RNetica_0.2-6.tar.gz</a></td>
-<td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td>
+<td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td></tr>
+<td>0.2-7</td><td><a href="RNetica_0.2-7.tar.gz">RNetica_0.2-7.tar.gz</a></td>
+<td><a href="RNetica-manual_0.2-7.pdf">RNetica-manual_0.2-7.pdf</a></td><td>Fixed
+    problems with CPT extraction inside functions</td></tr>
 </table>
 
-Note that the source version is the preferred version for installation
-under Linux/Unix.  Compiled versions are available for some Mac OS X
-and Windows releases.  The source version can be used for Mac OS X and
-Windows as well, however, the R development kit needs to be
+Note the source versions have been compiled and tested under
+Linux/Unix, Mac OS X and Windows.  Note that for Windows and Mac OS X,
+compiling source packages requires the R development kit to be
 installed.  See the
 appropriate <a href="http://lib.stat.cmu.edu/R/CRAN/faqs.html">R
-  FAQ</a>.   
+  FAQ</a>.  
+
 <p>
 Compiling from sources requires that you have already downloaded and
 unpacked the Netica C API
 from <a href="http://www.norsys.com/">Norsys<a/>.  Under *nix
-(including Mac OS X) the location of hte library can be passed to the
+(including Mac OS X) the location of the library can be passed to the
 configure command, e.g.:
 <p>
 <code>R CMD INSTALL RNetica --configure-args='--with-netica=/Users/ralmond/software/Netica_API_504/'</code>
@@ -122,9 +128,11 @@ switch), the environmental variable <code>NETICA_HOME</code> can be
 set to the location in which the Netica API was unpacked.  I have only
 tested with the API version 5.04, not with earlier versions.  
 <p>
-Windows and Mac OS X binarys are not yet available, as they would
+Windows and Mac OS X binaries are not yet available, as they would
 involve distributing the Netica shared library, and hence requires
-additional permission from Norsys.
+additional permission from Norsys.  Also, as this is still an early
+test release, I want to make sure that users have a local R guru to
+ask support questions, and help file bug reports if needed.
 
 <h2>Development Version</h2>
 
@@ -133,5 +141,19 @@ at:  <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/">https://pluto.coe.f
 
 If you have patches or other correspondence about RNetica you can
 contact me at <a href="mailto:almond@acm.org">almond@acm.org<a/>.  
+
+<h2>Legal Notices</h2>
+
+Netica and Norsys are registered trademarks of Norsys, LLC, used by
+permission.  
+<p>
+Although Norsys has been generally supportive of the RNetica project,
+they do not offer formal support in any way.  (In particular, the do
+not currently have anybody on staff who knows R.)  All support
+requests should be sent to the package maintainers.
+<p>
+  The software is offered AS IS, without any warranty of any kind.
+  Support is provided on a volunteer basis, and may not be immediately
+  forthcoming. 
 
 </body>
