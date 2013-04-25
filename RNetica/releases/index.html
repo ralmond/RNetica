@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
 <head><title>RNetcia Release Information</title></head>
 <body>
 
@@ -113,7 +115,7 @@ compiling source packages requires the R development kit to be
 installed.  See the
 appropriate <a href="http://lib.stat.cmu.edu/R/CRAN/faqs.html">R
   FAQ</a>.  You should also be familiar with building R packages, see
-the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing
+the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing   
   R Extensions</a> manual.
 
 <p>
@@ -135,6 +137,60 @@ involve distributing the Netica shared library, and hence requires
 additional permission from Norsys.  Also, as this is still an early
 test release, I want to make sure that users have a local R guru to
 ask support questions, and help file bug reports if needed.
+
+<h2><a name="FAQ">FAQ</a></h2>
+
+<dl>
+  <dt>How do I compile RNetica?</dt>
+  <dd>Start by skimming the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing   
+  R Extensions</a> manual so that you understand how R binary packages
+  are built.  Then you will issue a command like <code>R CMD INSTALL
+  RNetica
+  --configure-args='--with-netica=/Users/ralmond/software/Netica_API_504/'</code>,
+  where you have adjusted the latter bit to the directory where you
+  have downloaded the Netica API.</dd>
+  <dt>How do I compile RNetica under Windows?</dt>
+  <dd>Compiling R under Windows requires installing enough of the
+  standard GNU tools to build R, as well as the right compilers.
+  Follow the recipe in the <a href="http://lib.stat.cmu.edu/R/CRAN/faqs.html">R
+  FAQ</a> for Windows, and you should be fine.</dd>
+  <dt> How do I compile RNetica under Mac OS X or GNU/Linux?</dt>
+  <dd> Mac OS X users need to install the software developer kit which
+  is a free download (with registration) from Apple.  Linux users win,
+  as most Linux distributions come with all of the GNU tools you need
+  pre-installed.</dd>
+  <dt>When will binaries be available?</dt>
+  <dd>Currently, RNetica is fairly lightly tested.  In particular,
+  there is a possibility for some strange interactions between the R
+  garbage collection system and the handles coming back from RNetica
+  that could produce serious problems (e.g., memory leaks, crashing
+  R).  I need to do some serious stress testing before releasing a
+  binary package for people who are not use to computer debugging.
+  There is also a licensing problem as I do not have permission from
+  Netica to redistribute the API.  (This is probably solvable, but no
+  point until I solve the first problem.)
+  <dt>How do I get support for RNetica?</dt>
+  <dd>You can't.  The good folks at Norsys don't know enough about R
+  to help you, and I'm mostly too busy.  I will, however, cheerfully
+  accept bug reports and try to respond to those as quickly as I
+  can.</dd>
+  <dt>Okay, so how to I file a bug report?</dt>
+  <dd>Send me email with the following information:
+    <ol>
+      <li> Details about your environment (operating system, 32 or 64 bit,
+        R version, Netica version, RNetica version).</li>
+      <li> Exactly what you were doing when you generated the error.  It
+        really helps me if you can make a small example that reproduces the
+        problem.  If I can't reproduce the problem, I can't fix the bug.
+      <li> What you expected to happen and what actually happened.
+      <li> The exact text of the error message you got (this may be
+      many lines, more is generally better here).
+    </ol>
+    Bug reports that are missing this information will be referenced
+    back to the FAQ.
+</dd>
+
+</dl>
 
 <h2>Development Version</h2>
 
