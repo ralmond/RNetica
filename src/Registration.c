@@ -26,6 +26,12 @@ const char* DISCRETEATT = "node_discrete";
 const char* CliqueNodeClass = "CliqueNode";
 const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
+const char* CaseStreamClass = "NeticaCaseStream";
+const char* CASESTREAMATT = "Netica_Case_Stream";
+const char* CASESTREAMPATHATT = "Case_Stream_Path";
+const char* CASESTREAMDFATT = "Case_Stream_DataFrame";
+const char* CASESTREAMDFNAMEATT = "Case_Stream_DataFrameName";
+
 
 SEXP bnclass=NULL;
 SEXP nodeclass=NULL;
@@ -39,6 +45,11 @@ SEXP FALSEV=NULL;
 SEXP NAV=NULL;
 SEXP NodeKinds = NULL;
 SEXP XYnames = NULL;
+SEXP casestreamclass = NULL;
+SEXP casestreamatt = NULL;
+SEXP casestreampathatt = NULL;
+SEXP casestreamdfatt = NULL;
+SEXP casestreamdfnameatt = NULL;
 
 static int symbolRegCount=0;
 
@@ -95,6 +106,23 @@ void RN_Define_Symbols() {
   if (cliqueatt==NULL) { 
     R_PreserveObject(cliqueatt = install(CLIQUEATT));  
   } 
+  if (casestreamclass==NULL) {
+    casestreamclass = allocVector(STRSXP,1);
+    R_PreserveObject(casestreamclass);
+    SET_STRING_ELT(casestreamclass,0,mkChar(CaseStreamClass));
+  }
+  if (casestreamatt==NULL) { 
+    R_PreserveObject(casestreamatt = install(CASESTREAMATT));  
+  } 
+  if (casestreampathatt==NULL) { 
+    R_PreserveObject(casestreampathatt = install(CASESTREAMPATHATT));  
+  } 
+  if (casestreamdfatt==NULL) { 
+    R_PreserveObject(casestreamdfatt = install(CASESTREAMDFATT));  
+  } 
+  if (casestreamdfnameatt==NULL) { 
+    R_PreserveObject(casestreamdfnameatt = install(CASESTREAMDFNAMEATT));  
+  } 
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
@@ -149,6 +177,21 @@ void RN_Free_Symbols() {
     if (cliqueatt != NULL) { 
       R_ReleaseObject(cliqueatt); 
       cliqueatt = NULL; 
+    } 
+    if (casestreamclass!=NULL) {
+      R_ReleaseObject(casestreamclass);
+    }
+    if (casestreamatt!=NULL) { 
+      R_ReleaseObject(casestreamatt);
+    } 
+    if (casestreampathatt!=NULL) { 
+      R_ReleaseObject(casestreampathatt);
+    } 
+    if (casestreamdfatt!=NULL) { 
+      R_ReleaseObject(casestreamdfatt);
+    } 
+    if (casestreamdfnameatt!=NULL) { 
+      R_ReleaseObject(casestreamdfnameatt);
     } 
   }
 }
@@ -567,6 +610,17 @@ extern SEXP RN_SetEliminationOrder(SEXP net, SEXP order);
 extern SEXP RN_GetEliminationOrder(SEXP net);
 extern SEXP RN_SizeCompiledNetwork(SEXP net);
 
+// Cases.c
+extern SEXP RN_CaseFileDelimiter(SEXP newchar);
+extern SEXP RN_MissingCode(SEXP newchar);
+extern SEXP RN_WriteFindingsToFile(SEXP nodes, SEXP casefile, 
+                                   SEXP id, SEXP freq);
+
+// Experience.c
+extern SEXP RN_GetNodeExperience(SEXP node, SEXP states);
+extern SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight);
+extern SEXP RN_FaceCPT(SEXP node, SEXP weight);
+extern SEXP RN_LearnFindings(SEXP nodelist, SEXP weight);
 
 
 
@@ -669,6 +723,13 @@ R_CallMethodDef callMethods[] = {
   {"RN_SetEliminationOrder", (DL_FUNC) &RN_SetEliminationOrder, 2},
   {"RN_GetEliminationOrder", (DL_FUNC) &RN_GetEliminationOrder, 1},
   {"RN_SizeCompiledNetwork", (DL_FUNC) &RN_SizeCompiledNetwork, 1},
+  {"RN_CaseFileDelimiter", (DL_FUNC) &RN_CaseFileDelimiter, 1},
+  {"RN_MissingCode", (DL_FUNC) &RN_MissingCode, 1},
+  {"RN_WriteFindingsToFile", (DL_FUNC) &RN_WriteFindingsToFile, 4},
+  {"RN_GetNodeExperience", (DL_FUNC) &RN_GetNodeExperience, 2},
+  {"RN_SetNodeExperience", (DL_FUNC) &RN_SetNodeExperience, 3},
+  {"RN_FadeCPT", (DL_FUNC) &RN_FadeCPT, 2},
+  {"RN_LearnFindings", (DL_FUNC) &RN_LearnFindings, 2},
   {NULL, NULL, 0},
 };
 

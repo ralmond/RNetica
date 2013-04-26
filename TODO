@@ -1,3 +1,7 @@
+Error message when NodeProbs() is called on a node whose CPT is not
+yet set.
+
+
 FALSE-node bug (Netica Node object is replaced with FALSE).
 Nasty bug where RReference gets overwritten in network.  Not sure
 where this is coming from, as they should be preserved.
@@ -27,18 +31,17 @@ Equations
 ##export (
 ##   GetNodeEquation, SetNodeEquation
 ##   EquationToTable
-##   CalcNodeState, CalcNodeValue,
 ##   )
 Learning from Data
-##   NodeExperience, "NodeExperience<-",
-##   ReviseCPTsByFindings, FadeCPT
+##*   NodeExperience, "NodeExperience<-",
+##*   ReviseCPTsByFindings, FadeCPT
 ##   ReviseCPTsByFindings_bn, ReviseCPTsByCaseFile_bn
 ##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
 ##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support
 ##   WriteNetFindings, ReadNetFindings
 ##   WriteNetFindings_bn, ReadNetFindings2_bn
-##   SetCaseFileDelimChar_ns, SetMissingDataChar_ns
+##*   SetCaseFileDelimChar_ns, SetMissingDataChar_ns
 ##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
 ##   TestWithCaseset_bn, GenerateRandomCase_bn
 
@@ -47,6 +50,7 @@ Decision Net support
 ##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
 ##   EnterIntervalFinding,
 ##   GetNodeExpectedValue, GetNodeExpectedUtils,
+##   CalcNodeState, CalcNodeValue,
 Database Connectivity
 ##  NewDBManager_cs, DeleteDBManager_cs
 ##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
