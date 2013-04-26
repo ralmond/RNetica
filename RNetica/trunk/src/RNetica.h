@@ -26,6 +26,8 @@ extern SEXP GetNode_RRef(node_bn* node);
 #define GetNodeHandle(n)        (node_bn*) R_ExternalPtrAddr(getAttrib(n,nodeatt))
 #define NODE_NAME(n)            CHAR(STRING_ELT(AS_CHARACTER(n),0))
 extern int isNeticaNode(SEXP obj);
+#define GetCaseStream_Handle(cs,r) (stream_ns*) R_ExternalPtrAddr(getAttrib(cs,casestreamatt))
+#define GetNet_RRef(n)		(SEXP) GetNetUserData_bn(n,0)
 
 /**
  * Converts from name to network.  
@@ -64,6 +66,11 @@ extern SEXP FALSEV;
 extern SEXP NAV;
 extern SEXP XYnames;
 extern const char* EmptyString;
+extern SEXP casestreamclass;
+extern SEXP casestreamatt;
+extern SEXP casestreampathatt;
+extern SEXP casestreamdfatt;
+extren SEXP casestreamdfnameatt;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 
