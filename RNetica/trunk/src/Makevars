@@ -1,0 +1,3 @@
+PKG_LIBS= -L/lib -lnetica -lstdc++
+PKG_CFLAGS= -I. -I/src
+
