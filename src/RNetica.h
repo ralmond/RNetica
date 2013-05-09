@@ -70,7 +70,7 @@ extern SEXP casestreamclass;
 extern SEXP casestreamatt;
 extern SEXP casestreampathatt;
 extern SEXP casestreamdfatt;
-extren SEXP casestreamdfnameatt;
+extern SEXP casestreamdfnameatt;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 

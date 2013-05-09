@@ -29,12 +29,12 @@ SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight) {
     error("Could not find node %s.",NODE_NAME(node));
   } else {
     SetNodeExperience_bn(node_handle, RN_AS_STATE_BN(states),
-                         REAL(val)[0]);
+                         REAL(weight)[0]);
   }
   return node;
 }
 
-SEXP RN_FaceCPT(SEXP node, SEXP weight) {
+SEXP RN_FadeCPT(SEXP node, SEXP weight) {
   node_bn* node_handle;
 
   node_handle = GetNodeHandle(node);
@@ -48,7 +48,7 @@ SEXP RN_FaceCPT(SEXP node, SEXP weight) {
 
 SEXP RN_LearnFindings(SEXP nodelist, SEXP weight) {
   nodelist_bn* targets = RN_AS_NODELIST(nodelist,NULL);
-  ReviseCPTsByFindings_bn(targets,0,Real(weight)[0]);
+  ReviseCPTsByFindings_bn(targets,0,REAL(weight)[0]);
   DeleteNodeList_bn(targets);
   return R_NilValue;
 }

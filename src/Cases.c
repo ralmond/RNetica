@@ -20,9 +20,9 @@ SEXP RN_CaseFileDelimiter(SEXP newchar) {
   if (isNull(newchar)) {
     result = SetCaseFileDelimChar_ns(QUERY_ns,RN_netica_env);
   } else {
-    result = SetCaseFileDelimChar_ns(INT(newchar)[0],RN_netica_env);
+    result = SetCaseFileDelimChar_ns(INTEGER(newchar)[0],RN_netica_env);
   }
-  return ScalerInteger(result);
+  return ScalarInteger(result);
 }
 
 SEXP RN_MissingCode(SEXP newchar) {
@@ -30,19 +30,20 @@ SEXP RN_MissingCode(SEXP newchar) {
   if (isNull(newchar)) {
     result = SetMissingDataChar_ns(QUERY_ns,RN_netica_env);
   } else {
-    result = SetMissingDataChar_ns(INT(newchar)[0],RN_netica_env);
+    result = SetMissingDataChar_ns(INTEGER(newchar)[0],RN_netica_env);
   }
-  return ScalerInteger(result);
+  return ScalarInteger(result);
 }
 
 SEXP RN_WriteFindingsToFile(SEXP nodes, SEXP casefile, SEXP id, SEXP freq) {
   nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
-  long id = freq =-1;
-  if (!isNull(id)) id = INT(id)[0];
-  if (!isNull(freq)) id = INT(id)[0];
+  long idnum = -1;
+  long freqnum = -1;
+  if (!isNull(id)) idnum = INTEGER(id)[0];
+  if (!isNull(freq)) freqnum = INTEGER(id)[0];
   const char *filename = CHAR(STRING_ELT(casefile,0));
   stream_ns *file = NewFileStream_ns(filename,RN_netica_env,NULL);
-  WriteNetFindings_bn(nodelist,file,id,freq);
+  WriteNetFindings_bn(nodelist,file,idnum,freqnum);
   DeleteStream_ns(file);
   DeleteNodeList_bn(nodelist);
   return R_NilValue;
