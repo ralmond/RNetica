@@ -1,3 +1,7 @@
+2013-05-07  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (as.IDname): Added.
+
 2013-01-12  Russell G. Almond  <ralmond@Limu>
 
 	* man/RNetica.Rd: Added trademarks.

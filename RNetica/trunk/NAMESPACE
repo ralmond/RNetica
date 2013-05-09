@@ -5,7 +5,7 @@ export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,
        CreateNetwork, DeleteNetwork,
        print.NeticaBN, toString.NeticaBN, is.active,
-       is.IDname, is.NeticaBN,
+       is.IDname, as.IDname, is.NeticaBN,
        GetNthNetwork, GetNamedNetworks, CopyNetworks,
        .Last.lib)
 
