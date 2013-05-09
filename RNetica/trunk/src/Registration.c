@@ -619,7 +619,7 @@ extern SEXP RN_WriteFindingsToFile(SEXP nodes, SEXP casefile,
 // Experience.c
 extern SEXP RN_GetNodeExperience(SEXP node, SEXP states);
 extern SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight);
-extern SEXP RN_FaceCPT(SEXP node, SEXP weight);
+extern SEXP RN_FadeCPT(SEXP node, SEXP weight);
 extern SEXP RN_LearnFindings(SEXP nodelist, SEXP weight);
 
 
