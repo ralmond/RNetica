@@ -764,7 +764,7 @@ selectionToConfig <- function(node,selection) {
 
 "[<-.NeticaNode" <- function(x, ..., value) {
   if (!is.NeticaNode(x) || !is.active(x)) {
-    stop("GetCondProb:  Expected an active netica node.")
+    stop("GetCondProb:  Expected an active netica node, got",x)
   }
 
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
@@ -816,17 +816,17 @@ selectionToConfig <- function(node,selection) {
   if (is.matrix(value)) {
     if (nrow(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=nrow(value))) {
-      stop("Number of rows selected and rows in value do not match.")
+      stop("Number of rows selected and rows in value do not match; node",x)
     }
     if (!is.numeric(value) || any(value<0) || any(value>1)) {
-      stop("Expected a matrix of values between 0 and 1.")
+      stop("Expected a matrix of values between 0 and 1; node",x)
     }
     if (ncol(value) == nstate-1L) {
       ## Normalize
       value <- cbind(value,1-apply(value,1L,sum))
     }
     if (ncol(value) != nstate) {
-      stop("Probabilities not supplied for every state.")
+      stop("Probabilities not supplied for every state; node",x)
     }
   } else {
     if (is.numeric(value) && all(value == as.integer(value)) &&
@@ -844,7 +844,7 @@ selectionToConfig <- function(node,selection) {
     }
     if (length(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=length(value))) {
-      stop("Number of rows selected and rows in value do not match.")
+      stop("Number of rows selected and rows in value do not match; node",x)
     }
     if(is.discrete(x) && nstate==2 && valisprobs) {
       ## Single column and binary node, normalize
@@ -854,10 +854,10 @@ selectionToConfig <- function(node,selection) {
   if (is.null(selection)) {
     ## No parents
     if (is.continuous(x)) {
-      .Call("RN_SetNodeFuncReal",x,NULL,as.real(value),PACKAGE="RNetica")
+      .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),PACKAGE="RNetica")
     } else {
       if (valisprobs) {
-        .Call("RN_SetNodeProbs",x,NULL,as.real(value),PACKAGE="RNetica")
+        .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE="RNetica")
       } else {
         .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE="RNetica") 
       }
@@ -866,10 +866,10 @@ selectionToConfig <- function(node,selection) {
     if (is.null(nrow(selection))) {
       ## Single Row case
       if (is.continuous(x)) {
-        .Call("RN_SetNodeFuncReal",x,selection,as.real(value),PACKAGE="RNetica")
+        .Call("RN_SetNodeFuncReal",x,selection,as.double(value),PACKAGE="RNetica")
       } else {
         if (valisprobs) {
-          .Call("RN_SetNodeProbs",x,selection,as.real(value),PACKAGE="RNetica")
+          .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE="RNetica")
         } else {
           .Call("RN_SetNodeFuncState",x,selection,as.integer(value),
                 PACKAGE="RNetica") 
@@ -881,7 +881,7 @@ selectionToConfig <- function(node,selection) {
       if (is.continuous(x)) {
         for (i in 1L:nsel) {
           .Call("RN_SetNodeFuncReal",x,selection[i,],
-                as.real(ifelse(length(value)==1L,value,value[i])),
+                as.double(ifelse(length(value)==1L,value,value[i])),
                 PACKAGE="RNetica")
         }
       } else if (valisprobs) {
@@ -891,11 +891,11 @@ selectionToConfig <- function(node,selection) {
         if (is.matrix(value)) {
           for (i in 1L:nsel) {
             .Call("RN_SetNodeProbs",x,selection[i,],
-                  as.real(value[i,]),PACKAGE="RNetica")
+                  as.double(value[i,]),PACKAGE="RNetica")
           }
         } else {
           for (i in 1L:nsel) {
-            .Call("RN_SetNodeProbs",x,selection[i,],as.real(value),
+            .Call("RN_SetNodeProbs",x,selection[i,],as.double(value),
                   PACKAGE="RNetica")
           }
         }
@@ -916,7 +916,7 @@ selectionToConfig <- function(node,selection) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("Assign.NeticaNode: Netica Errors Encountered, see console for details.")
+    stop("Assign.NeticaNode: Node: ", x,"Netica Errors Encountered, see console for details.")
   }
   invisible(x)
 }

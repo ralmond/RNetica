@@ -9,6 +9,18 @@ is.IDname <- function (x) {
   ifelse(is.na(result),FALSE,result)
 }
 
+as.IDname <- function (x, prefix="y") {
+  y <- as.character(x)
+  if (length(grep("^[[:alpha:]].*",y)) < length(y)) {
+    ##Some non-numeric starts, prepend prefix characters.
+    y <- paste(prefix,y,sep="")
+  }
+  y <- gsub("[^[:alnum:]_]","_",y)
+  y <- substr(y,1,30)
+  y
+}
+
+
 ## This function returns the version number as a list with two named
 ## components, the first is the version number (expressed as an
 ## integer).  The second is the message string sent back from the
