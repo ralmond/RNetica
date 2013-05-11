@@ -1,4 +1,4 @@
-emsmdir <- paste(library(help="RNetica")$path, "sampleNets"
+emsmdir <- paste(library(help="RNetica")$path, "sampleNets",
                  sep=.Platform$file.sep)
 EMSMMotif <- ReadNetworks(paste(emsmdir, "EMSMMotif.dne",
                                 sep=.Platform$file.sep))
