@@ -1,0 +1,169 @@
+<head><title>RNetcia Release Information</title></head>
+<body>
+
+<h1>About RNetica</h1>
+<p>
+RNetica is best thought of as a "glue" layer between the open source
+statistical programing language
+R <a href="http://www.r-project.org/">http://www.r-project.org/</a>
+and the proprietary Bayesian network engine
+Netica &reg; <a href="http://www.norsys.com">http://www.norsys.com/</a>.
+Although there are some minor extensions to the Netica API, the
+primary purpose of RNetica is to provide a binding for the Netica API
+functions inside of R.  
+<p>
+There are two big advantages to this.  One is that while the Netica
+GUI is helpful for model development, entering evidence by point and
+click is cumbersome for real work.  Embedding the Netica API within R
+means that R can be used for data preparation and cleaning, the data
+can be entered into a model developed with the Netica GUI and the
+results extracted and graphed using the graphical power of R.  The
+second big advantage is that R is an interpreted language, which
+supports rapid improvisation of code.  This make it substantially
+faster to work in RNetica than using the C or Java APIs.
+
+<h2>RNetica License Information</h2>
+<p>
+There are three layers to the complete RNetica environment, each with
+their own licensing terms.
+
+<ol>
+
+  <li> The <a href="http://www.r-project.org/">R Programming
+  Language</a> is released under
+  the <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU
+  General Public License (GPL)</a> version 2.  See
+  the <a href="http://cran.r-project.org/doc/FAQ/R-FAQ.html#Can-I-use-R-for-commercial-purposes_003f">R
+  FAQ</a> for more information.
+
+  <li>The Netica API is a commercial product.  License terms can be
+  found on the <a href="http://www.norsys.com">Norsys&reg;</a> web site.
+
+  <li>RNetica itself (the combination of R and C code that provides
+  the glue between R and Netica) is made available under
+  the <a href="http://www.r-project.org/Licenses/Artistic-2.0">Artistic
+  License, version 2.0</a>.
+
+</ol>
+
+I am not a lawyer, and therefore this should not be considered formal
+legal advise, but my understanding is that for most uses the use of
+RNetica requires the purchase of a Netica API license (which is
+different from the Netica GUI license) from Norsys.
+<p>
+Once you have obtained a license key from Norsys, you can use it in
+one of two ways.  First, it can be passed as an argument to the
+function <code>StartNetica(<i>license key</i>)</code> (you may need to
+call <code>StopNetica()</code> first).  Second, if you execute the
+command <code>NeticaLicenseKey &lt;- <i>license key</i></code> in the
+main R workspace (the default namespace), then RNetica will use that
+value when loaded through <code>library(RNetica)</code>.  
+<p>
+Without the license key, the Netica API operates in a limited mode.
+All of the functions in the test scripts will run, but the size of the
+networks is generally limited.
+
+<h2>Current Version Status</h2>
+<p>
+The current version (0.2-7) incorporates approximately 3/5 of the
+Netica C API Version 5.04.  This is sufficient functionality to build,
+compile and carry out inferences with a Bayesian network.  Some of the
+more advanced functionality, including support for case files,
+influence diagrams, and dynamic Bayesian networks is not yet
+developed. 
+<p>
+Although an extensive test script exists for RNetica (most of this is
+exposed on the manual pages), the testing away from these simple tests
+has been particularly light.  In particular, no real stress testing
+has taken place.  It is probably best considered somewhere between an
+alpha and a beta release.  Note that because it uses calls to C code,
+it is possible for RNetica to crash R.  Plan your work accordingly.
+<p>
+Most of the development has been with R version 2.15.2 under Ubuntu
+12.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
+runs under Mac OS X and Windows 7 without errors.  Almost all of the
+testing has been with the 64 bit versions of R and Netica.  There may
+be some problems that crop up under 32 bit versions.  
+
+<h1>RNetica Releases</h1>
+<p>
+The following releases are archived here:
+<p>
+<table border="1">
+<tr>
+<th>Release</th><th>Source</th><th>Manual</th><th>Notes</th>
+</tr>
+<tr>
+<td>0.1-8</td><td><a href="RNetica_0.1-8.tar.gz">RNetica_0.1-8.tar.gz</a></td>
+<td></td><td>First reasonably functional version.</td></tr>
+<tr>
+<td>0.2-5</td><td><a href="RNetica_0.2-5.tar.gz">RNetica_0.2-5.tar.gz</a></td>
+<td></td><td>Initial version used for Newton's Playground</td></tr>
+<tr>
+<td>0.2-6</td><td><a href="RNetica_0.2-6.tar.gz">RNetica_0.2-6.tar.gz</a></td>
+<td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td></tr>
+<td>0.2-7</td><td><a href="RNetica_0.2-7.tar.gz">RNetica_0.2-7.tar.gz</a></td>
+<td><a href="RNetica-manual_0.2-7.pdf">RNetica-manual_0.2-7.pdf</a></td><td>Fixed
+    problems with CPT extraction inside functions</td></tr>
+</table>
+<p>
+Note the source versions have been compiled and tested under
+Linux/Unix, Mac OS X and Windows.  Note that for Windows and Mac OS X,
+compiling source packages requires the R development kit to be
+installed.  See the
+appropriate <a href="http://lib.stat.cmu.edu/R/CRAN/faqs.html">R
+  FAQ</a>.  You should also be familiar with building R packages, see
+the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing
+  R Extensions</a> manual.
+
+<p>
+Compiling from sources requires that you have already downloaded and
+unpacked the Netica C API
+from <a href="http://www.norsys.com/">Norsys<a/>.  Under *nix
+(including Mac OS X) the location of the library can be passed to the
+configure command, e.g.:
+<p>
+<code>R CMD INSTALL RNetica --configure-args='--with-netica=/Users/ralmond/software/Netica_API_504/'</code>
+<p>
+Under Windows (or as an alternative to the <code>--with-netica</code> 
+switch), the environmental variable <code>NETICA_HOME</code> can be
+set to the location in which the Netica API was unpacked.  I have only
+tested with the API version 5.04, not with earlier versions.  
+<p>
+Windows and Mac OS X binaries are not yet available, as they would
+involve distributing the Netica shared library, and hence requires
+additional permission from Norsys.  Also, as this is still an early
+test release, I want to make sure that users have a local R guru to
+ask support questions, and help file bug reports if needed.
+
+<h2>Development Version</h2>
+<p>
+The latest development version is available as a subversion repository
+at:  <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/">https://pluto.coe.fsu.edu/svn/common/RNetica/</a>.  
+<p>
+If you have patches or other correspondence about RNetica you can
+contact me at <a href="mailto:almond@acm.org">almond@acm.org<a/>.  
+If you are filing a bug report, please be sure to include the
+following information:
+<ol>
+<li> The version number of CPTtools and R that you are using.
+<li> Your operating system and whether it is 64 or 32 bit.
+<li> The exact text of any error message that is generated.
+<li> A small script that reproduces the problem (if at all possible).
+</ol>
+
+<h2>Legal Notices</h2>
+<p>
+Netica and Norsys are registered trademarks of Norsys, LLC, used by
+permission.  
+<p>
+Although Norsys has been generally supportive of the RNetica project,
+they do not offer formal support in any way.  (In particular, the do
+not currently have anybody on staff who knows R.)  All support
+requests should be sent to the package maintainers.
+<p>
+  The software is offered AS IS, without any warranty of any kind.
+  Support is provided on a volunteer basis, and may not be immediately
+  forthcoming. 
+
+</body>
