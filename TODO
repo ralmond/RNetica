@@ -33,15 +33,13 @@ Equations
 ##   EquationToTable
 ##   )
 Learning from Data
-##*   NodeExperience, "NodeExperience<-",
-##*   ReviseCPTsByFindings, FadeCPT
+##*   LearnFindings, FadeCPT
 ##   ReviseCPTsByFindings_bn, ReviseCPTsByCaseFile_bn
 ##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
 ##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support
-##   WriteNetFindings, ReadNetFindings
-##   WriteNetFindings_bn, ReadNetFindings2_bn
-##*   SetCaseFileDelimChar_ns, SetMissingDataChar_ns
+##*   WriteNetFindings, write.cases, read.cases
+##    ReadNetFindings2_bn
 ##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
 ##   TestWithCaseset_bn, GenerateRandomCase_bn
 

@@ -101,4 +101,4 @@ stopifnot(
 DeleteNetwork(abc)
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ model }

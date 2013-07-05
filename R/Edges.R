@@ -346,10 +346,9 @@ NodeProbs <- function (node) {
   }
   if (length(statecounts)>0) {
     config <- -1L
-    while (!is.na((config <- RNetica:::nextconfig(config,statecounts))[1L])) {
-      ci <- RNetica:::configindex(config,nstates)
-      .Call("RN_SetNodeProbs",node,config,
-            value[RNetica:::configindex(config,nstates)],PACKAGE="RNetica")
+    while (!is.na((config <- nextconfig(config,statecounts))[1L])) {
+      ci <- configindex(config,nstates)
+      .Call("RN_SetNodeProbs",node,config,value[ci],PACKAGE="RNetica")
     }
   } else { ## Prior node with no parents.
     .Call("RN_SetNodeProbs",node,NULL,value,PACKAGE="RNetica")

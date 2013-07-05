@@ -1,6 +1,6 @@
 /**
- * Node.c --- This file contains functions for creating,
- * destroying, and modifying states of nodes.
+ * Experience.c --- This file contains functions for creating,
+ * destroying, and modifying CPTs via learning.
  */
 
 #include <string.h>
@@ -34,14 +34,14 @@ SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight) {
   return node;
 }
 
-SEXP RN_FadeCPT(SEXP node, SEXP weight) {
+SEXP RN_FadeCPT(SEXP node, SEXP degree) {
   node_bn* node_handle;
 
   node_handle = GetNodeHandle(node);
   if (!node_handle) {
     error("Could not find node %s.",NODE_NAME(node));
   } else {
-    FadeCPTable_bn(node_handle, REAL(weight)[0]);
+    FadeCPTable_bn(node_handle, REAL(degree)[0]);
   }
   return node;
 }

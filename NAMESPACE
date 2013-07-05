@@ -79,6 +79,10 @@ export (
    NetworkNodesInSet, NetworkNodeSetColor
  )
 
+export(CaseFileDelimiter,CaseFileMissingCode,
+       WriteFindingsToFile,NodeExperience, "NodeExperience<-",
+       FadeCPT, LearnFindings
+       )
 
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)

@@ -70,7 +70,7 @@ as.IDname(x,prefix="y")
 stopifnot(
 is.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",
                       "a123456789012345678901234567890")) ==
-          c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE)
+          c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE),
 as.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",
                       "a123456789012345678901234567890")) ==
           c("yaFish","yWanda1","yfeed_me","yfish_food","y1more","yUS_",
