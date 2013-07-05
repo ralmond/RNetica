@@ -1,3 +1,11 @@
+2013-06-01  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (CaseFileDelimiter, CaseFileMissingCode)
+	(WriteFindingsToFile): Added.
+
+	* R/Experience.R (NodeExperience, "NodeExperience<-", FadeCPT)
+	(LearnFindings): Added.
+
 2013-05-07  Russell G. Almond  <ralmond@Limu>
 
 	* R/Networks.R (as.IDname): Added.
