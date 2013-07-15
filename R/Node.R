@@ -738,3 +738,4 @@ NetworkNodeSetColor <- function(net, setname, newcolor) {
   }
   result
 }
+

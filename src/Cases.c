@@ -35,23 +35,228 @@ SEXP RN_MissingCode(SEXP newchar) {
   return ScalarInteger(result);
 }
 
-SEXP RN_WriteFindingsToFile(SEXP nodes, SEXP casefile, SEXP id, SEXP freq) {
-  nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
-  long idnum = -1;
-  long freqnum = -1;
-  if (!isNull(id)) idnum = INTEGER(id)[0];
-  if (!isNull(freq)) freqnum = INTEGER(id)[0];
-  const char *filename = CHAR(STRING_ELT(casefile,0));
-  stream_ns *file = NewFileStream_ns(filename,RN_netica_env,NULL);
-  WriteNetFindings_bn(nodelist,file,idnum,freqnum);
-  DeleteStream_ns(file);
-  DeleteNodeList_bn(nodelist);
-  return R_NilValue;
-}
 
 /**
  * Much of the next bit follows 
  * http://www.stat.uiowa.edu/~luke/R/references/weakfinex.html
+ *
+ * This is not well documented in Luke's web page, but I've put the
+ * stream pointer in as the "key" of the weak pointer list, and the
+ * NeticaCaseStream object as the "value".  This allows me to set the
+ * pointer to NULL when I'm closing all open streams, say on detatch.
+ */
+/**
+ * The Netica API uses file streams in four places:
+ * 1) Reading networks
+ * 2) Writing networks
+ * 3) Reading Case files
+ * 4) Writing Case files
+ * Only in case 3 do we need to keep the stream open after returning
+ * to R.  In particular, that means we can stash information about the
+ * current case position in the NeticaStream object.  However,
+ * allowing for case 4 as well allows us to support memory streams.
  */
 
 
+/**
+ * Finalizer:  calling this multiple times should be harmless.
+ */
+SEXP CaseStreamClose (SEXP streamptr) {
+  stream_ns *stream_handle;
+  if (!isNull(streamptr)) {
+    //Already closed, nothing to do
+  } else {
+    if (TYPEOF(streamptr) != EXTPTRSXP || 
+        R_ExternalPtrTag(streamptr) != casestreamatt) {
+      warning("Trying to close a non-stream pointer");
+    }
+    stream_handle = (stream_ns*) R_ExternalPtrAddr(streamptr);
+    if (stream_handle != NULL) {
+      DeleteStream_ns(stream_handle);
+      R_ClearExternalPtr(streamptr);
+    }
+  }
+  return R_NilValue;
+}
+
+void AddStreamRef(SEXP ref) {
+  SEXP s, streams, next=NULL, last=NULL;
+  streams = CDR(CaseStreamList);
+  for (s = streams; s != R_NilValue; s = next) {
+    SEXP r = CAR(s);
+    SEXP key = R_WeakRefKey(r);
+    next = CDR(s);
+    if (key == R_NilValue || R_ExternalPtrAddr(key)==NULL) {
+      if (last == NULL) streams = next;
+      else SETCDR(last,next);
+    } else {
+      last = s;
+    }
+  }
+  SETCDR(CaseStreamList, CONS(ref,streams));
+}
+
+void CloseOpenCaseStreams () {
+  SEXP s, streams, next=NULL, last=NULL;
+  streams = CDR(CaseStreamList);
+  for (s = streams; s != R_NilValue; s = next) {
+    SEXP r = CAR(s);
+    SEXP key = R_WeakRefKey(r);
+    SEXP stream = R_WeakRefValue(r);
+    next = CDR(s);
+    if (key != R_NilValue) {
+      CaseStreamClose(key);
+      setAttrib(stream,casestreamatt,R_NilValue);
+    }
+  }
+}
+
+
+SEXP RN_isCaseStreamActive(SEXP stream) {
+  SEXP stPtr, result;
+  PROTECT(result=allocVector(LGLSXP,1));
+  LOGICAL(result)[0]=FALSE;
+  PROTECT(stPtr = getAttrib(stream,casestreamatt));
+  if (!isNull(stPtr) && R_ExternalPtrAddr(stPtr)) {
+    LOGICAL(result)[0] = TRUE;
+  }
+  UNPROTECT(2);
+  return result;
+}
+
+SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
+  const char* pathname=CHAR(STRING_ELT(path,0));
+  stream_ns* str = 
+    NewFileStream_ns (pathname,RN_netica_env, NULL);
+  if (str == NULL ) 
+    return R_NilValue;
+  else {
+    SEXP stPtr, ref;
+    if (isNull(stream)) {
+      //Allocate new stream object
+      PROTECT(stream = allocVector(STRSXP,1));
+      SET_STRING_ELT(stream,0,mkChar(pathname));
+      SET_CLASS(stream,casestreamclass);
+    } else {
+      PROTECT(stream); //To keep protect count constant
+    }
+    PROTECT(stPtr = R_MakeExternalPtr(str,casestreamatt, R_NilValue));
+    setAttrib(stream,casestreamatt,stPtr);
+    PROTECT(ref = R_MakeWeakRefC(stPtr,stream,
+                                 (R_CFinalizer_t) &CaseStreamClose, 
+                                 TRUE));
+    AddStreamRef(ref);
+    setAttrib(stream,casestreampathatt,path);
+    // Use pos of NULL to indicate start from the beginning.
+    setAttrib(stream,casestreamposatt,R_NilValue);
+    setAttrib(stream,casestreamlastidatt,R_NilValue);
+    setAttrib(stream,casestreamlastfreqatt,R_NilValue);
+    setAttrib(stream,casestreamdfatt,R_NilValue);
+    setAttrib(stream,casestreamdfnameatt,R_NilValue);
+    UNPROTECT(3);
+    return stream;
+  }
+
+}
+
+SEXP RN_CloseCaseStream (SEXP stream) {
+
+  if (!isNeticaStream(stream)) {
+    warning("Trying to close a non-Stream object.");
+  }
+  CaseStreamClose(getAttrib(stream,casestreamatt));
+  setAttrib(stream,casestreamatt,R_NilValue);
+  return(stream);
+}
+
+
+/**
+ * Tests whether or not an object is a Netica stream
+ */
+int isNeticaStream(SEXP obj) {
+  SEXP klass;
+  int result = FALSE;
+  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
+  R_len_t k, kk=length(klass);
+  for (k=0; k<kk; k++) {
+    if(strcmp(CaseStreamClass,CHAR(STRING_ELT(klass,k))) == 0) {
+      result = TRUE;
+      break;
+    }
+  }
+  UNPROTECT(1);
+  return result;
+}
+
+
+SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq) {
+  nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
+  long idnum = -1;
+  double freqnum = -1.0;
+  stream_ns *stream;
+  caseposn_bn pos;
+  if (!isNull(id)) idnum = INTEGER(id)[0];
+  if (!isNull(freq)) freqnum = REAL(freq)[0];
+  if (isNeticaStream(pathOrStream)) {
+    if (!RN_isCaseStreamActive(pathOrStream)) {
+      error("RN_WriteFindings:  Stream is not open.");
+    }
+    stream = GetCaseStream_Handle(pathOrStream);
+  } else {
+    const char* filename = CHAR(STRING_ELT(pathOrStream,0));
+    stream = NewFileStream_ns(filename,RN_netica_env,NULL);
+  }
+  pos = WriteNetFindings_bn(nodelist,stream,idnum,freqnum);
+  if (isNeticaStream(pathOrStream)) {
+    setAttrib(pathOrStream,casestreamposatt,ScalarInteger(pos));
+    setAttrib(pathOrStream,casestreamlastidatt,ScalarInteger(idnum));
+    setAttrib(pathOrStream,casestreamlastfreqatt,ScalarReal(freqnum));
+  } else {
+    DeleteStream_ns(stream);
+  }
+  DeleteNodeList_bn(nodelist);
+  return pathOrStream;
+}
+
+SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
+  nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
+  long idnum = -1;
+  double freqnum = -1.0;
+  bool_ns addflag=FALSE;
+  caseposn_bn case_posn=0;
+  //Translate string positions to integer ones.
+  if (isInteger(pos)) {
+    case_posn = INTEGER(pos)[0];
+  } else if (isString(pos)) {
+    if(strcmp(CHAR(STRING_ELT(pos,0)),"FIRST") == 0) {
+      case_posn = FIRST_CASE;
+    } else if(strcmp(CHAR(STRING_ELT(pos,0)),"NEXT") == 0) {
+      case_posn = NEXT_CASE;
+    } else {
+      error("RN_ReadFindings: Pos should be 'FIRST', 'NEXT' or integer.");
+    }
+  } else {
+    error("RN_ReadFindings: Pos should be an integer or string scalar.");
+  }
+  if (!isNull(add)) addflag = INTEGER(add)[0];
+  if (!isNeticaStream(stream)) {
+    error("RN_ReadFindings:  stream is not a valid Netica stream.");
+  } 
+  if (!RN_isCaseStreamActive(stream)) {
+    error("RN_ReadFindings:  stream is not a open.");
+  }
+  stream_ns *stream_handle = GetCaseStream_Handle(stream);
+  printf("RN_ReadFindings: Stream_handle %d.\n",stream_handle);
+  ReadNetFindings2_bn(&case_posn,stream_handle,addflag,nodelist,
+                      &idnum,&freqnum);
+  if (case_posn == NO_MORE_CASES) {
+    setAttrib(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
+  } else {
+    setAttrib(stream,casestreamposatt,ScalarInteger(case_posn));
+  }
+  setAttrib(stream,casestreamlastidatt,ScalarInteger(idnum));
+  setAttrib(stream,casestreamlastfreqatt,ScalarReal(freqnum));
+
+  DeleteNodeList_bn(nodelist);
+  return stream;
+}

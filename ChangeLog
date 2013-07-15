@@ -1,3 +1,26 @@
+2013-07-14  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (RN_OpenCaseFileStream): Modified the weak reference
+	system so that the stream object is the value, so we can properly
+	mark the stream object as closed.
+
+
+	* R/Cases.R (ReadFindings): Added trap for Netica
+	ReadNetFindings2_bn FIRST/NEXT bug.
+
+2013-07-07  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (RN_WriteFindingsToFile): Renamed to WriteFindings
+	(RN_WriteFindings): Merged functionality of writing to file and
+	stream. 
+
+2013-07-05  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (CaseStreamClose, AddStreamRef)
+	(CloseOpenCaseStreams, RN_isCaseStreamActive)
+	(RN_OpenCaseFileStream, RN_CloseCaseStream): Added rough code.
+	Still need to work out position mechanism.
+
 2013-06-01  Russell G. Almond  <ralmond@Limu>
 
 	* R/Cases.R (CaseFileDelimiter, CaseFileMissingCode)

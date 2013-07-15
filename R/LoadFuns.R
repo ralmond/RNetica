@@ -33,7 +33,7 @@ EVERY_STATE <- -Inf
   StartNetica()
 }
 
-.Last.lib <- function(libpath) {
+.onDetach <- function(libpath) {
   StopNetica()
 }
 
