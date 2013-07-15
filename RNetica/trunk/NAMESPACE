@@ -6,8 +6,7 @@ export(StartNetica, StopNetica, NeticaVersion,
        CreateNetwork, DeleteNetwork,
        print.NeticaBN, toString.NeticaBN, is.active,
        is.IDname, as.IDname, is.NeticaBN,
-       GetNthNetwork, GetNamedNetworks, CopyNetworks,
-       .Last.lib)
+       GetNthNetwork, GetNamedNetworks, CopyNetworks)
 
 export(WriteNetworks, ReadNetworks,
        GetNetworkFileName,
@@ -80,7 +79,13 @@ export (
  )
 
 export(CaseFileDelimiter,CaseFileMissingCode,
-       WriteFindingsToFile,NodeExperience, "NodeExperience<-",
+       OpenCaseStream, CloseCaseStream,
+       is.CaseStream, isCaseStreamOpen,
+       getCaseStreamPath,getCaseStreamLastId,
+       getCaseStreamPos,getCaseStreamLastFreq,
+       getCaseStreamDataFrame,getCaseStreamDataFrameName,
+       WriteFindings,ReadFindings,
+       NodeExperience, "NodeExperience<-",
        FadeCPT, LearnFindings
        )
 
@@ -93,5 +98,7 @@ S3method(Ops, NeticaNode)
 S3method("[", NeticaNode)
 S3method("[[", NeticaNode)
 S3method("[<-", NeticaNode)
+S3method(toString, NeticaCaseStream)
+S3method(print, NeticaCaseStream)
 
        

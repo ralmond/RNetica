@@ -1,6 +1,6 @@
 Package: RNetica
-Version: 0.3-1
-Date: 2012/11/22
+Version: 0.3-3
+Date: 2013/07/05
 Title: R interface to Netica(R) Bayesian Network Engine
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>

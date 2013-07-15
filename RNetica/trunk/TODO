@@ -34,12 +34,13 @@ Equations
 ##   )
 Learning from Data
 ##*   LearnFindings, FadeCPT
-##   ReviseCPTsByFindings_bn, ReviseCPTsByCaseFile_bn
+##*   ReviseCPTsByFindings_bn, 
+##    ReviseCPTsByCaseFile_bn
 ##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
 ##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support
 ##*   WriteNetFindings, write.cases, read.cases
-##    ReadNetFindings2_bn
+##*   ReadNetFindings2_bn
 ##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
 ##   TestWithCaseset_bn, GenerateRandomCase_bn
 

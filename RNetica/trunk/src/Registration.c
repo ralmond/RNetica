@@ -28,9 +28,13 @@ const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
 const char* CaseStreamClass = "NeticaCaseStream";
 const char* CASESTREAMATT = "Netica_Case_Stream";
+const char* CASESTREAMPOSATT = "Case_Stream_Position";
 const char* CASESTREAMPATHATT = "Case_Stream_Path";
+const char* CASESTREAMLASTIDATT = "Case_Stream_Lastid";
+const char* CASESTREAMLASTFREQATT = "Case_Stream_Lastfreq";
 const char* CASESTREAMDFATT = "Case_Stream_DataFrame";
 const char* CASESTREAMDFNAMEATT = "Case_Stream_DataFrameName";
+
 
 
 SEXP bnclass=NULL;
@@ -47,9 +51,13 @@ SEXP NodeKinds = NULL;
 SEXP XYnames = NULL;
 SEXP casestreamclass = NULL;
 SEXP casestreamatt = NULL;
+SEXP casestreamposatt = NULL;
 SEXP casestreampathatt = NULL;
+SEXP casestreamlastidatt = NULL;
+SEXP casestreamlastfreqatt = NULL;
 SEXP casestreamdfatt = NULL;
 SEXP casestreamdfnameatt = NULL;
+SEXP CaseStreamList = NULL;
 
 static int symbolRegCount=0;
 
@@ -114,14 +122,26 @@ void RN_Define_Symbols() {
   if (casestreamatt==NULL) { 
     R_PreserveObject(casestreamatt = install(CASESTREAMATT));  
   } 
+  if (casestreamposatt==NULL) { 
+    R_PreserveObject(casestreamposatt = install(CASESTREAMPOSATT));  
+  } 
   if (casestreampathatt==NULL) { 
     R_PreserveObject(casestreampathatt = install(CASESTREAMPATHATT));  
+  } 
+  if (casestreamlastidatt==NULL) { 
+    R_PreserveObject(casestreamlastidatt = install(CASESTREAMLASTIDATT));  
+  } 
+  if (casestreamlastfreqatt==NULL) { 
+    R_PreserveObject(casestreamlastfreqatt = install(CASESTREAMLASTFREQATT));  
   } 
   if (casestreamdfatt==NULL) { 
     R_PreserveObject(casestreamdfatt = install(CASESTREAMDFATT));  
   } 
   if (casestreamdfnameatt==NULL) { 
     R_PreserveObject(casestreamdfnameatt = install(CASESTREAMDFNAMEATT));  
+  } 
+  if (CaseStreamList==NULL) { 
+    R_PreserveObject(CaseStreamList = CONS(R_NilValue, R_NilValue));
   } 
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
@@ -184,14 +204,27 @@ void RN_Free_Symbols() {
     if (casestreamatt!=NULL) { 
       R_ReleaseObject(casestreamatt);
     } 
+    if (casestreamposatt!=NULL) { 
+      R_ReleaseObject(casestreamposatt);
+    } 
     if (casestreampathatt!=NULL) { 
       R_ReleaseObject(casestreampathatt);
+    } 
+    if (casestreamlastidatt!=NULL) { 
+      R_ReleaseObject(casestreamlastidatt);
+    } 
+    if (casestreamlastfreqatt!=NULL) { 
+      R_ReleaseObject(casestreamlastfreqatt);
     } 
     if (casestreamdfatt!=NULL) { 
       R_ReleaseObject(casestreamdfatt);
     } 
     if (casestreamdfnameatt!=NULL) { 
       R_ReleaseObject(casestreamdfnameatt);
+    } 
+    if (CaseStreamList!=NULL) { 
+      CloseOpenCaseStreams();
+      R_ReleaseObject(CaseStreamList);
     } 
   }
 }
@@ -613,8 +646,13 @@ extern SEXP RN_SizeCompiledNetwork(SEXP net);
 // Cases.c
 extern SEXP RN_CaseFileDelimiter(SEXP newchar);
 extern SEXP RN_MissingCode(SEXP newchar);
-extern SEXP RN_WriteFindingsToFile(SEXP nodes, SEXP casefile, 
-                                   SEXP id, SEXP freq);
+extern SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, 
+                             SEXP id, SEXP freq);
+extern SEXP RN_ReadFindings(SEXP nodes, SEXP stream, 
+                             SEXP pos, SEXP add);
+extern SEXP RN_isCaseStreamActive(SEXP stream);
+extern SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream);
+extern SEXP RN_CloseCaseStream(SEXP stream);
 
 // Experience.c
 extern SEXP RN_GetNodeExperience(SEXP node, SEXP states);
@@ -725,7 +763,11 @@ R_CallMethodDef callMethods[] = {
   {"RN_SizeCompiledNetwork", (DL_FUNC) &RN_SizeCompiledNetwork, 1},
   {"RN_CaseFileDelimiter", (DL_FUNC) &RN_CaseFileDelimiter, 1},
   {"RN_MissingCode", (DL_FUNC) &RN_MissingCode, 1},
-  {"RN_WriteFindingsToFile", (DL_FUNC) &RN_WriteFindingsToFile, 4},
+  {"RN_WriteFindings", (DL_FUNC) &RN_WriteFindings, 4},
+  {"RN_ReadFindings", (DL_FUNC) &RN_ReadFindings, 4},
+  {"RN_isCaseStreamActive", (DL_FUNC) &RN_isCaseStreamActive, 1},
+  {"RN_OpenCaseFileStream", (DL_FUNC) &RN_OpenCaseFileStream, 2},
+  {"RN_CloseCaseStream", (DL_FUNC) &RN_CloseCaseStream, 1},
   {"RN_GetNodeExperience", (DL_FUNC) &RN_GetNodeExperience, 2},
   {"RN_SetNodeExperience", (DL_FUNC) &RN_SetNodeExperience, 3},
   {"RN_FadeCPT", (DL_FUNC) &RN_FadeCPT, 2},
