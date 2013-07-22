@@ -35,7 +35,7 @@ Equations
 Learning from Data
 ##*   LearnFindings, FadeCPT
 ##*   ReviseCPTsByFindings_bn, 
-##    ReviseCPTsByCaseFile_bn
+##   ReviseCPTsByCaseFile_bn
 ##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
 ##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support

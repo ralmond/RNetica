@@ -37,7 +37,7 @@ NeticaVersion <- function () {
 ## errors. 
 ReportErrors <- function(maxreport=9,clear=TRUE) {
   counts <- .C("RN_report_errors",as.integer(maxreport),
-                as.integer(clear),counts=integer(4),
+                as.integer(clear),counts=rep(-1L,4L),
                PACKAGE="RNetica")$counts
   names(counts) <- c("Errors","Warnings","Notices","Reports")
   invisible(counts)

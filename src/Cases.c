@@ -2,6 +2,7 @@
  * Cases.c --- This file contains functions for working with case set files
  */
 
+#define _GNU_SOURCE         /* Needed for mempcpy */
 #include <string.h>
 #include <R.h>
 #include <Rdefines.h>
@@ -63,17 +64,18 @@ SEXP RN_MissingCode(SEXP newchar) {
  */
 SEXP CaseStreamClose (SEXP streamptr) {
   stream_ns *stream_handle;
-  if (!isNull(streamptr)) {
+  if (streamptr == NULL || isNull(streamptr)) {
     //Already closed, nothing to do
   } else {
     if (TYPEOF(streamptr) != EXTPTRSXP || 
         R_ExternalPtrTag(streamptr) != casestreamatt) {
       warning("Trying to close a non-stream pointer");
-    }
-    stream_handle = (stream_ns*) R_ExternalPtrAddr(streamptr);
-    if (stream_handle != NULL) {
-      DeleteStream_ns(stream_handle);
-      R_ClearExternalPtr(streamptr);
+    } else {
+      stream_handle = (stream_ns*) R_ExternalPtrAddr(streamptr);
+      if (stream_handle != NULL) {
+        DeleteStream_ns(stream_handle);
+        R_ClearExternalPtr(streamptr);
+      }
     }
   }
   return R_NilValue;
@@ -106,7 +108,9 @@ void CloseOpenCaseStreams () {
     next = CDR(s);
     if (key != R_NilValue) {
       CaseStreamClose(key);
-      setAttrib(stream,casestreamatt,R_NilValue);
+      if (stream && stream != R_NilValue) {
+        setAttrib(stream,casestreamatt,R_NilValue);
+      }
     }
   }
 }
@@ -136,7 +140,7 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
       //Allocate new stream object
       PROTECT(stream = allocVector(STRSXP,1));
       SET_STRING_ELT(stream,0,mkChar(pathname));
-      SET_CLASS(stream,casestreamclass);
+      SET_CLASS(stream,casefilestreamclass);
     } else {
       PROTECT(stream); //To keep protect count constant
     }
@@ -158,6 +162,43 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
   }
 
 }
+
+
+SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream) {
+  const char* lab=CHAR(STRING_ELT(label,0));
+  stream_ns* str = 
+    NewMemoryStream_ns (lab,RN_netica_env, NULL);
+  if (str == NULL ) 
+    return R_NilValue;
+  else {
+    SEXP stPtr, ref;
+    if (isNull(stream)) {
+      //Allocate new stream object
+      PROTECT(stream = allocVector(STRSXP,1));
+      SET_STRING_ELT(stream,0,mkChar(lab));
+      SET_CLASS(stream,memorystreamclass);
+    } else {
+      PROTECT(stream); //To keep protect count constant
+    }
+    PROTECT(stPtr = R_MakeExternalPtr(str,casestreamatt, R_NilValue));
+    setAttrib(stream,casestreamatt,stPtr);
+    PROTECT(ref = R_MakeWeakRefC(stPtr,stream,
+                                 (R_CFinalizer_t) &CaseStreamClose, 
+                                 TRUE));
+    AddStreamRef(ref);
+    setAttrib(stream,casestreamdfnameatt,label);
+    // Use pos of NULL to indicate start from the beginning.
+    setAttrib(stream,casestreamposatt,R_NilValue);
+    setAttrib(stream,casestreamlastidatt,R_NilValue);
+    setAttrib(stream,casestreamlastfreqatt,R_NilValue);
+    setAttrib(stream,casestreamdfatt,R_NilValue);
+    setAttrib(stream,casestreampathatt,R_NilValue);
+    UNPROTECT(3);
+    return stream;
+  }
+
+}
+
 
 SEXP RN_CloseCaseStream (SEXP stream) {
 
@@ -186,6 +227,75 @@ int isNeticaStream(SEXP obj) {
   }
   UNPROTECT(1);
   return result;
+}
+
+SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
+
+  char *buf =NULL;
+  void *pos;
+  long totlen=0;
+  size_t irow, nrow = length(contents);
+  if (!isNull(contents)) {
+    for (irow = 0; irow < nrow; irow++) {
+      totlen += strlen(CHAR(STRING_ELT(contents,irow)));
+      totlen ++; //For eol.
+    }
+    buf = (char *) R_alloc(totlen+1,sizeof(char));
+    if (buf == NULL) {
+      error("Could not allocate memory for string buffer.");
+      return R_NilValue;
+    }
+    pos = (void *) buf;
+    for (irow = 0; irow < nrow; irow++) {
+      pos = mempcpy(pos, (const void*) CHAR(STRING_ELT(contents,irow)),
+                    strlen(CHAR(STRING_ELT(contents,irow))));
+      pos = mempcpy(pos,"\n",1);
+    }
+    mempcpy(pos,"\0",1);
+  }
+  //printf("Length at creation time %ld\n",totlen);
+  SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
+
+  setAttrib(stream,casestreamposatt,R_NilValue);
+  setAttrib(stream,casestreamlastidatt,R_NilValue);
+  setAttrib(stream,casestreamlastfreqatt,R_NilValue);
+  return (stream);  
+}
+
+
+SEXP RN_GetMemoryStreamContents(SEXP stream) {
+  SEXP contents;
+  char *line;
+  char *buf;
+  long ipos, totlen=0;
+  size_t irow, nrow;
+
+  const char *nbuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
+  //Copy so we can tokenize it.
+  //printf("Buffer length %ld\n",(size_t) totlen);
+  if (totlen == 0) return R_NilValue;
+  buf = (char *) R_alloc((size_t) totlen,sizeof(char));
+  if (buf == NULL) {
+    error("Could not allocate memory for string buffer.");
+    return R_NilValue;
+  }
+  nrow =0;
+  for (ipos=0; ipos < totlen; ipos++) {
+    buf[ipos]=nbuf[ipos];
+    if (buf[ipos]=='\n') nrow++;
+  }
+  //printf("ipos = %ld, nrow=%ld\n",ipos,nrow);
+  PROTECT(contents = allocVector(STRSXP,nrow));
+  line = strtok(buf,"\n");
+  irow=0;
+  while (line) {
+    //printf("Line %ld: %s\n",irow,line);
+    SET_STRING_ELT(contents,irow++,mkChar(line));
+    line = strtok(NULL,"\n");
+  }
+
+  UNPROTECT(1);
+  return (contents);  
 }
 
 
@@ -246,7 +356,7 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
     error("RN_ReadFindings:  stream is not a open.");
   }
   stream_ns *stream_handle = GetCaseStream_Handle(stream);
-  printf("RN_ReadFindings: Stream_handle %d.\n",stream_handle);
+  //printf("RN_ReadFindings: Stream_handle %ld.\n",stream_handle);
   ReadNetFindings2_bn(&case_posn,stream_handle,addflag,nodelist,
                       &idnum,&freqnum);
   if (case_posn == NO_MORE_CASES) {

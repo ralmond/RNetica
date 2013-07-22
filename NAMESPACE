@@ -80,10 +80,15 @@ export (
 
 export(CaseFileDelimiter,CaseFileMissingCode,
        OpenCaseStream, CloseCaseStream,
-       is.CaseStream, isCaseStreamOpen,
+       WithOpenCaseStream,
+       is.NeticaCaseStream, isCaseStreamOpen,
+       MemoryCaseStream, CaseFileStream,
+       is.MemoryCaseStream, is.CaseFileStream,
        getCaseStreamPath,getCaseStreamLastId,
        getCaseStreamPos,getCaseStreamLastFreq,
-       getCaseStreamDataFrame,getCaseStreamDataFrameName,
+       getCaseStreamDataFrameName,
+       MemoryStreamContents,"MemoryStreamContents<-",
+       read.CaseFile,write.CaseFile,
        WriteFindings,ReadFindings,
        NodeExperience, "NodeExperience<-",
        FadeCPT, LearnFindings

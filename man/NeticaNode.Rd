@@ -16,7 +16,7 @@
 }
 \usage{
 is.NeticaNode(x)
-\method{print}{NeticaNode}(x, ...)
+\method{toString}{NeticaNode}(x, ...)
 \method{print}{NeticaNode}(x, ...)
 \method{Ops}{NeticaNode}(e1, e2)
 e1 == e2

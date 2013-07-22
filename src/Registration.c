@@ -27,6 +27,8 @@ const char* CliqueNodeClass = "CliqueNode";
 const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
 const char* CaseStreamClass = "NeticaCaseStream";
+const char* MemoryStreamClass = "MemoryCaseStream";
+const char* CaseFileStreamClass = "CaseFileStream";
 const char* CASESTREAMATT = "Netica_Case_Stream";
 const char* CASESTREAMPOSATT = "Case_Stream_Position";
 const char* CASESTREAMPATHATT = "Case_Stream_Path";
@@ -50,6 +52,8 @@ SEXP NAV=NULL;
 SEXP NodeKinds = NULL;
 SEXP XYnames = NULL;
 SEXP casestreamclass = NULL;
+SEXP memorystreamclass = NULL;
+SEXP casefilestreamclass = NULL;
 SEXP casestreamatt = NULL;
 SEXP casestreamposatt = NULL;
 SEXP casestreampathatt = NULL;
@@ -118,6 +122,18 @@ void RN_Define_Symbols() {
     casestreamclass = allocVector(STRSXP,1);
     R_PreserveObject(casestreamclass);
     SET_STRING_ELT(casestreamclass,0,mkChar(CaseStreamClass));
+  }
+  if (memorystreamclass==NULL) {
+    memorystreamclass = allocVector(STRSXP,2);
+    R_PreserveObject(memorystreamclass);
+    SET_STRING_ELT(memorystreamclass,0,mkChar(MemoryStreamClass));
+    SET_STRING_ELT(memorystreamclass,1,mkChar(CaseStreamClass));
+  }
+  if (casefilestreamclass==NULL) {
+    casefilestreamclass = allocVector(STRSXP,2);
+    R_PreserveObject(casefilestreamclass);
+    SET_STRING_ELT(casefilestreamclass,0,mkChar(CaseFileStreamClass));
+    SET_STRING_ELT(casefilestreamclass,1,mkChar(CaseStreamClass));
   }
   if (casestreamatt==NULL) { 
     R_PreserveObject(casestreamatt = install(CASESTREAMATT));  
@@ -200,6 +216,12 @@ void RN_Free_Symbols() {
     } 
     if (casestreamclass!=NULL) {
       R_ReleaseObject(casestreamclass);
+    }
+    if (memorystreamclass!=NULL) {
+      R_ReleaseObject(memorystreamclass);
+    }
+    if (casefilestreamclass!=NULL) {
+      R_ReleaseObject(casefilestreamclass);
     }
     if (casestreamatt!=NULL) { 
       R_ReleaseObject(casestreamatt);
@@ -652,7 +674,10 @@ extern SEXP RN_ReadFindings(SEXP nodes, SEXP stream,
                              SEXP pos, SEXP add);
 extern SEXP RN_isCaseStreamActive(SEXP stream);
 extern SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream);
+extern SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream);
 extern SEXP RN_CloseCaseStream(SEXP stream);
+extern SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents);
+extern SEXP RN_GetMemoryStreamContents(SEXP stream);
 
 // Experience.c
 extern SEXP RN_GetNodeExperience(SEXP node, SEXP states);
@@ -767,7 +792,10 @@ R_CallMethodDef callMethods[] = {
   {"RN_ReadFindings", (DL_FUNC) &RN_ReadFindings, 4},
   {"RN_isCaseStreamActive", (DL_FUNC) &RN_isCaseStreamActive, 1},
   {"RN_OpenCaseFileStream", (DL_FUNC) &RN_OpenCaseFileStream, 2},
+  {"RN_OpenCaseMemoryStream", (DL_FUNC) &RN_OpenCaseMemoryStream, 2},
   {"RN_CloseCaseStream", (DL_FUNC) &RN_CloseCaseStream, 1},
+  {"RN_SetMemoryStreamContents", (DL_FUNC) &RN_SetMemoryStreamContents, 2},
+  {"RN_GetMemoryStreamContents", (DL_FUNC) &RN_GetMemoryStreamContents, 1},
   {"RN_GetNodeExperience", (DL_FUNC) &RN_GetNodeExperience, 2},
   {"RN_SetNodeExperience", (DL_FUNC) &RN_SetNodeExperience, 3},
   {"RN_FadeCPT", (DL_FUNC) &RN_FadeCPT, 2},
