@@ -21,7 +21,7 @@ SEXP RN_isNodeActive(SEXP node) {
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
   PROTECT(nodePtr = getAttrib(node,nodeatt));
-  if (nodePtr && R_ExternalPtrAddr(nodePtr)) {
+  if (nodePtr && nodePtr != R_NilValue && R_ExternalPtrAddr(nodePtr)) {
     LOGICAL(result)[0] = TRUE;
   }
   UNPROTECT(2);
@@ -97,11 +97,13 @@ void RN_Free_Node(node_bn* node_handle) {
   PROTECT(nodehandle = getAttrib(node,nodeatt));
 
   /* Clear the handle */
-  R_ClearExternalPtr(nodehandle);
-  setAttrib(node,nodeatt,nodehandle); //Probably not needed.
+  if (nodehandle && nodehandle != R_NilValue) {
+    R_ClearExternalPtr(nodehandle);
+  }
+  setAttrib(node,nodeatt,R_NilValue); //Probably not needed.
   R_ReleaseObject(node); //Let R garbage collect it when all
   //references are gone.
-
+  SetNode_RRef(node_handle,NULL);
   UNPROTECT(2);
   return;
 }

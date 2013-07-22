@@ -95,11 +95,20 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
   with Brent that this is in fact the position in characters from the
   start of the stream to the record.  It is not recommended, however,
   that program rely on that fact.
+
+  The fact that the case positions are difficult to compute makes random
+  access difficult.  If it is needed, programmers will need to save the
+  values of \code{\link{getCaseStreamPos}} on previous calls to
+  \code{ReadFindings} or \code{\link{WriteFindings}}.  Fetching cases by
+  the ID requires scanning through the case file (see
+  \code{\link{WithOpenCaseStream}} for an example).
+
 }
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{NodeFinding}}, \code{\link{RetractNetFindings}}
-  \code{\link{ReadFindings}}, \code{\link{NeticaCaseStream}}
+  \code{\link{ReadFindings}}, \code{\link{NeticaCaseStream}},
+  \code{\link{WithOpenCaseStream}}
 }
 \examples{
 
@@ -118,7 +127,7 @@ AddLink(B,C)
 casefile <- paste(library(help="RNetica")$path,
                            "testData","abctestcases.cas",
                            sep=.Platform$file.sep)
-filestream <- OpenCaseStream(casefile)
+filestream <- CaseFileStream(casefile)
 ## Case 1
 filestream <- ReadFindings(list(A,B,C),filestream,"FIRST")
 stopifnot( NodeFinding(A) == "A1",

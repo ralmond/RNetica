@@ -89,8 +89,8 @@ AddLink(B,C)
 
 ## Outputfilename
 casefile <- tempfile("testcase",fileext=".cas")
-filestream <- OpenCaseStream(casefile)
-stopifnot(is.CaseStream(filestream),
+filestream <- CaseFileStream(casefile)
+stopifnot(is.CaseFileStream(filestream),
           isCaseStreamOpen(filestream))
 
 ## Case 1

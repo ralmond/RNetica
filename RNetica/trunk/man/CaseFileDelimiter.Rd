@@ -49,7 +49,8 @@ CaseFileMissingCode(newcode = NULL)
   The default R missing code "NA" does not work with Netica.
 }
 \seealso{
-  \code{\link{WriteFindingsToFile}}
+  \code{\link{WriteFindings}}, \code{\link{WriteFindings}},
+  \code{\link{read.CaseFile}}
 }
 \examples{
 

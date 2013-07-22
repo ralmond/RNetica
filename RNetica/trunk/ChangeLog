@@ -1,3 +1,13 @@
+2013-07-17  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (write.CaseFile): Factored this code out, as it is
+	likely quite interesting.
+
+2013-07-16  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (OpenCaseStream): Split OpenCaseStream into separate
+	functions for Memory and File Case Streams
+
 2013-07-14  Russell G. Almond  <ralmond@Limu>
 
 	* src/Cases.c (RN_OpenCaseFileStream): Modified the weak reference

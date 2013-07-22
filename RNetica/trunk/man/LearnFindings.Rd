@@ -52,8 +52,8 @@ LearnFindings(nodes, weight = 1)
 }
 \author{Russell G. Almond}
 \note{
-  Do not confuse this function with \code{\link{NodeFindings}}.
-  \code{NodeFindings} instantiates a node and updates all of the other
+  Do not confuse this function with \code{\link{NodeFinding}}.
+  \code{NodeFinding} instantiates a node and updates all of the other
   beliefs associated with a node to reflect the new evidence.
   \code{LearnFindings} incorporates the current case (the currently
   instantiated set of findings) into the CPTs for the nodes.

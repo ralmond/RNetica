@@ -57,12 +57,13 @@ firstNet <- CreateNetwork("firstNet")
 NetworkTitle(firstNet) <- "My First Bayesian Network"
 stopifnot(NetworkTitle(firstNet)=="My First Bayesian Network")
 
-NetworkComment(firstNet)<-c("Network created on",date())
-stopifnot(NetworkComment(firstNet) ==
-  paste(c("Network created on",date()),collapse="\n"))
-
+now <- date()
+NetworkComment(firstNet)<-c("Network created on",now)
 ## Print here escapes the newline, so is harder to read
 cat(NetworkComment(firstNet),"\n")
+stopifnot(NetworkComment(firstNet) ==
+  paste(c("Network created on",now),collapse="\n"))
+
 
 DeleteNetwork(firstNet)
 }
