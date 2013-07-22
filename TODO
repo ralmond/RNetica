@@ -37,11 +37,12 @@ Learning from Data
 ##*   ReviseCPTsByFindings_bn, 
 ##   ReviseCPTsByCaseFile_bn
 ##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
+##   DeleteNodeTables_bn,
 ##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
 Casefile support
 ##*   WriteNetFindings, write.cases, read.cases
 ##*   ReadNetFindings2_bn
-##   NewCaseset_cs, DeleteCaseset_cs, WriteCaseset_ns
+##   NewCaseset_cs, DeleteCaseset_cs, 
 ##   TestWithCaseset_bn, GenerateRandomCase_bn
 
 Continuous Node support
@@ -54,6 +55,8 @@ Database Connectivity
 ##  NewDBManager_cs, DeleteDBManager_cs
 ##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
 ##  ExcecuteDBSql_cs, AddNodesFromDB_bn
+##  WriteCaseset_ns (The only use for this function is in conjunction
+##  with the database stuff.)
 Sensitivity
 ## export(
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
