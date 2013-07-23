@@ -22,6 +22,21 @@ second big advantage is that R is an interpreted language, which
 supports rapid improvisation of code.  This make it substantially
 faster to work in RNetica than using the C or Java APIs.
 
+<h2>News</h2>
+The 0.3 series of releases includes a number of different improvements.
+<ol>
+<li> I now how official permission to distribute binary versions from
+  Norsys.  (You may want to still download and compile from sources
+  you need the latest version of the API.)
+<li> RNetica now passes the self-test
+  under <code>gctorture(TRUE)</code>, which should mean that is it is
+  much more robust to memory errors.  This is still a beta version,
+  caution is still advisable.
+<li> It now has case file support and soon (version 0.3-4) will
+  include learning support as well.
+<li> I've moved my development and testing platform to R 3.0.1.
+</ol>
+
 <h2>RNetica License Information</h2>
 <p>
 There are three layers to the complete RNetica environment, each with
@@ -65,25 +80,28 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.2-7) incorporates approximately 3/5 of the
+The current version (0.3-3) incorporates approximately 70% of the
 Netica C API Version 5.04.  This is sufficient functionality to build,
 compile and carry out inferences with a Bayesian network.  Some of the
-more advanced functionality, including support for case files,
+more advanced functionality, including support for databases,
 influence diagrams, and dynamic Bayesian networks is not yet
 developed. 
 <p>
 Although an extensive test script exists for RNetica (most of this is
 exposed on the manual pages), the testing away from these simple tests
-has been particularly light.  In particular, no real stress testing
-has taken place.  It is probably best considered somewhere between an
-alpha and a beta release.  Note that because it uses calls to C code,
-it is possible for RNetica to crash R.  Plan your work accordingly.
+has been particularly light.  In particular, I have not yet used
+valgrind to test for memory leaks.  It is currently a beta release.
+Note that because it uses calls to C code, <i>it is possible for RNetica
+to crash R.</i>  Plan your work accordingly.
 <p>
-Most of the development has been with R version 2.15.2 under Ubuntu
+The development has been with R version 3.0.1 under Ubuntu
 12.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
 runs under Mac OS X and Windows 7 without errors.  Almost all of the
 testing has been with the 64 bit versions of R and Netica.  There may
 be some problems that crop up under 32 bit versions.  
+<p>
+Version 0.2-7 was developed and tested under R 2.15.2.  The windows
+binary for that version is a R 2.15 binary.
 
 <h1>RNetica Releases</h1>
 <p>
@@ -91,23 +109,29 @@ The following releases are archived here:
 <p>
 <table border="1">
 <tr>
-<th>Release</th><th>Source</th><th>Manual</th><th>Notes</th>
+<th>Release</th><th>Source</th><th>Windows</th><th>MacOS</th><th>Manual</th><th>Notes</th>
 </tr>
 <tr>
 <td>0.1-8</td><td><a href="RNetica_0.1-8.tar.gz">RNetica_0.1-8.tar.gz</a></td>
-<td></td><td>First reasonably functional version.</td></tr>
+<td></td><td></td><td></td><td>First reasonably functional version.</td></tr>
 <tr>
 <td>0.2-5</td><td><a href="RNetica_0.2-5.tar.gz">RNetica_0.2-5.tar.gz</a></td>
-<td></td><td>Initial version used for Newton's Playground</td></tr>
+<td></td><td></td><td></td><td>Initial version used for Newton's Playground</td></tr>
 <tr>
 <td>0.2-6</td><td><a href="RNetica_0.2-6.tar.gz">RNetica_0.2-6.tar.gz</a></td>
-<td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td></tr>
+<td></td><td></td><td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td></tr>
 <td>0.2-7</td><td><a href="RNetica_0.2-7.tar.gz">RNetica_0.2-7.tar.gz</a></td>
-<td><a href="RNetica-manual_0.2-7.pdf">RNetica-manual_0.2-7.pdf</a></td><td>Fixed
-    problems with CPT extraction inside functions</td></tr>
+<td><a href="RNetica_0.2-7.zip">RNetica_0.2-7.zip</a></td>
+<td><a href="RNetica_0.2-7.tgz">RNetica_0.2-7.tgz</a></td>
+<td><a href="RNetica-manual_0.2-7.pdf">RNetica-manual_0.2-7.pdf</a></td>
+  <td>Last Version for R 2.15 </td></tr>
 <td>0.3-1</td><td><a href="RNetica_0.3-1.tar.gz">RNetica_0.3-1.tar.gz</a></td>
-<td><a href="RNetica-manual_0.3-1.pdf">RNetica-manual_0.3-1.pdf</a></td><td>
-    Added NodeExperience and Case Writing (not Reading)</td></tr>
+<td></td><td></td><td><a href="RNetica-manual_0.3-1.pdf">RNetica-manual_0.3-1.pdf</a></td><td>
+    R 3.0:  Added NodeExperience and Case Writing (not Reading)</td></tr>
+<td>0.3-3</td><td><a href="RNetica_0.3-3.tar.gz">RNetica_0.3-3.tar.gz</a></td>
+<td><a href="RNetica_0.3-3.zip">RNetica_0.3-3.zip</a></td>
+<td><a href="RNetica_0.3-3.tgz">RNetica_0.3-3.tgz</a></td><td><a href="RNetica-manual_0.3-3.pdf">RNetica-manual_0.3-3.pdf</a></td><td>
+    R 3.0:  Added NodeExperience and Case Writing (not Reading)</td></tr>
 </table>
 <p>
 Note the source versions have been compiled and tested under
@@ -133,11 +157,11 @@ switch), the environmental variable <code>NETICA_HOME</code> can be
 set to the location in which the Netica API was unpacked.  I have only
 tested with the API version 5.04, not with earlier versions.  
 <p>
-Windows and Mac OS X binaries are not yet available, as they would
-involve distributing the Netica shared library, and hence requires
-additional permission from Norsys.  Also, as this is still an early
-test release, I want to make sure that users have a local R guru to
-ask support questions, and help file bug reports if needed.
+Although I am now supplying Windows and Mac OS X binaries, which
+include the version of the Netica API I last downloaded (currently
+5.04).  As this is still an early test release, it will help you to
+have a local R guru to ask support questions, and help file bug
+reports if needed.
 
 <h2>Development Version</h2>
 <p>
