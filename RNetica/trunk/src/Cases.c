@@ -4,6 +4,15 @@
 
 #define _GNU_SOURCE         /* Needed for mempcpy */
 #include <string.h>
+#ifdef __APPLE__   /* Fails for Macs, need to define mempcpy
+                      explicitly */
+/* From Gnulib */
+void *
+mempcpy (void *dest, const void *src, size_t n)
+{
+  return (char *) memcpy (dest, src, n) + n;
+}
+#endif
 #include <R.h>
 #include <Rdefines.h>
 #include <RNetica.h>
