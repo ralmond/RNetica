@@ -61,9 +61,10 @@ firstNode <- NewDiscreteNode(net2,"firstNode")
 NodeTitle(firstNode) <- "My First Bayesian Network Node"
 stopifnot(NodeTitle(firstNode)=="My First Bayesian Network Node")
 
-NodeDescription(firstNode)<-c("Node created on",date())
+now <- date()
+NodeDescription(firstNode)<-c("Node created on",now)
 stopifnot(NodeDescription(firstNode) ==
-  paste(c("Node created on",date()),collapse="\n"))
+  paste(c("Node created on",now),collapse="\n"))
 
 ## Print here escapes the newline, so is harder to read
 cat(NodeDescription(firstNode),"\n")
