@@ -684,6 +684,9 @@ extern SEXP RN_GetNodeExperience(SEXP node, SEXP states);
 extern SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight);
 extern SEXP RN_FadeCPT(SEXP node, SEXP degree);
 extern SEXP RN_LearnFindings(SEXP nodelist, SEXP weight);
+extern SEXP RN_LearnCaseStream(SEXP stream, SEXP nodelist, SEXP weight);
+extern SEXP RN_LearnCPTs (SEXP caseStream, SEXP nodes, SEXP method, 
+                          SEXP maxIters, SEXP maxTol, SEXP weight);
 
 
 
@@ -800,6 +803,8 @@ R_CallMethodDef callMethods[] = {
   {"RN_SetNodeExperience", (DL_FUNC) &RN_SetNodeExperience, 3},
   {"RN_FadeCPT", (DL_FUNC) &RN_FadeCPT, 2},
   {"RN_LearnFindings", (DL_FUNC) &RN_LearnFindings, 2},
+  {"RN_LearnCaseStream", (DL_FUNC) &RN_LearnCaseStream, 3},
+  {"RN_LearnCPTs", (DL_FUNC) &RN_LearnCPTs, 6},
   {NULL, NULL, 0},
 };
 

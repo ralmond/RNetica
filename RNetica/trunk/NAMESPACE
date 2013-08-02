@@ -69,7 +69,6 @@ export(
    NodeBeliefs, IsBeliefUpdated,
    NodeLikelihood, "NodeLikelihood<-",
    JointProbability, FindingsProbability, MostProbableConfig
-##   WriteNetFindings, ReadNetFindings
  )
 
 export (
@@ -91,7 +90,8 @@ export(CaseFileDelimiter,CaseFileMissingCode,
        read.CaseFile,write.CaseFile,
        WriteFindings,ReadFindings,
        NodeExperience, "NodeExperience<-",
-       FadeCPT, LearnFindings
+       FadeCPT, LearnFindings,
+       LearnCases, LearnCPTs
        )
 
 S3method(print, NeticaBN)

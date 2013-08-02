@@ -1,3 +1,16 @@
+2013-08-01  Russell G. Almond  <ralmond@Limu>
+
+	* R/LoadFuns.R (StartNetica): Bug fix from Nicole Farina
+
+2013-07-26  Russell G. Almond  <ralmond@Limu>
+
+	* R/Experience.R (LearnCPTs, LearnCases): Added
+
+2013-07-24  Russell G. Almond  <ralmond@Limu>
+
+	* src/Experience.c (RN_LearnCPTs, NewCaseset_rn, NewLearner_rn)
+	(RN_LearnCaseStream): Added.
+
 2013-07-17  Russell G. Almond  <ralmond@Limu>
 
 	* R/Cases.R (write.CaseFile): Factored this code out, as it is
