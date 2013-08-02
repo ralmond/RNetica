@@ -61,7 +61,8 @@ LearnFindings(nodes, weight = 1)
 \seealso{
   \code{\link{NodeExperience}}, \code{\link{NodeProbs}},
   \code{\link{NodeFinding}}, \code{\link{FadeCPT}},
-  \code{\link{RetractNetFindings}}
+  \code{\link{RetractNetFindings}},  \code{\link{LearnCases}}
+
 
 }
 \examples{

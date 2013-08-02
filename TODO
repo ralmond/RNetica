@@ -33,17 +33,11 @@ Equations
 ##   EquationToTable
 ##   )
 Learning from Data
-##*   LearnFindings, FadeCPT
-##*   ReviseCPTsByFindings_bn, 
-##   ReviseCPTsByCaseFile_bn
-##   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
-##   DeleteNodeTables_bn,
-##   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, SetLearnerRandomGen_bn
+##*   ReviseCPTsByCaseFile_bn
+##*   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
+##*   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, 
 Casefile support
-##*   WriteNetFindings, write.cases, read.cases
-##*   ReadNetFindings2_bn
-##   NewCaseset_cs, DeleteCaseset_cs, 
-##   TestWithCaseset_bn, GenerateRandomCase_bn
+##*   NewCaseset_cs, DeleteCaseset_cs, 
 
 Continuous Node support
 Decision Net support
@@ -51,12 +45,6 @@ Decision Net support
 ##   EnterIntervalFinding,
 ##   GetNodeExpectedValue, GetNodeExpectedUtils,
 ##   CalcNodeState, CalcNodeValue,
-Database Connectivity
-##  NewDBManager_cs, DeleteDBManager_cs
-##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
-##  ExcecuteDBSql_cs, AddNodesFromDB_bn
-##  WriteCaseset_ns (The only use for this function is in conjunction
-##  with the database stuff.)
 Sensitivity
 ## export(
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
@@ -66,13 +54,24 @@ Testing
 ## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
 ## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
 ## GetTestQuadradicLoss_bn
+## TestWithCaseset_bn, 
 Random Generation
 ## NewRandomGenerator_ns, DeleteRandomGenerator_ns
 ## GenerateRandomeNumbers_ns, GetRandomGenState_ns
 ## SetNetRandomGen_bn
+## GenerateRandomCase_bn
 DBNs
 ## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
+
+Do Not implement
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+##  SetLearnerRandomGen_bn #This is for future expasion (MCMC?)
+Database Connectivity
+##  NewDBManager_cs, DeleteDBManager_cs
+##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
+##  ExcecuteDBSql_cs, AddNodesFromDB_bn
+##  WriteCaseset_ns (The only use for this function is in conjunction
+##  with the database stuff.)
 
 
 Ask Brent:
@@ -82,3 +81,4 @@ Ask Brent:
 4. CopyNodes does not copy NodeSet information?
 5. EnterLikelihoodFindingClique
 6. NetworkUndo, Redo
+7. Learn_CPTs return value?

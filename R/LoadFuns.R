@@ -6,7 +6,7 @@ LicenseKey <- NULL
 ##These functions start and stop the Netica API Environment.
 StartNetica <- function(license=LicenseKey, checking=NULL,
                         maxmem=NULL) {
-  invisible(.C("RN_start_Netica",as.character(LicenseKey),
+  invisible(.C("RN_start_Netica",as.character(license),
      as.character(checking),as.double(maxmem), PACKAGE="RNetica"))
 }
 StopNetica <- function() {

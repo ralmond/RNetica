@@ -106,3 +106,88 @@ LearnFindings <- function (nodes, weight=1.0) {
 }
 
 
+LearnCases <- function(caseStream, nodelist, weight=1.0) {
+  if (is.NeticaNode(nodelist) && length(nodelist) ==1L) {
+    nodelist <- list(nodelist)
+  }
+  if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
+                                          is.active(nd)}))) { 
+    stop("Expected a list of Netica nodes, got, ",nodelist)
+  }
+  weight <- as.numeric(weight)
+  if (length(weight) >1) {
+    warning("LearnCases:  Only the first value of weight will be used.")
+  }
+  ## If caseStream objected is coerceable into a stream, do that.
+  label <- deparse(substitute(caseStream))
+  if (is.character(caseStream)) {
+    stream <- CaseFileStream(caseStream)
+  } else if (is.data.frame(caseStream)) {
+    stream <- MemoryCaseStream(caseStream,label)
+  } else if (is.NeticaCaseStream(caseStream)) {
+    stream <- caseStream
+  } else {
+    stop("Expected a Case stream or a filename or a data frame to make a case stream.")
+  }
+  WithOpenCaseStream(stream,
+   {
+     .Call("RN_LearnCaseStream",stream,nodelist,weight, PACKAGE="RNetica")
+     ecount <- ReportErrors()
+     if (ecount[1]>0) {
+       stop("LearnCases: Netica Errors Encountered, see console for details.")
+     }
+  invisible(stream)
+  })
+}
+
+LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
+                      maxIters=1000L, maxTol=1.0e-6,
+                      weight=1.0) {
+  if (is.NeticaNode(nodelist) && length(nodelist) ==1L) {
+    nodelist <- list(nodelist)
+  }
+  if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
+                                          is.active(nd)}))) { 
+    stop("Expected a list of Netica nodes, got, ",nodelist)
+  }
+  weight <- as.numeric(weight)
+  if (length(weight) >1) {
+    warning("LearnCPTs:  Only the first value of weight will be used.")
+  }
+  maxTol <- as.numeric(maxTol)
+  if (length(maxTol) >1) {
+    warning("LearnCPTs:  Only the first value of maxTol will be used.")
+  }
+  maxIters <- as.integer(maxIters)
+  if (length(maxTols) >1) {
+    warning("LearnCPTs:  Only the first value of maxIters will be used.")
+  }
+  if (!is.character(method) || length(method) > 1L) {
+    stop("Method must be one of 'GRADIENT', 'EM', or 'COUNTING'")
+  }
+  method <- toupper(method)
+  if (!(method="GRADIENT" || method == "EM" || method == "COUNTING")) {
+    stop("Method must be one of 'GRADIENT', 'EM', or 'COUNTING'")
+  }
+  ## If caseStream objected is coerceable into a stream, do that.
+  label <- deparse(substitute(caseStream))
+  if (is.character(caseStream)) {
+    stream <- CaseFileStream(caseStream)
+  } else if (is.data.frame(caseStream)) {
+    stream <- MemoryCaseStream(caseStream,label)
+  } else if (is.NeticaCaseStream(caseStream)) {
+    stream <- caseStream
+  } else {
+    stop("Expected a Case stream or a filename or a data frame to make a case stream.")
+  }
+  WithOpenCaseStream(stream,
+   {
+     result <- .Call("RN_LearnCPTs",stream,nodelist,method,
+                     maxIters,maxTol,weight, PACKAGE="RNetica")
+     ecount <- ReportErrors()
+     if (ecount[1]>0) {
+       stop("SetNodeName: Netica Errors Encountered, see console for details.")
+     }
+     result
+   })
+}

@@ -175,6 +175,7 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
 
 SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream) {
   const char* lab=CHAR(STRING_ELT(label,0));
+  printf("Opening Stream for R object %s\n",lab);
   stream_ns* str = 
     NewMemoryStream_ns (lab,RN_netica_env, NULL);
   if (str == NULL ) 
@@ -264,6 +265,8 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
   }
   //printf("Length at creation time %ld\n",totlen);
   SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
+  const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
+  printf("Buffer contents now:\n%s\n",obuf);
 
   setAttrib(stream,casestreamposatt,R_NilValue);
   setAttrib(stream,casestreamlastidatt,R_NilValue);
@@ -317,10 +320,11 @@ SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq) {
   if (!isNull(id)) idnum = INTEGER(id)[0];
   if (!isNull(freq)) freqnum = REAL(freq)[0];
   if (isNeticaStream(pathOrStream)) {
-    if (!RN_isCaseStreamActive(pathOrStream)) {
+    stream = GetCaseStream_Handle(pathOrStream);
+    if (stream == NULL) {
+      DeleteNodeList_bn(nodelist);
       error("RN_WriteFindings:  Stream is not open.");
     }
-    stream = GetCaseStream_Handle(pathOrStream);
   } else {
     const char* filename = CHAR(STRING_ELT(pathOrStream,0));
     stream = NewFileStream_ns(filename,RN_netica_env,NULL);
