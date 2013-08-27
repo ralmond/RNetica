@@ -16,6 +16,9 @@ object caches in the Net/Node/UserData field, now check to make sure
 the returned object is of the right class, and if not recreates it.  I
 wish I could more reliably reproduce the bugs so I can see if this
 fixed the problem.
+UPDATE:  I've made some changes that may fix this.  I've also now run
+a couple of times using CHECK --gc-torture and not found the problem.
+It may be fixed.
 
 R stack error in BN_SetNodeProbs when passed a matrix of NA's as
 probability table.
@@ -26,19 +29,15 @@ Functions for
 ##   ReorderNodeStates, RemoveNodeState,
 These seem to be redundant with current definition of NodeStates<-
 
+Learning from Data (Both of these depend on Netica API updates)
+## LearnCPTs -- update when Netica Fixes bugs
+## Test Case streams with LearnCPTs and LearnFindings
 
 Equations
 ##export (
 ##   GetNodeEquation, SetNodeEquation
 ##   EquationToTable
 ##   )
-Learning from Data
-##*   ReviseCPTsByCaseFile_bn
-##*   NewLearner_bn, DeleteLearner_bn, LearnCPTs_bn
-##*   SetLearnerMaxIters_bn, SetLearnerMaxTol_bn, 
-Casefile support
-##*   NewCaseset_cs, DeleteCaseset_cs, 
-
 Continuous Node support
 Decision Net support
 ##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,

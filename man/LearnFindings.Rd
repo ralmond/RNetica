@@ -57,13 +57,18 @@ LearnFindings(nodes, weight = 1)
   beliefs associated with a node to reflect the new evidence.
   \code{LearnFindings} incorporates the current case (the currently
   instantiated set of findings) into the CPTs for the nodes.
+
+  The \code{LearnFindings} function will not update the conditional
+  probability table of a node unless \code{\link{NodeExperience}} has
+  been set for that node.  Instead it will issue a warning and update
+  the other nodes.
+
 }
 \seealso{
   \code{\link{NodeExperience}}, \code{\link{NodeProbs}},
   \code{\link{NodeFinding}}, \code{\link{FadeCPT}},
-  \code{\link{RetractNetFindings}},  \code{\link{LearnCases}}
-
-
+  \code{\link{RetractNetFindings}},  \code{\link{LearnCases}},
+  \code{\link{LearnCPTs}} 
 }
 \examples{
 

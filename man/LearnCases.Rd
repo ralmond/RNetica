@@ -18,6 +18,9 @@ LearnCases(caseStream, nodelist, weight = 1)
     described in \code{\link{MemoryCaseStream}}.  The case stream can be
     either opened or closed.  If closed it is reopened before updating.
     In either case, it is closed at the end of the function.
+    \bold{Warning}, due to a bug in Netica, memory streams are not
+    working and should not be used with Netica API 5.04 or earlier.  See
+    below. 
   }
   \item{nodelist}{
     A list of active \code{\link{NeticaNode}} objects that reference the
@@ -63,10 +66,20 @@ LearnCases(caseStream, nodelist, weight = 1)
   To learn without using the current probabilities as priors, call
   \code{\link{DeleteNodeTable}} first.
 }
+\section{Netica Bugs}{
+  In version 5.04 of the Netica API, there is a problem with using
+  Memory Streams that seems to affect the functions
+  \code{\link{LearnCases}} and \code{\link{LearnCPTs}}.  Until this
+  problem is fixed, most uses of Memory Streams will require file
+  streams instead.  Write the case file using
+  \code{\link{write.CaseFile}}, and then create a file stream using
+  \code{\link{CaseFileStream}}. 
+}
 \seealso{
   \code{\link{NodeExperience}}, \code{\link{NodeProbs}},
   \code{\link{NodeFinding}}, \code{\link{FadeCPT}},
-  \code{\link{LearnFindings}}, \code{\link{DeleteNodeTable}}
+  \code{\link{LearnFindings}}, \code{\link{DeleteNodeTable}},
+  \code{\link{LearnCPTs}}
 }
 \examples{
 
@@ -92,8 +105,15 @@ casesabb <-
   data.frame(A=c("A1","A1","A1","A1","A1","A2","A2","A2","A2","A2"),
              B1=c("B1","B1","B1","B2","B2","B2","B2","B2","B1","B1"),
              B2=c("B1","B1","B1","B1","B2","B2","B2","B2","B2","B1"))
+## LearnCases(casesabb,list(A,B1))
+## There is currently a bug in Netica, so that this function does not
+## work with memory streams.  As a work around, use proper file streams
+## instead.
 
-LearnCases(casesabb,list(A,B1))
+outfile <- tempfile("casesabb",fileext=".cas")
+write.CaseFile(casesabb,outfile)
+LearnCases(outfile,list(A,B1))
+
 ## Probs for A & B1 modified, but B2 left alone
 stopifnot(
   NodeExperience(A)==20,
@@ -106,7 +126,7 @@ stopifnot(
   sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
 )
 
-
+DeleteNetwork(abb)
 
 }
 \keyword{ interface }
