@@ -114,6 +114,15 @@ getCaseStreamDataFrameName(stream)
   reopen the stream.  Note that any position information will be lost.
   
 }
+\section{Netica Bugs}{
+  In version 5.04 of the Netica API, there is a problem with using
+  Memory Streams that seems to affect the functions
+  \code{\link{LearnCases}} and \code{\link{LearnCPTs}}.  Until this
+  problem is fixed, most uses of Memory Streams will require file
+  streams instead.  Write the case file using
+  \code{\link{write.CaseFile}}, and then create a file stream using
+  \code{\link{CaseFileStream}}. 
+}
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},

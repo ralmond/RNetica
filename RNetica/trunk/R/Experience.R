@@ -44,7 +44,7 @@ NodeExperience <- function (node) {
       value <- array(value,statecounts)
     }
   }
-        
+
   if (length(statecounts) == 1L) {
     if (length(value) != statecounts) {
       stop("Dimensions not correct for this node.")
@@ -111,7 +111,7 @@ LearnCases <- function(caseStream, nodelist, weight=1.0) {
     nodelist <- list(nodelist)
   }
   if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
-                                          is.active(nd)}))) { 
+                                          is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   weight <- as.numeric(weight)
@@ -147,26 +147,35 @@ LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
     nodelist <- list(nodelist)
   }
   if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
-                                          is.active(nd)}))) { 
+                                          is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   weight <- as.numeric(weight)
   if (length(weight) >1) {
     warning("LearnCPTs:  Only the first value of weight will be used.")
   }
+  if (is.na(weight[])) {
+    stop("Weight must be numeric.")
+  }
   maxTol <- as.numeric(maxTol)
   if (length(maxTol) >1) {
     warning("LearnCPTs:  Only the first value of maxTol will be used.")
   }
+  if (is.na(maxTol[])) {
+    stop("maxTol must be a positive number.")
+  }
   maxIters <- as.integer(maxIters)
-  if (length(maxTols) >1) {
+  if (length(maxIters) >1) {
     warning("LearnCPTs:  Only the first value of maxIters will be used.")
+  }
+  if (is.na(maxIters[])) {
+    stop("maxIters must be a postive integer.")
   }
   if (!is.character(method) || length(method) > 1L) {
     stop("Method must be one of 'GRADIENT', 'EM', or 'COUNTING'")
   }
   method <- toupper(method)
-  if (!(method="GRADIENT" || method == "EM" || method == "COUNTING")) {
+  if (!(method == "GRADIENT" || method == "EM" || method == "COUNTING")) {
     stop("Method must be one of 'GRADIENT', 'EM', or 'COUNTING'")
   }
   ## If caseStream objected is coerceable into a stream, do that.

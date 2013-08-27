@@ -121,6 +121,13 @@ caseset_cs* NewCaseset_rn(SEXP caseStream) {
   /* Netica allows us to add a degree, but it seems redundant with the
      one in the call to Learner, so won't bother. */
   AddFileToCaseset_cs(result,stream,1.0,(const char*) NULL);
+  /* Debugging:  Somehow the the Caseset doesn't work properly if the
+  stream is a memory stream instead of a file stream.  The next
+  couple of lines write it out. */
+  /*  stream_ns *temp = NewFileStream_ns("NeticaTest.cas",RN_netica_env,NULL);
+      WriteCaseset_cs(result, temp, NULL);
+      DeleteStream_ns(temp); */
+  /* Verified that this file is exactly what was expected.  */
   return result;
 }
 

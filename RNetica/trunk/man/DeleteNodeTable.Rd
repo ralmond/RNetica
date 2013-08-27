@@ -27,12 +27,6 @@ DeleteNodeTable(node)
 \author{
   Russell Almond
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
   \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{HasNodeTable}()}
@@ -54,4 +48,4 @@ stopifnot(
 DeleteNetwork(a1)
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }
