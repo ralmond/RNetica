@@ -32,9 +32,30 @@ The 0.3 series of releases includes a number of different improvements.
   under <code>gctorture(TRUE)</code>, which should mean that is it is
   much more robust to memory errors.  This is still a beta version,
   caution is still advisable.
-<li> It now has case file support and soon (version 0.3-4) will
-  include learning support as well.
+<li><i>Update</i>It now has case file support and includes support for learning
+  conditional probability tables 
 <li> I've moved my development and testing platform to R 3.0.1.
+  Binaries are build for R version 3.x.
+<li><i>Update</i> The version 0.3 cycle is more or less complete,
+  except that I'm waiting for API updates from Norsys in response to
+  problems. 
+</ol>
+<p> Known issues with this release.</p>
+<ol>
+<li> There is currently no way through the Netica API to check whether
+  EM and Gradient decent learning converged or timed out due to the
+  maximum number of iterations being reached.
+<li> Currently, memory streams cannot be used with the LearnCPTs
+  functions.  This appears to be a Netica problem.
+</ol>
+<p> Approximately 3/4 of the API functionality is mapped.  Things that
+  are still not mapped:
+<ol>
+<li> Continuous Node and Decision Node Support
+<li> Sensitivity
+<li> Random data generation
+<li> DBN functionality
+<li> Equations (may not do, because these are easier to express in R).
 </ol>
 
 <h2>RNetica License Information</h2>
@@ -120,18 +141,26 @@ The following releases are archived here:
 <tr>
 <td>0.2-6</td><td><a href="RNetica_0.2-6.tar.gz">RNetica_0.2-6.tar.gz</a></td>
 <td></td><td></td><td><a href="RNetica-manual_0.2-6.pdf">RNetica-manual_0.2-6.pdf</a></td><td>Fixed Windows installation.</td></tr>
+<tr>
 <td>0.2-7</td><td><a href="RNetica_0.2-7.tar.gz">RNetica_0.2-7.tar.gz</a></td>
 <td><a href="RNetica_0.2-7.zip">RNetica_0.2-7.zip</a></td>
 <td><a href="RNetica_0.2-7.tgz">RNetica_0.2-7.tgz</a></td>
 <td><a href="RNetica-manual_0.2-7.pdf">RNetica-manual_0.2-7.pdf</a></td>
   <td>Last Version for R 2.15 </td></tr>
+<tr>
 <td>0.3-1</td><td><a href="RNetica_0.3-1.tar.gz">RNetica_0.3-1.tar.gz</a></td>
 <td></td><td></td><td><a href="RNetica-manual_0.3-1.pdf">RNetica-manual_0.3-1.pdf</a></td><td>
     R 3.0:  Added NodeExperience and Case Writing (not Reading)</td></tr>
+<tr>
 <td>0.3-3</td><td><a href="RNetica_0.3-3.tar.gz">RNetica_0.3-3.tar.gz</a></td>
 <td><a href="RNetica_0.3-3.zip">RNetica_0.3-3.zip</a></td>
 <td><a href="RNetica_0.3-3.tgz">RNetica_0.3-3.tgz</a></td><td><a href="RNetica-manual_0.3-3.pdf">RNetica-manual_0.3-3.pdf</a></td><td>
     R 3.0:  Support for Case Streams (file and memory)</td></tr>
+<tr>
+<td>0.3-4</td><td><a href="RNetica_0.3-4.tar.gz">RNetica_0.3-4.tar.gz</a></td>
+<td><a href="RNetica_0.3-4.zip">RNetica_0.3-4.zip</a></td>
+<td><a href="RNetica_0.3-4.tgz">RNetica_0.3-4.tgz</a></td><td><a href="RNetica-manual_0.3-4.pdf">RNetica-manual_0.3-4.pdf</a></td><td>
+    Learning CPTs</td></tr>
 </table>
 <p>
 Note the source versions have been compiled and tested under
@@ -196,6 +225,6 @@ requests should be sent to the package maintainers.
   forthcoming. 
 
 <hr>
-Site last updated on 2013-07-23.
+Site last updated on 2013-08-30.
 
 </body>
