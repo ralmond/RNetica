@@ -23,7 +23,8 @@ AdjoinNetwork(sm, em, setname = character())
   \item{setname}{
     An optional character vector containing names of node sets (see
     \code{\link{NodeSets}()}).  If supplied, all of the newly created
-    nodes are added to the node sets. 
+    nodes are added to the node sets.  Note that all node set names must
+    conform to the \code{\link{IDname}} rules.
   }
 }
 \details{
@@ -144,7 +145,7 @@ stopifnot(
 )
 
 ## Now Task 2
-student1.t2a <- AdjoinNetwork(student1,EMTask2a,"t2a")
+student1.t2a <- AdjoinNetwork(student1,EMTask2a,as.IDname("t2a"))
 stopifnot(
   setequal(names(student1.t2a),names(NetworkNodesInSet(student1,"t2a")))
 )
