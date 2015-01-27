@@ -1,3 +1,21 @@
+2015-01-26  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (NodeValue, "NodeValue<-")
+	("EnterGaussianFinding", "EnterIntervalFinding")
+	(NodeExpectedValue, NodeExpectedUtils, CalcNodeState)
+	(CalcNodeValue, MutalInfo, VarianceOfReal): Created
+
+2015-01-25  Russell G. Almond  <ralmond@Limu>
+
+	* src/Continuous.c (RN_GetVarianceOfReal, RN_GetMutualInfo)
+	(RN_CalcNodeValue, RN_CalcNodeState): Created
+
+2015-01-24  Russell G. Almond  <ralmond@Limu>
+
+	* src/Continuous.c (RN_GetNodeValue, RN_SetNodeValue)
+	(RN_SetNodeGaussian, RN_SetNodeInterval)
+	(RN_GetNodeExpectedValue, RN_GetNodeExpectedUtils): Created.
+
 2013-08-01  Russell G. Almond  <ralmond@Limu>
 
 	* R/LoadFuns.R (StartNetica): Bug fix from Nicole Farina
