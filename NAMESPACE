@@ -21,7 +21,7 @@ export(WriteNetworks, ReadNetworks,
 
 export(
   NewDiscreteNode, NewContinuousNode, DeleteNodes,
-  CopyNodes,  
+  CopyNodes,
   NodeNet, NodeName, "NodeName<-",
   print.NeticaNode, toString.NeticaNode, is.NeticaNode,
   is.discrete, is.continuous,
@@ -29,7 +29,7 @@ export(
   NodeTitle, "NodeTitle<-",
   NodeDescription, "NodeDescription<-",
   NodeUserField, "NodeUserField<-", NodeAllUserFields,
-  NodeKind, "NodeKind<-", 
+  NodeKind, "NodeKind<-",
   NodeVisStyle, "NodeVisStyle<-",
   NodeVisPos, "NodeVisPos<-"
   )
@@ -46,7 +46,7 @@ export(
    NodeParents, "NodeParents<-", NodeChildren,
    AbsorbNodes, MakeCliqueNode, is.CliqueNode,
    GetClique,
-   is.NodeRelated, GetRelatedNodes,  
+   is.NodeRelated, GetRelatedNodes,
    NodeInputNames, "NodeInputNames<-",
    AdjoinNetwork, NetworkFootprint
    )
@@ -64,7 +64,7 @@ export(
    CompileNetwork, UncompileNetwork, is.NetworkCompiled,
    EliminationOrder, "EliminationOrder<-",
    NetworkCompiledSize, JunctionTreeReport,
-   NodeFinding, "NodeFinding<-", EnterNegativeFinding, 
+   NodeFinding, "NodeFinding<-", EnterNegativeFinding,
    RetractNetFindings, RetractNodeFinding, EnterFindings,
    NodeBeliefs, IsBeliefUpdated,
    NodeLikelihood, "NodeLikelihood<-",
@@ -94,6 +94,13 @@ export(CaseFileDelimiter,CaseFileMissingCode,
        LearnCases, LearnCPTs
        )
 
+export(NodeValue, "NodeValue<-",
+       EnterGaussianFinding, EnterIntervalFinding,
+       NodeExpectedValue, NodeExpectedUtils,
+       CalcNodeState, CalcNodeValue,
+       MutualInfo, VarianceOfReal
+       )
+
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)
 S3method(Ops, NeticaBN)
@@ -106,4 +113,4 @@ S3method("[<-", NeticaNode)
 S3method(toString, NeticaCaseStream)
 S3method(print, NeticaCaseStream)
 
-       
+

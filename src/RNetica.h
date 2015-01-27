@@ -61,6 +61,7 @@ extern SEXP nodeatt;
 extern SEXP nodediscatt;
 extern SEXP cliquenodeclass;
 extern SEXP cliqueatt;
+extern SEXP sdatt;
 extern SEXP TRUEV;  //Length 1 logical vector containing TRUE
 extern SEXP FALSEV;
 extern SEXP NAV;

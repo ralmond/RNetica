@@ -22,6 +22,7 @@ const char* NeticaClass = "NeticaBN";
 const char* BNATT = "Netica_bn";
 const char* NodeClass = "NeticaNode";
 const char* NODEATT = "Netica_Node";
+const char* SDATT = "std_dev";
 const char* DISCRETEATT = "node_discrete";
 const char* CliqueNodeClass = "CliqueNode";
 const char* CLIQUEATT = "clique";
@@ -44,6 +45,7 @@ SEXP nodeclass=NULL;
 SEXP cliquenodeclass=NULL;
 SEXP bnatt=NULL;
 SEXP nodeatt=NULL;
+SEXP sdatt=NULL;
 SEXP nodediscatt=NULL;
 SEXP cliqueatt=NULL;
 SEXP TRUEV=NULL;
@@ -84,6 +86,9 @@ void RN_Define_Symbols() {
   } 
   if (nodediscatt==NULL) { 
     R_PreserveObject(nodediscatt = install(DISCRETEATT));  
+  } 
+  if (sdatt==NULL) { 
+    R_PreserveObject(sdatt = install(SDATT));  
   } 
   if (TRUEV==NULL) {
     R_PreserveObject(TRUEV = allocVector(LGLSXP,1));
@@ -181,6 +186,10 @@ void RN_Free_Symbols() {
     if (nodeatt != NULL) { 
       R_ReleaseObject(nodeatt); 
       nodeatt = NULL; 
+    } 
+    if (sdatt != NULL) { 
+      R_ReleaseObject(sdatt); 
+      sdatt = NULL; 
     } 
     if (nodediscatt != NULL) { 
       R_ReleaseObject(nodediscatt); 
@@ -688,6 +697,22 @@ extern SEXP RN_LearnCaseStream(SEXP stream, SEXP nodelist, SEXP weight);
 extern SEXP RN_LearnCPTs (SEXP caseStream, SEXP nodes, SEXP method, 
                           SEXP maxIters, SEXP maxTol, SEXP weight);
 
+// Continuous.c
+extern SEXP RN_GetNodeValue(SEXP node);
+extern SEXP RN_SetNodeValue(SEXP node, SEXP value);
+extern SEXP RN_SetNodeGaussian(SEXP node, SEXP mean, SEXP sd, 
+                               SEXP reset_first);
+extern SEXP RN_SetNodeInterval(SEXP node, SEXP low, SEXP high, 
+                               SEXP reset_first);
+extern SEXP RN_GetNodeExpectedUtils(SEXP node);
+extern SEXP RN_GetNodeExpectedValue(SEXP node);
+extern SEXP RN_CalcNodeState(SEXP node);
+extern SEXP RN_CalcNodeValue(SEXP node);
+extern SEXP RN_GetMutualInfo(SEXP target, SEXP nodelist);
+extern SEXP RN_GetVarianceOfReal(SEXP target, SEXP nodelist);
+
+
+
 
 
 R_CallMethodDef callMethods[] = {
@@ -805,6 +830,16 @@ R_CallMethodDef callMethods[] = {
   {"RN_LearnFindings", (DL_FUNC) &RN_LearnFindings, 2},
   {"RN_LearnCaseStream", (DL_FUNC) &RN_LearnCaseStream, 3},
   {"RN_LearnCPTs", (DL_FUNC) &RN_LearnCPTs, 6},
+  {"RN_GetNodeValue", (DL_FUNC) &RN_GetNodeValue, 1},
+  {"RN_SetNodeValue", (DL_FUNC) &RN_SetNodeValue, 2},
+  {"RN_SetNodeInterval", (DL_FUNC) &RN_SetNodeValue, 4},
+  {"RN_SetNodeGaussian", (DL_FUNC) &RN_SetNodeValue, 4},
+  {"RN_GetNodeExpectedValue", (DL_FUNC) &RN_GetNodeExpectedValue, 1},
+  {"RN_GetNodeExpectedUtils", (DL_FUNC) &RN_GetNodeExpectedUtils, 1},
+  {"RN_CalcNodeState", (DL_FUNC) &RN_CalcNodeState, 1},
+  {"RN_CalcNodeValue", (DL_FUNC) &RN_CalcNodeValue, 1},
+  {"RN_GetMutalInfo", (DL_FUNC) &RN_GetMutualInfo, 2},
+  {"RN_GetVarianceOfReal", (DL_FUNC) &RN_GetVarianceOfReal, 2},
   {NULL, NULL, 0},
 };
 

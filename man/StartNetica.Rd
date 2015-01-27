@@ -18,7 +18,7 @@ StopNetica()
   \item{license}{A string containing a license key from Norsys.  If this
     is \code{NULL} the limited student/demonstration
     version of Netica is used rather than the full version.  If the
-    variable \code{NeticaLicenceKey} is set before \code{RNetica} is
+    variable \code{NeticaLicenseKey} is set before \code{RNetica} is
     loaded, then the value of that variable at the time the package is
     loaded will become the deafult for \code{license}.
 }
