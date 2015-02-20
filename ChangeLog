@@ -1,3 +1,13 @@
+2015-01-28  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (EquationToTable, "NodeEquation<-")
+	(NodeEquation): Naive implementation.  Not worth spending a lot of
+	time on these as CPTtools is more flexible.
+
+	* src/Continuous.c (RN_GetNodeEquataion, RN_SetNodeEquation)
+	(RN_EquationToTable): Created as we need them to test
+	CalcNodeValue. 
+
 2015-01-26  Russell G. Almond  <ralmond@Limu>
 
 	* R/Continuous.R (NodeValue, "NodeValue<-")

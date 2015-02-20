@@ -1,8 +1,7 @@
 \name{NodeExpectedValue}
 \alias{NodeExpectedValue}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
+\title{Calculates expected value for a continuous node
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -14,6 +13,8 @@ NodeExpectedValue(node)
 \arguments{
   \item{node}{
     An active \code{\link{NeticaNode}} object that references the node.
+    The node should be continuous or have a numeric value associated
+    with each level (see \code{\link{NodeLevels}}).
   }
 }
 \details{

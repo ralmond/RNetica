@@ -209,3 +209,55 @@ SEXP RN_GetVarianceOfReal(SEXP target, SEXP nodelist) {
   return(result);
 }
     
+////////////////////////////////////////////////////////////
+// Adding minimal equations functionality because I need it for
+// testing
+
+
+SEXP RN_GetNodeEquation(SEXP nd) {
+  const char *equation;
+  node_bn* node_handle;
+  SEXP result;
+
+  PROTECT(result = allocVector(STRSXP,1));
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    equation = GetNodeEquation_bn(node_handle);
+    SET_STRING_ELT(result,0,mkChar(equation));
+  } else {
+    SET_STRING_ELT(result,0,NA_STRING);
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  UNPROTECT(1);
+  return(result);
+}
+
+SEXP RN_SetNodeEquation(SEXP nd, SEXP newequation) {
+  const char *equation;
+  node_bn* node_handle;
+
+  node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    equation = CHAR(STRING_ELT(newequation,0));
+    SetNodeEquation_bn(node_handle,equation);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+
+SEXP RN_EquationToTable(SEXP nd, SEXP numSamples, SEXP sampUnc, SEXP addExist) {
+  node_bn* node_handle = GetNodeHandle(nd);
+
+  if (node_handle) {
+    EquationToTable_bn(node_handle,INTEGER(numSamples)[0],
+                       LOGICAL(sampUnc)[0],LOGICAL(addExist)[0]);
+  } else {
+    warning("Could not find node %s.",NODE_NAME(nd));
+  }
+  return(nd);
+}
+

@@ -2,7 +2,7 @@
 \alias{MutualInfo}
 \alias{VarianceOfReal}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Calculates strength of relationship between two nodes in a network
 %%  ~~function to do ... ~~
 }
 \description{
