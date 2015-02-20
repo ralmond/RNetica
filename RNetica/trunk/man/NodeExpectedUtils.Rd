@@ -1,8 +1,7 @@
 \name{NodeExpectedUtils}
 \alias{NodeExpectedUtils}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
+\title{Calculates expected utility for each value of a decision node
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~

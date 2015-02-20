@@ -710,7 +710,10 @@ extern SEXP RN_CalcNodeState(SEXP node);
 extern SEXP RN_CalcNodeValue(SEXP node);
 extern SEXP RN_GetMutualInfo(SEXP target, SEXP nodelist);
 extern SEXP RN_GetVarianceOfReal(SEXP target, SEXP nodelist);
-
+extern SEXP RN_GetNodeEquation(SEXP nd);
+extern SEXP RN_SetNodeEquation(SEXP nd, SEXP newequation);
+extern SEXP RN_EquationToTable(SEXP nd, SEXP numSamples, 
+                               SEXP sampUnc, SEXP addExist);
 
 
 
@@ -840,6 +843,9 @@ R_CallMethodDef callMethods[] = {
   {"RN_CalcNodeValue", (DL_FUNC) &RN_CalcNodeValue, 1},
   {"RN_GetMutalInfo", (DL_FUNC) &RN_GetMutualInfo, 2},
   {"RN_GetVarianceOfReal", (DL_FUNC) &RN_GetVarianceOfReal, 2},
+  {"RN_GetNodeEquation", (DL_FUNC) &RN_GetNodeEquation, 1},
+  {"RN_SetNodeEquation", (DL_FUNC) &RN_SetNodeEquation, 2},
+  {"RN_EquationToTable", (DL_FUNC) &RN_EquationToTable, 4},
   {NULL, NULL, 0},
 };
 

@@ -1,14 +1,14 @@
 \name{EnterGaussianFinding}
 \alias{EnterGaussianFinding}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
+\title{Enter a numeric finding with uncertainty
 %%  ~~function to do ... ~~
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-EnterGaussianFinding(node, mean, sd, retractFirst = TRUE)
+EnterGaussianFinding(node, mean, sem, retractFirst = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,7 +20,7 @@ EnterGaussianFinding(node, mean, sd, retractFirst = TRUE)
   \item{mean}{
 %%     ~~Describe \code{mean} here~~
 }
-  \item{sd}{
+  \item{sem}{
 %%     ~~Describe \code{sd} here~~
 }
   \item{retractFirst}{

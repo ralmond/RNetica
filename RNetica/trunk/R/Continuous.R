@@ -34,7 +34,7 @@ NodeValue <- function (node) {
   invisible(handle)
 }
 
-"EnterGaussianFinding" <- function (node,mean,sd,retractFirst=TRUE) {
+"EnterGaussianFinding" <- function (node,mean,sem,retractFirst=TRUE) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
@@ -44,11 +44,11 @@ NodeValue <- function (node) {
   if (is.character(mean) || is.na(mean)) {
     stop("Mean value ", mean, " is not numeric.")
   }
-  if (is.character(sd) || is.na(sd)) {
-    stop("SD value ", sd, " is not numeric.")
+  if (is.character(sem) || is.na(sem)) {
+    stop("SEM value ", sem, " is not numeric.")
   }
   resetFirst <- as.logical(retractFirst)
-  handle <- .Call("RN_SetNodeGaussian",node,val,sd,resetFirst,PACKAGE="RNetica")
+  handle <- .Call("RN_SetNodeGaussian",node,val,sem,resetFirst,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeFinding: Netica Errors Encountered, see console for details.")
@@ -196,5 +196,58 @@ VarianceOfReal <- function (target, nodelist) {
     names(result) <- sapply(nodelist,NodeName)
   }
   result
+}
+
+NodeEquation <- function (node) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  equation <- .Call("RN_GetNodeEquation",node,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("NodeEquation: Netica Errors Encountered, see console for details.")
+  }
+  equation
+}
+
+"NodeEquation<-" <- function (node, autoconvert=TRUE, value) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  value <- as.character(value)
+  if (any(is.na(value))) {
+    stop("Non-character titles in ", value)
+  }
+  value <- paste(value,collapse="\n")
+  handle <- .Call("RN_SetNodeEquation",node,value,PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeEquation: Netica Errors Encountered, see console for details.")
+  }
+  if (autoconvert)
+    EquationToTable(node)
+  invisible(handle)
+}
+
+EquationToTable <- function (node, numSamples=25, sampUnc=TRUE, addExist=TRUE) {
+  if (!is.NeticaNode(node)) {
+    stop("Expected an active Netica node, got, ",node)
+  }
+  numSamples <- as.integer(numSamples)
+  if (is.na(numSamples) || numSamples < 1) {
+    stop("Number of samples must be a positive integer.")
+  }
+  sampUnc <- as.logical(sampUnc)
+  addExist <- as.logical(addExist)
+  if (is.na(sampUnc) || is.na(addExist)) {
+    stop("Flag sampUnc and addExist must be logical values.")
+  }
+  handle <- .Call("RN_EquationToTable",node,numSamples,sampUnc,addExist,
+                  PACKAGE="RNetica")
+  ecount <- ReportErrors()
+  if (ecount[1]>0) {
+    stop("SetNodeEquation: Netica Errors Encountered, see console for details.")
+  }
+  invisible(handle)
 }
 

@@ -98,7 +98,8 @@ export(NodeValue, "NodeValue<-",
        EnterGaussianFinding, EnterIntervalFinding,
        NodeExpectedValue, NodeExpectedUtils,
        CalcNodeState, CalcNodeValue,
-       MutualInfo, VarianceOfReal
+       MutualInfo, VarianceOfReal,
+       NodeEquation, "NodeEquation<-",EquationToTable
        )
 
 S3method(print, NeticaBN)

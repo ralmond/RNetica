@@ -2,8 +2,7 @@
 \alias{CalcNodeState}
 \alias{CalcNodeValue}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
+\title{Calculates the state of a node based on logical functions or formulae
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -32,7 +31,6 @@ CalcNodeValue(node)
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{CalcNodeState_bn}, \nref{CalcNodeValue_bn}
-}
 }
 \author{
 %%  ~~who you are~~
