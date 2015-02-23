@@ -57,6 +57,7 @@ RetractNetFindings(net)
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
+  \code{\link{EnterGaussianFinding}()}, \code{\link{EnterIntervalFinding}()},
   \code{\link{NodeFinding}()}, \code{\link{NodeLikelihood}()}
 }
 \examples{

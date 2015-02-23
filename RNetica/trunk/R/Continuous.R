@@ -48,7 +48,7 @@ NodeValue <- function (node) {
     stop("SEM value ", sem, " is not numeric.")
   }
   resetFirst <- as.logical(retractFirst)
-  handle <- .Call("RN_SetNodeGaussian",node,val,sem,resetFirst,PACKAGE="RNetica")
+  handle <- .Call("RN_SetNodeGaussian",node,mean,sem,resetFirst,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("NodeFinding: Netica Errors Encountered, see console for details.")
@@ -156,11 +156,12 @@ MutualInfo <- function (target, nodelist) {
   if (length(target)>1L || !is.NeticaNode(target) || !is.active(target)) {
     stop ("Target is not an active Netica node", target)
   }
-  if(!is.list(value) || length(nodelist) == 0) {
-    stop("Value must be list of Netica nodes")
+  if(!is.list(nodelist) || length(nodelist) == 0) {
+    stop("Nodelist must be list of Netica nodes")
   }
-  if (!all(sapply(value, is.NeticaNode))) {
-    stop("Value must be list of Netica nodes, or NULLs")
+  if (!all(sapply(nodelist,
+                  function (n) is.NeticaNode(n) & is.active(n)))) {
+    stop("Nodelist must be list of active Netica Nodes")
   }
   result <- .Call("RN_GetMutalInfo",target,nodelist,PACKAGE="RNetica")
   ecount <- ReportErrors()
@@ -179,11 +180,12 @@ VarianceOfReal <- function (target, nodelist) {
   if (length(target)>1L || !is.NeticaNode(target) || !is.active(target)) {
     stop ("Target is not an active Netica node", target)
   }
-  if(!is.list(value) || length(nodelist) == 0) {
-    stop("Value must be list of Netica nodes")
+  if(!is.list(nodelist) || length(nodelist) == 0) {
+    stop("Nodelist must be list of Netica nodes")
   }
-  if (!all(sapply(value, is.NeticaNode))) {
-    stop("Value must be list of Netica nodes, or NULLs")
+  if (!all(sapply(nodelist,
+                  function (n) is.NeticaNode(n) & is.active(n)))) {
+    stop("Nodelist must be list of active Netica Nodes")
   }
   result <- .Call("RN_GetVarianceOfReal",target,nodelist,PACKAGE="RNetica")
   ecount <- ReportErrors()

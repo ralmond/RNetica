@@ -416,11 +416,19 @@ Maintainer: Russell Almond <almond@acm.org>
 }
 \references{
 
+  The general Netica manual can be found at:
+  \url{http://www.norsys.com/WebHelp/NETICA.htm}
+  
   The Netica API documentation can be found at
   \url{http://norsys.com/onLineAPIManual/index.html}.
 
   Almond, R. G. & Mislevy, R. J. (1999) Graphical models and computerized
-  adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223--238.
+  adaptive testing.  \emph{Applied Psychological Measurement}, 23,
+  223--238.
+
+  Almond, R. G., Mislevy, R. J., Steinberg, L. S., Yan, D. & Williamson,
+  D. M. (2015) \emph{Bayesian Networks in Educational Assessment}.
+  Springer. 
 
 }
 \keyword{ package }

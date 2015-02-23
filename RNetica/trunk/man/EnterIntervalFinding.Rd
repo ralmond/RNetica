@@ -1,38 +1,38 @@
 \name{EnterIntervalFinding}
 \alias{EnterIntervalFinding}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Enter finding of value within an interval
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Sets the finding associate with node to an interval.
 }
 \usage{
 EnterIntervalFinding(node, low, high, retractFirst = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
     An active \code{\link{NeticaNode}} object that references the node.
 }
   \item{low}{
-%%     ~~Describe \code{low} here~~
+    Lower bound of interval.
 }
   \item{high}{
-%%     ~~Describe \code{high} here~~
+    Upper bound of interval.
 }
   \item{retractFirst}{
-%%     ~~Describe \code{retractFirst} here~~
+    A logical value.  If true, any previous findings will be retracted
+    first. 
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+  The \code{node} must a continuous node that has
+  been discritized using \code{\link{NodeLevels}(node)}.  The
+  probabilities for each state are calculated based on a uniform
+  distribution with the given \code{low} and \code{high} endpoints.
+
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  Return the \code{node} argument invisibly.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -40,72 +40,43 @@ EnterIntervalFinding(node, low, high, retractFirst = TRUE)
   \nref{EnterIntervalFinding_bn}
 }
 \author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+  Russell Almond
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\section{Warning }{
+
+  This function is not behaving at all like what I expected.  In
+  particular, I expect that it would behave like a normal likelihood,
+  but instead it seems to be behaving as if I typed the expression
+  \code{\link{NodeValue}(node)<-low}.  I've queried Norsys about
+  this.  Use with caution until I get a clarification.
+
+}
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link{EnterNegativeFinding}()}, \code{\link{EnterFindings}()},
+  \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()},
+  \code{\link{NodeFinding}()}, \code{\link{EnterGaussianFinding}()},
+  \code{\link{NodeValue}()}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+cirt5 <- CreateNetwork("ContinuousIRT5")
 
-## The function is currently defined as
-function (node, low, high, retractFirst = TRUE) 
-{
-    if (length(node) > 1 || !is.NeticaNode(node) || !is.active(node)) {
-        stop("Node is not an active Netica node", node)
-    }
-    if (length(low) > 1 || length(high) > 1) {
-        stop("Low and high must be scalars.")
-    }
-    hv <- high
-    lv <- low
-    if (is.discrete(node)) {
-        if (is.character(hv)) {
-            hv <- match(hv, NodeStates(node))
-        }
-        hv <- as.integer(hv) - 1L
-        if (is.na(hv)) {
-            stop("High value ", high, " not legal for node ", 
-                node)
-        }
-        if (is.character(lv)) {
-            lv <- match(lv, NodeStates(node))
-        }
-        lv <- as.integer(lv) - 1L
-        if (is.na(lv)) {
-            stop("Low value ", low, " not legal for node ", node)
-        }
-    }
-    else {
-        if (is.character(low) || is.na(low)) {
-            stop("Low value ", low, " is not numeric.")
-        }
-        if (is.character(high) || is.na(high)) {
-            stop("High value ", high, " is not numeric.")
-        }
-        if (high <= low) {
-            stop("High value must be greater than low value.")
-        }
-    }
-    resetFirst <- as.logical(retractFirst)
-    handle <- .Call("RN_SetNodeGaussian", node, lv, hv, resetFirst, 
-        PACKAGE = "RNetica")
-    ecount <- ReportErrors()
-    if (ecount[1] > 0) {
-        stop("NodeFinding: Netica Errors Encountered, see console for details.")
-    }
-    invisible(handle)
-  }
+theta <- NewContinuousNode(cirt5,"Theta")
+NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
+
+CompileNetwork(cirt5) ## Ready to enter findings
+
+EnterIntervalFinding(theta,-1,1)
+NodeBeliefs(theta)
+
+## I expect the middle three values to be non-negative, but that is not
+## what I get!
+
+DeleteNetwork(cirt5)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ interface }
+\keyword{ manip }% __ONLY ONE__ keyword per line

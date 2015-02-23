@@ -1,18 +1,25 @@
 \name{MutualInfo}
 \alias{MutualInfo}
 \alias{VarianceOfReal}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Calculates strength of relationship between two nodes in a network
-%%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  The mutual information is a measure of how closely related one node is
+  to another, i.e., how much information each node in \code{nodelist}
+  provides about the \code{target} node.  The expression
+  \code{MutualInfo(target, nodelist)} calcuates the mutal information of
+  each node in \code{nodelist} with \code{target}.
+
+  The function \code{VarianceOfReal()} is similar, but instead it
+  measures the reduction in variance of the target.  The \code{target}
+  node must be continuous or have numeric values assigned to all levels
+  using \code{\link{NodeLevels}}.
+
 }
 \usage{
 MutualInfo(target, nodelist)
-MutualInfo(target, nodelist)
+VarianceOfReal(target, nodelist)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{target}{
     An active \code{\link{NeticaNode}} object that is the target of
@@ -25,64 +32,67 @@ MutualInfo(target, nodelist)
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+  The mutaul information between two discrete variables is defined as:
+  \deqn{MI(X,Y) = \sum_{x,y} \Pr(x,y) \log \frac{ \Pr(x,y) }{\Pr(x)\Pr(y)}.}
+  It is a measure of how much information \code{X} provides about
+  \code{Y}.  This measure is appropriate when both \code{X} and \code{Y}
+  are discrete variables.
+
+  Mutual infomation is often used to select the next best variable to
+  test (in the educational context, this would be the next item to
+  select for an adaptive test).  The highest value of the mutual
+  information will provide the most information.  (See Chapter 7 of
+  Almond et al, 2015).
+
+  The funciton \code{VarianceOfReal(target,nodelist)} is related, but in
+  this case \code{target} must either be continuous
+  (\code{\link{is.continuous}(target)} is true) or have numeric values
+  assigned to each level using \code{\link{NodeLevels}(target)}.  For
+  this function, the value returned is the amount by which the variance
+  of \code{target} is expected to be reduced if the value of the
+  observable node in the nodelist was learned.  Again, higher values
+  indicate better information.
+  
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  Returns a named numeric vector with the names corresponding to the
+  nodes in \code{nodelist} and the value the mutual information or
+  variance reduction.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{MutualInfo_bn}, \nref{VarianceOfReal_bn}
+
+  Almond, R. G., Mislevy, R. J., Steinberg, L. S., Yan, D. & Williamson,
+  D. M. (2015) \emph{Bayesian Networks in Educational Assessment}.
+  Springer.   
+
 }
 \author{
-%%  ~~who you are~~
+  Russell Almond
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link{is.continuous}()}, \code{\link{NodeExpectedValue}()},
+  \code{\link{NodeLevels}()},
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (target, nodelist) 
-{
-    if (length(target) > 1L || !is.NeticaNode(target) || !is.active(target)) {
-        stop("Target is not an active Netica node", target)
-    }
-    if (!is.list(value) || length(nodelist) == 0) {
-        stop("Value must be list of Netica nodes")
-    }
-    if (!all(sapply(value, is.NeticaNode))) {
-        stop("Value must be list of Netica nodes, or NULLs")
-    }
-    result <- .Call("RN_GetMutalInfo", target, nodelist, PACKAGE = "RNetica")
-    ecount <- ReportErrors()
-    if (ecount[1L] > 0) {
-        stop("MutualInfo: Netica Errors Encountered, see console for details.")
-    }
-    if (!is.null(names(nodelist))) {
-        names(result) <- names(nodelist)
-    }
-    else {
-        names(result) <- sapply(nodelist, NodeName)
-    }
-    result
-  }
+irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne",
+                           sep=.Platform$file.sep))
+
+irt5.theta <- NetworkFindNode(irt5,"Theta")
+irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
+
+CompileNetwork(irt5)
+
+MutualInfo(irt5.theta,irt5.x)
+
+VarianceOfReal(irt5.theta,irt5.x)
+
+DeleteNetwork(irt5)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ interface }
+\keyword{ manip }% __ONLY ONE__ keyword per line
