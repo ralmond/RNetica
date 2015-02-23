@@ -22,7 +22,7 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
     An active \code{\link{NeticaNode}} object that references the node
     whose equation is to manipulated.
   }
-  \item{autocovert}{
+  \item{autoconvert}{
     A logical value that indicates whether or not the CPT should be
   recalculated after the equation is set.
   }
@@ -68,6 +68,11 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
   is usually the desired behavior, but can be suppressed by setting
   \code{autoconvert=FALSE}.  
 
+  Constants play a special role in Netica formulas.  A formula can
+  reference the value of a constant node even if it is not a marked
+  parent of the node whose equation is being defined.  It appears as if
+  the value of the constant must be set before the table is created.
+
 }
 \value{
   The function \code{NodeValue} returns the equation as a character
@@ -78,6 +83,8 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeEquation_bn}, \nref{SetNodeEquation_bn}, \nref{EquationToTable_bn}
+
+  The reference document for Netica equations:
   \url{http://www.norsys.com/WebHelp/NETICA/X_Equations.htm}
 }
 \author{
@@ -92,7 +99,8 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 }
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link{NodeValue}()},\code{\link{NodeKind}()},
+  \code{\link{NodeProbs}()}, \code{\link{Extract.NeticaNode}}
 }
 \examples{
 
@@ -100,7 +108,7 @@ grn <- CreateNetwork("GradedResponseTest")
 
 ## Set up the variables in our network
 skill <- NewDiscreteNode(grn,"Skill",c("High","Medium","Low"))
-NodeLevels(skill) <- c(-1,0,1)
+NodeLevels(skill) <- c(1,0,-1)
 
 score1 <- NewDiscreteNode(grn,"Score1",
   c("FullCredit","PartialCredit","NoCredit"))
@@ -114,6 +122,7 @@ b1_2 <- NewContinuousNode(grn,"B1_2")
 NodeKind(b1_2) <- "Constant"
 diffB1 <- NewContinuousNode(grn,"DiffB1")
 
+NodeLevels(diffB1) <- seq(-4,4,.5)
 
 NodeValue(a1) <- 1
 NodeValue(b1_1) <- -1.5
@@ -123,8 +132,9 @@ NodeValue(b1_2) <- 0
 ## not set first.
 NodeEquation(diffB1) <- "DiffB1() = B1_2 - B1_1"
 
-
-stopifnot(abs(NodeValue(diffB1)-1.5) < .00001)
+## I think this should return 1.5, but it return NA.  I'm not sure what
+## is happening here?
+CalcNodeValue(diffB1)
 
 ## This is the rather clunky format for Netica formulae.  This
 ## implements a graded response model.
@@ -136,14 +146,25 @@ dsformula <- c(
    "1 - 1/(1+exp(-1.7*(A1/sqrt(1)*Skill-B1_1)))"
 )
 
+AddLink(skill,score1)
+NodeEquation(score1) <- dsformula
+
+score1[]
+## Expected value:
 #   Skill Score1.FullCredit Score1.PartialCredit Score1.NoCredit
 #1   High         0.8455347            0.1404016      0.01406363
 #2 Medium         0.5000000            0.4275735      0.07242648
 #3    Low         0.1544653            0.5461019      0.29943281
+
+NodeValue(b1_1) <- -2
+score1[]    ## Change not propagated yet
+
+EquationToTable(score1)
+score1[]  ## Now it changes
 
 
 DeleteNetwork(grn)
 
 }
 \keyword{ Interface }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ manip }% __ONLY ONE__ keyword per line

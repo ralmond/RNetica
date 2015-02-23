@@ -62,6 +62,11 @@ NodeProbs(node) <- value
   Russell Almond
 }
 \note{
+
+  Note that the expression \code{node[...]} also accesses the partial or
+  complete node conditional probability table.  See
+  \code{\link{Extract.NeticaNode}}.
+
   All of this assumes that these are discrete nodes, that is
   \code{\link{is.discrete}(node)} will return true for both \code{node}
   and all of the parents.  It is unknown what Netica does is this is not
@@ -71,6 +76,7 @@ NodeProbs(node) <- value
   CPT class.
 }
 \seealso{
+  \code{\link{Extract.NeticaNode}},
   \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
   \code{\link{CPA}}, \code{\link{CPF}}, \code{\link{normalize}()}

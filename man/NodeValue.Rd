@@ -82,7 +82,8 @@ NodeValue(node) <- value
   \code{\link{NodeFinding}()}, \code{\link{NodeLevels}()},
   \code{\link{EnterNegativeFinding}()}, \code{\link{EnterFindings}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeStates}()},
-  \code{\link{NodeEquation}()},
+  \code{\link{NodeEquation}()},\code{\link{is.continuous}()},
+  \code{\link{NodeExpectedValue}()}, \code{\link{NodeBeliefs}()}
 }
 \examples{
 

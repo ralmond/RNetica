@@ -34,21 +34,31 @@ Learning from Data (Both of these depend on Netica API updates)
 ## Test Case streams with LearnCPTs and LearnFindings
 
 Equations
-##export (
-##   GetNodeEquation, SetNodeEquation
-##   EquationToTable
-##   )
+  Equation Suppot is currently pretty minimal.  Probably not important
+  as it is easier to build CPTs in R than use equations.
+
 Continuous Node support
 Decision Net support
-##   GetNodeValueEntered, EnterNodeValue, EnterGaussianFinding,
+##   EnterGaussianFinding,
 ##   EnterIntervalFinding,
-##   GetNodeExpectedValue, GetNodeExpectedUtils,
+    These two functions are giving unexpected results.  Query out to
+    Norsys about this, i.e., they always give weight 1 to a single
+    state, rather than distributiong the output over a number of
+    states as expected.
+     These two functions return NA in stituations where I'm expecting
+     a numeric value or a state.
 ##   CalcNodeState, CalcNodeValue,
+##    GetNodeExpectedUtils,
+   Seems to be generating an internal Netica error.
+##   GetNodeFuncState, GetNodeFuncReal
+   Need to write
 Sensitivity
 ## export(
 ##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
 ##   GetVarianceOfReal,
 ##  )
+Need Doc
+
 Testing
 ## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
 ## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
@@ -81,3 +91,5 @@ Ask Brent:
 5. EnterLikelihoodFindingClique
 6. NetworkUndo, Redo
 7. Learn_CPTs return value?
+8. Mysterious behavior of CalcNodeState and CalcNodeValue
+9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding

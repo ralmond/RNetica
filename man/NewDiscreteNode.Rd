@@ -60,6 +60,15 @@ DeleteNodes(nodes)
   be a character vector providing the list of states for the
   corresponding new node.
 
+  The function \code{NewContinuousNode()} creates a new continuous
+  node.  It appears as if Netica expects continuous nodes to be used in
+  one of three ways:  (1) they can be discretized using
+  \code{\link{NodeLevels}()}, (2) they can be used as utilities, (3)
+  they can be used as constants.  The function \code{\link{NodeKind}()}
+  can change a nature node (the default) to a constant or utility node.
+  It appears as if Netica will not compile the network unless this is
+  done for all nodes.
+  
   The function \code{DeleteNode()} deletes a single node or a group of
   nodes.  If multiple nodes are to be deleted in a single call, they
   must all belong to the same network.  Node that any \code{NeticaNode}
@@ -105,7 +114,7 @@ DeleteNodes(nodes)
   \code{\link{CreateNetwork}()}, \code{\link{NeticaNode}},
   \code{\link{NodeName}()}, \code{\link{is.discrete}()},
   \code{\link{is.active}()}, \code{\link{NodeStates}()},
-  \code{\link{NodeLevels}()}
+  \code{\link{NodeLevels}()}, \code{\link{NodeKind}()}
 }
 \examples{
 safetyNet <- CreateNetwork("safetyNet")

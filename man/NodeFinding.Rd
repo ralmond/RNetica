@@ -84,6 +84,7 @@ NodeFinding(node) <- value
   \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()}, \code{\link{EnterFindings}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()},
+  \code{\link{EnterGaussianFinding}()}, \code{\link{EnterIntervalFinding}()},
   \code{\link{JointProbability}()},\code{\link{NodeValue}()},
   \code{\link{MostProbableConfig}()},
   \code{\link{FindingsProbability}()}

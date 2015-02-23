@@ -1,10 +1,13 @@
 \name{NodeExpectedValue}
 \alias{NodeExpectedValue}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Calculates expected value for a continuous node
+\title{Calculates expected value for a numeric node
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+  Calculates the expected value for \code{node} based on the current
+  beliefs about the nodes states.  The \code{node} should either be
+  continuous or a descrete node with levels assigned to the values.  The
+  standard deviation is supplied as an attribute.
 }
 \usage{
 NodeExpectedValue(node)
@@ -17,15 +20,10 @@ NodeExpectedValue(node)
     with each level (see \code{\link{NodeLevels}}).
   }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+  Returns a scalar real giving the expected value for \code{node}.  It
+  has an attribute called \code{"std_dev"} which contains the standard
+  deviation. 
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -33,37 +31,35 @@ NodeExpectedValue(node)
   \nref{GetNodeExpectedValue_bn}
 }
 \author{
-%%  ~~who you are~~
+  Russell Almond
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link{NodeBeliefs}()}, \code{\link{NodeLevels}()},
+  \code{\link{NodeLevels}()},\code{\link{is.continuous}()}
+  \code{\link{NodeValue}()},\code{\link{CalcNodeValue}()},
+
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
 
-## The function is currently defined as
-function (node) 
-{
-    if (length(node) > 1 || !is.NeticaNode(node) || !is.active(node)) {
-        stop("Node is not an active Netica node", node)
-    }
-    result <- .Call("RN_GetNodeExpectedValue", node, PACKAGE = "RNetica")
-    ecount <- ReportErrors()
-    if (ecount[1] > 0) {
-        stop("NodeExpectedValue: Netica Errors Encountered, see console for details.")
-    }
-    result
-  }
+irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne",
+                           sep=.Platform$file.sep))
+
+irt5.theta <- NetworkFindNode(irt5,"Theta")
+irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
+
+CompileNetwork(irt5) ## Ready to enter findings
+
+## Prior should have mean 0, Std 1.095
+stopifnot(abs(NodeExpectedValue(irt5.theta)) <.000001)
+stopifnot(abs(attr(NodeExpectedValue(irt5.theta),"std_dev")-1.095445)<.00001)
+
+NodeFinding(irt5.x[[1]]) <- "Right"
+## Expected value should go up
+stopifnot(NodeExpectedValue(irt5.theta)>0)
+
+DeleteNetwork(irt5)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ interface }
+\keyword{ manip }% __ONLY ONE__ keyword per line
