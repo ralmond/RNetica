@@ -23,6 +23,22 @@ supports rapid improvisation of code.  This make it substantially
 faster to work in RNetica than using the C or Java APIs.
 
 <h2>News</h2>
+Started the 0.4 series of releases includes the following
+improvements:
+<ol>
+<li> Added the functions MutualInfo, NodeExpectedValue and
+  VarianceOfReal (user request, plus close to the top of my personal
+  list). 
+<li> Minimal support for equation.  (I find
+  the <a href="CPTtools.html">CPTtools</a> easier to use for
+  manipulating conditional probability tables.)
+<li> Added more functions for decision nets, although these are not
+  currently working (support request in to Norsys).
+<li> A few other functions related to calcuating values and interval
+  and Gaussian findings.  Again, these are not working in the 0.4-1
+  version and a help request to Norsys is pending.
+<ol>
+<p>
 The 0.3 series of releases includes a number of different improvements.
 <ol>
 <li> I now how official permission to distribute binary versions from
@@ -101,12 +117,12 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.3-3) incorporates approximately 70% of the
-Netica C API Version 5.04.  This is sufficient functionality to build,
-compile and carry out inferences with a Bayesian network.  Some of the
-more advanced functionality, including support for databases,
-influence diagrams, and dynamic Bayesian networks is not yet
-developed. 
+The current version (0.4-1) incorporates approximately 75% of the
+Netica C API Version 5.04 (no new version since 2012).  This is
+sufficient functionality to build, compile and carry out inferences
+with a Bayesian network.  Some of the more advanced functionality,
+including support for databases, influence diagrams, and dynamic
+Bayesian networks is not yet developed.
 <p>
 Although an extensive test script exists for RNetica (most of this is
 exposed on the manual pages), the testing away from these simple tests
@@ -116,7 +132,7 @@ Note that because it uses calls to C code, <i>it is possible for RNetica
 to crash R.</i>  Plan your work accordingly.
 <p>
 The development has been with R version 3.0.1 under Ubuntu
-12.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
+14.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
 runs under Mac OS X and Windows 7 without errors.  Almost all of the
 testing has been with the 64 bit versions of R and Netica.  There may
 be some problems that crop up under 32 bit versions.  
@@ -161,6 +177,11 @@ The following releases are archived here:
 <td><a href="RNetica_0.3-4.zip">RNetica_0.3-4.zip</a></td>
 <td><a href="RNetica_0.3-4.tgz">RNetica_0.3-4.tgz</a></td><td><a href="RNetica-manual_0.3-4.pdf">RNetica-manual_0.3-4.pdf</a></td><td>
     Learning CPTs</td></tr>
+<tr>
+<td>0.4-1</td><td><a href="RNetica_0.4-1.tar.gz">RNetica_0.4-1.tar.gz</a></td>
+<td><a href="RNetica_0.4-1.zip"></a>RNetica_0.4-1.zip</td>
+<td><a href="RNetica_0.4-1.tgz"></a>RNetica_0.4-1.tgz</td><td><a href="RNetica-manual_0.4-1.pdf">RNetica-manual_0.4-1.pdf</a></td><td>
+    Learning CPTs</td></tr>
 </table>
 <p>
 Note the source versions have been compiled and tested under
@@ -168,9 +189,9 @@ Linux/Unix, Mac OS X and Windows.  Note that for Windows and Mac OS X,
 compiling source packages requires the R development kit to be
 installed.  See the
 appropriate <a href="http://lib.stat.cmu.edu/R/CRAN/faqs.html">R
-  FAQ</a>.  You should also be familiar with building R packages, see
-the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing
-  R Extensions</a> manual.
+FAQ</a> for your operating system.  You should also be familiar with
+building R packages, see
+the <a href="http://lib.stat.cmu.edu/R/CRAN/doc/manuals/r-release/R-exts.html">Writing R Extensions</a> manual.
 
 <p>
 Compiling from sources requires that you have already downloaded and
@@ -225,6 +246,6 @@ requests should be sent to the package maintainers.
   forthcoming. 
 
 <hr>
-Site last updated on 2013-08-30.
+Site last updated on 2014-02-23.
 
 </body>
