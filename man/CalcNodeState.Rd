@@ -83,6 +83,9 @@ AddLink(switchs[[2]],bulb)
 bulb[] <-"Off"
 bulb[Switch1="Up",Switch2="Up"]<-"On"
 bulb[Switch1="Down",Switch2="Down"]<-"On"
+switchs[[1]][] <- .5
+switchs[[2]][] <- .5
+
 
 CompileNetwork(lights)
 

@@ -68,6 +68,7 @@ cirt5 <- CreateNetwork("ContinuousIRT5")
 
 theta <- NewContinuousNode(cirt5,"Theta")
 NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
+theta[] <- rep(1/NodeNumStates(theta),NodeNumStates(theta))
 
 CompileNetwork(cirt5) ## Ready to enter findings
 
