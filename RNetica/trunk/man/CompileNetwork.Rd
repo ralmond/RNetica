@@ -66,6 +66,19 @@ is.NetworkCompiled(net)
   the same network is harmless.  Adding a node to a network will
   automatically uncompile it.
 }
+\section{Warning }{
+
+  I'm currently observing a bug that occurs under Windows if not all of
+  the nodes have their CPTs set.  Under Linux the function exhibits the
+  expected behavior:  It generates a warning about the unset CPTs and
+  enters a uniform distribution for each one.  Under Windows it reports
+  the warning, but then generates an error "GetError_ns:  deleted or
+  damage report_ns passed".  It is unclear if this a problem in Netica
+  or RNetica.
+
+  To work around, simply set all tables before compiling.
+  
+}
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{HasNodeTable}()},
   \code{\link{NodeFinding}()}, \code{\link{NodeBeliefs}()},
