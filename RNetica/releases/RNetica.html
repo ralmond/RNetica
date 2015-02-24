@@ -37,12 +37,7 @@ improvements:
 <li> A few other functions related to calcuating values and interval
   and Gaussian findings.  Again, these are not working in the 0.4-1
   version and a help request to Norsys is pending.
-<li> As I'm going through the compile cycle, I'm running into some
-  errors under Windows related to generating extra error messages
-  after the first error message or warning.  Haven't had time to track
-  this down yet.  Problem seems to only affect the 32-bit Windows
-  version (anybody still use that?).
-<ol>
+</ol>
 <p>
 The 0.3 series of releases includes a number of different improvements.
 <ol>
@@ -68,15 +63,26 @@ The 0.3 series of releases includes a number of different improvements.
   maximum number of iterations being reached.
 <li> Currently, memory streams cannot be used with the LearnCPTs
   functions.  This appears to be a Netica problem.
+<li> As I'm going through the compile cycle, I'm running into some
+  errors under Windows related to generating extra error messages
+  after the first error message or warning.  Haven't had time to track
+  this down yet.  Problem seems to only affect the 32-bit Windows
+  version (anybody still use that?).
+<li> The functions EnterIntervalFinding and EnterGaussianFinding seem
+  to give probabity 1 to a single state no matter the width of the
+  interval or the SD.
+<li> The functions CalcNodeValue and CalcNodeState return NA when I
+  think they should return a non-missing value.
+<li> The function NodeExpectedUtils is generating an internal Netica
+  error.
 </ol>
 <p> Approximately 3/4 of the API functionality is mapped.  Things that
   are still not mapped:
 <ol>
-<li> Continuous Node and Decision Node Support
-<li> Sensitivity
 <li> Random data generation
 <li> DBN functionality
-<li> Equations (may not do, because these are easier to express in R).
+<li> Database suppot (I see no need to do this as better to use the
+  DBI R package).
 </ol>
 
 <h2>RNetica License Information</h2>
