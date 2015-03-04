@@ -22,6 +22,26 @@ second big advantage is that R is an interpreted language, which
 supports rapid improvisation of code.  This make it substantially
 faster to work in RNetica than using the C or Java APIs.
 
+<h2>Getting Started</h2>
+I recently did a demonstration of RNetica for my Bayes net class and
+recorded it using Tegrity.  I'm posting a few of those resources here
+as a way of getting started.
+<ul>
+<li> The <a href="https://tegr.it/y/1ijsr">Tegrity recording</a> and
+  the slightly edited <a href="RNetica.txt">R transcript</a>.
+<li>The Slides used for the talk.  Note that these were revised an
+  expanded after the class and now contain lots of additional
+  material, including an index of RNetica functions grouped by topic.
+  (<a href="RNetica.pptx">PowerPoint</a>, <a href="RNetica.pdf">PDF</a>).
+<li> A sample RNetica script for restoring a network after restarting
+  R.  (<a href="irt5.R">irt5.R</a>)  Note:  this uses one of the
+  RNetica sample scripts (in the sampleNets folder after you install
+  RNetica).  
+<li> A sample RNetica script for building a Network and doing some
+  inference.  (<a href="irt3.R">irt3.R</a>)  The network built by the
+  script is here (<a href="irt5.R">irt5.R</a>).
+</ul>
+
 <h2>News</h2>
 Started the 0.4 series of releases includes the following
 improvements:
@@ -75,6 +95,11 @@ The 0.3 series of releases includes a number of different improvements.
   think they should return a non-missing value.
 <li> The function NodeExpectedUtils is generating an internal Netica
   error.
+<li> If a node has a name which is too close to the 40 character
+  limit, and that node is disconnected from a link, leaving a stub
+  variable, then the stub variable will have a name that is longer
+  than 40 characters, causing problems.  To avoid make sure names are
+  no more than 36 characters.
 </ol>
 <p> Approximately 3/4 of the API functionality is mapped.  Things that
   are still not mapped:

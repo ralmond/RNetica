@@ -1,0 +1,74 @@
+// ~->[DNET-1]->~
+
+// File created by Course at FloridaSU using Netica 5.04 on Feb 24, 2015 at 15:13:33.
+
+bnet IRT3 {
+autoupdate = FALSE;
+title = "3-item IRT network, four levels for theta";
+comment = "Almond et al (2015) problem 6.17";
+whenchanged = 1424808736;
+
+node theta {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (VeryLow, Low, High, VeryHigh);
+	statetitles = ("-1.5", "-0.5", "0.5", "1.5");
+	levels = (-1.5, -0.5, 0.5, 1.5);
+	parents = ();
+	probs = 
+		// -1.5         -0.5         0.5          1.5          
+		  (0.125,       0.375,       0.375,       0.125);
+	whenchanged = 1424807335;
+	belief = (0.125, 0.375, 0.375, 0.125);
+	};
+
+node Item_1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	parents = (theta);
+	probs = 
+		// Right        Wrong         // theta 
+		  (0.378,       0.622,        // -1.5  
+		   0.622,       0.378,        // -0.5  
+		   0.818,       0.182,        // 0.5   
+		   0.924,       0.076);       // 1.5   ;
+	whenchanged = 1424808736;
+	belief = (0.70275, 0.29725);
+	};
+
+node Item_2 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	parents = (theta);
+	probs = 
+		// Right        Wrong         // theta 
+		  (0.1824255,   0.8175745,    // -1.5  
+		   0.3775407,   0.6224594,    // -0.5  
+		   0.6224594,   0.3775407,    // 0.5   
+		   0.8175745,   0.1824255);   // 1.5   ;
+	whenchanged = 1424808736;
+	belief = (0.5, 0.5);
+	};
+
+node Item_3 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	parents = (theta);
+	probs = 
+		// Right        Wrong         // theta 
+		  (0.07585818,  0.9241418,    // -1.5  
+		   0.1824255,   0.8175745,    // -0.5  
+		   0.3775407,   0.6224594,    // 0.5   
+		   0.6224594,   0.3775407);   // 1.5   ;
+	whenchanged = 1424808736;
+	belief = (0.297277, 0.702723);
+	};
+ElimOrder = (Item_1, Item_2, theta, Item_3);
+};

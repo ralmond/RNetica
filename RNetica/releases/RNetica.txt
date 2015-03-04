@@ -1,0 +1,268 @@
+## This is the R output generated duing the Tegrity recording (with a
+   few now fixed RNetica bugs edited out).
+Tegrity Recording is available at:
+https://tegr.it/y/1ijsr
+
+
+R version 3.1.2 (2014-10-31) -- "Pumpkin Helmet"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Workspace loaded from ~/.RData]
+
+> library(RNetica)
+Netica 5.04 Win (AF), (C) 1992-2012 Norsys Software Corp.
+
+The license being used is +Course/FloridaSU/Ex15-05-30,120,310/(security part removed).
+
+> ?MutalInfo
+No documentation for "MutalInfo" in specified packages and libraries:
+you could try "??MutalInfo"
+> ?MutualInfo
+> irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
++                            "sampleNets","IRT5.dne",
++                            sep=.Platform$file.sep))
+> 
+> irt5
+<Netica BN: IRT5 > 
+> irt5.theta <- NetworkFindNode(irt5,"Theta")
+> irt5.theta
+<Discrete Node: Theta > 
+> irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
+> irt5.x
+$Item_1
+<Discrete Node: Item_1 > 
+
+$Item_2
+<Discrete Node: Item_2 > 
+
+$Item_3
+<Discrete Node: Item_3 > 
+
+$Item_4
+<Discrete Node: Item_4 > 
+
+$Item_5
+<Discrete Node: Item_5 > 
+
+> irt5.x$Item_3
+<Discrete Node: Item_3 > 
+> unclass(irt5)
+[1] "IRT5"
+attr(,"Netica_bn")
+<pointer: 0x000000000eadb360>
+attr(,"Filename")
+[1] "T:/Documents/R/win-library/2.13/RNetica/sampleNets/IRT5.dne"
+> irt5 <- ReadNetworks(irt5)
+> irt5.theta
+<Discrete Node: Theta > 
+> help("RNetica-package")
+> NodeNet(irt5.theta)
+<Netica BN: IRT5 > 
+> NodeNet(irt5.theta) == irt5
+[1] FALSE
+> DeleteNetwork(irt5)
+> irt5
+<Deleted Netica BN: IRT5 > 
+> is.active(irt5)
+[1] FALSE
+> irt5 <- NodeNet(irt5.theta)
+> irt5
+<Netica BN: IRT5 > 
+> ## Homework problem 6.17
+> 
+> irt3 <- CreateNetwork("IRT3")
+> irt3
+<Netica BN: IRT3 > 
+> ?NetworkTitle
+> NetworkTitle(irt3) <- "3-item IRT network, four levels for theta"
+> NetworkComment(irt3) <- "Almond et al (2015) problem 6.17"
+> NetworkTitle(irt3)
+[1] "3-item IRT network, four levels for theta"
+> theta <- NewDiscreteNode(irt3,"theta",c("VeryLow","Low","High","VeryHigh"))
+> NodeStates(theta)
+   VeryLow        Low       High   VeryHigh 
+ "VeryLow"      "Low"     "High" "VeryHigh" 
+> ?NodeStates
+> NodeStateTitles(theta) <- paste(c(-1.5,-0.5,0.5,1.5))
+> NodeStateTitles(theta)
+ VeryLow      Low     High VeryHigh 
+  "-1.5"   "-0.5"    "0.5"    "1.5" 
+> NodeLevels(theta) <- c(-1.5,-0.5,0.5,1.5)
+> paste("Item",1:3,sep="_")
+[1] "Item_1" "Item_2" "Item_3"
+> items <- NewDiscreteNode(irt3,paste("Item",1:3,sep="_"),c("Right","Wrong"))
+> items
+[[1]]
+<Discrete Node: Item_1 > 
+
+[[2]]
+<Discrete Node: Item_2 > 
+
+[[3]]
+<Discrete Node: Item_3 > 
+
+> items[[2]]
+<Discrete Node: Item_2 > 
+> items[2]
+[[1]]
+<Discrete Node: Item_2 > 
+
+> AddLink(theta,items[[1]])
+> NodeParents(theta)
+named list()
+> NodeParents(items[[1]])
+[[1]]
+<Discrete Node: theta > 
+
+> NodeParents(items[[2]]) <- theta
+Error in `NodeParents<-`(`*tmp*`, value = "theta") : 
+  Value must be list of Netica nodes, or NULLs
+> NodeParents(items[[2]]) <- list(theta)
+> for(i in 3:3) {
++   AddLink(theta,items[[i]])
++ }
+> ?Extract.NeticaNode
+> theta[]
+ theta.VeryLow      theta.Low     theta.High theta.VeryHigh 
+            NA             NA             NA             NA 
+> theta[] <- c(1,3,3,1)/8
+> NodeProbs(theta)
+theta
+ VeryLow      Low     High VeryHigh 
+   0.125    0.375    0.375    0.125 
+attr(,"class")
+[1] "CPA"   "array"
+> items[[1]][]
+     theta Item_1.Right Item_1.Wrong
+1  VeryLow           NA           NA
+2      Low           NA           NA
+3     High           NA           NA
+4 VeryHigh           NA           NA
+> items[[1]]["VeryLow"]
+    theta Item_1.Right Item_1.Wrong
+1 VeryLow           NA           NA
+> items[[1]][2]
+  theta Item_1.Right Item_1.Wrong
+1   Low           NA           NA
+> items[[1]]["VeryLow"]<-.378
+> items[[1]][]
+     theta  Item_1.Right  Item_1.Wrong
+1  VeryLow  3.780000e-01  6.220000e-01
+2      Low -3.396031e+38 -3.396031e+38
+3     High -3.396031e+38 -3.396031e+38
+4 VeryHigh -3.396031e+38 -3.396031e+38
+> items[[1]][2:4]<- c(0.622,0.818,0.924)
+> items[[1]][]
+     theta Item_1.Right Item_1.Wrong
+1  VeryLow        0.378        0.622
+2      Low        0.622        0.378
+3     High        0.818        0.182
+4 VeryHigh        0.924        0.076
+> library(CPTtools)
+Loading required package: stats4
+
+> invlogit <- function (x) exp(x)/(1+exp(x))
+> invlogit(NodeLevels(theta)-0)
+  VeryLow       Low      High  VeryHigh 
+0.1824255 0.3775407 0.6224593 0.8175745 
+> items[[2]][] <- invlogit(NodeLevels(theta)-0)
+Error in `[<-.NeticaNode`(`*tmp*`, , value = c(0.182425523806356, 0.377540668798145,  : 
+  Number of rows selected and rows in value do not match; nodeItem_2
+> items[[2]]
+<Discrete Node: Item_2 > 
+> items[[2]][]
+     theta Item_2.Right Item_2.Wrong
+1  VeryLow           NA           NA
+2      Low           NA           NA
+3     High           NA           NA
+4 VeryHigh           NA           NA
+> items[[2]][] <- matrix(invlogit(NodeLevels(theta)-0),4,1)
+Error in `[<-.NeticaNode`(`*tmp*`, , value = c(0.182425523806356, 0.377540668798145,  : 
+  Number of rows selected and rows in value do not match; nodeItem_2
+> items[[2]][1:4] <- matrix(invlogit(NodeLevels(theta)-0),4,1)
+> items[[2]][1:4] <- invlogit(NodeLevels(theta)-0)
+> items[[2]][]
+     theta Item_2.Right Item_2.Wrong
+1  VeryLow    0.1824255    0.8175745
+2      Low    0.3775407    0.6224594
+3     High    0.6224594    0.3775407
+4 VeryHigh    0.8175745    0.1824255
+> invlogit(NodeLevels(theta)-1)
+   VeryLow        Low       High   VeryHigh 
+0.07585818 0.18242552 0.37754067 0.62245933 
+> items[[3]][1:4] <- invlogit(NodeLevels(theta)-1)
+> CompileNetwork(irt3)
+> NodeBeliefs(theta)
+ VeryLow      Low     High VeryHigh 
+   0.125    0.375    0.375    0.125 
+> NodeExpectedValue(theta)
+[1] 0
+attr(,"std_dev")
+[1] 0.8660254
+> attr(NodeExpectedValue(theta),"std_dev")
+[1] 0.8660254
+> for( i in 1:3) {
++   NodeFinding(items[[1]])<-"Wrong"
++ }
+> NodeBeliefs(theta)
+   VeryLow        Low       High   VeryHigh 
+0.26156431 0.47687134 0.22960471 0.03195963 
+> NodeExpectedValue(theta)
+[1] -0.4680403
+attr(,"std_dev")
+[1] 0.7861209
+> for( i in 1:3) {
++   NodeFinding(items[[i]])<-"Wrong"
++ }
+> NodeBeliefs(theta)
+   VeryLow        Low       High   VeryHigh 
+0.39806399 0.48881882 0.10868357 0.00443363 
+> NodeExpectedValue(theta)
+[1] -0.7805132
+attr(,"std_dev")
+[1] 0.6676784
+> for (i in 1:3) {
++   NodeFinding(items[[i]])<-"Right"
++   NodeExpectedValue(theta)
++ }
+> for( i in 1:3) {
++   NodeFinding(items[[i]])<-"Wrong"
++ }
+> NodeBeliefs(theta)
+   VeryLow        Low       High   VeryHigh 
+0.39806399 0.48881882 0.10868357 0.00443363 
+> NodeExpectedValue(theta)
+[1] -0.7805132
+attr(,"std_dev")
+[1] 0.6676784
+> for (i in 1:3) {
++   NodeFinding(items[[i]])<-"Right"
++   print(NodeExpectedValue(theta))
++ }
+[1] -0.276932
+attr(,"std_dev")
+[1] 0.7387278
+[1] 0.2770373
+attr(,"std_dev")
+[1] 0.7384468
+[1] 0.7805601
+attr(,"std_dev")
+[1] 0.6679294
+> RetractNetFindings(irt3)
+> NodeBeliefs(theta)
+ VeryLow      Low     High VeryHigh 
+   0.125    0.375    0.375    0.125 
+> WriteNetworks(irt3,"T:/My Documents/BayesNets/irt3.dne")
