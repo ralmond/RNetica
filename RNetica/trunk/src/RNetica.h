@@ -28,6 +28,8 @@ extern SEXP GetNode_RRef(node_bn* node);
 extern int isNeticaNode(SEXP obj);
 #define GetCaseStream_Handle(cs) (stream_ns*) R_ExternalPtrAddr(getAttrib(cs,casestreamatt))
 extern int isNeticaStream(SEXP obj);
+#define GetRNG_Handle(rng) (randgen_ns*) R_ExternalPtrAddr(getAttrib(rng,rngatt))
+extern int isNeticaRng(SEXP obj);
 
 /**
  * Converts from name to network.  
@@ -81,6 +83,10 @@ extern SEXP casestreamlastfreqatt;
 extern SEXP casestreamdfatt;
 extern SEXP casestreamdfnameatt;
 extern SEXP CaseStreamList;
+extern SEXP rngclass;
+extern const char* RNGClass;
+extern SEXP rngatt;
+extern SEXP RngList;
 
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 
@@ -101,3 +107,6 @@ extern SEXP RN_AS_PROBSXP(const prob_bn *vals, int nn);
 
 //Closes the case streams
 extern void CloseOpenCaseStreams();
+//Frees unneeded RNGs
+extern void FreeRNGs();
+

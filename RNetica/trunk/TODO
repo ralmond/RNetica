@@ -25,6 +25,14 @@ probability table.
 
 Parse the junction tree report
 
+I'm getting an error GetError_ns:  deleted or damage report_ns passed
+under Windows, 32-bit.  The condition that seemed to trigger this was
+compiling a network with uninitialized CPTs (which generates a
+warning).  This works correctly under Linux and Windows-64 bit.  The
+error seems to persist after it was first encountered.
+
+
+
 Functions for
 ##   ReorderNodeStates, RemoveNodeState,
 These seem to be redundant with current definition of NodeStates<-
@@ -50,14 +58,6 @@ Decision Net support
 ##   CalcNodeState, CalcNodeValue,
 ##    GetNodeExpectedUtils,
    Seems to be generating an internal Netica error.
-##   GetNodeFuncState, GetNodeFuncReal
-   Need to write
-Sensitivity
-## export(
-##   GetMutualInfo, NewSensvToFinding, DeleteSensvToFinding
-##   GetVarianceOfReal,
-##  )
-Need Doc
 
 Testing
 ## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn

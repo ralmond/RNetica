@@ -15,7 +15,7 @@
 }
 \usage{
 is.IDname(x)
-as.IDname(x,prefix="y")
+as.IDname(x,prefix="y",maxlen=25)
 }
 \arguments{
   \item{x}{
@@ -24,7 +24,11 @@ as.IDname(x,prefix="y")
   \item{prefix}{
     A character scalar that provides an alphabetic prefix for names that
     start with an illegal character.
-    }
+  }
+  \item{maxlen}{
+    The maximum number of characters to use in the converted name, which
+    should be less than Netica's maximum of 30 characters.
+  }
 }
 \details{
 
@@ -41,12 +45,28 @@ as.IDname(x,prefix="y")
     \item{If any value begins with a nonalphabetic character, the
       \code{prefix} argument is prepended to all values.}
     \item{All non-alphanumeric characters are converted to '_'.}
-    \item{Each value is truncated to 30 characters in length.}
+    \item{Each value is truncated to \code{maxlen} characters in length.}
   }
-  Note that these rules guarentee that the result will conform to the
-  IDname convention.  They do not guarentee that the resulting values
-  will be unique.  In particular, watch out for long names that differ
-  only in the last few characters.
+
+  The truncation works by the following mechanism:
+  \enumerate{
+    \item{The string is truncated to length \code{maxlen-3}.}
+    \item{The UTF 8 values of the remainig characters is summed and the
+      result is taken modulo 100 to provide a 2-digit hash code for the
+      remaining characters.}
+    \item{The hash code is appended to the end of the truncated string
+      separated with an \code{_}.
+    }
+  }
+  This should result in strings which are likely, but not guarenteed to
+  be unique if the difference between two names is only after the last
+  \code{maxlen-3} characters.
+
+  Note that although Netica allows variable names up to 30 characters in
+  length, in some cases (particularly when stub variables are created
+  after separating an edge from its parent) Netica creates new variable
+  names by appending characters onto existing ones.  That is why the
+  recommended value for \code{maxlen} is set to 25.
 }
 \value{
   A logical vector of the same length of \code{x}.

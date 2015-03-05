@@ -12,13 +12,13 @@ probabilities from a Netica network.
 \details{
 \tabular{ll}{
 Package: \tab RNetica\cr
-Version: \tab 0.2-6\cr
-Date: \tab 2012/11/22\cr
-Depends: \tab R (>= 2.0), methods, utils, grDevices\cr
+Version: \tab 0.4-2\cr
+Date: \tab 2015/02/25\cr
+Depends: \tab R (>= 3.0), methods, utils, grDevices\cr
 (http: \tab //norsys.com/) Bayesian network library API\cr
 License: \tab Artistic-2.0 + file LICENSE\cr
 URL: \tab http://ralmond.net/RNetica\cr
-Built: \tab R 2.15.2; x86_64-pc-linux-gnu; 2012-11-22 19:38:18 UTC; unix\cr
+Built: \tab R 3.1.2; x86_64-pc-linux-gnu; 2015-02-25 19:38:18 UTC; unix\cr
 }
 }
 \section{License}{

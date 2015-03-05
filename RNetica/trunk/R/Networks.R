@@ -9,14 +9,20 @@ is.IDname <- function (x) {
   ifelse(is.na(result),FALSE,result)
 }
 
-as.IDname <- function (x, prefix="y") {
+
+as.IDname <- function (x, prefix="y", maxlen=25) {
+  if (maxlen >30) stop("Netica limits names to 30 characters.")
   y <- as.character(x)
   if (length(grep("^[[:alpha:]].*",y)) < length(y)) {
     ##Some non-numeric starts, prepend prefix characters.
     y <- paste(prefix,y,sep="")
   }
   y <- gsub("[^[:alnum:]_]","_",y)
-  y <- substr(y,1,30)
+  if (nchar(y) > maxlen) {
+    y <- paste(substr(y,1,maxlen-3),
+               sum(utf8ToInt(substr(y,maxlen-3,1000))) %% 100,
+               sep="_")
+  }
   y
 }
 
@@ -34,7 +40,7 @@ NeticaVersion <- function () {
 ## them as well.  It returns a vector given the counts of errors of
 ## various types.  This is mostly used internally:  The R functions
 ## call Netica through .Call and the call ReportErrors to report on
-## errors. 
+## errors.
 ReportErrors <- function(maxreport=9,clear=TRUE) {
   counts <- .C("RN_report_errors",as.integer(maxreport),
                 as.integer(clear),counts=rep(-1L,4L),
@@ -44,7 +50,7 @@ ReportErrors <- function(maxreport=9,clear=TRUE) {
 }
 ## * Clears all errors at a given severity (and lower?)
 ## * sev -- should be either NULL (all arguments) or a single character
-## * string, one of "NOTHING_ERR", "REPORT_ERR", "NOTICE_ERR", 
+## * string, one of "NOTHING_ERR", "REPORT_ERR", "NOTICE_ERR",
 ## * "WARNING_ERR", "ERROR_ERR", or "XXX_ERR"
 ClearAllErrors <- function(severity="XXX_ERR") {
   .C("RN_ClearAllErrors",as.character(severity),PACKAGE="RNetica")
@@ -74,7 +80,7 @@ CreateNetwork <- function (names) {
 ## Tests to see if the handle attached to a BN object is live or not.
 ## Returns NA if the object is not a network.
 is.active <- function (x) {
-  if(is.NeticaBN(x)) 
+  if(is.NeticaBN(x))
      return(.Call("RN_isBNActive",x,PACKAGE="RNetica"))
   if (is.NeticaNode(x))
      return(.Call("RN_isNodeActive",x,PACKAGE="RNetica"))
@@ -87,10 +93,10 @@ is.active <- function (x) {
 toString.NeticaBN <- function(x,...) {
   if (is.active(x))
     paste("<Netica BN:",as.character(x),">")
-  else 
+  else
     paste("<Deleted Netica BN:",as.character(x),">")
 }
-  
+
 print.NeticaBN <- function(x, ...) {
   cat(toString(x),"\n")
 }
@@ -125,7 +131,7 @@ Ops.NeticaBN <- function(e1, e2) {
                 truth,!truth))
 }
 
-  
+
 DeleteNetwork <- function (nets) {
   if (is.NeticaBN(nets) && length(nets) ==1) {
     nets <- list(nets)
@@ -220,7 +226,7 @@ WriteNetworks <- function (nets, paths) {
   handles <- .Call("RN_Write_Nets",nets,paths,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("WriteNetwork: Netica Errors Encountered, see console for details.")
+    stop("WriteNetworks: Netica Errors Encountered, see console for details.")
   }
   ## Save filenames for later recovery of network.
   for (i in 1:length(handles)) {
@@ -252,7 +258,7 @@ ReadNetworks <- function (paths) {
       attr(handles[[i]],"Filename") <- paths[i]
   }
   if (ecount[1]>0) {
-    stop("WriteNetwork: Netica Errors Encountered, see console for details.")
+    stop("ReadNetworks: Netica Errors Encountered, see console for details.")
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
