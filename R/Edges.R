@@ -232,7 +232,7 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
 
 MakeCliqueNode <- function(nodelist) {
   if (any(!sapply(nodelist,function (nd) {is.NeticaNode(nd) &&
-                                          is.active(nd)}))) { 
+                                          is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   handle <- .Call("RN_MakeCliqueNode",nodelist,PACKAGE="RNetica")
@@ -258,7 +258,7 @@ GetClique <- function (cliquenode) {
 
 
 ## To start, pass -1.
-## Using 1 based indexing, but Netica uses 1-based.  Convert inside C code. 
+## Using 1 based indexing, but Netica uses 1-based.  Convert inside C code.
 nextconfig <- function (current, maxvals) {
   ## Base case
   if (current[1L] < 0) return (rep(1L,length(maxvals)))
@@ -294,7 +294,7 @@ NodeProbs <- function (node) {
   }
   parnames <- ParentStates(node)
   statecounts <- sapply(parnames,length)
-  
+
   childnames <- list(NodeStates(node))
   names(childnames) <- NodeName(node)
   nstates <- length(childnames[[1L]])
@@ -311,7 +311,9 @@ NodeProbs <- function (node) {
         result[configindex(config,nstates)] <- row
     }
   } else { ## Prior node, no parents.
-    result[] <- .Call("RN_GetNodeProbs",node,NULL,PACKAGE="RNetica")
+    row <- .Call("RN_GetNodeProbs",node,NULL,PACKAGE="RNetica")
+    if (!is.null(row))
+      result[] <- row
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
@@ -500,7 +502,7 @@ as.CPA <- function (x) {
 ## This function interprets the various input modes and returns an
 ## integer matrix which does the selection.
 ## env is frame in which to do the evaluation, which is probably the
-## parent frame of the calling funciton 
+## parent frame of the calling funciton
 parseDims <- function (node,...,env) {
   ## This creates a call object with the arguments
   clist <- substitute(list(...))
@@ -511,7 +513,7 @@ parseDims <- function (node,...,env) {
   for (idim in 2:length(clist)) {
     if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
       ## Blank entry, replace with 1:n
-      clist[idim] <- RNetica:::EVERY_STATE 
+      clist[idim] <- RNetica:::EVERY_STATE
     }
   }
   selection <- eval(clist,env)
@@ -858,7 +860,7 @@ selectionToConfig <- function(node,selection) {
       if (valisprobs) {
         .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE="RNetica")
       } else {
-        .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE="RNetica") 
+        .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE="RNetica")
       }
     }
   } else {
@@ -871,7 +873,7 @@ selectionToConfig <- function(node,selection) {
           .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE="RNetica")
         } else {
           .Call("RN_SetNodeFuncState",x,selection,as.integer(value),
-                PACKAGE="RNetica") 
+                PACKAGE="RNetica")
         }
       }
     } else {

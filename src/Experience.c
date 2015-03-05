@@ -102,7 +102,7 @@ learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol) {
 /**
  * Once again, the caseset is an object that probably does not need to
  * be passed back across the R boundary.   Case sets appear to be a
- * wrapper for either CaseStreams ofr Database links.  As RNetica is
+ * wrapper for either CaseStreams or Database links.  As RNetica is
  * unlikely to support the database functionality, we can use
  * CaseStreams instead. 
  */

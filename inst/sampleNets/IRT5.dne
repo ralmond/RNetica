@@ -1,11 +1,10 @@
 // ~->[DNET-1]->~
 
-// File created by AlmondR at FloridaStateU using Netica 4.16 on Apr 09, 2012 at 16:09:32.
+// File created by an unlicensed user using Netica 5.04 on 03/04/2015 at 03:53:35 PM.
 
 bnet IRT5 {
-AutoCompile = TRUE;
 autoupdate = TRUE;
-whenchanged = 1334002104;
+whenchanged = 1425502400;
 
 visual V1 {
 	defdispform = BELIEFBARS;
@@ -19,19 +18,20 @@ visual V1 {
 	showpagebreaks = FALSE;
 	usegrid = TRUE;
 	gridspace = (6, 6);
-	NodeSet Node {BuiltIn = 1; Color = 0xc0c0c0;};
-	NodeSet Nature {BuiltIn = 1; Color = 0xf8eed2;};
-	NodeSet Deterministic {BuiltIn = 1; Color = 0xd3caa6;};
-	NodeSet Finding {BuiltIn = 1; Color = 0xc8c8c8;};
-	NodeSet Constant {BuiltIn = 1; Color = 0xffffff;};
-	NodeSet ConstantValue {BuiltIn = 1; Color = 0xffffb4;};
-	NodeSet Utility {BuiltIn = 1; Color = 0xffbdbd;};
-	NodeSet Decision {BuiltIn = 1; Color = 0xdee8ff;};
-	NodeSet Documentation {BuiltIn = 1; Color = 0xf0fafa;};
-	NodeSet Title {BuiltIn = 1; Color = 0xffffff;};
+	NodeSet Node {BuiltIn = 1; Color = 0x00C0C0C0;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ReportingVars {Disabled = 1; Color = 0x00C8C8C8;};
+	NodeSet Observables {Disabled = 1; Color = 0x00C8C8C8;};
 	PrinterSetting A {
 		margins = (1270, 1270, 1270, 1270);
-		landscape = FALSE;
 		magnify = 1;
 		};
 	};
@@ -49,7 +49,6 @@ node Theta {
 	EqnDirty = TRUE;
 	title = "Theta";
 	whenchanged = 1334002092;
-	belief = (0.1, 0.2, 0.4, 0.2, 0.1);
 	visual V1 {
 		center = (132, 198);
 		height = 6;
@@ -72,7 +71,6 @@ node Item_1 {
 	EqnDirty = TRUE;
 	title = "Item_1";
 	whenchanged = 1334002104;
-	belief = (0.77178, 0.22822);
 	visual V1 {
 		center = (432, 36);
 		height = 5;
@@ -96,7 +94,6 @@ node Item_2 {
 	EqnDirty = TRUE;
 	title = "Item_2";
 	whenchanged = 1334002051;
-	belief = (0.6459, 0.3541);
 	visual V1 {
 		center = (432, 120);
 		height = 4;
@@ -123,7 +120,6 @@ node Item_3 {
 	EqnDirty = TRUE;
 	title = "Item_3";
 	whenchanged = 1334002050;
-	belief = (0.4928, 0.5072);
 	visual V1 {
 		center = (432, 198);
 		height = 1;
@@ -147,7 +143,6 @@ node Item_4 {
 	EqnDirty = TRUE;
 	title = "Item_4";
 	whenchanged = 1334002029;
-	belief = (0.3541, 0.6459);
 	visual V1 {
 		center = (432, 282);
 		height = 2;
@@ -171,7 +166,6 @@ node Item_5 {
 	EqnDirty = TRUE;
 	title = "Item_5";
 	whenchanged = 1334002027;
-	belief = (0.22882, 0.77118);
 	visual V1 {
 		center = (432, 366);
 		height = 3;
@@ -180,5 +174,7 @@ node Item_5 {
 			};
 		};
 	};
+NodeSet ReportingVars {Nodes = (Theta);};
+NodeSet Observables {Nodes = (Item_1, Item_2, Item_3, Item_4, Item_5);};
 ElimOrder = (Item_1, Item_2, Item_3, Item_4, Theta, Item_5);
 };

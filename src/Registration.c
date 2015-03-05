@@ -37,6 +37,8 @@ const char* CASESTREAMLASTIDATT = "Case_Stream_Lastid";
 const char* CASESTREAMLASTFREQATT = "Case_Stream_Lastfreq";
 const char* CASESTREAMDFATT = "Case_Stream_DataFrame";
 const char* CASESTREAMDFNAMEATT = "Case_Stream_DataFrameName";
+const char* RNGClass = "NeticaRNG";
+const char* RNGATT = "Netica_RNG";
 
 
 
@@ -64,6 +66,10 @@ SEXP casestreamlastfreqatt = NULL;
 SEXP casestreamdfatt = NULL;
 SEXP casestreamdfnameatt = NULL;
 SEXP CaseStreamList = NULL;
+SEXP rngclass = NULL;
+SEXP rngatt = NULL;
+SEXP RngList = NULL;
+
 
 static int symbolRegCount=0;
 
@@ -164,6 +170,17 @@ void RN_Define_Symbols() {
   if (CaseStreamList==NULL) { 
     R_PreserveObject(CaseStreamList = CONS(R_NilValue, R_NilValue));
   } 
+  if (rngclass==NULL) {
+    rngclass = allocVector(STRSXP,1);
+    R_PreserveObject(rngclass);
+    SET_STRING_ELT(rngclass,0,mkChar(RNGClass));
+  }
+  if (rngatt==NULL) { 
+    R_PreserveObject(rngatt = install(RNGATT));  
+  } 
+  if (RngList==NULL) { 
+    R_PreserveObject(RngList = CONS(R_NilValue, R_NilValue));
+  } 
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
@@ -171,6 +188,14 @@ void RN_Define_Symbols() {
 void RN_Free_Symbols() {
   //printf("RN_Free_Symbols: %d.\n",symbolRegCount);
   if (--symbolRegCount == 0) {
+    if (CaseStreamList!=NULL) { 
+      CloseOpenCaseStreams();
+      R_ReleaseObject(CaseStreamList);
+    } 
+    if (RngList!=NULL) { 
+      FreeRNGs();
+      R_ReleaseObject(RngList);
+    } 
     if (bnclass != NULL) {
       R_ReleaseObject(bnclass);
       bnclass = NULL;
@@ -253,9 +278,13 @@ void RN_Free_Symbols() {
     if (casestreamdfnameatt!=NULL) { 
       R_ReleaseObject(casestreamdfnameatt);
     } 
-    if (CaseStreamList!=NULL) { 
-      CloseOpenCaseStreams();
-      R_ReleaseObject(CaseStreamList);
+    if (rngclass != NULL) {
+      R_ReleaseObject(rngclass);
+      rngclass = NULL;
+    }
+    if (rngatt != NULL) { 
+      R_ReleaseObject(rngatt); 
+      rngatt = NULL; 
     } 
   }
 }
@@ -716,6 +745,13 @@ extern SEXP RN_EquationToTable(SEXP nd, SEXP numSamples,
                                SEXP sampUnc, SEXP addExist);
 
 
+// Cases.c
+extern SEXP RN_NewRandomGenerator (SEXP seed);
+extern SEXP RN_FreeRNG (SEXP rng);
+extern SEXP RN_isRNGActive(SEXP rng);
+extern SEXP RN_SetNetRandomGen (SEXP net, SEXP seed);
+extern SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
+                                  SEXP timeout, SEXP seed) ;
 
 
 R_CallMethodDef callMethods[] = {
@@ -846,6 +882,11 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNodeEquation", (DL_FUNC) &RN_GetNodeEquation, 1},
   {"RN_SetNodeEquation", (DL_FUNC) &RN_SetNodeEquation, 2},
   {"RN_EquationToTable", (DL_FUNC) &RN_EquationToTable, 4},
+  {"RN_NewRandomGenerator", (DL_FUNC) &RN_NewRandomGenerator, 1},
+  {"RN_FreeRNG", (DL_FUNC) &RN_FreeRNG, 1},
+  {"RN_isRNGActive", (DL_FUNC) &RN_isRNGActive,1},
+  {"RN_SetNetRandomGen", (DL_FUNC) &RN_SetNetRandomGen, 2},
+  {"RN_GenerateRandomCase", (DL_FUNC) &RN_GenerateRandomCase,4},
   {NULL, NULL, 0},
 };
 

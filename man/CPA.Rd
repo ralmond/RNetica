@@ -11,8 +11,8 @@
   variables and the last dimension representing the
   states of the node.  Given a set of values for the parent variables,
   the values in the last dimension contain the conditional probabilities 
-  corresponding conditional probabilities.  A \code{CPF} is a special
-  \code{\link[base]{data.frame}} object which represents a conditional
+  corresponding conditional probabilities.  A \code{CPA} is a special
+  \code{\link[base]{array}} object which represents a conditional
   probability table.
 }
 \usage{
@@ -21,7 +21,7 @@ as.CPA(x)
 }
 \arguments{
   \item{x}{
-    Object to be tested or coerced into a \code{CPF}.  
+    Object to be tested or coerced into a \code{CPA}.  
   }
 }
 \details{

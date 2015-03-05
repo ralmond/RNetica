@@ -90,6 +90,11 @@ GetNetworkFileName(net)
   collection of networks can be read or written at once).  When the
   argument is a scalar, a scalar is returned.  This is probably the 80\% case,
   but may produce unexpected behavior in certain coding circumstances.
+
+  Netica does not seem to expand the character '~' to your home
+  directory (unlike R which follows the Unix convention in this
+  regard). 
+
 }
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{CreateNetwork}()},
