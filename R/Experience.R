@@ -21,7 +21,7 @@ NodeExperience <- function (node) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("GetNodeExperience: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
@@ -67,7 +67,7 @@ NodeExperience <- function (node) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("SetNodeExperience: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(node)
 }
@@ -83,7 +83,7 @@ FadeCPT <- function (node, degree=0.2) {
   handle <- .Call("RN_FadeCPT",node,as.double(degree),PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("FadeCPT: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -99,7 +99,7 @@ LearnFindings <- function (nodes, weight=1.0) {
   handles <- .Call("RN_LearnFindings",nodes,as.double(weight),PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("LearnFindings: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
@@ -134,7 +134,7 @@ LearnCases <- function(caseStream, nodelist, weight=1.0) {
      .Call("RN_LearnCaseStream",stream,nodelist,weight, PACKAGE="RNetica")
      ecount <- ReportErrors()
      if (ecount[1]>0) {
-       stop("LearnCases: Netica Errors Encountered, see console for details.")
+       stop("Netica Errors Encountered, see console for details.")
      }
   invisible(stream)
   })
@@ -195,7 +195,7 @@ LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
                      maxIters,maxTol,weight, PACKAGE="RNetica")
      ecount <- ReportErrors()
      if (ecount[1]>0) {
-       stop("SetNodeName: Netica Errors Encountered, see console for details.")
+       stop("Netica Errors Encountered, see console for details.")
      }
      result
    })
