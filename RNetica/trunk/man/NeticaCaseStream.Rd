@@ -131,7 +131,7 @@ getCaseStreamLastFreq(stream)
   Stream objects should also be forced closed when garbage collected.
   The weak reference system is somewhat experimental, so well designed
   code should manually close the streams when the program is through
-  with it.
+  with them.
 
   Stream objects are fragile, and will not survive saving and restoring
   an R session.  However, the object retains information about itself,

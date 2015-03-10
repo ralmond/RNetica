@@ -13,7 +13,7 @@ AddLink <- function (parent, child) {
   handle <- .Call("RN_AddLink",parent,child,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("AddLink: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -28,7 +28,7 @@ DeleteLink <- function (parent, child) {
   handle <- .Call("RN_DeleteLink",parent,child,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("DeleteLink: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -43,7 +43,7 @@ ReverseLink <- function (parent, child) {
   handle <- .Call("RN_ReverseLink",parent,child,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("ReverseLink: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -55,7 +55,7 @@ NodeChildren <- function (parent) {
   handle <- .Call("RN_GetNodeChildren",parent,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("NodeChildren: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -68,7 +68,7 @@ NodeParents <- function (child) {
   handle <- .Call("RN_GetNodeParents",child,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("NodeParents: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -119,7 +119,7 @@ NodeParents <- function (child) {
   handle <- .Call("RN_SetNodeParents",child, value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("NodeParents: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -131,7 +131,7 @@ NodeInputNames <- function (node) {
   names <- .Call("RN_GetNodeInputNames",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("NodeInputNamess: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   names
 }
@@ -147,7 +147,7 @@ NodeInputNames <- function (node) {
   handle <- .Call("RN_SetNodeInputNames",node, value,PACKAGE="RNetica");
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("NodeInputNames: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -178,7 +178,7 @@ AbsorbNodes <- function (nodes) {
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("AbsorbNodes: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (length(handles)==1L) handles <- handles[[1L]]
   invisible(handles)
@@ -203,7 +203,7 @@ is.NodeRelated <- function (node1, node2, relation="connected") {
   handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("IsNodeRelated: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -225,7 +225,7 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   handle <- .Call("RN_GetRelatedNodes",nodelist,relation,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("IsNodeRelated: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -238,7 +238,7 @@ MakeCliqueNode <- function(nodelist) {
   handle <- .Call("RN_MakeCliqueNode",nodelist,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("MakeCliqueNode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -317,7 +317,7 @@ NodeProbs <- function (node) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("GetNodeProbs: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   class(result) <- c("CPA",class(result))
   result
@@ -357,7 +357,7 @@ NodeProbs <- function (node) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("SetNodeProbs: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(node)
 }
@@ -370,7 +370,7 @@ IsNodeDeterministic <- function (node) {
   handle <- .Call("RN_IsNodeDeterministic",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("IsNodeDeterministic: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   handle
 }
@@ -382,7 +382,7 @@ HasNodeTable <- function (node) {
   result <- .Call("RN_HasNodeTable",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("HasNodeTable: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   names(result) <- c("exists","complete")
   result
@@ -395,7 +395,7 @@ DeleteNodeTable <- function (node) {
   handle <- .Call("RN_DeleteNodeTable",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("DeleteNodeTable: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -652,7 +652,7 @@ selectionToConfig <- function(node,selection) {
 
 "[.NeticaNode" <- function(x, ...,  drop=FALSE) {
   if (!is.NeticaNode(x) || !is.active(x)) {
-    stop("GetCondProb:  Expected an active netica node.")
+    stop("Expected an active netica node.")
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
@@ -754,7 +754,7 @@ selectionToConfig <- function(node,selection) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("Extract.NeticaNode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
@@ -765,7 +765,7 @@ selectionToConfig <- function(node,selection) {
 
 "[<-.NeticaNode" <- function(x, ..., value) {
   if (!is.NeticaNode(x) || !is.active(x)) {
-    stop("GetCondProb:  Expected an active netica node, got",x)
+    stop("Expected an active netica node, got",x)
   }
 
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
@@ -917,7 +917,7 @@ selectionToConfig <- function(node,selection) {
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("Assign.NeticaNode: Node: ", x,"Netica Errors Encountered, see console for details.")
+    stop("Node: ", x,"Netica Errors Encountered, see console for details.")
   }
   invisible(x)
 }

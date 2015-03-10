@@ -1,3 +1,18 @@
+2015-03-10  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (as.IDname): Fixed vectorization so that only
+	affected names would be modified.
+
+2015-03-07  Russell G. Almond  <ralmond@Limu>
+
+	* R/Random.R (GenerateRandomCase, NetworkSetRNG, WithRNG)
+	(isNeticaRNGActive, is.NeticaRNG, print.NeticaRNG)
+	(toString.NeticaRNG, FreeNeticaRNG, NewNeticaRNG): Created
+	
+
+	* R/*.R (*): Removed function name from stop statements
+	(rendundant and not alway correct). 
+
 2015-03-04  Russell G. Almond  <ralmond@Limu>
 
 	* src/Random.c (RNGFree, AddRNGRef, FreeRNGs, RN_isRNGActive)

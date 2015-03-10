@@ -102,6 +102,9 @@ export(NodeValue, "NodeValue<-",
        NodeEquation, "NodeEquation<-",EquationToTable
        )
 
+export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
+       is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
+
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)
 S3method(Ops, NeticaBN)
@@ -113,5 +116,7 @@ S3method("[[", NeticaNode)
 S3method("[<-", NeticaNode)
 S3method(toString, NeticaCaseStream)
 S3method(print, NeticaCaseStream)
+S3method(toString, NeticaRNG)
+S3method(print, NeticaRNG)
 
 

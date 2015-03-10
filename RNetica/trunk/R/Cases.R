@@ -18,7 +18,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL) {
   olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CaseFileDelimiter: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   intToUtf8(olddelim)
 }
@@ -43,7 +43,7 @@ CaseFileMissingCode <- function (newcode=NULL) {
   oldcode <- .Call("RN_MissingCode",newcode,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CaseFileMissingCode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   intToUtf8(oldcode)
 }
@@ -70,11 +70,11 @@ OpenCaseStream <- function (oldstream) {
       MemoryStreamContents(stream) <- source
     }
   } else {
-    stop("OpenCaseStream:  expected oldstram to be a NeticaCaseStream")    
+    stop("expected oldstram to be a NeticaCaseStream")
   }
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CaseFileMissingCode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   stream
 }
@@ -87,7 +87,7 @@ CaseFileStream <- function (pathname) {
     .Call("RN_OpenCaseFileStream",pathname,NULL,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CaseFileMissingCode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   stream
 }
@@ -99,7 +99,7 @@ MemoryCaseStream <- function (data.frame,
   MemoryStreamContents(stream) <- data.frame
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CaseFileMissingCode: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   stream
 }
@@ -107,12 +107,12 @@ MemoryCaseStream <- function (data.frame,
 
 CloseCaseStream <- function (stream) {
   if (!is.NeticaCaseStream(stream))
-    stop("CloseCaseStream:  Trying to close a non-stream object.")
+    stop("Trying to close a non-stream object.")
   if (!isCaseStreamOpen(stream)) {
     warning("CloseCaseStream:  Stream already closed.")
     return (stream)
   }
-  stream <- .Call("RN_CloseCaseStream",stream,PACKAGE="RNetica")  
+  stream <- .Call("RN_CloseCaseStream",stream,PACKAGE="RNetica")
   stream
 }
 
@@ -141,7 +141,7 @@ is.CaseFileStream <- function (x) {
 
 isCaseStreamOpen <- function (stream) {
   if (!is.NeticaCaseStream(stream)) return (NA_integer_)
-  .Call("RN_isCaseStreamActive",stream,PACKAGE="RNetica")  
+  .Call("RN_isCaseStreamActive",stream,PACKAGE="RNetica")
 }
 
 getCaseStreamPath <- function (stream) {
@@ -174,24 +174,24 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
   }
   if (is.NeticaCaseStream(pathOrStream)) {
     if (!isCaseStreamOpen(pathOrStream)) {
-      stop ("WriteFindings:  Stream is not open for writing.")
+      stop("Stream is not open for writing.")
     }
   } else if (!is.character(pathOrStream) || length(pathOrStream) >1L) {
-    stop("WriteFindings: expected filename (length 1) or CaseStream, got",
+    stop("expected filename (length 1) or CaseStream, got",
          pathOrStream)
   }
   id <- as.integer(id)
   if (length(id) >1L) {
-    stop("WriteFindings: Argument id must be an integer scalar.")
+    stop("Argument id must be an integer scalar.")
   }
   freq <- as.numeric(freq)
   if (length(freq) >1L) {
-    stop("WriteFindings: Argument freq must be a numeric scalar.")
+    stop("Argument freq must be a numeric scalar.")
   }
   stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("WriteFindings: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   stream
 }
@@ -203,15 +203,15 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
   }
   if (is.NeticaCaseStream(stream)) {
     if (!isCaseStreamOpen(stream)) {
-      stop ("ReadFindings:  Stream is not open for writing.")
+      stop("Stream is not open for writing.")
     }
   } else if (!is.character(stream) || length(stream) >1L) {
-    stop("ReadFindings: expected filename (length 1) or CaseStream, got",
+    stop("expected filename (length 1) or CaseStream, got",
          stream)
   }
   add <- as.logical(add)
   if (is.na(add) || length(add) >1L) {
-    stop("ReadFindings: Argument add must be a logical scalar.")
+    stop("Argument add must be a logical scalar.")
   }
   if (is.character(pos) && length(pos) == 1L &&
       (toupper(pos)=="FIRST" || toupper(pos)=="NEXT")) {
@@ -222,13 +222,13 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
   } else {
     pos <- as.integer(pos)
     if (is.na(pos) || length(pos)>1L || pos < 0) {
-      stop("ReadFindings: Argument pos must be a postive integer, 'FIRST' or 'NEXT'.")
+      stop("Argument pos must be a postive integer, 'FIRST' or 'NEXT'.")
     }
   }
   stream <- .Call("RN_ReadFindings",nodes,stream,pos,add,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("ReadFindings: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   stream
 }
@@ -262,7 +262,7 @@ MemoryStreamContents <- function (stream) {
     contents <- .Call("RN_GetMemoryStreamContents",stream,PACKAGE="RNetica")
     ecount <- ReportErrors()
     if (ecount[1]>0) {
-      stop("SetNodeName: Netica Errors Encountered, see console for details.")
+      stop("Netica Errors Encountered, see console for details.")
     }
     if (is.null(contents)) {
       result <- NULL
@@ -299,9 +299,9 @@ MemoryStreamContents <- function (stream) {
     stream <- .Call("RN_SetMemoryStreamContents",stream,contents,PACKAGE="RNetica")
     ecount <- ReportErrors()
     if (ecount[1]>0) {
-      stop("SetNodeName: Netica Errors Encountered, see console for details.")
+      stop("Netica Errors Encountered, see console for details.")
     }
-  } 
+  }
   stream
 }
 

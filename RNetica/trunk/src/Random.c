@@ -75,7 +75,7 @@ void FreeRNGs () {
 
 
 SEXP RN_isRNGActive(SEXP rng) {
-  SEXP stPtr, result;
+  SEXP rngPtr, result;
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
   PROTECT(rngPtr = getAttrib(rng,rngatt));
@@ -87,9 +87,9 @@ SEXP RN_isRNGActive(SEXP rng) {
 }
 
 SEXP RN_NewRandomGenerator (SEXP seed) {
-  const char* seedstring=CHAR(STRING_ELT(path,0));
+  const char* seedstring=CHAR(STRING_ELT(seed,0));
   randgen_ns* rng =  NewRandomGenerator_ns (seedstring,RN_netica_env, NULL);
-  if (str == NULL ) 
+  if (rng == NULL ) 
     return R_NilValue;
   else {
     SEXP rngsexp, rngPtr, ref;
@@ -97,12 +97,12 @@ SEXP RN_NewRandomGenerator (SEXP seed) {
     PROTECT(rngsexp = allocVector(STRSXP,1));
     SET_STRING_ELT(rngsexp,0,mkChar(seedstring));
     SET_CLASS(rngsexp,rngclass);
-    PROTECT(rngPtr = R_MakeExternalPtr(str,rngatt, R_NilValue));
+    PROTECT(rngPtr = R_MakeExternalPtr(rng,rngatt, R_NilValue));
     setAttrib(rngsexp,rngatt,rngPtr);
     PROTECT(ref = R_MakeWeakRefC(rngPtr,rngsexp,
                                  (R_CFinalizer_t) &RNGFree, 
                                  TRUE));
-    AddRngRef(ref);
+    AddRNGRef(ref);
     UNPROTECT(3);
     return rngsexp;
   }
@@ -138,22 +138,10 @@ SEXP RN_FreeRNG (SEXP rng) {
   return(rng);
 }
 
-SEXP RN_isRNGActive(SEXP rng) {
-  SEXP rngPtr, result;
-  PROTECT(result=allocVector(LGLSXP,1));
-  LOGICAL(result)[0]=FALSE;
-  PROTECT(rngPtr = getAttrib(rng,rngatt));
-  if (!isNull(rngPtr) && R_ExternalPtrAddr(rngPtr)) {
-    LOGICAL(result)[0] = TRUE;
-  }
-  UNPROTECT(2);
-  return result;
-}
-
 
 
 SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
-  net_bn* netica_handle = GetNeticaHandle(bn);
+  net_bn* netica_handle = GetNeticaHandle(net);
   const char* seedstring=NULL;
   randgen_ns* rng = NULL; 
   if (isNeticaRNG(seed)) {
@@ -209,6 +197,6 @@ SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method,
   if (rng && newrng) {
     DeleteRandomGen_ns(rng);
   }
-  DeleteNodeList_bn(related);
+  DeleteNodeList_bn(nodes);
   return ScalarInteger(result);
 }

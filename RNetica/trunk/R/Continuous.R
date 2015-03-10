@@ -10,7 +10,7 @@ NodeValue <- function (node) {
   result <- .Call("RN_GetNodeValue",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeValue: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
@@ -29,7 +29,7 @@ NodeValue <- function (node) {
   handle <- .Call("RN_SetNodeValue",node,val,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeFinding: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -51,7 +51,7 @@ NodeValue <- function (node) {
   handle <- .Call("RN_SetNodeGaussian",node,mean,sem,resetFirst,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeFinding: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -95,7 +95,7 @@ NodeValue <- function (node) {
   handle <- .Call("RN_SetNodeGaussian",node,lv,hv,resetFirst,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeFinding: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -107,7 +107,7 @@ NodeExpectedValue <- function (node) {
   result <- .Call("RN_GetNodeExpectedValue",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeExpectedValue: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
@@ -119,7 +119,7 @@ NodeExpectedUtils <- function (node) {
   result <- .Call("RN_GetNodeExpectedValue",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeExpectedUtils: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   names(result) <- NodeStates(node)
   result
@@ -132,7 +132,7 @@ CalcNodeState <- function (node) {
   result <- .Call("RN_CalcNodeState",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CalcNodeState: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (is.numeric(result) && !is.na(result)) {
     result <- NodeStates(node)[result+1] ## Convert to name.
@@ -147,7 +147,7 @@ CalcNodeValue <- function (node) {
   result <- .Call("RN_CalcNodeValue",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("CalcNodeValue: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
@@ -166,7 +166,7 @@ MutualInfo <- function (target, nodelist) {
   result <- .Call("RN_GetMutalInfo",target,nodelist,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("MutualInfo: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (!is.null(names(nodelist))) {
     names(result) <- names(nodelist)
@@ -190,7 +190,7 @@ VarianceOfReal <- function (target, nodelist) {
   result <- .Call("RN_GetVarianceOfReal",target,nodelist,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
-    stop("VarianceOfReal: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (!is.null(names(nodelist))) {
     names(result) <- names(nodelist)
@@ -207,7 +207,7 @@ NodeEquation <- function (node) {
   equation <- .Call("RN_GetNodeEquation",node,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("NodeEquation: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   equation
 }
@@ -224,7 +224,7 @@ NodeEquation <- function (node) {
   handle <- .Call("RN_SetNodeEquation",node,value,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("SetNodeEquation: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   if (autoconvert)
     EquationToTable(node)
@@ -248,7 +248,7 @@ EquationToTable <- function (node, numSamples=25, sampUnc=TRUE, addExist=TRUE) {
                   PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
-    stop("SetNodeEquation: Netica Errors Encountered, see console for details.")
+    stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
