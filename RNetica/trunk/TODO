@@ -1,6 +1,3 @@
-Error message when NodeProbs() is called on a node whose CPT is not
-yet set.
-
 
 FALSE-node bug (Netica Node object is replaced with FALSE).
 Nasty bug where RReference gets overwritten in network.  Not sure
@@ -64,11 +61,13 @@ Testing
 ## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
 ## GetTestQuadradicLoss_bn
 ## TestWithCaseset_bn, 
+
 Random Generation
-## NewRandomGenerator_ns, DeleteRandomGenerator_ns
-## GenerateRandomeNumbers_ns, GetRandomGenState_ns
-## SetNetRandomGen_bn
-## GenerateRandomCase_bn
+Random generation implemented and tested, but probably very
+inefficient in the simple case were we want to generate a set of
+several hundred cases to a case file.  Should reimplement that on the
+C side so we don't need to constantly do the R->c conversions.
+
 DBNs
 ## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
 
@@ -93,3 +92,4 @@ Ask Brent:
 7. Learn_CPTs return value?
 8. Mysterious behavior of CalcNodeState and CalcNodeValue
 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
+10.  Error on NodeExpectedUtils
