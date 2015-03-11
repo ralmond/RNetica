@@ -263,10 +263,10 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
     }
     mempcpy(pos,"\0",1);
   }
-  //printf("Length at creation time %ld\n",totlen);
+  //Rprintf("Length at creation time %ld\n",totlen);
   SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
   const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
-  printf("Buffer contents now:\n%s\n",obuf);
+  Rprintf("Buffer contents now:\n%s\n",obuf);
 
   setAttrib(stream,casestreamposatt,R_NilValue);
   setAttrib(stream,casestreamlastidatt,R_NilValue);
@@ -284,7 +284,7 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
 
   const char *nbuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
   //Copy so we can tokenize it.
-  //printf("Buffer length %ld\n",(size_t) totlen);
+  //Rprintf("Buffer length %ld\n",(size_t) totlen);
   if (totlen == 0) return R_NilValue;
   buf = (char *) R_alloc((size_t) totlen,sizeof(char));
   if (buf == NULL) {
@@ -296,12 +296,12 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
     buf[ipos]=nbuf[ipos];
     if (buf[ipos]=='\n') nrow++;
   }
-  //printf("ipos = %ld, nrow=%ld\n",ipos,nrow);
+  //Rprintf("ipos = %ld, nrow=%ld\n",ipos,nrow);
   PROTECT(contents = allocVector(STRSXP,nrow));
   line = strtok(buf,"\n");
   irow=0;
   while (line) {
-    //printf("Line %ld: %s\n",irow,line);
+    //Rprintf("Line %ld: %s\n",irow,line);
     SET_STRING_ELT(contents,irow++,mkChar(line));
     line = strtok(NULL,"\n");
   }
@@ -369,7 +369,7 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
     error("RN_ReadFindings:  stream is not a open.");
   }
   stream_ns *stream_handle = GetCaseStream_Handle(stream);
-  //printf("RN_ReadFindings: Stream_handle %ld.\n",stream_handle);
+  //Rprintf("RN_ReadFindings: Stream_handle %ld.\n",stream_handle);
   ReadNetFindings2_bn(&case_posn,stream_handle,addflag,nodelist,
                       &idnum,&freqnum);
   if (case_posn == NO_MORE_CASES) {
