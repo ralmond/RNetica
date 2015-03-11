@@ -175,7 +175,7 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
 
 SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream) {
   const char* lab=CHAR(STRING_ELT(label,0));
-  printf("Opening Stream for R object %s\n",lab);
+  Rprintf("Opening Stream for R object %s\n",lab);
   stream_ns* str = 
     NewMemoryStream_ns (lab,RN_netica_env, NULL);
   if (str == NULL ) 
