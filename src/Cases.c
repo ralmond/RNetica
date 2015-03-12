@@ -175,7 +175,7 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
 
 SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream) {
   const char* lab=CHAR(STRING_ELT(label,0));
-  Rprintf("Opening Stream for R object %s\n",lab);
+  //Rprintf("Opening Stream for R object %s\n",lab);
   stream_ns* str = 
     NewMemoryStream_ns (lab,RN_netica_env, NULL);
   if (str == NULL ) 
@@ -266,7 +266,7 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
   //Rprintf("Length at creation time %ld\n",totlen);
   SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
   const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
-  Rprintf("Buffer contents now:\n%s\n",obuf);
+  //Rprintf("Buffer contents now:\n%s\n",obuf);
 
   setAttrib(stream,casestreamposatt,R_NilValue);
   setAttrib(stream,casestreamlastidatt,R_NilValue);
@@ -284,9 +284,9 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
 
   const char *nbuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
   //Copy so we can tokenize it.
-  //Rprintf("Buffer length %ld\n",(size_t) totlen);
+  Rprintf("Buffer length %ld\n",(size_t) totlen);
   if (totlen == 0) return R_NilValue;
-  buf = (char *) R_alloc((size_t) totlen,sizeof(char));
+  buf = (char *) R_alloc((size_t) totlen+1,sizeof(char));
   if (buf == NULL) {
     error("Could not allocate memory for string buffer.");
     return R_NilValue;
@@ -296,12 +296,13 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
     buf[ipos]=nbuf[ipos];
     if (buf[ipos]=='\n') nrow++;
   }
-  //Rprintf("ipos = %ld, nrow=%ld\n",ipos,nrow);
+  buf[totlen] = '\0';
+  Rprintf("ipos = %ld, nrow=%ld\n",ipos,nrow);
   PROTECT(contents = allocVector(STRSXP,nrow));
   line = strtok(buf,"\n");
   irow=0;
   while (line) {
-    //Rprintf("Line %ld: %s\n",irow,line);
+    Rprintf("Line %ld: %s\n",irow,line);
     SET_STRING_ELT(contents,irow++,mkChar(line));
     line = strtok(NULL,"\n");
   }
