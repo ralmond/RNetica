@@ -99,16 +99,17 @@ The 0.3 series of releases includes a number of different improvements.
   think they should return a non-missing value.
 <li> The function NodeExpectedUtils is generating an internal Netica
   error.
-<li> If a node has a name which is too close to the 40 character
+<li> If a node has a name which is too close to the 30 character
   limit, and that node is disconnected from a link, leaving a stub
   variable, then the stub variable will have a name that is longer
-  than 40 characters, causing problems.  To avoid make sure names are
-  no more than 36 characters.
+  than 30 characters, causing problems.  To avoid make sure names are
+  no more than 26 characters.  UPDATE.  Changed as.IDname() to make
+  shorter names.
 </ol>
-<p> Approximately 3/4 of the API functionality is mapped.  Things that
+<p> Approximately 4/5 of the API functionality is mapped.  Things that
   are still not mapped:
 <ol>
-<li> Random data generation
+<li> Testers
 <li> DBN functionality
 <li> Database suppot (I see no need to do this as better to use the
   DBI R package).
