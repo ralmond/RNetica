@@ -1,3 +1,9 @@
+2015-03-12  Almond  <ralmond@macox.com>
+
+	* src/Cases.c (RN_GetMemoryStreamContents): Fixed null termination
+	problem.
+	
+
 2015-03-10  Russell G. Almond  <ralmond@Limu>
 
 	* R/Networks.R (as.IDname): Fixed vectorization so that only
