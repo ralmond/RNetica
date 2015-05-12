@@ -76,4 +76,4 @@ stopifnot(is.na(NodeUserField(userNode,"gender")))
 DeleteNetwork(usedNet)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

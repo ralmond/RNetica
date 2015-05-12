@@ -200,6 +200,110 @@ VarianceOfReal <- function (target, nodelist) {
   result
 }
 
+## This is broken, need to add evidence
+woe <- function (enodes,estates,hnodes,hstatelists) {
+  if (!is.list(enodes))
+    enodes <- list(enodes)
+  if (!is.list(estates))
+    estates <- list(estates)
+  if (!is.list(hnodes))
+    hnodes <- list(hnodes)
+  if (!is.list(hstatelists))
+    hstatelists <- list(hstatelists)
+  if (!all(sapply(hnodes,is.NeticaNode))) {
+    stop("Expected a list of Netica nodes, got ",hnodes)
+  }
+  if (length(hstatelists) > length(hnodes)) {
+    stop("More statelists than nodes.")
+  }
+  net <- NodeNetwork(hnodes[[1]])
+
+  ## Not sure whether hypothesis or negation is compound, so set up
+  ## likelihood based on hypothesis being true and use virtual evidence.
+  hlikes <- mapply(function(hnode,hstatelist) {
+    stnames <- NodeStateNames(hnode)
+    hlike <- rep(0,length(stnames))
+    names(hlike) <- stnames
+    hlike[hstatelist] <- 1
+    hlike
+  }, hnodes,hstatelists,SIMPLIFY=FALSE)
+
+  tryCatch({
+    for (i in 1:length(hnodes)) {
+      RetractNodeFinding(hnodes[[i]])
+      NodeLikelihood(hnodes[[i]]) <- hlike[[i]]
+    }
+    p_Htrue <- FindingsProbability(net)
+
+    for (i in 1:length(hnodes)) {
+      RetractNodeFinding(hnodes[[i]])
+      NodeLikelihood(hnodes[[i]]) <- 1-hlike[[i]]
+    }
+    p_Hfalse <- FindingsProbability(net)
+
+    100*log10(p_Htrue/p_Hfalse)
+  }, finally = sapply(hnodes,RetractNodeFinding))
+
+}
+
+
+ewoe <- function (targets,hnodes,hstatelists) {
+  if (!is.list(targets))
+    targets <- list(targets)
+  if (!all(sapply(targets,is.NeticaNode))) {
+    stop("Expected a list of Netica nodes, got ",targets)
+  }
+  if (!is.list(hnodes))
+    hnodes <- list(hnodes)
+  if (!all(sapply(hnodes,is.NeticaNode))) {
+    stop("Expected a list of Netica nodes, got ",hnodes)
+  }
+  if (!is.list(hstatelistss))
+    hstatelists <- list(hstatelists)
+  if (length(hstatelists) > length(hnodes)) {
+    stop("More statelists than nodes.")
+  }
+
+  ## Not sure whether hypothesis or negation is compound, so set up
+  ## likelihood based on hypothesis being true and use virtual evidence.
+  hlikes <- mapply(function(hnode,hstatelist) {
+    stnames <- NodeStateNames(hnode)
+    hlike <- rep(0,length(stnames))
+    names(hlike) <- stnames
+    hlike[hstatelist] <- 1
+    hlike
+  }, hnodes,hstatelists,SIMPLIFY=FALSE)
+
+  tryCatch({
+    for (i in 1:length(hnodes)) {
+      RetractNodeFinding(hnodes[[i]])
+      NodeLikelihood(hnodes[[i]]) <- hlike[[i]]
+    }
+    p_Htrue <- lapply(targets,NodeBeliefs)
+
+    for (i in 1:length(hnodes)) {
+      RetractNodeFinding(hnodes[[i]])
+      NodeLikelihood(hnodes[[i]]) <- 1-hlike[[i]]
+    }
+    p_Hfalse <- lapply(targets,NodeBeliefs)
+
+    ewoes <- mapply(function (p_H,p_notH) {100*sum(log10(p_H/p_notH)*pH)},
+                    p_Htrue,p_Hfalse)
+    if (length(names(targets)) > 0) {
+      names(ewoes) <- names(targets)
+    } else {
+      names(ewoes) <- sapply(targets,NodeName)
+    }
+    ewoes
+  }, finally = sapply(hnodes,RetractNodeFinding))
+
+}
+
+
+##########
+## Equations
+
+
 NodeEquation <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)

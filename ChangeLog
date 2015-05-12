@@ -2,7 +2,9 @@
 
 	* src/Cases.c (RN_GetMemoryStreamContents): Fixed null termination
 	problem.
-	
+2015-03-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (ewoe, woe): Added
 
 2015-03-10  Russell G. Almond  <ralmond@Limu>
 
