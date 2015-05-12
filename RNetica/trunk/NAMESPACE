@@ -99,7 +99,8 @@ export(NodeValue, "NodeValue<-",
        NodeExpectedValue, NodeExpectedUtils,
        CalcNodeState, CalcNodeValue,
        MutualInfo, VarianceOfReal,
-       NodeEquation, "NodeEquation<-",EquationToTable
+       NodeEquation, "NodeEquation<-",EquationToTable,
+       woe, ewoe
        )
 
 export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
