@@ -1,6 +1,8 @@
 \name{NodeSets}
 \alias{NodeSets}
 \alias{NodeSets<-}
+\alias{AddNodeToSets}
+\alias{RemoveNodeFromSets}
 \title{
   Lists or changes the node sets associated with a Netica node.
 }
@@ -12,6 +14,8 @@
 \usage{
 NodeSets(node, incSystem = FALSE)
 NodeSets(node) <- value
+AddNodeToSets(node,sets)
+RemoveNodeFromSets(node,sets)
 }
 \arguments{
   \item{node}{
@@ -25,6 +29,11 @@ NodeSets(node) <- value
     A character vector containing the names of the node sets that
     \code{node} should be associated with.  These names must follow the
     \code{\link{is.IDname}()} rules.
+  }
+  \item{sets}{
+    A character vector containing the names of the node sets that
+    \code{node} should (or should not) be associated with.  These names
+    must follow the \code{\link{is.IDname}()} rules.
   }
 }
 \details{
@@ -51,11 +60,15 @@ NodeSets(node) <- value
   would be two distinct node sets.)  Setting the node set associated
   with a node only affects user-defined node sets, the Netica system
   node sets cannot be set using \code{NodeSet}.
+
+  The functions \code{AddNodeToSets} and \code{RemoveNodeFromSets}
+  operate on the current node set in the expected way.
   
 }
 \value{
   A character vector giving the names of the node sets \code{node} is
-  associated with.  The setter form returns \code{node}.
+  associated with.  The setter form, \code{AddNodeToSets} and
+  \code{RemoveNodeFromSets} return \code{node}.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -114,6 +127,19 @@ NodeSets(Ability) <- character()
 stopifnot(
   length(NodeSets(Ability)) == 0
 )
+
+NodeSets(Ability) <- c("Set1","Set2")
+AddNodeToSets(Ability,c("Set2","Set3"))
+stopifnot(
+  length(NodeSets(Ability)) == 3,
+  setequal(NodeSets(Ability),c("Set1","Set2","Set3"))
+)
+RemoveNodeFromSets(Ability,c("Set1","Set4"))
+stopifnot(
+  length(NodeSets(Ability)) == 2,
+  setequal(NodeSets(Ability),c("Set2","Set3"))
+)
+
 
 DeleteNetwork(nsnet)
 

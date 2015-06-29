@@ -377,6 +377,23 @@ NodeAllUserFields <- function (node) {
   values
 }
 
+
+NodeUserObj <- function (node, fieldname) {
+  str <- NodeUserField(node,fieldname)
+  if (is.na(str)) return(NULL)
+  dgetFromString(str)
+}
+
+"NodeUserObj<-" <- function (node, fieldname, value) {
+  sval <- dputToString(value)
+  ## Sometimes R "helpfully" breaks this into multiple lines.
+  if (length(sval) > 1)
+    sval <- paste(sval,collapse=" ")
+  NodeUserField(node,fieldname) <- sval
+  node
+}
+
+
 NodeKind <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
@@ -671,6 +688,17 @@ NodeSets <- function(node, incSystem=FALSE) {
   invisible(node)
 }
 
+AddNodeToSets <- function (node,sets) {
+  NodeSets(node) <- union(NodeSets(node),sets)
+  invisible(node)
+}
+
+RemoveNodeFromSets <- function (node,sets) {
+  NodeSets(node) <- setdiff(NodeSets(node),sets)
+  invisible(node)
+}
+
+
 NetworkNodesInSet <- function(net, setname) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
@@ -687,6 +715,20 @@ NetworkNodesInSet <- function(net, setname) {
   nodes <- as.list(nodes)
   names(nodes) <- sapply(nodes,NodeName)
   nodes
+}
+
+"NetworkNodesInSet<-" <- function(net, setname, value) {
+  oldset <- NetworkNodesInSet(net,setname)
+  ## setdiff doesn't work with objects, so need to do this the hard way
+  for (nd in oldset) {
+    if (!(nd %in% value))
+      RemoveNodeFromSets(nd,setname)
+  }
+  for (nd in value) {
+    if (!(nd %in% oldset))
+      AddNodeToSets(nd,setname)
+  }
+  invisible(net)
 }
 
 NetworkSetPriority <- function(net, setlist) {

@@ -447,6 +447,37 @@ NetworkAllUserFields <- function (net) {
   values
 }
 
+## A utility function for converting objects to strings and vise
+## versa.
+dputToString <- function (obj) {
+  con <- textConnection(NULL,open="w")
+  tryCatch({dput(obj,con);
+           textConnectionValue(con)},
+           finally=close(con))
+}
+
+dgetFromString <- function (str) {
+  con <- textConnection(str,open="r")
+  tryCatch(dget(con), finally=close(con))
+}
+
+
+NetworkUserObj <- function (net, fieldname) {
+  str <- NetworkUserField(net,fieldname)
+  if (is.na(str)) return(NULL)
+  dgetFromString(str)
+}
+
+"NetworkUserObj<-" <- function (net, fieldname, value) {
+  sval <- dputToString(value)
+  ## Sometimes R "helpfully" breaks this into multiple lines.
+  if (length(sval) > 1)
+    sval <- paste(sval,collapse=" ")
+  NetworkUserField(net,fieldname) <- sval
+  net
+}
+
+
 NetworkUndo <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
