@@ -1,0 +1,119 @@
+<head><title>Peanut and PNetica Release Information</title></head>
+<body>
+
+<h1>About Peanut and PNetica</h1>
+<p>
+Peanut (a corruption of parameterized network, or Pnet) is a an object
+oriented layer designed to rest on top
+of <a href="CPTtools.html">CPTtools</a>.  In particular, it introduces
+a parameterized node (Pnode) class that can associates the parameters of the
+discrete partial credit models with the node object and a
+parameterized network (Pnet) class that contains a collection of
+parameterized nodes.  The figure below givens the object model.
+<p>
+  <img src="PnetClasses.png">
+<p>
+The most important method in the class is the GEMfit method, which
+uses the generalized EM algorithm to the CPTs for the parameterized
+nodes to a set of cases.  It may offer other capabilities as it
+evolveds.  
+<p>
+In order to keep the dependencies on a specific Bayes net package to a
+minimum, they were isolated in a separate package.  The Peanut package
+defines a series of functions and the PNetica package provides methods
+for objects of the NeticaBN and NeticaNode classes (both from
+the <a href="RNetica.html">RNetica</a> package).  The idea is similar
+to the relationship between the DBI and RMySQL packages.  
+
+<h2>Peanut and PNetica License Information</h2>
+
+<p>
+Peanut and PNetica are made available under
+  the <a href="http://www.r-project.org/Licenses/Artistic-2.0">Artistic
+    License, version 2.0</a>.  PNetica depends on RNetica, which has a
+  somewhat more complex <a href="RNetica.html#License">license</a>.
+
+
+<h2>Current Version Status</h2>
+<p>
+The current version (0.1-2) has been tested on simple models and
+contains a users manual for Peanut, but not PNetica.  More systematic
+test is necessary, as is more documentation for PNetica.
+<p>
+
+<h1>Peanut Releases</h1>
+
+The following releases are archived here:
+
+<table border="1">
+<tr>
+<th>Release</th><th>Source</th><th>Windows Binary</th><th>Mac Binary</th><th>Manual</th><th>Notes</th>
+</tr>
+<tr>
+<td>0.1-2</td><td><a href="Peanut_0.1-2.tar.gz">Peanut_0.1-2.tar.gz</a></td>
+<td><a href="Peanut_0.3-2.zip">Peanut_0.3-2.zip</a></td>
+<td><a href="Peanut_0.3-2.tgz">Peanut_0.3-3.tgz</a></td>
+<td><a href="Peanut-manual_0.3-2.pdf">Peanut-manual_0.3-2.pdf</a></td>
+<td></td><td>Initial Trial Release</td></tr>
+</table>
+
+Note the source versions have been compiled and tested under
+Linux/Unix, Mac OS X and Windows.  
+
+<h1>PNetica Releases</h1>
+
+The following releases are archived here:
+
+<table border="1">
+<tr>
+<th>Release</th><th>Source</th><th>Windows Binary</th><th>Mac Binary</th><th>Manual</th><th>Notes</th>
+</tr>
+<tr>
+<td>0.1-2</td><td><a href="PNetica_0.1-2.tar.gz">PNetica_0.1-2.tar.gz</a></td>
+<td><a href="PNetica_0.3-2.zip">PNetica_0.3-2.zip</a></td>
+<td><a href="PNetica_0.3-2.tgz">PNetica_0.3-3.tgz</a></td>
+<td><a href="PNetica-manual_0.3-2.pdf">PNetica-manual_0.3-2.pdf</a></td>
+<td></td><td>Initial Trial Release</td></tr>
+</table>
+
+Note the source versions have been compiled and tested under
+Linux/Unix, Mac OS X and Windows.  
+
+<h2>Development Version</h2>
+
+The latest development version is available as  subversion repositories
+at:  <a href="https://pluto.coe.fsu.edu/svn/common/Peanut/">https://pluto.coe.fsu.edu/svn/common/Peanut/</a>,
+<a href="https://pluto.coe.fsu.edu/svn/common/PNetica/">https://pluto.coe.fsu.edu/svn/common/PNetica/</a>.  
+<p>
+If you have patches or other correspondence about Peanut you can
+contact me at <a href="mailto:almond@acm.org">almond@acm.org<a/>.  If
+you are filing a bug report, please be sure to include:
+<ol>
+<li> The version number of Peanut and R that you are using.
+<li> Your operating system and whether it is 64 or 32 bit.
+<li> The exact text of any error message that is generated.
+<li> A small script that reproduces the problem (if at all possible).
+</ol>
+<p>
+I would also be willing to host alternatives to PNetica using other
+Bayes net packages on this server (either Web or Subversion).  Contact
+me for details.      
+
+<h2>Legal Notices</h2>
+<p>
+Netica and Norsys are registered trademarks of Norsys, LLC, used by
+permission.  
+<p>
+Although Norsys has been generally supportive of the RNetica project,
+they do not offer formal support in any way.  (In particular, the do
+not currently have anybody on staff who knows R.)  All support
+requests should be sent to the package maintainers.
+<p>
+  The software is offered AS IS, without any warranty of any kind.
+  Support is provided on a volunteer basis, and may not be immediately
+  forthcoming. 
+
+<hr>
+Site last updated on 2015-06-29.
+
+</body>

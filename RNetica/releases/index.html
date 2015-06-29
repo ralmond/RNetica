@@ -1,16 +1,25 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
         "http://www.w3.org/TR/html4/strict.dtd">
-<head><title>RNetica and CPTtools</title></head>
+<head><title>RNetica, PNetica, CPTtools and Peanut</title></head>
 <body>
 <p>
-This website plays host to two different packages of functions useful
-for building Bayesian networks:  RNetica and CPTtools.
+This website plays host to four different packages of functions useful
+for building Bayesian networks:  <a href="RNetica.html">RNetica</a>,
+<a href="PNetica.html">PNetica</a>, <a href="Peanut.html">CPTtools and
+  Peanut</a>.
 <p>
-Both packages are in early alpha release, there may be bugs and
+RNetica and CPTtools are beta-quality releases and Peanut and PNetica
+are both in early alpha stages.  There may be bugs and 
 problmes and users should be comfortable debugging in R.  Although I
 am happy to accept bug reports, I do not promise to respond to them in
 a timely fashion.
-
+<img src="PnetPackages.png">
+<p>
+Note that CPTtools is meant to be independent of the Bayes net
+implementation and Peanut, the object oriented later on top of it,
+depends on CPTtools but not the implementation specific packages.
+RNetica depends on the Netica Bayes net engine and PNetica is the
+Peanut implementation using RNetica.
 
 <h1>About RNetica</h1>
 <p>
@@ -45,11 +54,25 @@ to work with the output of StatShop, but work equally well with
 RNetica output.  Again, they should work with the output of other
 Bayes net packages with minimal adaptation.
 <p>
-CPTtools is also an alpha release, with minimal testing.  However, the
+CPTtools is beta release; however, the
 code is all in R, and hence does not require advanced knowledge of R.
 <p>
 <a href="CPTtools.html">Click here for information about CPTtools.</a>
 
+<h1>Peanut and PNetica</h1>
+<p>
+Peanut is an object oriented layer on top of CPTtools, for associating
+choices of parameters and parameterizations with specific
+parameterized nodes (Pnodes) in a parameterized network (Pnet).
+Peanut is mostly a generic interface, and PNetica is a specific
+implemenation of the Peanut framework using RNetica.
+<p>
+Peanut and PNetica are in early beta release; however, the
+code is all in R, and hence does not require advanced knowledge of R.
+<p>
+<a href="Peanut.html">Click here for information about Peanut and PNetica.</a>
 
+<hr>
+Site last updated on 2015-06-29.
 
 </body>
