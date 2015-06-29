@@ -1,3 +1,13 @@
+2015-06-05  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NodeUserObj, "NodeUserObj<-"): Added serialized object
+	storage. 
+	("NetworkNodesInSet<-", RemoveNodeFromSets, AddNodeToSets): Made
+	node sets more settable.
+
+	* R/Networks.R (dputToString, dgetFromString, NetworkUserObj)
+	("NetworkUserObj<-"): Added serialized object storage.
+
 2015-03-12  Almond  <ralmond@macox.com>
 
 	* src/Cases.c (RN_GetMemoryStreamContents): Fixed null termination

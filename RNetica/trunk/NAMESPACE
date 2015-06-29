@@ -15,7 +15,9 @@ export(WriteNetworks, ReadNetworks,
        NetworkComment, "NetworkComment<-",
        GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
        NetworkUserField, "NetworkUserField<-",
-       NetworkAllUserFields
+       NetworkUserObj, "NetworkUserObj<-",
+       NetworkAllUserFields,
+       dputToString, dgetFromString
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
        )
 
@@ -29,6 +31,7 @@ export(
   NodeTitle, "NodeTitle<-",
   NodeDescription, "NodeDescription<-",
   NodeUserField, "NodeUserField<-", NodeAllUserFields,
+  NodeUserObj, "NodeUserObj<-",
   NodeKind, "NodeKind<-",
   NodeVisStyle, "NodeVisStyle<-",
   NodeVisPos, "NodeVisPos<-"
@@ -72,9 +75,11 @@ export(
  )
 
 export (
-   NodeSets, "NodeSets<-",
-   NetworkNodeSets, NetworkSetPriority,
-   NetworkNodesInSet, NetworkNodeSetColor
+    NodeSets, "NodeSets<-",
+    AddNodeToSets, RemoveNodeFromSets,
+    NetworkNodeSets, NetworkSetPriority,
+    NetworkNodesInSet, "NetworkNodesInSet<-",
+    NetworkNodeSetColor
  )
 
 export(CaseFileDelimiter,CaseFileMissingCode,

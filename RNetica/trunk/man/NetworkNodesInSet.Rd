@@ -1,5 +1,6 @@
 \name{NetworkNodesInSet}
 \alias{NetworkNodesInSet}
+\alias{NetworkNodesInSet<-}
 \title{
   Returns a list of node labeled with the given node set in a Netica
   Network. 
@@ -11,6 +12,7 @@
 }
 \usage{
 NetworkNodesInSet(net, setname)
+NetworkNodesInSet(net, setname) <- value
 }
 \arguments{
   \item{net}{
@@ -18,6 +20,10 @@ NetworkNodesInSet(net, setname)
   }
   \item{setname}{
     A character scalar giving the node set to look for.
+  }
+  \item{value}{
+    A list of active \code{\link{NeticaNode}} objects which should be in
+    the node set.
   }
 }
 \details{
@@ -35,7 +41,13 @@ NetworkNodesInSet(net, setname)
   indirectly through the use of \code{NodeSets}, or through the use of
   system primitives.
 
-  Note that it is acceptable to use the system built-ins.  For examble
+  The expression \code{NetworkNodesInSet(net,setname) <-value} make sure
+  that \code{setname} is in the node sets of all nodes that are in
+  \code{value} and that it is not in the node sets of any node that is
+  not in \code{value}.
+
+  Note that it is acceptable to use the system built-ins in the getter
+  method (but not the setter).  For examble
   searching for \code{":TableIncomplete"} will return a collection of
   nodes for which the conditional probability table has not yet been
   set.
@@ -64,7 +76,8 @@ nsnet <- CreateNetwork("NodeSetExample")
 
 Ability <- NewContinuousNode(nsnet,"Ability")
 
-X1 <- NewDiscreteNode(nsnet,"Item1",c("Right","Wrong"))
+XX <- NewDiscreteNode(nsnet,paste("Item",1:5,sep=""),c("Right","Wrong"))
+X1 <- XX[[1]]
 
 EssayScore <- NewDiscreteNode(nsnet,"EssayScore",paste("level",5:0,sep="_"))
 
@@ -92,12 +105,31 @@ stopifnot(
   nodeseteq(NetworkNodesInSet(nsnet,"Observables"),
            list()),
   nodeseteq(NetworkNodesInSet(nsnet,":Nature"),
-           list(Ability,EssayScore,X1)),
+           c(list(Ability,EssayScore),XX)),
   nodeseteq(NetworkNodesInSet(nsnet,":Decision"),
            list(Placement)),
   nodeseteq(NetworkNodesInSet(nsnet,":Utility"),
            list(Value))
 )
+
+NetworkNodesInSet(nsnet,"TestSet") <- XX[1:3]
+stopifnot(
+  is.element("TestSet",NodeSets(XX[[1]])),
+  is.element("TestSet",NodeSets(XX[[2]])),
+  is.element("TestSet",NodeSets(XX[[3]])),
+  !is.element("TestSet",NodeSets(XX[[4]])),
+  !is.element("TestSet",NodeSets(XX[[5]]))
+)
+NetworkNodesInSet(nsnet,"TestSet") <- XX[2:4]
+stopifnot(
+  !is.element("TestSet",NodeSets(XX[[1]])),
+  is.element("TestSet",NodeSets(XX[[2]])),
+  is.element("TestSet",NodeSets(XX[[3]])),
+  is.element("TestSet",NodeSets(XX[[4]])),
+  !is.element("TestSet",NodeSets(XX[[5]]))
+)
+
+
 
 DeleteNetwork(nsnet)
 
