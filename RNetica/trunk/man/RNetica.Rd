@@ -2,24 +2,19 @@
 \alias{RNetica-package}
 \alias{RNetica}
 \docType{package}
-\title{R interface to Netica(R) Bayesian Network Engine}
+\title{\packageTitle{RNetica}}
 \description{
-This provides an R interface to the Netica, in particular, it binds many
-of the functions in the Netica C API into the R langauge.  RNetica can
-create and modify networks, enter evidence and extract the conditional
-probabilities from a Netica network.
+\packageDescription{RNetica}
 }
 \details{
-\tabular{ll}{
-Package: \tab RNetica\cr
-Version: \tab 0.4-2\cr
-Date: \tab 2015/03/09\cr
-Depends: \tab R (>= 3.0), methods, utils, grDevices\cr
-(http: \tab //norsys.com/) Bayesian network library API\cr
-License: \tab Artistic-2.0 + file LICENSE\cr
-URL: \tab http://pluto.coe.fsu.edu/RNetica\cr
-Built: \tab R 3.1.2; x86_64-pc-linux-gnu; 2015-03-10 18:35:49 UTC; unix\cr
-}
+The DESCRIPTION file:
+\packageDESCRIPTION{RNetica}
+
+This package provides an R interface to the Netica, in particular, it
+binds many of the functions in the Netica C API into the R langauge.
+RNetica can create and modify networks, enter evidence and extract the
+conditional probabilities from a Netica network.
+
 }
 \section{License}{
 
@@ -45,169 +40,10 @@ Built: \tab R 3.1.2; x86_64-pc-linux-gnu; 2015-03-10 18:35:49 UTC; unix\cr
 
 }
 \section{Index}{
-\preformatted{
-AbsorbNodes             Delete a Netica nodes in a way that maintains
-                        the connectivity.
-AddLink                 Adds or removes a link between two nodes in a
-                        Netican network.
-AdjoinNetwork           Links an evidence model network to a system
-                        model netwok.
-CPA                     Representation of a conditional probability
-                        table as an array.
-CPF                     Representation of a conditional probability
-                        table as a data frame.
-CalcNodeState           Calculates the state of a node based on logical
-                        functions or formulae
-CaseFileDelimiter       Gets or sets special characters for case files.
-CaseFileStream          A stream of cases for reading/writing Netica
-                        findings to a file
-CompileNetwork          Builds the junction tree for a Netica Network
-CopyNetworks            Makes copies of Netica networks.
-CopyNodes               Copies or duplicates nodes in a Netica network.
-CreateNetwork           Creates (destroys) a new Netica network.
-DeleteNodeTable         Deletes the conditional probability table of a
-                        Netica node.
-EliminationOrder        Retrieves or sets the elimination order used in
-                        compiling a Netica network.
-EnterFindings           Enters findings for multiple nodes in a Netica
-                        network.
-EnterGaussianFinding    Enter a numeric finding with uncertainty
-EnterIntervalFinding    Enter finding of value within an interval
-EnterNegativeFinding    Sets findings for a Netaca node to a list of
-                        ruled out values.
-Extract.NeticaNode      Extracts portions of the conditional
-                        probability table of a Netica node.
-FadeCPT                 Fades a Netica Conditional Probability Table
-FindingsProbability     Finds the probability of the findings entered
-                        into a Netica network.
-GenerateRandomCase      Generates random cases for nodes in a Netica
-                        network
-GetNamedNetworks        Finds a Netica network (if it exists) for the
-                        name.
-GetNetworkAutoUpdate    Turns Netica automatic updating on or off for a
-                        network.
-GetNthNetwork           Fetch a Netica network by its position in the
-                        Netica list.
-HasNodeTable            Tests to see if a Netica node has a conditional
-                        probability table.
-IDname                  Tests to see if a string is a valid as a Netica
-                        Identifier.
-IsNodeDeterministic     Determines if a node in a Netica Network is
-                        deterministic or not.
-JointProbability        Calculates the joint probability over several
-                        network nodes.
-JunctionTreeReport      Produces a report about the junction tree from
-                        a compiled Netica network.
-LearnCPTs               Learn Conditional Probability Tables with
-                        Missing Data.
-LearnCases              Learn Conditional Probabilitiy Tables from a
-                        Netica Case Stream
-LearnFindings           Learn Netica conditional probabilities from
-                        findings.
-MakeCliqueNode          Forces a collection of nodes in a Netica
-                        network to be in the same clique.
-MemoryCaseStream        A stream of cases for reading/writing Netica
-                        from memory
-MemoryStreamContents    Access the contents of a MemoryCaseStream
-MostProbableConfig      Finds the configuration of the nodes most likel
-                        to have lead to observed findings.
-MutualInfo              Calculates strength of relationship between two
-                        nodes in a network
-NeticaBN                An object referencing a Bayesian network in
-                        Netica.
-NeticaCaseStream        A stream of cases for reading/writing Netica
-                        findings
-NeticaNode              An object referencing a node in a Netica
-                        Bayesian network.
-NeticaRNG               Creates a Netica Random Number Generator
-NeticaVersion           Fetches the version number of Netica.
-NetworkFindNode         Finds nodes in a Netica network.
-NetworkFootprint        Returns a list of names of unconnected edges.
-NetworkName             Gets or Sets the name of a Netica network.
-NetworkNodeSetColor     Returns or sets a display colour to use with a
-                        netica node.b
-NetworkNodeSets         Returns a list of node sets associated with a
-                        Netica network.
-NetworkNodesInSet       Returns a list of node labeled with the given
-                        node set in a Netica Network.
-NetworkSetPriority      Changes the priority order of the node sets.
-NetworkSetRNG           Sets a random number generator associates with
-                        the network.
-NetworkTitle            Gets the title or comments associated with a
-                        Netica network.
-NetworkUndo             Undoes (redoes) a Netica operation on a
-                        network.
-NetworkUserField        Gets user definable fields associated with a
-                        Netica network.
-NewDiscreteNode         Creates (or destroys) a node in a Netica
-                        Bayesian network.
-NodeBeliefs             Returns the current marginal probability
-                        distribution associated with a node in a Netica
-                        network.
-NodeChildren            Returns a list of the children of a node in a
-                        Netica network.
-NodeEquation            Gets or sets the equation Netica uses to
-                        calcate the CPT for a node
-NodeExpectedUtils       Calculates expected utility for each value of a
-                        decision node
-NodeExpectedValue       Calculates expected value for a numeric node
-NodeExperience          Gets or sets the amount of experience
-                        associated with a node.
-NodeFinding             Returns of sets the observed value associated
-                        with a Netica node.
-NodeInputNames          Associates names with incomming edges on a
-                        Netica node.
-NodeKind                Gets or changes the kind of a node in a Netica
-                        network.
-NodeLevels              Accesses the levels associated with a Netica
-                        node.
-NodeLikelihood          Returns or sets the virtual evidence associated
-                        with a Netica node.
-NodeName                Gets or set of a Netica node.
-NodeNet                 Finds which Netica network a node comes from.
-NodeParents             Gets or sets the parents of a node in a Netica
-                        network.
-NodeProbs               Gets or sets the conditional probability table
-                        associated with a Netica node.
-NodeSets                Lists or changes the node sets associated with
-                        a Netica node.
-NodeStateTitles         Accessors for the titles and comments
-                        associated with states of Netica nodes.
-NodeStates              Accessor for states of a Netica node.
-NodeTitle               Gets the title or Description associated with a
-                        Netica node.
-NodeUserField           Gets user definable fields associated with a
-                        Netica node.
-NodeValue               Sets the numeric value of a continuous node
-NodeVisPos              Gets, sets the visual position of the node on
-                        the Netica display.
-NodeVisStyle            Gets/sets the nodes visual appearence in
-                        Netica.
-ParentStates            Returns a list of the names of the states of
-                        the parents of a Netica node.
-RNetica-package         R interface to Netica(R) Bayesian Network
-                        Engine
-ReadFindings            Retrieves a record from a Netica Case Stream
-RetractNodeFinding      Clears any findings for a Netica node or
-                        network.
-ReverseLink             Reverses a link in a Netica network.
-StartNetica             Starting and stopping the Netica shared
-                        library.
-WithOpenCaseStream      Evaluate an expression and then close the
-                        Netica Case Stream.
-WriteFindings           Appends the current findings to a Netica case
-                        file.
-WriteNetworks           Reads or writes a Netica network from a file.
-is.NodeRelated          Computes topological properities of a 'Netica'
-                        network.
-is.active               Check to see if a Netica network or node object
-                        is still valid.
-is.discrete             Determines whether a Netica node is discrete or
-                        continuous.
-normalize               Normalizes a conditional probability table.
-write.CaseFile          Read or write data frame in Netica Case File
-                        format.
-}}
+
+  \packageIndices{Peanut}
+
+}
 \section{RNetica Environment and Netica Objects}{
 
 Netica exists in both as a stand alone graphical tool for building and
