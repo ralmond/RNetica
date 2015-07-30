@@ -32,7 +32,7 @@ EnterGaussianFinding(node, mean, sem, retractFirst = TRUE)
 }
 \details{
   The \code{node} must a continuous node that has
-  been discritized using \code{\link{NodeLevels}(node)}.  The
+  been discretized using \code{\link{NodeLevels}(node)}.  The
   probabilities for each state are calculated based on a Gaussian
   distribution with the given \code{mean} and \code{sem} (SD).  
 }

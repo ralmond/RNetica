@@ -30,7 +30,7 @@ NodeExperience(node) <- value
   distribution.  If there are \eqn{k} states, then the parameters of the
   Dirichlet distribution are \eqn{a_1,\ldots,a_k} and the expected value
   is \eqn{p_1=a_1/n,\ldots,p_k=a_k/n}, where \eqn{n=a_1+\ldots+a_k} is
-  the normalization constant.  An alterantive way to represent the
+  the normalization constant.  An alternative way to represent the
   Dirichlet parameters is with the probability vector and the
   normalization.  The \emph{experience} is the normalization constant.
   Note that after observing \eqn{m} additional observations, the
@@ -60,7 +60,7 @@ NodeExperience(node) <- value
 \author{Russell Almond}
 \note{
   I tend to refer to this distribution as a "hyper-Dirichlet"
-  distribution, although Speigelhalter and Laurtizen (1990) used that
+  distribution, although Spiegelhalter and Lauritzen (1990) used that
   term to refer to a network in which all of the nodes were
   parameterized in that way.
 }

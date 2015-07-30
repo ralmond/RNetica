@@ -6,7 +6,7 @@
   \code{\link{NeticaCaseStream}} is open.  The stream is closed when the
   evaluation is complete.  The evaluation of \code{expr} is surrounded
   with a \code{\link[base]{tryCatch}} so that the stream is closed
-  whether or not the expression is successfull executed.
+  whether or not the expression is successfully executed.
 }
 \usage{
 WithOpenCaseStream(stream, expr)

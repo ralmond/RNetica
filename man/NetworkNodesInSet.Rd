@@ -47,7 +47,7 @@ NetworkNodesInSet(net, setname) <- value
   not in \code{value}.
 
   Note that it is acceptable to use the system built-ins in the getter
-  method (but not the setter).  For examble
+  method (but not the setter).  For example
   searching for \code{":TableIncomplete"} will return a collection of
   nodes for which the conditional probability table has not yet been
   set.

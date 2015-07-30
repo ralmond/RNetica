@@ -33,8 +33,8 @@ FadeCPT(node, degree = 0.2)
   (1-degree) + degree)}, and the new experience will be the
   normalization constant.
 
-  This funciton is often used together with \code{\link{LearnFindings}}
-  to downweight old cases when the conditional probabilities are thought
+  This function is often used together with \code{\link{LearnFindings}}
+  to down weight old cases when the conditional probabilities are thought
   to be changing slowly over time.
 
 }

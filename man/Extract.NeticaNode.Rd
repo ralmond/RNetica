@@ -8,7 +8,7 @@
   Extracts portions of the conditional probability table of a Netica node.
 }
 \description{
-  Provides an efficient mechansim for extracting or setting portions of
+  Provides an efficient mechanism for extracting or setting portions of
   large conditional probability tables.  In particular, allows setting
   many rows a CPT to the same value.
 }
@@ -46,7 +46,7 @@ EVERY_STATE
   \item{value}{
     Either a numeric vector with length \code{\link{NodeNumStates}(x)}
     giving the conditional probabilities for the specified rows in the
-    table or a character scaler (discrete node) or numeric scaler (continuous
+    table or a character scalar (discrete node) or numeric scalar (continuous
     node) giving the value that should be given probability 1.
   }
 }
@@ -58,8 +58,8 @@ EVERY_STATE
   inefficient.  In particular, to set a single row of an array, the
   entire table is read into R and then written back to Netica.
 
-  This funciton allows the syntax \code{node[\ldots]} to be used to
-  access only a portion of the table.  Ther are many different ways
+  This function allows the syntax \code{node[\ldots]} to be used to
+  access only a portion of the table.  There are many different ways
   \code{...} can be interpreted, which are described below.
 
   In this access model the value \code{EVERY_STATE} or the character
@@ -72,17 +72,17 @@ EVERY_STATE
 
   A second difference is that \code{node[\ldots]} returns the
   conditional probability table in data frame (\code{\link{CPF}})
-  format.  This is particularly convenient becasue that format does not
+  format.  This is particularly convenient because that format does not
   need to cover every parent configuration, thus it is ideal for holding
   subset of the complete table.
 
   A third difference is that a number of special values are allowed for
   the probability table.  First, if the node is deterministic, the value
   of a parent configuration can be set to the state name instead of a
-  probabity vector.  This creates a deterministic conditional
+  probability vector.  This creates a deterministic conditional
   probability table full of 1's and 0's.  For continuous nodes, the
   nodes value for a parent configuration (assuming all discrete or
-  discritized parents) can be set directly.  Finally, if the last column
+  discretized parents) can be set directly.  Finally, if the last column
   of the conditional probabilities is not supplied, it will be
   computed.  This is particularly handy for binary nodes.
 
@@ -98,7 +98,7 @@ EVERY_STATE
 }
 \section{Selecting Rows Using Data Frames}{
   This selection uses the syntax \code{node[df]} or
-  \code{node[df]<-value}, wheree \code{df} is a data frame or a matrix. 
+  \code{node[df]<-value}, where \code{df} is a data frame or a matrix. 
   It is assumed that the columns represent the variables, and the rows
   represent the selected configurations of the parent variables.
 
@@ -128,7 +128,7 @@ EVERY_STATE
   parent variables for \code{node}.  If \code{df} has column names, then
   all columns should be named.  In this case the parent variables will
   be match by the \code{\link{NodeInputNames}(node)} if they exist, or
-  the names of the parent varaibles if they do not (see
+  the names of the parent variables if they do not (see
   \code{\link{ParentStates}(node)} for more details).  Otherwise,
   positional selection is used.
 
@@ -136,7 +136,7 @@ EVERY_STATE
 \section{Selecting Rows Using Array-type Selection}{
 
   The second way that rows from the conditional probability table can be
-  selected is using an analogue of the selection mechansims supported by
+  selected is using an analogue of the selection mechanisms supported by
   R for selecting cells from an array.  Essentially, the rows of the
   conditional probability table are treated as if they are the elements
   of an array whose dimnames correspond to
@@ -203,14 +203,14 @@ EVERY_STATE
   are identical, so there should be no conflict.
   
 }
-\section{Special Meanining for \code{NULL} selection}{
+\section{Special Meaning for \code{NULL} selection}{
 
   If \code{\ldots} is \code{NULL}, that is if the calling expression looks
   like \code{node[]} then the intention is that all rows of the
   conditional probability table are to be selected.  This is the only
   meaningful selection type if there are no parent variables.  It also
   provides a fast and convenient way to set all rows of the conditional
-  probabillity table to the same value (if \code{value}) has a single
+  probability table to the same value (if \code{value}) has a single
   row, or to retrieve the complete conditional probability table in
   \code{\link{CPF}} format.
 
@@ -230,7 +230,7 @@ EVERY_STATE
   valued arguments, but not counting the special values
   \code{EVERY_STATE} or \code{"*"} (or blank entries in the list).
 
-  Netcia has a special shortcut for \code{EVERY_STATE} and all matching
+  Netica has a special shortcut for \code{EVERY_STATE} and all matching
   rows are set to the same probability value. This means that the number
   of rows in the value must match the selection counting the special
   values as if they selected a single row.  In particular, if
@@ -250,7 +250,7 @@ EVERY_STATE
   When a node is deterministic, that is all probabilities are \eqn{0} or
   \eqn{1}, then it is meaningful to talk about the conditional value of
   a node instead of the conditional probability table.  The expression
-  \code{node[\ldots]} displays the conditional probabililty table in a
+  \code{node[\ldots]} displays the conditional probability table in a
   special way when the node is deterministic.  In this case it displays
   the value as a single variable giving the state of the child variable
   given the configuration of the parents.  In the case of discrete
@@ -263,15 +263,15 @@ EVERY_STATE
   configurations are set to deterministic probabilities with the
   indicated value given probability of \eqn{1} and all others with
   probability \eqn{0}.  It is possible to set some rows of a conditional
-  probability table to be deterministic and others to have unrestriced
+  probability table to be deterministic and others to have unrestricted
   probabilities, however, the deterministic rows will then print out as
-  unconstrained probabilites with \eqn{0} and \eqn{1} values.
+  unconstrained probabilities with \eqn{0} and \eqn{1} values.
 
   Continuous nodes (nodes for which \code{\link{is.continuous}(node) ==
   TRUE}) use a variation of this system.  Here the value is an arbitrary
   numeric value.  For this to be meaningful, it is assumed that all of
-  the parents of \code{node} are either discrete ofr have been
-  discritized. 
+  the parents of \code{node} are either discrete or have been
+  discretized. 
 
   Warning:  Setting an unconditional discrete node to a constant value,
   that is executing an expression like \code{node[] <- value} 
@@ -288,7 +288,7 @@ EVERY_STATE
   If the number of columns in \code{value} is one less than the number of
   states in \code{node}, then is assumed that the probability values
   should be calculated for the last state via normalization, that is it
-  is assigned all of the remaining probability not asigned in the first
+  is assigned all of the remaining probability not assigned in the first
   couple of columns.  In particular, the value is internally translated
   via the expression:
   \code{value <- cbind(value,1-apply(value,1,sum))}.
@@ -312,7 +312,7 @@ EVERY_STATE
   For the form \code{node[\ldots]} the return value is a data frame in
   the \code{\link{CPF}} format giving the conditional probability
   table.  If the node is deterministic
-  (\code{IsNodeDetermistic(node)==TRUE}), then the probilities will be
+  (\code{IsNodeDetermistic(node)==TRUE}), then the probabilities will be
   replaced with a single column giving the value of the node.  If the
   node is discrete, then the value will be a factor.  If the node is
   continuous, then the value will be a real vector.

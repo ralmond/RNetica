@@ -15,7 +15,7 @@ woe(hnodes, hstatelists)
 \arguments{
   \item{hnodes}{A list of \code{\link{NeticaNode}}s
     whose values are of interest.  As a special case, a single
-    \code{NeticaNode} is treated as a list of lenght one.}
+    \code{NeticaNode} is treated as a list of length one.}
   \item{hstatelists}{A list of character vectors the same length as
     \code{hnodes} corresponding to the hypothesized state of the nodes
     and representing states of the corresponding node.
@@ -24,7 +24,7 @@ woe(hnodes, hstatelists)
 }
 \details{
 
-  Good (1985) defines the weight of evidence \eqn{E} for a hypotheis \eqn{H} as
+  Good (1985) defines the weight of evidence \eqn{E} for a hypothesis \eqn{H} as
   \deqn{W(H:E) = log \frac{P(E|H)}{P(E|\not H)} =
     log \frac{P(H|E)}{P(\not H|E)} - log \frac{P(H)}{P(\not H)}.}
   

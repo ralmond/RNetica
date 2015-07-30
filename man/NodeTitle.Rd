@@ -8,7 +8,7 @@
 }
 \description{
   The title is a longer name for a node which is not subject to the
-  netica \code{\link{IDname}} restrictions.  The description is a freeform
+  Netica \code{\link{IDname}} restrictions.  The description is a free form
   text associated with a node.
 }
 \usage{

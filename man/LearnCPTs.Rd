@@ -32,7 +32,7 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
     \dQuote{COUNTING} (the default).  See details.
   }
   \item{maxIters}{An integer scalar giving the maximum number of
-    interations for the EM and gradient decent algorithms.
+    interactions for the EM and gradient decent algorithms.
   }
   \item{maxTol}{An real scalar giving the difference in log-likelihood
     required before the EM or gradient decent algorithms to be
@@ -56,7 +56,7 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
   The \emph{Counting} algorithm is the same as the one used in
   \code{\link{LearnCases}}.  Cases where either the parent or the child
   variable is missing are ignored when updating the conditional
-  probablity table for the node, that is the neither affect the
+  probability table for the node, that is the neither affect the
   \code{\link{NodeExperience}} or the \code{\link{NodeProbs}}.  As a
   consequence, models with latent variables cannot be fit with this
   algorithm.
@@ -68,7 +68,7 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
 
   The \emph{Gradient Decent} algorithm is an alternative iterative
   algorithm.  According to the Netica documentation it is similar to
-  back propagation in neural networks.  Again acording to Netica, it is
+  back propagation in neural networks.  Again according to Netica, it is
   faster than EM, but more likely to find a local maxima.  It appears
   not to respect prior information about the conditional probability
   tables, and it sets the node experience to \code{-Inf}.

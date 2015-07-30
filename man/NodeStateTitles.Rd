@@ -19,7 +19,7 @@ NodeStateComments(node) <- value
 }
 \arguments{
   \item{node}{
-    An active \code{NeticaNode} object whose state titles or coments will be
+    An active \code{NeticaNode} object whose state titles or comments will be
     accessed. 
   }
   \item{value}{

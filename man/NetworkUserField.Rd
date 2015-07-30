@@ -10,7 +10,7 @@
 \description{
   Netica provides a mechanism for associating user defined values with a
   network as a series of key/value pairs.  The key must be a
-  \code{\link{IDname}} and the value can be an aribtrary string
+  \code{\link{IDname}} and the value can be an arbitrary string
   (\code{NetworkUserField}) or arbitrary object (\code{NetworkUserObj}).
 }
 \usage{

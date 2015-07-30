@@ -25,8 +25,8 @@ as.CPF(x)
   }
 }
 \details{
-  One way to store a conditional proability table is a table in which
-  the first severl columns indicate the states of the parent variables,
+  One way to store a conditional probability table is a table in which
+  the first several columns indicate the states of the parent variables,
   and the last several columns indicate probabilities for several child
   variables. Consider the following example:
   \tabular{rllrrrr}{
@@ -38,11 +38,11 @@ as.CPF(x)
 [5,] \tab a1 \tab b3 \tab 0.09 \tab 0.20 \tab 0.30 \tab 0.41 \cr 
 [6,] \tab a2 \tab b3 \tab 0.10 \tab 0.20 \tab 0.30 \tab 0.40 \cr 
   }
-  In this cas the first two columns correspond to parent variables
+  In this case the first two columns correspond to parent variables
   \eqn{A} and \eqn{B}.  The variable \eqn{A} has two possible states and
   the variable \eqn{B} has three.  The child variable is \eqn{C} and it
   has for possible states.  The numbers in each row give the conditional
-  proabillities for those states give the state of the child variables.
+  probabilities for those states give the state of the child variables.
 
   The class \code{CPF} is a subclass of \code{\link[base]{data.frame}}
   (formally, it is class \code{c("CPF","data.frame")}).  Although the
@@ -57,7 +57,7 @@ as.CPF(x)
   returns a \code{CPF} (if the node is not deterministic).
 
   The function \code{as.CPF()} is designed to convert between
-  \code{\link{CPA}}s (that is, conditional proability tables stored as
+  \code{\link{CPA}}s (that is, conditional probability tables stored as
   arrays) and \code{CPF}s. In particular, \code{as.CPF} is designed to
   work with the output of \code{NodeProbs()} or a similarly formatted
   array.  It assumes that \code{names(dimnames(x))} are the names of the
@@ -76,8 +76,8 @@ as.CPF(x)
   The function \code{is.CPF()} returns a logical value indicating
   whether or not the \code{is(x,"CDF")} is true.
   
-  The frunction \code{as.CPF} returns an object of class
-  \code{c("CPF","data.frame")}, which is essentailly a data frame with
+  The function \code{as.CPF} returns an object of class
+  \code{c("CPF","data.frame")}, which is essentially a data frame with
   the first couple of columns representing the parent variables, and the
   remaining columns representing the states of the child 
   variable. 
@@ -88,7 +88,7 @@ as.CPF(x)
 \note{
   The parent variable list is created with a call
   \code{\link[base]{expand.grid}(dimnames(x)[1:(p-1)])}.  This produces
-  conditional probabilty tables where the first parent variable varies
+  conditional probability tables where the first parent variable varies
   fastest.  The Netica GUI displays tables in which the last parent
   variable varies fastest.
 }

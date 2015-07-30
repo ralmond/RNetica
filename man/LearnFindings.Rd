@@ -35,8 +35,8 @@ LearnFindings(nodes, weight = 1)
   a_{jk}+weight} with all other values remaining the same.  The new
   conditional probabilities are \eqn{p'_{jk} = a'_{jk}/n'_j}.
 
-  The funciton \code{\link{FadeCPT}} is often used between calls to
-  \code{LearnFindings} to downweight old cases when the conditional
+  The function \code{\link{FadeCPT}} is often used between calls to
+  \code{LearnFindings} to down weight old cases when the conditional
   probabilities are thought to be changing slowly over time.
 
 }

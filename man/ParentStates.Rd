@@ -9,7 +9,7 @@
   vector giving the states of the parent variables (i.e., the result of
   calling \code{\link{NodeStates})} on each of the elements of
   \code{\link{NodeParents}(node)}).   The names of this list are the
-  names assiged to the edges through \code{\link{NodeInputNames}(node)},
+  names assigned to the edges through \code{\link{NodeInputNames}(node)},
   or the names of the parent variables if edge names were not supplied.
 }
 \usage{
@@ -24,7 +24,7 @@ ParentNames(node)
 }
 \value{
   For \code{ParentStates(node)}, named list where each element
-  correponds to the states of a parent variable.  If \code{node} has no
+  corresponds to the states of a parent variable.  If \code{node} has no
   parents, it returns a list of length 0.
 
   The function \code{ParentName(node)} returns

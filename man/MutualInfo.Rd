@@ -7,7 +7,7 @@
   The mutual information is a measure of how closely related one node is
   to another, i.e., how much information each node in \code{nodelist}
   provides about the \code{target} node.  The expression
-  \code{MutualInfo(target, nodelist)} calcuates the mutal information of
+  \code{MutualInfo(target, nodelist)} calculates the mutual information of
   each node in \code{nodelist} with \code{target}.
 
   The function \code{VarianceOfReal()} is similar, but instead it
@@ -32,19 +32,19 @@ VarianceOfReal(target, nodelist)
 }
 }
 \details{
-  The mutaul information between two discrete variables is defined as:
+  The mutual information between two discrete variables is defined as:
   \deqn{MI(X,Y) = \sum_{x,y} \Pr(x,y) \log \frac{ \Pr(x,y) }{\Pr(x)\Pr(y)}.}
   It is a measure of how much information \code{X} provides about
   \code{Y}.  This measure is appropriate when both \code{X} and \code{Y}
   are discrete variables.
 
-  Mutual infomation is often used to select the next best variable to
+  Mutual information is often used to select the next best variable to
   test (in the educational context, this would be the next item to
   select for an adaptive test).  The highest value of the mutual
   information will provide the most information.  (See Chapter 7 of
   Almond et al, 2015).
 
-  The funciton \code{VarianceOfReal(target,nodelist)} is related, but in
+  The function \code{VarianceOfReal(target,nodelist)} is related, but in
   this case \code{target} must either be continuous
   (\code{\link{is.continuous}(target)} is true) or have numeric values
   assigned to each level using \code{\link{NodeLevels}(target)}.  For

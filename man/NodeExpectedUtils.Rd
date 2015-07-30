@@ -20,9 +20,9 @@ NodeExpectedUtils(node)
 \details{
 
   This solves a decision problem.  In an influence diagram (decision
-  net), one decision node is considered a predicessor if its value is
+  net), one decision node is considered a predecessor if its value is
   known at the time when a decision is made.  The compilation process
-  for a decision net will fill in predicessor relationships when they
+  for a decision net will fill in predecessor relationships when they
   are implied by paths through nature nodes.  Decision networks are
   typically \dQuote{solved} by working backwards in time from the last
   decision to the first.
@@ -53,7 +53,7 @@ NodeExpectedUtils(node)
 }
 \section{Warning}{
   This function is currently returning an internal Netica error.  Do not
-  use until I get clarification from Norysis.
+  use until I get clarification from Norsys.
 }
 \seealso{
   \code{\link{NodeKind}()}, \code{\link{NodeValue}()},

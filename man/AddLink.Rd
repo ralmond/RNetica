@@ -2,7 +2,7 @@
 \alias{AddLink}
 \alias{DeleteLink}
 \title{
-  Adds or removes a link between two nodes in a Netican network.
+  Adds or removes a link between two nodes in a Netica network.
 }
 \description{
   Add link adds an edge from \code{Parent} to \code{Child}.  Delete Link
@@ -37,8 +37,8 @@ DeleteLink(parent, child)
   \code{NodeParents(child)}.  
 
   In general, the Bayesian network must always be an acyclic directed
-  graph.  Therefore, if \code{parent} is a decendent of \code{child}
-  (that is if \code{\link{is.NodeRelated}(child)}, "decendent",
+  graph.  Therefore, if \code{parent} is a descendant of \code{child}
+  (that is if \code{\link{is.NodeRelated}(child)}, "descendant",
   \code{child} is \code{TRUE}), then Netica will generate an error.
 
   The function \code{DeleteLink()} removes the relationship, and the

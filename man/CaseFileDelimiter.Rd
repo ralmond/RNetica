@@ -35,7 +35,7 @@ CaseFileMissingCode(newcode = NULL)
   without changing it.
 }
 \value{
-  The value of the delimiter or mising code before the function call as
+  The value of the delimiter or missing code before the function call as
   a string.
 }
 \references{
@@ -65,7 +65,7 @@ m2 <- CaseFileMissingCode("?")
 m3 <- CaseFileMissingCode(" ")
 m4 <- CaseFileMissingCode("")
 \dontrun{
- ## This should thow an error.
+ ## This should throw an error.
  CaseFileDelimiter(" ")
 }
 

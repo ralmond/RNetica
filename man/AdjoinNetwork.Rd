@@ -1,7 +1,7 @@
 \name{AdjoinNetwork}
 \alias{AdjoinNetwork}
 \title{
-  Links an evidence model network to a system model netwok.
+  Links an evidence model network to a system model network.
 }
 \description{
   This function assumes that the two arguments are networks that were
@@ -41,7 +41,7 @@ AdjoinNetwork(sm, em, setname = character())
   the \code{sm} (see \code{\link{NodeInputNames}()} and
   \code{\link{NodeKind}()}).  The idea is that the \emph{evidence model}
   provides a set of observable values associated with some diagnostic
-  proceedure, in particular, a task on an assessment.
+  procedure, in particular, a task on an assessment.
 
   The function \code{AdjoinNetwork(sm,em)} copies all of the nodes from
   \code{em} to \code{sm}, modifying \code{sm} in the process (copy it
@@ -177,4 +177,4 @@ DeleteNetwork(EMSMSystem)
 
 }
 \keyword{ interface }
-\keyword{ manidp }% __ONLY ONE__ keyword per line
+\keyword{ manip }% __ONLY ONE__ keyword per line

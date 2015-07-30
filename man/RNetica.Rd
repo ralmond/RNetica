@@ -11,7 +11,7 @@ The DESCRIPTION file:
 \packageDESCRIPTION{RNetica}
 
 This package provides an R interface to the Netica, in particular, it
-binds many of the functions in the Netica C API into the R langauge.
+binds many of the functions in the Netica C API into the R language.
 RNetica can create and modify networks, enter evidence and extract the
 conditional probabilities from a Netica network.
 
@@ -57,7 +57,7 @@ easily move back and forth between the two.
 The function \code{\link{StartNetica}()} (invoked automatically when
 \code{library(RNetica)}) builds a Netica environment which can be
 accessed from R.  Networks created and loaded into the RNetica
-environment can then be manipulted from inside of R.  Note that the
+environment can then be manipulated from inside of R.  Note that the
 RNetica environment is separate from other Netica environments that may
 be created using the Netica GUI (or API invoked from a different
 program); RNetica can only manipulate the networks that are currently
@@ -83,7 +83,7 @@ Note that if more than one network is loaded they may have identically
 named nodes that are not identical.  For example, \code{net1} and
 \code{net2} may both have a node named \dQuote{Proficiency}.  If the R
 variable \code{Proficiency} is bound to the \code{NeticaNode} object
-correspoinding to the variable \dQuote{Proficiency} in \code{net1}, it
+corresponding to the variable \dQuote{Proficiency} in \code{net1}, it
 can only be used to access the instance of that variable in \code{net1},
 not the one in \code{net2}.
 
@@ -165,7 +165,7 @@ will load all of the nodes in \code{net}, and the expression
   conditional probability table.
 
   A completed Bayesian network has a conditional probability table (CPT)
-  associated with each node.  The CPT provies the conditional
+  associated with each node.  The CPT provides the conditional
   probability distributions of the node given the states of its parents
   in the graph.  RNetica provides two functions for accessing and
   setting this CPT.  The function \code{\link{NodeProbs}()} returns (or
@@ -174,7 +174,7 @@ will load all of the nodes in \code{net}, and the expression
   allows the conditional probability table to be manipulated as a data
   frame, where the first several columns provide the states of the
   parent variables, and the remaining columns the probabilities of the
-  the node being in each of thoses states given the parent
+  the node being in each of those states given the parent
   configurations.  This latter approach has a number of features for
   working with large tables and tables with complex structure.
 
@@ -186,10 +186,10 @@ will load all of the nodes in \code{net}, and the expression
 }
 \section{Inference}{
 
-  The basic purpose for building a Bayesian network is to raplidly
+  The basic purpose for building a Bayesian network is to rapidly
   calculate conditional probabilities.  In Netica language, one enters
   \dQuote{findings} (conditions) on the known or hypothesized variables
-  and then calculates \dQuote{beliefs} (conditional probalities) on
+  and then calculates \dQuote{beliefs} (conditional probabilities) on
   certain variables of interest.
 
   Netica, like most Bayesian network software, uses two different
@@ -254,7 +254,7 @@ will load all of the nodes in \code{net}, and the expression
   user programming.
 
   RNetica provides some functions that make node sets incredibly
-  convenient ways to describe the indended usage of the nodes.  In
+  convenient ways to describe the intended usage of the nodes.  In
   particular, the function \code{\link{NetworkNodesInSet}()} returns a
   list of all nodes which are tagged as being in a particular node set.
   For example, suppose that the modeller has marked a number of nodes as
@@ -274,7 +274,7 @@ will load all of the nodes in \code{net}, and the expression
   testing is still required.  Users are advised to work in such a way
   that they can easily recover from problems.
 
-  In particular, because RNetica calls C code, there is a possiblity
+  In particular, because RNetica calls C code, there is a possibility
   that it will crash R.  There is also a possibility that pointers
   embedded in \code{\link{NeticaBN}} and \code{\link{NeticaNode}}
   objects will become corrupted.  If such problems occur, it is best to

@@ -5,8 +5,8 @@
   Returns or sets the virtual evidence associated with a Netica node.
 }
 \description{
-  The findings associated with a node can be exrpressed as the
-  probability of the evidence occuring in each of the states of the
+  The findings associated with a node can be expressed as the
+  probability of the evidence occurring in each of the states of the
   node.  This is the \emph{likelihood} associated with the node.  This
   function retrieves or sets the likelihood.
 }
@@ -30,16 +30,16 @@ NodeLikelihood(node) <- value
 \details{
   This function retrieves or sets virtual evidence associated with each
   node.  Suppose that some set of evidence \eqn{e} is observed.  The
-  each of the values in the likelihood representes the conditional
+  each of the values in the likelihood represents the conditional
   probability \eqn{Pr(e|node==state)}.  Note that the likelihood can be
-  throught of as the message that a new node \code{child} which was a
+  thought of as the message that a new node \code{child} which was a
   child of \code{node} with no other parents would pass to \code{node}
   if its value was set.
 
   As the likelihood values are conditional probabilities, they do not
   need to add to 1, although they are still restricted to the range
   [0,1].  Also, at least one value must be non-zero (or else the
-  evidence represtents an impossible case) or Netic will generate an
+  evidence represents an impossible case) or Netica will generate an
   error.
 
   Entering findings through \code{\link{NodeFinding}(node,state)} sets
@@ -83,13 +83,13 @@ NodeLikelihood(node) <- value
 
   The documentation for the Netica function \nref{MostProbableConfig_bn}
   states that likelihood findings are not
-  properly taken into accont in \code{\link{MostProbableConfig}()}.
+  properly taken into account in \code{\link{MostProbableConfig}()}.
   Some quick tests indicate that it is doing something sensible, but
   more extensive testing and/or clarification is needed.
 
   The documentation for the Netica function
   \nref{FindingsProbability_bn} also provides a warning about likelihood
-  evidnece.  The function \code{\link{FindingsProbability}(net)} still
+  evidence.  The function \code{\link{FindingsProbability}(net)} still
   gives a result, but it is the normalization constant for the network,
   and not necessarily a probability.
 

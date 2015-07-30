@@ -7,7 +7,7 @@
   This reverses the link between \code{parent} and \code{child} so that
   it now points from \code{child} to \code{parent}.  If \code{child} has
   additional parents, they are connected to \code{parent} and the
-  conditional probality tables are adjusted so that the joint
+  conditional probability tables are adjusted so that the joint
   probability distribution across all nodes in the network remains the same.
 }
 \usage{
@@ -28,7 +28,7 @@ ReverseLink(parent, child)
   influence diagram operation of \emph{arc reversal}.  Netica will add
   additional links to enforce any conditional probability relationship.
   For example, Consider a net where \code{A} and \code{B} are both
-  parents of \code{C}, but \code{A} is not directly connecte to
+  parents of \code{C}, but \code{A} is not directly connected to
   \code{C}.  After reversing the arc between \code{B} and \code{C},
   \code{A} will also become a parent of \code{B} to maintain the joint
   distribution. 

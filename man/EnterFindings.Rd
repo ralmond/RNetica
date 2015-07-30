@@ -5,7 +5,7 @@
 }
 \description{
   This function takes two arguments, a network and a list of nodes and
-  the correspoinding findings.  It sets all of the findings at once.
+  the corresponding findings.  It sets all of the findings at once.
 }
 \usage{
 EnterFindings(net, findings)

@@ -16,7 +16,7 @@ CopyNodes(nodes, newnamelist = NULL, newnet = NULL, options = character(0))
     network. 
   }
   \item{newnamelist}{
-    If supplied, this should be character vector with the same lenght as
+    If supplied, this should be character vector with the same length as
     \code{nodes} giving the new names for the nodes.
   }
   \item{newnet}{

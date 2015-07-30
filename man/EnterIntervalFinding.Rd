@@ -25,7 +25,7 @@ EnterIntervalFinding(node, low, high, retractFirst = TRUE)
 }
 \details{
   The \code{node} must a continuous node that has
-  been discritized using \code{\link{NodeLevels}(node)}.  The
+  been discretized using \code{\link{NodeLevels}(node)}.  The
   probabilities for each state are calculated based on a uniform
   distribution with the given \code{low} and \code{high} endpoints.
 

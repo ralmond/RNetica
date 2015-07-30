@@ -1,7 +1,6 @@
 \name{JunctionTreeReport}
 \alias{JunctionTreeReport}
 \alias{NetworkCompiledSize}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
   Produces a report about the junction tree from a compiled Netica network.
 }

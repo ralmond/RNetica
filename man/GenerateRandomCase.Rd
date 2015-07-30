@@ -33,7 +33,7 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
 
   The function visits each node in \code{nodelist} and randomly sets a
   finding for that node based on the current beliefs about that node.
-  This takes into account any findings peviously entered into the
+  This takes into account any findings previously entered into the
   graph   (including the previously sampled nodes in the list).   In
   particular, to generate multiple cases, the findings need to be
   retracted (using \code{\link{RetractNodeFinding}(node)} or
@@ -49,7 +49,7 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
 
     \item{Forward_Sampling.}{  Random cases are generated directly using
     equations for continuous nodes if these are available.  Random results
-    not compatable with the current findings are rejected.  This method is
+    not compatible with the current findings are rejected.  This method is
     not guaranteed to converge, and may be quite slow if the current set
     of findings has a low probability.  It will only run for a period of
     time indicated by \code{timeout} and returns a negative value if it
@@ -61,7 +61,7 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
     uncompiled.  Otherwise it uses join tree sampling.}
   }
 
-  The \code{rng} argument can be used to assocate a random number
+  The \code{rng} argument can be used to associate a random number
   generator with the generation (see \code{\link{NeticaRNG}}).  If the
   \code{rng} argument is \code{NULL}, then the default random number
   generator for the network is used.  This is either a random number

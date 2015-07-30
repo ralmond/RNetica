@@ -11,7 +11,7 @@
   This object is returned by various RNetica functions which create or
   find nodes in a \code{\link{NeticaBN}} network.  A \code{NeticaNode}
   object represents a node object inside of Netica's memory.  The
-  fucntion \code{is.active()} tests whether the node is still a valid
+  function \code{is.active()} tests whether the node is still a valid
   reference. 
 }
 \usage{
@@ -62,7 +62,7 @@ e1 != e2
   The function \code{is.NeticaNode()} returns a logical scalar depending
   on whether or not its argument is a \code{NeticaBN}.
 
-  The function \code{Ops.NeticaNode()} returns a logical value dending on
+  The function \code{Ops.NeticaNode()} returns a logical value depending on
   whether the objects are equal.  If the second argument is a list of
   \code{NeticaNode} objects, then a logical vector is returned, testing
   \code{e1} against every element of \code{e2}.
@@ -85,7 +85,7 @@ e1 != e2
   will return the name of the node.  
 
   Note that if a \code{NeticaNode} object is stored in an R object, and
-  the Node is subsquently renamed (with a call to the set method of
+  the Node is subsequently renamed (with a call to the set method of
   \code{NodeName}), the old object may persist with the wrong name.
   This may result in a situation where the printed names of the objects
   are different but \code{node1==node2} returns true.  This can be fixed

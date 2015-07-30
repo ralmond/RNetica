@@ -20,9 +20,9 @@ HasNodeTable(node)
 }
 \details{
   This function returns two values.  The first is true or false
-  according to whether the conditional probabilty table has been
+  according to whether the conditional probability table has been
   established, that is has \code{\link{NodeProbs}()} been set.  The
-  second value tests to see whether the conditional probabilty table is
+  second value tests to see whether the conditional probability table is
   complete, that is, does it have any \code{NA}s associated with it.
 
   In many cases, it is the second value that is of interest, so

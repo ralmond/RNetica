@@ -51,7 +51,7 @@ normalize(cpt)
   The second way to represent a conditional probability table in RNetica
   is to use a data frame (\code{\link{CPF}}).  Here the factor variables
   correspond to a configuration of the parent states, and the numeric
-  columns correspond to states of the child varaible.  Each row
+  columns correspond to states of the child variable.  Each row
   corresponds to a particular configuration of parent variables and the
   numeric values should sum to one.  The \code{normalize.CPF} function
   makes sure this constraint holds.  The method
@@ -69,7 +69,7 @@ normalize(cpt)
 
 }
 \value{
-  An object with similar properities to \code{cpt}, but adjusted so that
+  An object with similar properties to \code{cpt}, but adjusted so that
   probabilities sum to one.
 
   For \code{normalize.CPA} and \code{normalize.array} an normalized

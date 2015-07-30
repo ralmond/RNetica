@@ -18,7 +18,7 @@ NetworkSetRNG(net, seed=runif(1,0,1000000000))
 
   Associating a random number generator with a Netica network has two
   effects.  First, if the seed is constant, then subsequent calls to
-  \code{GenerateRandomCase} will create a reproduceable sequence of
+  \code{GenerateRandomCase} will create a reproducible sequence of
   cases.  Second, as the default random number generator Netica uses is
   threadsafe, the random number generation will be slightly faster.
 }
@@ -39,7 +39,7 @@ NetworkSetRNG(net, seed=runif(1,0,1000000000))
   the two operations, but it unclear what would happen if the RNG object
   was then freed (either manually or by associating it with another
   network and then deleting that other network).  It therefore seemed
-  safter to encapsulate the RNG creation process in the C code.
+  safer to encapsulate the RNG creation process in the C code.
 }
 \seealso{
   \code{\link{NewNeticaRNG}()}, \code{\link{GenerateRandomCase}()}

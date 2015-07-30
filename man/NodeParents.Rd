@@ -33,14 +33,14 @@ NodeParents(child) <- value
   order of the dimensions in the conditional probability table
   (\code{\link{NodeProbs}()}).
 
-  The parent list can be set.  This can accomplishes a number of diffent
+  The parent list can be set.  This can accomplishes a number of different
   goals: it can replace a parent variable, it can add additional
   parents, it can remove extra parents, and it can reorder parents.
   Changing the parents alters the topology of the network.  Note that
   Netica networks must always be acyclic directed graphs.  In
   particular, if \code{\link{is.NodeRelated}(child,"decendent",parent)}
   returns true for any prospective parent, Netica will generate an
-  error (new parents must node be decendents of the child as that would
+  error (new parents must node be descendants of the child as that would
   produce a cycle).
 
   Setting an element of the parent list to \code{list(NULL)} has special

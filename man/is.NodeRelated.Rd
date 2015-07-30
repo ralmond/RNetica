@@ -2,7 +2,7 @@
 \alias{is.NodeRelated}
 \alias{GetRelatedNodes}
 \title{
-  Computes topological properities of a \code{Netica} network.
+  Computes topological proprieties of a \code{Netica} network.
 }
 \description{
   The function \code{is.NodeRelated()} tests to see if \code{relation}
@@ -23,7 +23,7 @@ GetRelatedNodes(nodelist, relation = "connected")
   }
   \item{relation}{
     A character scalar which should be one of the values:  "parents",
-    "children", "ancestors", "descendents", "connected",
+    "children", "ancestors", "descendents" [sic], "connected",
     "markov_blanket", or "d_connected".  Singular forms and modifiers
     are also allowed, see details.
   }
@@ -52,9 +52,9 @@ GetRelatedNodes(nodelist, relation = "connected")
   of \code{node2}, or returns a list of children of the nodes in
   \code{nodelist}. 
 
-  \code{"decendent"}, \code{"decendents"}.  True if there is a directed
+  \code{"descendent"}, \code{"decedents"}.  True if there is a directed
   (parent to child) path from \code{node2} to \code{node1}, or returns a
-  list of decendents of the nodes in \code{nodelist}. 
+  list of decedents of the nodes in \code{nodelist}. 
 
   \code{"connected"}.  True if there is a chain (unordered path) from
   \code{node1} to \code{node2}, or returns a list of all nodes connected

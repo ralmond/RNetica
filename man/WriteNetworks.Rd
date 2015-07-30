@@ -37,9 +37,9 @@ GetNetworkFileName(net)
   This method invokes the native Netica open and save functions to read
   and write networks to \code{.neta} or \code{.dne} files.  The
   \code{.neta} format is binary and more compact, while the \code{.dne}
-  format is ascii and may be safer in some circumstances (such as when
+  format is ASCII and may be safer in some circumstances (such as when
   used with a source control system).  Netica figures out which format
-  to use based on the extension of the file, elments of \code{paths}
+  to use based on the extension of the file, elements of \code{paths}
   should end with \code{.neta} or \code{.dne}.
 
   The function \code{GetNetworkFileName()} returns the name of the last

@@ -59,7 +59,7 @@ e1 != e2
   The function \code{is.NeticaBN()} returns a logical scalar depending
   on whether or not its argument is a \code{NeticaBN}.
 
-  The function \code{Ops.NeticaBN()} returns a logical value dending on
+  The function \code{Ops.NeticaBN()} returns a logical value depending on
   whether the objects are equal.
 }
 \references{
@@ -77,7 +77,7 @@ e1 != e2
   will return the name of the network.  
 
   Note that if a \code{NeticaBN} object is stored in an R object, and
-  the network is subsquently renamed (with a call to the set method of
+  the network is subsequently renamed (with a call to the set method of
   \code{NetworkName}), the old object may persist with the wrong name.
   This may result in a situation where the printed names of the objects
   are different but \code{net1==net2} returns true.  This can be fixed

@@ -5,7 +5,7 @@
 }
 \description{
   The children of a node \code{parent} are the nodes which are directly
-  connnected to \code{parent} with an edge oriented from
+  connected to \code{parent} with an edge oriented from
   \code{parent}. The function \code{NodeChildren(parent)} returns a list of the
   children of \code{parent}
 }
@@ -19,7 +19,7 @@ NodeChildren(parent)
 }
 \details{
   The function \code{NodeChildren(parent)} only returns the immediate
-  decendents of \code{parent}.  A list of all decendents can be found
+  descendants of \code{parent}.  A list of all descendants can be found
   using the function
   \code{\link{GetRelatedNodes}(parent,"decendents")}.
 

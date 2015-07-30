@@ -14,7 +14,7 @@ WriteFindings(nodes, pathOrStream, id = -1L, freq = -1.0)
   \item{nodes}{
     The a list of active \code{\link{NeticaNode}} objects to be written out.
   }
-  \item{pathOrStream}{Either a character scaler giving the path name of
+  \item{pathOrStream}{Either a character scalar giving the path name of
     the file to which the results are to be written, or a
     \code{\link{NeticaCaseStream}} object.  It is recommended that it have
     the extension \dQuote{.cas}.

@@ -8,7 +8,7 @@
 }
 \description{
   The title is a longer name for a network which is not subject to the
-  netica \code{\link{IDname}} restrictions.  The comment is a freeform
+  Netica \code{\link{IDname}} restrictions.  The comment is a free form
   text associated with a network.
 }
 \usage{

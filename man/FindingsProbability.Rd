@@ -5,7 +5,7 @@
 }
 \description{
   This function assumes that the network has been compiled and that a
-  number of findinds have been entered.  The function calculates the
+  number of findings have been entered.  The function calculates the
   prior probability for the entered findings (that is, the
   normalization constant of the Bayesian network).  
 }

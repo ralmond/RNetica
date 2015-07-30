@@ -25,19 +25,19 @@ NetworkFootprint(net)
   \code{NULL}, or by copying a node (\code{\link{CopyNodes}()} without
   copying its parents.  (This can also be done in the Netica GUI by
   detaching the link from the parent end).  This this case Netica names
-  the \code{\link{NodeInputNames}()} accorind to the name of the old
+  the \code{\link{NodeInputNames}()} according to the name of the old
   node.
 
   The function \code{NetworkFootprint(net)} search all of the nodes in
   \code{net} to find stub nodes, and reports the
-  \code{NodeInputNames()} of the stub nodes.  This function provies a
+  \code{NodeInputNames()} of the stub nodes.  This function provides a
   test for unsatisfied connections, and should be of assistance when
   joining two networks together.  The function
   \code{\link{AdjoinNetwork}(sm,em)} joins two networks together and
   attempts to resolve the unsatisfied connections in \code{em}.
 
   One particular application of the footprint is in the EM--SM algorithm
-  (Almond et al, 1999; Almond and Mislevey, 1999).  Here it is assumed
+  (Almond et al, 1999; Almond and Mislevy, 1999).  Here it is assumed
   that nodes in the footprint of an evidence model will be joined.
   Making a clique node \code{\link{MakeCliqueNode}()} ensures that joint
   information from the evidence model will find a good home in the
