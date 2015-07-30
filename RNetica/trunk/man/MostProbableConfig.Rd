@@ -1,7 +1,7 @@
 \name{MostProbableConfig}
 \alias{MostProbableConfig}
 \title{
-  Finds the configuration of the nodes most likel to have lead to
+  Finds the configuration of the nodes most likely to have lead to
   observed findings.
 }
 \description{
@@ -37,7 +37,7 @@ MostProbableConfig(net,nth = 0)
   Note that this produces a configuration over all of the nodes in the
   network, not just the nodes in some particular set.  The Netica
   documentation suggests running \code{\link{AbsorbNodes}()} over the
-  unnecssary nodes first.  Another possibility (if the set of
+  unnecessary nodes first.  Another possibility (if the set of
   interesting nodes is small) is to call
   \code{\link{JointProbability}()} on the affected nodes and then
   find the max of that.
@@ -46,7 +46,7 @@ MostProbableConfig(net,nth = 0)
 \value{
   A character vector whose names are the names of the nodes in the
   network (see \code{\link{NetworkAllNodes}(net)}) and whose values are
-  the names of the states that maximize the posterior probabiity given
+  the names of the states that maximize the posterior probability given
   the findings.
 }
 \references{
@@ -72,7 +72,7 @@ MostProbableConfig(net,nth = 0)
 }
 \section{Warning}{
 
-  The documentation for the netica function \nref{MostProbableConfig_bn}
+  The documentation for the Netica function \nref{MostProbableConfig_bn}
   states that likelihood findings (\code{\link{NodeLikelihood}()}) are not
   handled properly in \code{MostProbableConfig()}.  Seems to indicate
   that this works properly, but some caution is still advised.

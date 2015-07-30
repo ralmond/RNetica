@@ -53,7 +53,7 @@ GetClique(cliquenode)
   (formally, the class is \code{c("CliqueNode", "NeticaNode")}).  It has
   a number of special features.  It's name is always \dQuote{Clique}
   followed by a number.  It only has one state.  And it has a special
-  \code{"clique"} attiribute which records the \code{nodelist} used to
+  \code{"clique"} attribute which records the \code{nodelist} used to
   create it.  The function \code{is.CliqueNode()} tests a node to see if
   it is a clique node, and the function \code{GetClique(node)} retrieves
   the \code{nodelist}.  (This should not be set manually).
@@ -86,7 +86,7 @@ adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223-238.
 Almond, R., Herskovits, E., Mislevy, R. J., & Steinberg,
 L. S. (1999). Transfer of information between system and evidence
 models. In Artificial Intelligence and Statistics 99, Proceedings
-(pp. 181--186). Morgan-Kauphman
+(pp. 181--186). Morgan-Kaufmann
 
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIManual/index.html}:
@@ -99,11 +99,11 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
 \note{
   Clique nodes only last for the R session that was used to create
   them.  After that, they will appear like ordinary nodes.  They will
-  still be present in the newtwork, but the special \code{"clique"}
+  still be present in the network, but the special \code{"clique"}
   attribute will be lost.
 
-  Currently Netica only allows virutal evidence at the node level
-  (\code{\link{NodeLikelihood}()}).  I'm loppying to get Netica to
+  Currently Netica only allows virtual evidence at the node level
+  (\code{\link{NodeLikelihood}()}).  I'm lobbying to get Netica to
   support it at the clique level as well.  At which point, this function
   becomes extremely useful.
 }

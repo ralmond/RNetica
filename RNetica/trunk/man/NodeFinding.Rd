@@ -20,7 +20,7 @@ NodeFinding(node) <- value
     hypothesized. 
   }
   \item{value}{
-    A character or integer scaler indicating the value which was
+    A character or integer scalar indicating the value which was
     observed or hypothesized.  If a character, it should be one of the
     values in \code{\link{NodeStates}(node)}.  If an integer it should
     be a value between 1 and \code{\link{NodeNumStates}(node)}
@@ -34,7 +34,7 @@ NodeFinding(node) <- value
   into the state table.
 
   Note that setting \code{NodeFinding(node) <- value} clears any previous
-  findings (including virutal findings set through
+  findings (including virtual findings set through
   \code{\link{NodeLikelihood}()} or
   \code{\link{EnterNegativeFinding}()}), that may have been set.  The
   function \code{\link{RetractNodeFinding}(node)} will clear the current
@@ -46,7 +46,7 @@ NodeFinding(node) <- value
   \enumerate{
     \item  \code{"@NEGATIVE FINDINGS"} --- Negative findings have been
     entered using \code{\link{EnterNegativeFinding}()}. 
-    \item  \code{"@LIKELIHOOD"} --- Uncertiain evidence which provides a
+    \item  \code{"@LIKELIHOOD"} --- Uncertain evidence which provides a
     likelihood of various states of the node were entered using
     \code{\link{NodeLikelihood}(node)} 
     \item  \code{"@NO FINDING"} --- No findings, including negative
@@ -107,7 +107,7 @@ stopifnot (
 ## Marginal probability for Node 5
 irt5.x5.init <- NodeBeliefs(irt5.x[[5]])
 
-SetNetworkAutoUpdate(irt5,TRUE) ## Automatic updateing
+SetNetworkAutoUpdate(irt5,TRUE) ## Automatic updating
 NodeFinding(irt5.x[[1]]) <- "Right"
 stopifnot( 
   IsBeliefUpdated(irt5.x[[5]])
@@ -117,7 +117,7 @@ stopifnot (
   sum(abs(irt5.x5.init-irt5.x5.time1)) > 1e-6
 )
 
-SetNetworkAutoUpdate(irt5,FALSE) ## Automatic updateing
+SetNetworkAutoUpdate(irt5,FALSE) ## Automatic updating
 NodeFinding(irt5.x[[2]]) <- 2 ## Wrong
 stopifnot( 
   !IsBeliefUpdated(irt5.x[[5]]),

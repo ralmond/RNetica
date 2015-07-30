@@ -35,7 +35,7 @@ EliminationOrder(net) <- value
 
   Finding the optimal pattern of fill-ins is an NP hard problem.  A
   common way of approaching it is to eliminate the nodes from the
-  network one-by-one and connect the neighbors of the eliminated node
+  network one-by-one and connect the neighbours of the eliminated node
   (if they were not already connected).  In this case, the sequence of
   eliminated nodes will determine which edges are filled in, and hence
   the size of the final junction tree.  Finding an optimal eliminator
@@ -107,7 +107,7 @@ stopifnot(
 JunctionTreeReport(EMSMMotif)
 
 ## EMSMMotif is partitioned into observable and proficiency variables.
-## Tell Netica to eliminate observable varaibles first.
+## Tell Netica to eliminate observable variables first.
 EliminationOrder(EMSMMotif) <- c(NetworkNodesInSet(EMSMMotif,"Observable"),
                                  NetworkNodesInSet(EMSMMotif,"Proficiency"))
 UncompileNetwork(EMSMMotif)

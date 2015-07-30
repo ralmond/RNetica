@@ -20,7 +20,7 @@ StopNetica()
     version of Netica is used rather than the full version.  If the
     variable \code{NeticaLicenseKey} is set before \code{RNetica} is
     loaded, then the value of that variable at the time the package is
-    loaded will become the deafult for \code{license}.
+    loaded will become the default for \code{license}.
 }
   \item{checking}{A character string containing one of the keywords:
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
@@ -47,7 +47,7 @@ StopNetica()
   send a license key which unlocks the full capabilities of the shared
   library.  This can be passed as the first argument to
   \code{StartNetica()}.  If the value of the first argument is
-  \code{NULL} then the demonstration verison is used instead of the
+  \code{NULL} then the demonstration version is used instead of the
   licensed version (could be useful for testing).
 
   If you set the value of a variable \code{NeticaLicenseKey}, then when
@@ -108,7 +108,7 @@ StopNetica()
   and bug fixes are welcome.
 }
 \section{Implementation Notes}{
-  I'm looking into a way to burry the license key into RNetica during
+  I'm looking into a way to bury the license key into RNetica during
   the installation process.  Probably will happen in a future version.
   Until then, best bet is to save a value for \code{NeticaLicenseKey} in
   the workspace.

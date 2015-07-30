@@ -25,7 +25,7 @@ NodeVisPos(node) <- value
 \details{
   The visual position of the node doesn't make much different in RNetica,
   as R does not display the node.  However, it will control the
-  appearence when the node is loaded into the Netica GUI.
+  appearance when the node is loaded into the Netica GUI.
 
 }
 \value{
@@ -61,7 +61,7 @@ stopifnot(
   pos["y"] ==300
 )
 
-## Netica rounds nonitenger positions.
+## Netica rounds noninteger positions.
 NodeVisPos(pnode) <- c(74.3,88.8)
 pos <- NodeVisPos(pnode)
 stopifnot(

@@ -6,7 +6,7 @@
 \description{
   Both \code{\link{NeticaBN}} and \code{\link{NeticaNode}} objects
   contain embedded pointers into Netica's memory.  The function
-  \code{is.active()} checks to see that the corresponding Netica objetct
+  \code{is.active()} checks to see that the corresponding Netica object
   still exists. 
 }
 \usage{
@@ -18,7 +18,7 @@ is.active(x)
   }
 }
 \details{
-  Internally, both \code{NeticaBN} and \code{NeticaNode} objects contian
+  Internally, both \code{NeticaBN} and \code{NeticaNode} objects contain
   pointers to the corresponding Netica objects. The
   \code{\link{DeleteNetwork}()} and \code{\link{DeleteNodes}()}
   functions deletes the Netica objects (and clears the pointers in the R
@@ -43,7 +43,7 @@ is.active(x)
   \code{NeticaNode}.
 
   If \code{x} is a list, then a logical vector of the same length of
-  \code{x} is returned with \code{is.active()} recursivelly applied to
+  \code{x} is returned with \code{is.active()} recursively applied to
   each one.
 }
 \references{

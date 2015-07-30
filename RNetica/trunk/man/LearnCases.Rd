@@ -1,6 +1,6 @@
 \name{LearnCases}
 \alias{LearnCases}
-\title{Learn Conditional Probabilitiy Tables from a Netica Case Stream
+\title{Learn Conditional Probability Tables from a Netica Case Stream
 }
 \description{
   This function updates the conditional probabilities associated with

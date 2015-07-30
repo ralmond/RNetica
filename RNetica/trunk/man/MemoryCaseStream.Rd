@@ -7,7 +7,7 @@
 
   This object is subclass of \code{\link{NeticaCaseStream}} so it is a
   wrapper around a Netica stream which is used to read/write cases.  In
-  this subclass, the case stream is assocaited with a memory buffer that
+  this subclass, the case stream is associated with a memory buffer that
   corresponds to an R \code{\link[base]{data.frame}} object.
   The function \code{\link{MemoryStreamContents}} accesses the contents
   as a data frame.

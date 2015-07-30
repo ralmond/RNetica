@@ -43,7 +43,7 @@ DeleteNetwork(nets)
 }
 \value{
   A single \code{NeticaBN} object if the length of the argument is 1,
-  and a list of suct objects if the argument has length greater than 1.
+  and a list of such objects if the argument has length greater than 1.
   For \code{DeleteNets()} if a specified network does not exist, the
   corresponding element in the return list will be \code{NULL}.
   
@@ -58,7 +58,7 @@ DeleteNetwork(nets)
 }
 \note{
   The function \code{DeleteNetwork()} implicitly deletes any nodes
-  assocaited with the network.  Therefore, any nodes associated with
+  associated with the network.  Therefore, any nodes associated with
   this network will become inactive (see \code{\link{is.active}()}).
 }
 \section{Implementation Note}{

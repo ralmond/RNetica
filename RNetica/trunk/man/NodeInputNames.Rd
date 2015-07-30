@@ -2,7 +2,7 @@
 \alias{NodeInputNames}
 \alias{NodeInputNames<-}
 \title{
-  Associates names with incomming edges on a Netica node.
+  Associates names with incoming edges on a Netica node.
 }
 \description{
   The function \code{NodeInputNames()} can be used to set or retrieve
@@ -28,7 +28,7 @@ NodeInputNames(node) <- value
   When a parent node is detached from a child, Netica names the link
   with the name of the old node.  For example, suppose that the
   following commands were executed \code{AddLink(A,C); AddLink(B,C)}.
-  Then if the node \code{B} is detacted, via
+  Then if the node \code{B} is detached, via
   \code{\link{NodeParents}(C)[2]<-list(NULL)}, Netica will replace \code{B}
   with a stub node, and name the link \code{"B"}.  The command
   \code{NodeParents(C)$B <- D} would then attach the node \code{D} where

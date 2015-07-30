@@ -26,7 +26,7 @@ is.NetworkCompiled(net)
 \details{
   Usually Bayesian network projects operate in two phases.  In the
   construction phase, new nodes are added to the network, new connections
-  made and conditional probabilty tables are set.
+  made and conditional probability tables are set.
 
   In the inference phase, findings are added to nodes and other nodes
   are queried about their current conditional probability tables.

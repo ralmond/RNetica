@@ -12,7 +12,6 @@
 NetworkName(net)
 NetworkName(net) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
     A \code{\link{NeticaBN}} object which links to the network.

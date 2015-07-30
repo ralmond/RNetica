@@ -1,7 +1,7 @@
 \name{EnterNegativeFinding}
 \alias{EnterNegativeFinding}
 \title{
-  Sets findings for a Netaca node to a list of ruled out values.
+  Sets findings for a Netica node to a list of ruled out values.
 }
 \description{
   This is conceptually equivalent to setting
@@ -26,14 +26,14 @@ EnterNegativeFinding(node, eliminatedVals)
   }
 }
 \details{
-  This function essentially assers that \eqn{Pr(node \in eliminatedVals)
+  This function essentially asserts that \eqn{Pr(node \in eliminatedVals)
     = 0}.  Thus, it rules out the values in the \code{eliminatedVals}
   set.  Note that the length of this set should be less than the number
   of states, or all possibilities will have been eliminated.
 
   Note calling \code{EngerNegativeFining(node, ...)} clears any previous
-  findings (including virutal findings set through
-  \code{\link{NodeLikelihood}()} or simplie findinding set through
+  findings (including virtual findings set through
+  \code{\link{NodeLikelihood}()} or simple finding set through
   \code{\link{NodeFinding}(node)<-value}).  The function
   \code{\link{RetractNodeFinding}(node)} will clear the current finding
   without setting it to a new value.

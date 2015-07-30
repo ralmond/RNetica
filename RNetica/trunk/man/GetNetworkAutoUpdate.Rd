@@ -26,7 +26,7 @@ WithoutAutoUpdate(net,expr)
     A value \code{NA} produces an error.
   }
   \item{expr}{
-    An R expresssion to be evaluated with automatica updating turned off.
+    An R expression to be evaluated with automatic updating turned off.
   }
   
 }
@@ -39,12 +39,12 @@ WithoutAutoUpdate(net,expr)
   \code{GetNetworkAutoUpdate()} returns the current status of the
   autoupdate flag.    \code{SetNetworkAutoUpdate()} sets flag, but
   returns its current value (to make it easier to restore).  The
-  function \code{WithoutAutoUpdate} provides a mechansim for turning
+  function \code{WithoutAutoUpdate} provides a mechanism for turning
   updating off while performing a series of operations.
 }
 \value{
   \code{GetNetworkAutoUpdate()} and \code{SetNetworkAutoUpdate} both
-  returns the current autoupdate flage as a logical value.
+  returns the current autoupdate flag as a logical value.
 
   \code{WithoutAutoUpdate()} returns the value of executing \code{expr},
   unless executing \code{expr} results in an error in which case it

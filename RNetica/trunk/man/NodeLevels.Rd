@@ -48,7 +48,7 @@ NodeLevels(node) <- value
   split the continuous range into intervals (similar in spirit to the
   function \code{\link[base]{cut}()}).  The levels represent the
   endpoints of the intervals and should be in either
-  increaseing or decreasing order.  The values \code{Inf} and
+  increasing or decreasing order.  The values \code{Inf} and
   \code{-Inf} are acceptable for the endpoints of the interval.  There
   should be one more level than the desired number of states.
   
@@ -81,7 +81,7 @@ NodeLevels(node) <- value
 \note{
   The overloading of node levels is a "feature" of the Netica API.  It
   is not great design, but it probably will be maintained for backwards
-  compatability. 
+  compatibility. 
 }
 \seealso{
   \code{\link{NewDiscreteNode}()}, \code{\link{NeticaNode}},

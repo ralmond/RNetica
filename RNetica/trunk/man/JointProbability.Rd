@@ -5,7 +5,7 @@
 }
 \description{
   The Bayesian network, once compiled, gives the joint probability of
-  all nodes in the network given the findings.  This function caluclates
+  all nodes in the network given the findings.  This function calculates
   the joint probability over all of the nodes its argument and returns
   it as an array.
 }
@@ -41,7 +41,7 @@ adaptive testing.  \emph{Applied Psychological Measurement}, 23, 223--238.
 Almond, R., Herskovits, E., Mislevy, R. J., & Steinberg,
 L. S. (1999). Transfer of information between system and evidence
 models. In Artificial Intelligence and Statistics 99, Proceedings
-(pp. 181--186). Morgan-Kauphman
+(pp. 181--186). Morgan-Kaufmann
 
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIManual/index.html}:
@@ -54,7 +54,7 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
   One possible use for the joint probability function is to get a joint
   likelihood over the footprint nodes in an evidence model (see Almond
   et al, 1999; Almond & Mislevy, 1999).  However, Netica currently does
-  not support intserting a likelihood on a clique, just on a single
+  not support inserting a likelihood on a clique, just on a single
   node.
 }
 \seealso{

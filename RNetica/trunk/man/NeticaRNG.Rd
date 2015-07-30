@@ -113,4 +113,4 @@ stopifnot(!isNeticaRNGActive(rng))
 
 }
 \keyword{ interface }
-\keyword{ datagen }% __ONLY ONE__ keyword per line
+\keyword{ datagen }

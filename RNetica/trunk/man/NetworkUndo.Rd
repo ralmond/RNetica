@@ -5,7 +5,7 @@
   Undoes (redoes) a Netica operation on a network.
 }
 \description{
-  Netica mantians an internal queue of reversable operations on a
+  Netica maintains an internal queue of reversible operations on a
   network.  The \code{NetworkUndo()} rolls them back off the stack.
   The \code{NetworkRedo()}.
 }

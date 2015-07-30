@@ -1,12 +1,11 @@
 \name{NodeExpectedValue}
 \alias{NodeExpectedValue}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Calculates expected value for a numeric node
 }
 \description{
   Calculates the expected value for \code{node} based on the current
   beliefs about the nodes states.  The \code{node} should either be
-  continuous or a descrete node with levels assigned to the values.  The
+  continuous or a discrete node with levels assigned to the values.  The
   standard deviation is supplied as an attribute.
 }
 \usage{

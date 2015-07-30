@@ -46,7 +46,7 @@ DeleteNodes(nodes)
   represent nominal variables.  Continuous nodes represent real
   variables.  Continuous nodes cannot be changed to discrete nodes (or
   vise versa) using calls to the API [this is a different from the
-  GUI].  However, a continus node can be made to behave like a discrete
+  GUI].  However, a continuous node can be made to behave like a discrete
   node (or vise versa) by setting the \code{\link{NodeLevels}()}
   attribute. 
 

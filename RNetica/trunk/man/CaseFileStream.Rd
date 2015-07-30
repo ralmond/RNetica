@@ -7,7 +7,7 @@
 
   This object is subclass of \code{\link{NeticaCaseStream}} so it is a
   wrapper around a Netica stream which is used to read/write cases.  In
-  this subclass, the case stream is assocaited with a Netica case file
+  this subclass, the case stream is associated with a Netica case file
   ('.cas' extension).  The function \code{\link{ReadFindings}} reads the
   findings from the stream and the function \code{\link{WriteFindings}}
   writes them out.

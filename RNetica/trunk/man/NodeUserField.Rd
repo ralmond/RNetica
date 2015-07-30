@@ -10,7 +10,7 @@
 \description{
   Netica provides a mechanism for associating user defined values with a
   node as a series of key/value pairs.  The key must be a
-  \code{\link{IDname}} and the value can be an aribtrary string.  The
+  \code{\link{IDname}} and the value can be an arbitrary string.  The
   function \code{NodeUserField} accesses the string value associated
   with the key, and the function \code{NodeUserObj} accesses an R object
   associated with the key.

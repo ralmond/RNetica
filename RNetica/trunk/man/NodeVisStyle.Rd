@@ -2,11 +2,11 @@
 \alias{NodeVisStyle}
 \alias{NodeVisStyle<-}
 \title{
-  Gets/sets the nodes visual appearence in Netica.
+  Gets/sets the nodes visual appearance in Netica.
 }
 \description{
   Netica internally has a number of styles it can use to draw a node,
-  thes including, "Default", "Absent", "Shape", "LabeledBox",
+  these including, "Default", "Absent", "Shape", "LabeledBox",
   "BeliefBars", "BeliefLine", and "Meter".  The function
   \code{NodeVisStyle()} returns how the node will be displayed, or
   sets how it will be displayed.
@@ -29,12 +29,12 @@ NodeVisStyle(node) <- value
 \details{
   The visual style of the node doesn't make much different in RNetica,
   as R does not display the node.  However, it will control the
-  appearence when the node is loaded into the Netica GUI.
+  appearance when the node is loaded into the Netica GUI.
 }
 \value{
   A character string which is one of the values "Default", "Absent",
   "Shape", "LabeledBox", "BeliefBars", "BeliefLine", or "Meter", or
-  \code{NA} if an error occured.
+  \code{NA} if an error occurred.
 
   The setter method returns the modified \code{node} object.
 }
@@ -48,7 +48,7 @@ NodeVisStyle(node) <- value
   Russell Almond
 }
 \note{
-  The Netica documentation indicates that in the future additionl
+  The Netica documentation indicates that in the future additional
   parameters can be added to the style, for example:
   "LabeledBox,CornerRoundingRadius=3,LineThickness=2" 
 }

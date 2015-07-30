@@ -34,7 +34,7 @@ as.IDname(x,prefix="y",maxlen=25)
 
   Netica identifiers (net names, node names, state names,  and similar)
   are limited to 30 characters which must be a valid letter, number of
-  the character '_'.  The first chacter must be a letter.  The function
+  the character '_'.  The first character must be a letter.  The function
   \code{is.IDname()} tests to see if a string conforms to these rules,
   and thus is a legal name.
 
@@ -51,14 +51,14 @@ as.IDname(x,prefix="y",maxlen=25)
   The truncation works by the following mechanism:
   \enumerate{
     \item{The string is truncated to length \code{maxlen-3}.}
-    \item{The UTF 8 values of the remainig characters is summed and the
+    \item{The UTF 8 values of the remaining characters is summed and the
       result is taken modulo 100 to provide a 2-digit hash code for the
       remaining characters.}
     \item{The hash code is appended to the end of the truncated string
       separated with an \code{_}.
     }
   }
-  This should result in strings which are likely, but not guarenteed to
+  This should result in strings which are likely, but not guaranteed to
   be unique if the difference between two names is only after the last
   \code{maxlen-3} characters.
 

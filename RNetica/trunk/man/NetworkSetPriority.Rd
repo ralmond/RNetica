@@ -45,7 +45,7 @@ NetworkSetPriority(net, setlist)
   Russell Almond
 }
 \note{
-  The priority of the Netica internal node sets (the ones beging with
+  The priority of the Netica internal node sets (the ones beginning with
   \sQuote{:}) are set by Netica and cannot be changed.  They all have
   lower priority than the user-defined node sets.
 }

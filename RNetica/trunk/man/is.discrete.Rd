@@ -5,7 +5,7 @@
   Determines whether a Netica node is discrete or continuous.
 }
 \description{
-  A \code{\link{NeticaNode}} objet can take on either a discrete set of
+  A \code{\link{NeticaNode}} object can take on either a discrete set of
   values or an arbitrary real value.  These functions determine which
   type of node this is.
 }
@@ -32,7 +32,7 @@ is.continuous(node)
   of the node.  
 }
 \value{
-  \code{TRUE} or \code{FALSE} depedning on whether a node is discrete or
+  \code{TRUE} or \code{FALSE} depending on whether a node is discrete or
   continuous. 
 }
 \references{

@@ -1,7 +1,7 @@
 \name{NetworkNodeSetColor}
 \alias{NetworkNodeSetColor}
 \title{
-  Returns or sets a display colour to use with a netica node.b
+  Returns or sets a display colour to use with a Netica node.b
 }
 \description{
   Returns the display colour associated with a node set or sets the node
@@ -47,14 +47,14 @@ NetworkNodeSetColor(net, setname, newcolor)
   specified in any of the usual ways that colours are specified in R (see
   \code{\link[grDevices]{col2rgb}()}).  The special value \code{NA} is
   used to indicate that the set should be \sQuote{transparent}, that is
-  the colour of the next set in priorty should be used to colour the node.
+  the colour of the next set in priority should be used to colour the node.
 
   The function \code{NetworkNodeSetColor(net,setname)}, with the third
   argument missing, returns the current node set colour instead of
   setting it.
 }
 \value{
-  The old value of the node color as hexidecimal string value of the
+  The old value of the node color as hexadecimal string value of the
   form \code{"#rrggbb"}. 
 }
 \references{

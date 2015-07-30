@@ -2,7 +2,7 @@
 \alias{ReadFindings}
 \title{Retrieves a record from a Netica Case Stream}
 \description{
-  This function reads a row from a netica case stream and instantiates
+  This function reads a row from a Netica case stream and instantiates
   the values of the listed nodes to the values found in that row of the
   case stream.
 }
@@ -22,7 +22,7 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
     certainly be one of the two string values \dQuote{FIRST} or
     \dQuote{NEXT}.  It also can be an integer giving the position (in
     characters) where to start the machine.  This is likely to produce
-    surprizing results unless the integer value is a value obtained from
+    surprising results unless the integer value is a value obtained from
     calling \code{\link{getCaseStreamPos}} on this stream earlier after
     a call to either \code{ReadFindings} or \code{\link{WriteFindings}}.
 }
@@ -39,7 +39,7 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
   instantiated.  The values in the columns are separated by the value of
   \code{\link{CaseFileDelimiter}()}.
 
-  If \code{add} is false, it will first retract any findings assocated
+  If \code{add} is false, it will first retract any findings associated
   with the nodes in \code{nodeset}.  If a finding is associated with a
   node, the the case file would cause it to be set to an inconsistent
   value, then an error will be generated.
@@ -174,4 +174,4 @@ DeleteNetwork(abc)
 
 }
 \keyword{ interface }
-\keyword{ io }% __ONLY ONE__ keyword per line
+\keyword{ io }

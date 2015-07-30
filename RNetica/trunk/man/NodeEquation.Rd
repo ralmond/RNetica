@@ -2,8 +2,7 @@
 \alias{NodeEquation}
 \alias{NodeEquation<-}
 \alias{EquationToTable}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Gets or sets the equation Netica uses to calcate the CPT for a node
+\title{Gets or sets the equation Netica uses to calculate the CPT for a node
 }
 \description{
 
@@ -55,12 +54,12 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 
   The function \code{EquationToTable()} builds a conditional probability
   table from the equation and must be called before Netica will update
-  the table used in calculations.  The documenation for this function is
+  the table used in calculations.  The documentation for this function is
   somewhat unclear.  In particular, it is not clear when Netica uses
   sampling to calculating the CPT (this should not be needed in most of
   the examples I've worked with).
 
-  There are two differences between the RNetica implemention and the
+  There are two differences between the RNetica implementation and the
   default Netica behavior.  First, equations can be fairly complex.  If
   \code{value} is a character vector, RNetica will concatenate it into a
   single string before passing it to Netica.  Second, by default RNetica

@@ -62,9 +62,9 @@ as.CPA(x)
   and the last value is the name of the child variable.  Each of the
   elements of \code{dimnames(x)} should give the state names (see
   \code{\link{NodeStates}()}) for the respective value.  In particular,
-  the conversion function \code{\link{as.CPF}()} relies on the existance
+  the conversion function \code{\link{as.CPF}()} relies on the existence
   of this meta-data, and \code{as.CPA()} will raise a warning if an
-  array without the appropriate dimnames is suppled.
+  array without the appropriate dimnames is supplied.
 
   Although the intended interpretation is that of a conditional
   probability table, the normalization constraint is not enforced.  Thus
@@ -76,7 +76,7 @@ as.CPA(x)
   The method \code{\link{NodeProbs}()} returns a \code{CPA} object.
 
   The function \code{as.CPA()} is designed to convert between
-  \code{\link{CPF}}s (that is, conditional proability tables stored as
+  \code{\link{CPF}}s (that is, conditional probability tables stored as
   data frames) and \code{CPA}s.  It assumes that the factors variables
   in the data frame represent the parent variables, and the numeric
   values represent the states of the child variable.  It also assumes
@@ -93,8 +93,8 @@ as.CPA(x)
   The function \code{is.CPA()} returns a logical value indicating
   whether or not the \code{is(x,"CPA")} is true.
   
-  The frunction \code{as.CPA} returns an object of class
-  \code{c("CPA","array")}, which is essentailly an array with the
+  The function \code{as.CPA} returns an object of class
+  \code{c("CPA","array")}, which is essentially an array with the
   dimnames set to reflect the variable names and states.
 }
 \author{

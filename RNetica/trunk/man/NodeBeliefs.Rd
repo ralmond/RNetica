@@ -13,7 +13,7 @@
   \code{node} conditioned on the findings.
 
   The function \code{IsBeliefUpdated(node)} checks to see whether the value
-  of findings have been propogated to \code{node} yet.
+  of findings have been propagated to \code{node} yet.
 }
 \usage{
 NodeBeliefs(node)
@@ -99,7 +99,7 @@ stopifnot (
 ## Marginal probability for Node 5
 irt5.x5.init <- NodeBeliefs(irt5.x[[5]])
 
-SetNetworkAutoUpdate(irt5,TRUE) ## Automatic updateing
+SetNetworkAutoUpdate(irt5,TRUE) ## Automatic updating
 NodeFinding(irt5.x[[1]]) <- "Right"
 stopifnot( 
   IsBeliefUpdated(irt5.x[[5]])
@@ -109,7 +109,7 @@ stopifnot (
   sum(abs(irt5.x5.init-irt5.x5.time1)) > 1e-6
 )
 
-SetNetworkAutoUpdate(irt5,FALSE) ## Automatic updateing
+SetNetworkAutoUpdate(irt5,FALSE) ## Automatic updating
 NodeFinding(irt5.x[[2]]) <- "Right"
 stopifnot( 
   !IsBeliefUpdated(irt5.x[[5]])

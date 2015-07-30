@@ -8,7 +8,7 @@
   Netica supports nodes of four different kinds:  \code{"Nature"},
   \code{"Decision"}, \code{"Utility"}, and \code{"Constant"}.  A fifth
   kind, \code{"Stub"} is used for a reference to a node when an edge has
-  been detacted from a node.  The function \code{NodeKind()} returns the
+  been detached from a node.  The function \code{NodeKind()} returns the
   current kind.
 }
 \usage{
@@ -113,7 +113,7 @@ stopifnot(
 ## To make stub node, need links
 AddLink(skills[[1]],pretestScore)
 NodeInputNames(pretestScore) <- "SkillTested"
-## Detatch node
+## Detach node
 NodeParents(pretestScore)$SkillTested <- list(NULL)
 stopifnot(
   NodeKind(NodeParents(pretestScore)$SkillTested) == "Stub"

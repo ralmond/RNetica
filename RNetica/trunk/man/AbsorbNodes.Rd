@@ -8,7 +8,7 @@
   the parents of the deleted node to its children.  If multiple nodes
   are passed as the argument, then all of the nodes are absorbed.  The
   joint probability distribution over the remaining nodes should be the
-  same as the marginal probalility distribution over the remaining nodes
+  same as the marginal probability distribution over the remaining nodes
   before the nodes were deleted.
 }
 \usage{
@@ -16,7 +16,7 @@ AbsorbNodes(nodes)
 }
 \arguments{
   \item{nodes}{
-    A \code{NeticaNode} or list of \code{NeticaNodes} to be deleted.
+    A \code{NeticaNode} or list of \code{NeticaNode}s to be deleted.
   }
 }
 \details{
@@ -43,7 +43,7 @@ AbsorbNodes(nodes)
   \code{\link{ReverseLink}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
-anet <- CreateNetwork("Absorbant")
+anet <- CreateNetwork("Absorbent")
 
 xnodes <- NewDiscreteNode(anet,paste("X",1:5,sep="_"))
 AddLink(xnodes[[1]],xnodes[[2]])
