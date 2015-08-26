@@ -44,8 +44,8 @@ NodeLikelihood(node) <- value
 
   Entering findings through \code{\link{NodeFinding}(node,state)} sets
   a special likelihood.  In this case, the likelihood value
-  corresponding to \code{state} will be 1, and all others will be 0.
-  Similarly, \code{\link{EnterNegativeFinding}(node,statelist)} sets a
+  corresponding to \code{state} will be one, and all others will be zero.
+  Similarly, the expression \code{\link{EnterNegativeFinding}(node,statelist)} sets a
   special likelihood with 0's corresponding to the states in
   \code{statelist} and 1's elsewhere.
 

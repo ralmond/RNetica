@@ -29,7 +29,7 @@ NetworkAllNodes(net)
   Although each \code{\link{NeticaNode}} belongs to a single network, a
   network contains many nodes.  Within a network, a node is uniquely
   identified by its name.  However, nodes can be renamed (see
-  \code{\link{NodeName}()}.  
+  \code{\link{NodeName}()}).  
 
   The function \code{NetworkAllNodes()} returns all the nodes in the
   network, however, the order of the nodes in the network could be

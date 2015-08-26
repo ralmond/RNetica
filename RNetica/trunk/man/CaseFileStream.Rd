@@ -39,21 +39,21 @@ getCaseStreamPath(stream)
   sequentially from the cases in the stream, and hence the stream needs
   to be kept open between calls.
 
-  The function \code{CaseFileStream} will open a stream in Netica
-  and create a new \code{CaseFileStream}.  If the argument
-  \code{pathname} is the pathname of the case file in the file system.
-  This file should be a file previously written by
+  The function \code{CaseFileStream} will open a stream in Netica and
+  create a new \code{CaseFileStream} if necessary.  The argument
+  \code{pathname} should be the pathname of the case file in the file
+  system.  This file should be a file previously written by
   \code{\link{WriteFindings}} or be in the same format.  The delimiter
   used should be the one given by \code{\link{CaseFileDelimiter}}, and
   the code used for missing values should be the value of
   \code{\link{CaseFileMissingCode}}.
 
   The function \code{\link{CloseCaseStream}} closes an open case stream
-  (and is harmless if the stream is already closed.  Although RNetica
+  (and is harmless if the stream is already closed).  Although RNetica
   tries to close open case streams when they are garbage collected,
   users should not count on this behavior and should close them
   manually.  Also be aware that all case streams are automatically
-  closed when R is closes or RNetica is unloaded.  The function
+  closed when R is closed or RNetica is unloaded.  The function
   \code{\link{isCaseStreamOpen}} tests to see if the stream is open or
   closed, and the function \code{\link{OpenCaseStream}} reopens a
   previously closed case stream.

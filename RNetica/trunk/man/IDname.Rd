@@ -33,7 +33,7 @@ as.IDname(x,prefix="y",maxlen=25)
 \details{
 
   Netica identifiers (net names, node names, state names,  and similar)
-  are limited to 30 characters which must be a valid letter, number of
+  are limited to 30 characters which must be a valid letter, number or
   the character '_'.  The first character must be a letter.  The function
   \code{is.IDname()} tests to see if a string conforms to these rules,
   and thus is a legal name.

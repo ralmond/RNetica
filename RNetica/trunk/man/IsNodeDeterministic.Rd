@@ -4,8 +4,11 @@
   Determines if a node in a Netica Network is deterministic or not.
 }
 \description{
-  A node in a Bayesian network is all of its conditional probabilities
-  are determined by its parent states, that is they are all deterministic.
+
+  A node in a Bayesian network is deterministic if its value is
+  determined by the states of its parents, that is if all conditional
+  probabilities are 0 or 1.
+
 }
 \usage{
 IsNodeDeterministic(node)

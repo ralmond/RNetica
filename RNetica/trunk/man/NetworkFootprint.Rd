@@ -21,12 +21,12 @@ NetworkFootprint(net)
 \details{
 
   Stub nodes -- unsatisfied links or connections -- can happen in two
-  ways.  Either one of the values of \code{\link{NodeParents}(node)} to
-  \code{NULL}, or by copying a node (\code{\link{CopyNodes}()} without
-  copying its parents.  (This can also be done in the Netica GUI by
-  detaching the link from the parent end).  This this case Netica names
-  the \code{\link{NodeInputNames}()} according to the name of the old
-  node.
+  ways.  Either by setting one of the values of
+  \code{\link{NodeParents}(node)} to \code{NULL}, or by copying a node
+  (using \code{\link{CopyNodes}()}) without copying its parents.  (This
+  can also be done in the Netica GUI by detaching the link from the
+  parent end).  This this case Netica names the
+  \code{\link{NodeInputNames}()} according to the name of the old node.
 
   The function \code{NetworkFootprint(net)} search all of the nodes in
   \code{net} to find stub nodes, and reports the

@@ -27,7 +27,7 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
   }
   \item{value}{
     A character value giving the equation.  If it has length greater
-  than one, it is collapse with newlines between.
+  than one, it is collapsed with newlines between.
   }
   \item{numSamples}{
    In some cases Netica uses sampling to calculate the CPT.  If it does,

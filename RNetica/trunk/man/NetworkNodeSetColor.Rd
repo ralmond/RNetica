@@ -54,7 +54,7 @@ NetworkNodeSetColor(net, setname, newcolor)
   setting it.
 }
 \value{
-  The old value of the node color as hexadecimal string value of the
+  The old value of the node colour as hexadecimal string value of the
   form \code{"#rrggbb"}. 
 }
 \references{

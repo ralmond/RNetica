@@ -13,13 +13,12 @@
 NodeVisPos(node)
 NodeVisPos(node) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
     A \code{\link{NeticaNode}} object whose position is to be determined.
   }
   \item{value}{
-    A numeric vector of length 2 giving the $x$ and $y$ coordinates.
+    A numeric vector of length 2 giving the \eqn{x} and \eqn{y} coordinates.
   }
 }
 \details{

@@ -26,10 +26,10 @@ is.continuous(node)
   These functions determine which type of node the given node is.
 
   Note that setting \code{\link{NodeLevels}} can make a continuous node
-  behave like a discrete one and vise versa.  For continuous nodes, the
+  behave like a discrete one and vice versa.  For continuous nodes, the
   levels are cut points for getting a discrete state from the node.  For
-  a discrete node, the levels are real value representing the midpoint
-  of the node.  
+  a discrete node, the levels are real values representing the midpoint
+  of the states.  
 }
 \value{
   \code{TRUE} or \code{FALSE} depending on whether a node is discrete or

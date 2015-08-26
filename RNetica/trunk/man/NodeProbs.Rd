@@ -29,7 +29,7 @@ NodeProbs(node) <- value
 \details{
 
   Let \code{node} be the node of interest and \code{parent\var{1}},
-  \code{parent\var{2}}, ..., \code{parent\var{p}}, where $p$ is
+  \code{parent\var{2}}, ..., \code{parent\var{p}}, where \eqn{p} is
   the number of parents.  Let \code{pdim = sapply(\link{NodeParents}(node),
   \link{NodeNumStates})} be a vector with the number of states for each parent.
   A parent configuration is defined by assigning each of the parent
@@ -38,7 +38,7 @@ NodeProbs(node) <- value
   states of \code{node}.
 
   The result of \code{NodeProbs(node)} will be an array with dimensions
-  \code{c(pdim, NodeNumStates(node))}.  The first $p$ dimensions will be
+  \code{c(pdim, NodeNumStates(node))}.  The first \eqn{p} dimensions will be
   named according to the \code{\link{NodeInputNames}(node)} or the
   \code{\link{NodeName}(parent)} if the input names are not set.  The
   last dimension will be named according to the node itself.  The
@@ -51,7 +51,7 @@ NodeProbs(node) <- value
 }
 \value{
   A conditional probability array of class
-  \code{c("\link{CPA}","array")}.  See details
+  \code{c("\link{CPA}","array")}.  See details.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
