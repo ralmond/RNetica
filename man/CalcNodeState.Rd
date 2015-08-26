@@ -5,7 +5,7 @@
 }
 \description{
   The expression \code{CalcNodeState(node)} will return the state of
-  \code{node} if it is known deterministicly, and \code{NA} if the exact
+  \code{node} if it is known deterministically, and \code{NA} if the exact
   value is not known.  The expression \code{CalcNodeValue(node)} will
   return the numeric value of the node (e.g., the value set with
   \code{\link{NodeLevels}(node)}.  
@@ -58,8 +58,8 @@ CalcNodeValue(node)
 \section{Warning }{
 
   This function is not behaving at all like what I expected.  In
-  particular, it is return \code{NA} in many cases I expect it to
-  produce a value.  I've queried Norsys about this, but use with caution
+  particular, it is returning \code{NA} in many cases where I expect it
+  to produce a value.  I've queried Norsys about this, but use with caution
   until I get a clarification.
 
 }

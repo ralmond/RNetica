@@ -94,7 +94,7 @@ isNeticaRNGActive(rng)
   RNG objects which need to be closed when RNetica is unloaded.
   RNG objects should also be forced closed when garbage collected.
   The weak reference system is somewhat experimental, so well designed
-  code should manually close the rng when the program is through
+  code should manually close the RNG when the program is through
   with it.
 }
 \seealso{

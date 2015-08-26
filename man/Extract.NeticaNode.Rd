@@ -237,12 +237,12 @@ EVERY_STATE
   \code{node} has one or more parent variables and \code{value} is a
   matrix with more than one row, \code{node[] <- value} will generate a
   error, because the selection has only one row (with every value set to
-  \code{EVERY_STATE}.
+  \code{EVERY_STATE}).
 
   When \code{value} is an undimensioned vector, the function will do its
   best to figure out if it should be treated as a row or a column
   vector.  In the case of unusual behavior, expressing \code{value} as a
-  matrix should make the programmers intention clear.
+  matrix should make the programmer's intention clear.
 
 }
 \section{Setting Deterministic Values}{

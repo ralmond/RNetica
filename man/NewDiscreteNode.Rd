@@ -100,11 +100,11 @@ DeleteNodes(nodes)
   involving nodes don't require the net to be named.  The node creation
   functions are an exception.
 
-  Most functions involving lists of nodes, assume that all nodes come
+  Most functions involving lists of nodes assume that all nodes come
   from the same network.  Netica will generate an error if this is not
   the case.
 
-  Internally, node objects character vectors giving the name of the node
+  Internally, node objects are character vectors giving the name of the node
   with special properties representing the node.  Thus,
   \code{as.character(node)} will usually return the name of the node.
   However, if the node is renamed, that might not work properly.  Using

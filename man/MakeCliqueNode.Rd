@@ -52,7 +52,7 @@ GetClique(cliquenode)
   The \code{CliqueNode} is a subclass of \code{\link{NeticaNode}}
   (formally, the class is \code{c("CliqueNode", "NeticaNode")}).  It has
   a number of special features.  It's name is always \dQuote{Clique}
-  followed by a number.  It only has one state.  And it has a special
+  followed by a number.  It only has one state, and it has a special
   \code{"clique"} attribute which records the \code{nodelist} used to
   create it.  The function \code{is.CliqueNode()} tests a node to see if
   it is a clique node, and the function \code{GetClique(node)} retrieves

@@ -29,7 +29,7 @@ DeleteLink(parent, child)
   }
 }
 \details{
-  After adding a link \code{parent --> child}, it be the case that
+  After adding a link \code{parent --> child}, it may be the case that
   \code{parent} is in \code{\link{NodeParents}(child)} and \code{child}
   is a member of \code{\link{NodeChildren}(parent)}.  If \code{child}
   already has other parents, then the new parent will be added to the

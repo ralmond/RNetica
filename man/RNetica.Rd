@@ -55,7 +55,7 @@ for the GUI and API version of Netica is identical, so analysts can
 easily move back and forth between the two.
 
 The function \code{\link{StartNetica}()} (invoked automatically when
-\code{library(RNetica)}) builds a Netica environment which can be
+\code{library(RNetica)} is called) builds a Netica environment which can be
 accessed from R.  Networks created and loaded into the RNetica
 environment can then be manipulated from inside of R.  Note that the
 RNetica environment is separate from other Netica environments that may

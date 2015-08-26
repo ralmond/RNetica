@@ -48,7 +48,7 @@ e1 != e2
   inactive (deleted).  
 
   For active nodes, the equality test tests to see if both object
-  point to the same object in Netica memory.  Not that the name of the
+  point to the same object in Netica memory.  Note that the name of the
   node is embedded in the R object implementation and may get out of
   sync with Netica memory, so the printed representations may be unequal
   even if it points to the same node.  For inactive nodes, the

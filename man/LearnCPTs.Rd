@@ -34,7 +34,7 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
   \item{maxIters}{An integer scalar giving the maximum number of
     interactions for the EM and gradient decent algorithms.
   }
-  \item{maxTol}{An real scalar giving the difference in log-likelihood
+  \item{maxTol}{A real scalar giving the difference in log-likelihood
     required before the EM or gradient decent algorithms to be
     considered converged.
   }

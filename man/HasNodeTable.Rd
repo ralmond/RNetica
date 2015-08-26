@@ -26,7 +26,7 @@ HasNodeTable(node)
   complete, that is, does it have any \code{NA}s associated with it.
 
   In many cases, it is the second value that is of interest, so
-  \code{all(HasNodeTable(node)} is often a useful idiom.
+  \code{all(HasNodeTable(node))} is often a useful idiom.
 }
 \value{
   A logical vector with two elements.  The first states whether or not

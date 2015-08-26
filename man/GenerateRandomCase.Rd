@@ -19,10 +19,10 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
   select the random numbers.  This should have one of the values
   \code{"Join_Tree_Sampling"}, \code{"Forward_Sampling"} or
   \code{"Default_Sampling"} (see details).  Only the first letter is
-  uses and case is ignored, so \code{"J"}, \code{"F"} and \code{"D"} are
+  used and case is ignored, so \code{"J"}, \code{"F"} and \code{"D"} are
   legal values.}
   \item{timeout}{This is a number describing how long to carry on
-  computations under the forward sampling method.  It is ignore under
+  computations under the forward sampling method.  It is ignored under
   the join tree sampling method or when the default sampling method
   turns out to be join tree.}
   \item{rng}{This either be an existing \code{\link{NeticaRNG}} object

@@ -60,7 +60,7 @@ is.NetworkCompiled(net)
   function \code{is.NetworkCompiled()} calls the same internal function
   as \code{NetworkCompiledSize}, but clears the error.  This means it
   also clears any other errors that might be lurking in the system (see
-  \code{\link{ReportErrors}()}.  
+  \code{\link{ReportErrors}()}).  
   
   I think calling \code{CompileNetwork()} twice on
   the same network is harmless.  Adding a node to a network will

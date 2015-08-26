@@ -33,7 +33,7 @@ GetRelatedNodes(nodelist, relation = "connected")
 }
 \details{
   These functions are useful for testing the topology of a network.
-  Each of the functions offers measure related to the network.  The
+  Each of the functions offers a measure related to the network.  The
   \code{is.NodeRelated()} form tests the relationship between
   \code{node1} and \code{node2}.  The function \code{GetRelatedNodes()}
   returns a list of any nodes for which the relationship holds with any
@@ -52,9 +52,10 @@ GetRelatedNodes(nodelist, relation = "connected")
   of \code{node2}, or returns a list of children of the nodes in
   \code{nodelist}. 
 
-  \code{"descendent"}, \code{"decedents"}.  True if there is a directed
+  \code{"descendent"}, \code{"descedents"} [This is the spelling used by
+  Netica].  True if there is a directed
   (parent to child) path from \code{node2} to \code{node1}, or returns a
-  list of decedents of the nodes in \code{nodelist}. 
+  list of descedants of the nodes in \code{nodelist}. 
 
   \code{"connected"}.  True if there is a chain (unordered path) from
   \code{node1} to \code{node2}, or returns a list of all nodes connected
