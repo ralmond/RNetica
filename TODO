@@ -28,6 +28,8 @@ compiling a network with uninitialized CPTs (which generates a
 warning).  This works correctly under Linux and Windows-64 bit.  The
 error seems to persist after it was first encountered.
 
+Seg fault if CreateNetwork_bn() is called with a null environment.
+
 
 
 Functions for
