@@ -1,3 +1,8 @@
+2016-05-04  Almond  <ralmond@macox.com>
+
+	* R/LoadFuns.R (.onAttach, .onLoad): changed to use
+	assignInMyNamespace. 
+
 2015-06-05  Russell G. Almond  <ralmond@Limu>
 
 	* R/Node.R (NodeUserObj, "NodeUserObj<-"): Added serialized object
