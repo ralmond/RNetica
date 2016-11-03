@@ -99,6 +99,11 @@ The 0.3 series of releases includes a number of different improvements.
   think they should return a non-missing value.
 <li> The function NodeExpectedUtils is generating an internal Netica
   error.
+<li> The function CreateNetwork (and probably the load network
+  functions as well) assume that StartNetica() has been called.
+  Normally, library(RNetica) call StartNetica(), but if you bypass the
+  normal library() mechanism, CreateNetwork() will give a Seg Fault
+  error instead of a sensible error message.
 <li> If a node has a name which is too close to the 30 character
   limit, and that node is disconnected from a link, leaving a stub
   variable, then the stub variable will have a name that is longer
