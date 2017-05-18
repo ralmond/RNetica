@@ -65,6 +65,24 @@ NetworkNodesInSet(net, setname) <- value
 \author{
   Russell Almond
 }
+\note{
+  The \code{\link[base]{c}()} function strips attributes by default.
+  This means that the obvious expression for adding a node to a node
+  set:
+
+  \code{NetworkNodesInSet(Net,Set) <-
+    c(NetworkNodesInSet(Net,Set),NewNode)}
+
+  will give an error message (claiming that a string with the name of
+  \code{NewNode} is not a proper node).  The problem is with an
+  ill-considered side effect of the \code{c()} function.  You can work
+  around this by using the expression:
+
+  \code{NetworkNodesInSet(Net,Set) <-
+    c(NetworkNodesInSet(Net,Set),list(NewNode))}
+  
+
+}
 \seealso{
   \code{\link{NeticaBN}}, \code{\link{NodeSets}()},
   \code{\link{NetworkSetPriority}()}, 
@@ -136,4 +154,4 @@ DeleteNetwork(nsnet)
 
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }
