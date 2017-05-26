@@ -1,3 +1,21 @@
+2017-05-25  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_AbsorbNodes): Fixed bug in deleting absorbed nodes.
+
+	* src/Node.c (RN_Free_Nodelist): Fixed bug in PROTECT/UNPROTECT
+	count.
+	
+
+2017-05-24  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R ("NodeStates<-"): Added resize switch to control
+	behavior when input state list length is different from current
+	length. 
+
+	* src/Node.c (RN_SetNodeStates): Changed to automatically
+	add/delete states as needed.
+	
+
 2016-05-04  Almond  <ralmond@macox.com>
 
 	* R/LoadFuns.R (.onAttach, .onLoad): changed to use

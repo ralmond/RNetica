@@ -116,6 +116,46 @@ stopifnot(is.null(MemoryStreamContents(memstream)))
 
 CloseCaseStream(memstream)
 
+## Second test, do this from scratch.
+
+casesabb <-
+  data.frame(IDnum=1001:1010,NumCases=rep(1,10),
+             A=c("A1","A1","A1","A1","A1","A2","A2","A2","A2","A2"),
+             B1=c("B1","B1","B1","B2","B2","B2","B2","B2","B1","B1"),
+             B2=c("B1","B1","B1","B1","B2","B2","B2","B2","B2","B1"))
+
+abbstream <- MemoryCaseStream(casesabb)
+MemoryStreamContents(abbstream)
+CloseCaseStream(abbstream)
+
+abb <- CreateNetwork("ABB")
+A <- NewDiscreteNode(abb,"A",c("A1","A2"))
+B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
+B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
+
+AddLink(A,B1)
+AddLink(A,B2)
+
+A[] <- c(.5,.5)
+NodeExperience(A) <- 10
+
+B1["A1"] <- c(.8,.2)
+B1["A2"] <- c(.2,.8)
+B2["A1"] <- c(.8,.2)
+B2["A2"] <- c(.2,.8)
+NodeExperience(B1) <- c(10,10)
+NodeExperience(B2) <- c(10,10)
+
+abbstream <- MemoryCaseStream(casesabb)
+## This does not appear to work correctly
+abbstream <- ReadFindings(list(A,B1,B2),abbstream,"FIRST")
+NodeFinding(A)
+NodeFinding(B1)
+NodeFinding(B2)
+
+CloseCaseStream(abbstream)
+DeleteNetwork(abb)
+
 }
 \keyword{ interface }
 \keyword{ IO }

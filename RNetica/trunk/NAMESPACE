@@ -1,5 +1,7 @@
 import(methods)
 import(utils)
+importFrom("grDevices", "col2rgb")
+importFrom("stats", "runif")
 
 export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,

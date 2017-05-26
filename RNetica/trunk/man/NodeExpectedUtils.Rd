@@ -61,6 +61,7 @@ NodeExpectedUtils(node)
 }
 \examples{
 
+## Read the RTI network from the library.
 rti <- ReadNetworks(paste(library(help="RNetica")$path,
                            "sampleNets","CostOfTesting.dne",
                            sep=.Platform$file.sep))

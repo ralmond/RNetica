@@ -647,7 +647,7 @@ extern SEXP RN_GetNodeVisPos(SEXP nd);
 extern SEXP RN_SetNodeVisPos(SEXP nd, SEXP newPos);
 extern SEXP RN_GetNodeNumStates(SEXP nd);
 extern SEXP RN_GetNodeStates(SEXP nd);
-extern SEXP RN_SetNodeStates(SEXP nd, SEXP newvals);
+extern SEXP RN_SetNodeStates(SEXP nd, SEXP newvals, SEXP newsize);
 extern SEXP RN_GetNodeStateTitles(SEXP nd);
 extern SEXP RN_SetNodeStateTitles(SEXP nd, SEXP newvals);
 extern SEXP RN_GetNodeStateComments(SEXP nd);
@@ -802,7 +802,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_SetNodeVisPos", (DL_FUNC) &RN_SetNodeVisPos, 2},
   {"RN_GetNodeStates", (DL_FUNC) &RN_GetNodeStates, 1},
   {"RN_GetNodeNumStates", (DL_FUNC) &RN_GetNodeNumStates, 1},
-  {"RN_SetNodeStates", (DL_FUNC) &RN_SetNodeStates, 2},
+  {"RN_SetNodeStates", (DL_FUNC) &RN_SetNodeStates, 3},
   {"RN_GetNodeStateTitles", (DL_FUNC) &RN_GetNodeStateTitles, 1},
   {"RN_SetNodeStateTitles", (DL_FUNC) &RN_SetNodeStateTitles, 2},
   {"RN_GetNodeStateComments", (DL_FUNC) &RN_GetNodeStateComments, 1},

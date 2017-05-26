@@ -80,6 +80,8 @@ bulb <- NewDiscreteNode(lights,"Bulb",c("On","Off"))
 ## Set up a two-way switch (Xor) network
 AddLink(switchs[[1]],bulb)
 AddLink(switchs[[2]],bulb)
+## This sets up a logical table, so that the light is on iff
+## both switches are in the same orientation.
 bulb[] <-"Off"
 bulb[Switch1="Up",Switch2="Up"]<-"On"
 bulb[Switch1="Down",Switch2="Down"]<-"On"
@@ -100,8 +102,7 @@ NodeFinding(switchs[[2]]) <- "Up"
 
 stopifnot(CalcNodeState(switchs[[1]])=="Up")
 
-## This should be "On", but I get NA
-CalcNodeState(bulb)
+stopifnot(CalcNodeState(bulb)=="On")
 
 NodeLevels(bulb) <-c(1,0)
 NodeLevels(switchs[[1]]) <-c(1,0)
@@ -116,4 +117,4 @@ DeleteNetwork(lights)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

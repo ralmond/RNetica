@@ -38,7 +38,7 @@ NodeValue <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  if (length(mean) >1 || length(sd)>1) {
+  if (length(mean) >1 || length(sem)>1) {
     stop("Mean and sd must be scalars.")
   }
   if (is.character(mean) || is.na(mean)) {
@@ -216,12 +216,12 @@ woe <- function (enodes,estates,hnodes,hstatelists) {
   if (length(hstatelists) > length(hnodes)) {
     stop("More statelists than nodes.")
   }
-  net <- NodeNetwork(hnodes[[1]])
+  net <- NodeNet(hnodes[[1]])
 
   ## Not sure whether hypothesis or negation is compound, so set up
   ## likelihood based on hypothesis being true and use virtual evidence.
   hlikes <- mapply(function(hnode,hstatelist) {
-    stnames <- NodeStateNames(hnode)
+    stnames <- NodeStates(hnode)
     hlike <- rep(0,length(stnames))
     names(hlike) <- stnames
     hlike[hstatelist] <- 1
@@ -231,13 +231,13 @@ woe <- function (enodes,estates,hnodes,hstatelists) {
   tryCatch({
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
-      NodeLikelihood(hnodes[[i]]) <- hlike[[i]]
+      NodeLikelihood(hnodes[[i]]) <- hlikes[[i]]
     }
     p_Htrue <- FindingsProbability(net)
 
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
-      NodeLikelihood(hnodes[[i]]) <- 1-hlike[[i]]
+      NodeLikelihood(hnodes[[i]]) <- 1-hlikes[[i]]
     }
     p_Hfalse <- FindingsProbability(net)
 
@@ -258,7 +258,7 @@ ewoe <- function (targets,hnodes,hstatelists) {
   if (!all(sapply(hnodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got ",hnodes)
   }
-  if (!is.list(hstatelistss))
+  if (!is.list(hstatelists))
     hstatelists <- list(hstatelists)
   if (length(hstatelists) > length(hnodes)) {
     stop("More statelists than nodes.")
@@ -267,7 +267,7 @@ ewoe <- function (targets,hnodes,hstatelists) {
   ## Not sure whether hypothesis or negation is compound, so set up
   ## likelihood based on hypothesis being true and use virtual evidence.
   hlikes <- mapply(function(hnode,hstatelist) {
-    stnames <- NodeStateNames(hnode)
+    stnames <- NodeStates(hnode)
     hlike <- rep(0,length(stnames))
     names(hlike) <- stnames
     hlike[hstatelist] <- 1
@@ -277,17 +277,17 @@ ewoe <- function (targets,hnodes,hstatelists) {
   tryCatch({
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
-      NodeLikelihood(hnodes[[i]]) <- hlike[[i]]
+      NodeLikelihood(hnodes[[i]]) <- hlikes[[i]]
     }
     p_Htrue <- lapply(targets,NodeBeliefs)
 
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
-      NodeLikelihood(hnodes[[i]]) <- 1-hlike[[i]]
+      NodeLikelihood(hnodes[[i]]) <- 1-hlikes[[i]]
     }
     p_Hfalse <- lapply(targets,NodeBeliefs)
 
-    ewoes <- mapply(function (p_H,p_notH) {100*sum(log10(p_H/p_notH)*pH)},
+    ewoes <- mapply(function (p_H,p_notH) {100*sum(log10(p_H/p_notH)*p_H)},
                     p_Htrue,p_Hfalse)
     if (length(names(targets)) > 0) {
       names(ewoes) <- names(targets)

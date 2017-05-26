@@ -509,7 +509,7 @@ NodeStates <- function (node) {
   states
 }
 
-"NodeStates<-" <- function (node, value) {
+"NodeStates<-" <- function (node, resize=FALSE, value) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
@@ -517,10 +517,11 @@ NodeStates <- function (node) {
   if (any(is.na(value)) || any(!is.IDname(value))) {
     stop("Illegal state names: ", value)
   }
-  ## if (length(value) != NodeNumStates(node)) {
-  ##   stop("Expected exactly ", NodeNumStates(node), " states")
-  ## }
-  handle <- .Call("RN_SetNodeStates",node, paste(value,collapse=","),PACKAGE="RNetica")
+  if (!resize && length(value) != NodeNumStates(node)) {
+     stop("Expected exactly ", NodeNumStates(node), " states, or resize=TRUE.")
+  }
+  handle <- .Call("RN_SetNodeStates",node, paste(value,collapse=","),
+                  length(value),PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
