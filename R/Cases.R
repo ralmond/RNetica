@@ -287,6 +287,10 @@ MemoryStreamContents <- function (stream) {
   if (!is.data.frame(value) && !is.null(value)) {
     stop("MemoryStreamContents can only be set to a data.frame or NULL.")
   }
+  if (!is.null(value) && is.null(value$IDnum)) {
+    ## Force first row to be IDnum
+    value <- data.frame(IDnum=1:nrow(value),value)
+  }
   attr(stream,"Case_Stream_DataFrame") <- value
   if (isCaseStreamOpen(stream)) {
     contents <- NULL

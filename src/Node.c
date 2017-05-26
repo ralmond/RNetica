@@ -176,6 +176,27 @@ nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net_handle) {
   return result;
 }
 
+// Frees pointers from R-objects, assumes nodes have been deleted elsewhere.
+void RN_Free_Nodelist(SEXP nodes) {
+  R_len_t n, nn = length(nodes);
+  SEXP node, nodehandle;
+  
+  for (n=0; n<nn; n++) {
+    PROTECT(node = VECTOR_ELT(nodes,n));
+    if (!isNull(node)) {
+      PROTECT(nodehandle = getAttrib(node,nodeatt));
+      /* Clear the handle */
+      if (nodehandle && nodehandle != R_NilValue) {
+        R_ClearExternalPtr(nodehandle);
+      }
+      setAttrib(node,nodeatt,R_NilValue); //Probably not needed.
+      R_ReleaseObject(node); //Let R garbage collect it when all
+      UNPROTECT(1);
+    }
+    UNPROTECT(1);
+  }
+}
+
 
 
 /***************************************************************************
@@ -697,14 +718,27 @@ SEXP RN_GetNodeStates(SEXP nd) {
 }
 
 
-SEXP RN_SetNodeStates(SEXP nd, SEXP newvals) {
+/*
+ * Netica expects the state names as a comma separated list,
+ * so if we are resizing, we need to pass in the new size.
+ */
+SEXP RN_SetNodeStates(SEXP nd, SEXP newvals, SEXP newsize) {
   const char *value;
   node_bn* node_handle;
+  int n, ni, nn = INTEGER(newsize)[0];
 
   node_handle = GetNodeHandle(nd);
 
   if (node_handle) {
     value = CHAR(STRING_ELT(newvals,0));
+    n = GetNodeNumberStates_bn(node_handle);
+    if (n < nn) { //Too few add states
+      AddNodeStates_bn(node_handle,-1,NULL,nn-n, -1.0);
+    } else if (n > nn) { //Too long, remove states
+      for (ni=n; ni > nn; ) {
+        RemoveNodeState_bn(node_handle,--ni);
+      }
+    }
     SetNodeStateNames_bn(node_handle,value);
   } else {
     warning("Could not find node %s.",NODE_NAME(nd));
@@ -849,10 +883,10 @@ SEXP RN_GetNodeLevelsDiscrete(SEXP nd) {
 }
 //Switching between discrete and continuous is done at R level.
 SEXP RN_GetNodeLevelsContinuous(SEXP nd) {
-  R_len_t n, nn;
   node_bn* node_handle;
   const level_bn* levels;
   SEXP result;
+  R_len_t n, nn;
 
   node_handle = GetNodeHandle(nd);
   if (!node_handle) {

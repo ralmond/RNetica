@@ -41,6 +41,7 @@ extern net_bn* RN_AS_NET(const char* name);
  */
 extern void RN_Free_Node(node_bn* node_handle);
 extern void RN_Free_Nodes(const nodelist_bn* nodelist);
+extern void RN_Free_Nodelist(const SEXP nodes);
 
 /**
  * Converts between Netica nodelists and R lists.  Calling programs

@@ -172,10 +172,18 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
 
 SEXP RN_AbsorbNodes(SEXP nodelist) {
   nodelist_bn* deleteme = RN_AS_NODELIST(nodelist,NULL);
+  int kk=LengthNodeList_bn(deleteme);
+  Rprintf("Absorbing %d nodes.\n",kk);
+  node_bn* node0 = NthNode_bn(deleteme,0);
+  Rprintf("First node address %x.\n",(long) node0);
+  const char *nodename;
+  nodename = GetNodeName_bn(node0);
+  Rprintf("Its name is %s.\n",nodename);
 
   if (deleteme) {
-    RN_Free_Nodes(deleteme);  //Will be deleted, free handles
     AbsorbNodes_bn(deleteme);
+    Rprintf("Absorbed.\n");
+    RN_Free_Nodelist(nodelist);  //Free handles
   } else {
     error("AbsorbNodes: Could not find affected network.\n");
   }

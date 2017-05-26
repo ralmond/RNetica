@@ -95,7 +95,7 @@ GenerateRandomCase <- function (nodelist, method="Default",
     stop("The rng argument must be an active NeticaRNG or NULL.")
   }
   timeout <- as.double(timeout)
-  if (is.na(timeout) && timout <= 0) {
+  if (is.na(timeout) && timeout <= 0) {
     stop("Timeout must be a postive number.")
   }
   result <-

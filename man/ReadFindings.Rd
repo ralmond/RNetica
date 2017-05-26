@@ -168,8 +168,23 @@ stopifnot( NodeFinding(A) == "A1",
            abs(getCaseStreamLastFreq(filestream)-1.0) < .0001,
            pos1 == getCaseStreamPos(filestream))
 
+## Test with memory stream
+cases <- read.CaseFile(casefile)
+abcstream <- MemoryCaseStream(cases)
+MemoryStreamContents(abcstream)
+
+
+abcstream <- ReadFindings(list(A,B,C),abcstream,"FIRST")
+stopifnot( NodeFinding(A) == "A1",
+           NodeFinding(B) == "B1",
+           NodeFinding(C) == "C1",
+           getCaseStreamLastId(abcstream)==1001,
+           abs(getCaseStreamLastFreq(abcstream)-1.0) < .0001)
+
+
 ##Clean Up
 CloseCaseStream(filestream)
+CloseCaseStream(abcstream)
 DeleteNetwork(abc)
 
 }

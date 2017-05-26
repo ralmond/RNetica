@@ -175,6 +175,7 @@ AbsorbNodes <- function (nodes) {
   if (any(!sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
+  print(nodes)
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1L]>0) {

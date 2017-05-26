@@ -1,6 +1,5 @@
 \name{EnterGaussianFinding}
 \alias{EnterGaussianFinding}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Enter a numeric finding with uncertainty
 }
 \description{

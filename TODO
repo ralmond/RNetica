@@ -36,6 +36,9 @@ Seg fault if CreateNetwork_bn() is called with a null environment.
 Functions for
 ##   ReorderNodeStates, RemoveNodeState,
 These seem to be redundant with current definition of NodeStates<-
+## Update.  Folded AddNodeStates and RemoveNodeState into
+## NodeStates<-.  Reorder Node States does something to the CPT, so
+## There still might be a use for it.
 
 Learning from Data (Both of these depend on Netica API updates)
 ## LearnCPTs -- update when Netica Fixes bugs
@@ -73,6 +76,7 @@ C side so we don't need to constantly do the R->c conversions.
 
 DBNs
 ## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
+There are currently no corresponding Get functions for these.
 
 Do Not implement
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
@@ -93,7 +97,9 @@ Ask Brent:
 5. EnterLikelihoodFindingClique
 6. NetworkUndo, Redo
 7. Learn_CPTs return value?
-8. Mysterious behavior of CalcNodeState and CalcNodeValue
+8. Mysterious behavior of CalcNodeValue
 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 10.  Error on NodeExpectedUtils
 11.  Learn_CPTs and case streams.
+12. Crash in AbsorbNode
+13. Getters for DBN properties

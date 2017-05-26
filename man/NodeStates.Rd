@@ -12,7 +12,7 @@
 \usage{
 NodeStates(node)
 NodeNumStates(node)
-NodeStates(node) <- value
+NodeStates(node, resize=FALSE) <- value
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +24,13 @@ NodeStates(node) <- value
     names of the states.  State names must conform to the
     \code{\link{IDname}} rules.
   }
+  \item{resize}{
+    A logical scalar.  If true, the number of states of the node will be
+    adjusted to the length of \code{value}.  If false (the default), an
+    error will be raised.  Note: changing the number of states could
+    loose information if there is a conditional probability table or
+    values associated with a node.
+  }
 }
 \details{
   States behave slightly differently for discrete and continuous nodes
@@ -33,8 +40,8 @@ NodeStates(node) <- value
 
   \bold{Discrete.} The number of states for a discrete node is
   determined when the node is created (through a call to
-  \code{\link{NewDiscreteNode}()}).  The number of states may not be
-  changed, but they can be renamed.
+  \code{\link{NewDiscreteNode}()}).  By default, setting the node states
+  will not change the number of states in the node.
 
   The states are important when building conditional probability
   tables (CPTs).  In particular, the state names are used to label the columns
@@ -45,6 +52,17 @@ NodeStates(node) <- value
   \code{\link{NodeStateTitles}()}, and \code{\link{NodeLevels}()} (for
   discrete nodes).
 
+  Calling \code{NodeStates(node,resize=TRUE) <- value} will adjust the
+  number of states in the node to match the length of \code{value}.
+  Note that this is a somewhat dangerous operation.  If there is a CPT
+  associated with the node, Netica will adjust it to the right size
+  using an operation which has not been documented, but seems like a
+  sensible default.  If there is a finding associated with the node,
+  Netica may raise an error if this state is deleted (RNetica simply
+  deletes the unneeded states from the end of the list).  It is probably
+  safe to resize the node only in early stages of development.  This is
+  why the default is to raise an error.
+
   \bold{Continuous.}  States for a continuous node are determined by the
   \code{\link{NodeLevels}()} of the node, which describe a series of
   endpoints for intervals that cut the continuous space into the
@@ -53,6 +71,9 @@ NodeStates(node) <- value
   in which case it will be zero.  If \code{NodeStates} are set for a
   continuous node, they must have length
   \code{length(NodeLevels(node))-1}. 
+
+  
+
   
 }
 \value{
@@ -69,7 +90,8 @@ NodeStates(node) <- value
   \url{http://norsys.com/onLineAPIManual/index.html}:
   \nref{GetNodeNumberStates_bn}, \nref{GetNodeStateName_bn},
   \nref{SetNodeStateNames_bn},  \nref{GetNodeLevels_bn} 
-  \nref{SetNodeLevels_bn} 
+  \nref{SetNodeLevels_bn}, \nref{AddNodeStates_bn},
+  \nref{RemoveNodeState_bn}
 }
 \author{
   Russell Almond
@@ -113,13 +135,30 @@ stopifnot(
   NodeStates(nodel3)[2]=="Medium"
 )
 
+## Adjusting size
+
+\dontrun{
+## Don't run this it will generate an error.
+NodeStates(nodel2) <- c("Low","Medium","High")
+}
+
+## Should work if we pass resize=TRUE
+NodeStates(nodel2,resize=TRUE) <- c("Low","Med","High")
+NodeStates(nodel3,resize=TRUE) <- c("Low","High")
+stopifnot(
+  NodeNumStates(nodel2)==3,
+  NodeStates(nodel2)==c("Low","Med","High"),
+  NodeNumStates(nodel3)==2,
+  NodeStates(nodel3)==c("Low","High")
+)
+
 ## Continuous Nodes
 wnode <- NewContinuousNode(anet,"Weight")
 
 \dontrun{
 ## Don't run this until the levels for wnode have been set,
 ## it will generate an error.
-NodeStates(vnode) <- c("Low","Medium","High")
+NodeStates(wnode) <- c("Low","Medium","High")
 }
 
 ## First set levels of node.
