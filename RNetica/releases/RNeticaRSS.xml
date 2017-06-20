@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    
+    <title>RNetica Releases (RSS Feed)</title>
+    <link>//pluto.coe.fsu.edu/RNetica/</link>
+    <description>R Tools for Bayesian Networks</description>
+
+    <item>
+      <title>RNetica 0.4-5</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.4-5</guid>
+      <pubDate>Tue Jun 20 17:38:03 EDT 2017</pubDate>
+      <description>[CDATA[ Peanut compatability and User Object Support ]]</description>
+    </item>
+
+    <item>
+      <title>CPTtools 0.4-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/CPTtools.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/CPTtools_0.4-2</guid>
+      <pubDate>Tue Jun 20 17:42:03 EDT 2017</pubDate>
+      <description>[CDATA[ Debugging with Test cases. ]]</description>
+    </item>
+
+    <item>
+      <title>Peanut 0.2-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.2-2</guid>
+      <pubDate>Tue Jun 20 17:45:03 EDT 2017</pubDate>
+      <description>[CDATA[ Spreadsheet functions and debugging. ]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.2-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.2-2</guid>
+      <pubDate>Tue Jun 20 17:45:03 EDT 2017</pubDate>
+      <description>[CDATA[ Spreadsheet functions and debugging. ]]</description>
+    </item>
+
+  </channel>
+</rss>
