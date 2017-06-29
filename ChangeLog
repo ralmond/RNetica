@@ -1,3 +1,8 @@
+2017-06-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (cc): Added new c replacement function for lists of
+	nodes. 
+
 2017-05-25  Russell G. Almond  <ralmond@Limu>
 
 	* src/Edges.c (RN_AbsorbNodes): Fixed bug in deleting absorbed nodes.

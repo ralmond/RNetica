@@ -50,7 +50,7 @@ export(
    AddLink, DeleteLink, ReverseLink,
    NodeParents, "NodeParents<-", NodeChildren,
    AbsorbNodes, MakeCliqueNode, is.CliqueNode,
-   GetClique,
+   GetClique, cc,
    is.NodeRelated, GetRelatedNodes,
    NodeInputNames, "NodeInputNames<-",
    AdjoinNetwork, NetworkFootprint
@@ -116,9 +116,11 @@ export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
 S3method(print, NeticaBN)
 S3method(toString, NeticaBN)
 S3method(Ops, NeticaBN)
+S3method(c, NeticaBN)
 S3method(print, NeticaNode)
 S3method(toString, NeticaNode)
 S3method(Ops, NeticaNode)
+S3method(c, NeticaNode)
 S3method("[", NeticaNode)
 S3method("[[", NeticaNode)
 S3method("[<-", NeticaNode)

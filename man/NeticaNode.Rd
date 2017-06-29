@@ -82,7 +82,10 @@ e1 != e2
 \note{
   Internally, the \code{NeticaNode} objects are
   character strings with extra attributes.  So \code{as.character(node)}
-  will return the name of the node.  
+  will return the name of the node.  Because of this, the default
+  \code{\link[base]{c}()} function will strip off the essential
+  attributes returning them to strings.  Use the \code{\link{cc}()}
+  function instead to avoid this problem.
 
   Note that if a \code{NeticaNode} object is stored in an R object, and
   the Node is subsequently renamed (with a call to the set method of
@@ -109,7 +112,8 @@ e1 != e2
   \code{\link{is.active}()}, \code{\link{is.discrete}()}, 
   \code{\link{NewContinuousNode}()}, \code{\link{NewDiscreteNode}()},
   \code{\link{DeleteNodes}()}, \code{\link{NodeName}()},
-  \code{\link{NodeStates}()}, \code{\link{NodeLevels}()}
+  \code{\link{NodeStates}()}, \code{\link{NodeLevels}()},
+  \code{\link{cc}()}
 
 }
 \examples{
