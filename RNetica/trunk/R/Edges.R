@@ -124,6 +124,36 @@ NodeParents <- function (child) {
   invisible(handle)
 }
 
+## This is another workaround for an ancient S design flaw (I think
+## this one has been around since the Blue Book.  The c() function
+## strips attributes, which turns NeticaNodes and NeticaBN objects
+## into ordinary strings.  This is a replacement for c() which (a)
+## only works on lists and (b) does not strip attributes.
+cc <- function (...) {
+  args <- list(...)
+  isList <- sapply(args,function(x) is(x,"list"))
+  lens <- sapply(args,length)
+  lens <- ifelse(isList,lens,1L)
+  result <- vector("list",sum(lens))
+  n <- 1
+  for (arg in args) {
+    if (is(arg,"list")) {
+      m <- length(arg)
+      result[n:(n+m-1)] <- arg
+      n <- n+m
+    } else {
+      result[[n]] <- arg
+      n <- n+1
+    }
+  }
+  result
+}
+
+c.NeticaBN <- cc
+c.NeticaNode <- cc
+
+
+
 NodeInputNames <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)

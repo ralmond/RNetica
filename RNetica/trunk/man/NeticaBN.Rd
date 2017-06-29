@@ -74,7 +74,10 @@ e1 != e2
 \note{
   Internally, the \code{NeticaBN} objects are
   character strings with extra attributes.  So \code{as.character(net)}
-  will return the name of the network.  
+  will return the name of the network.  Because of this, the default
+  \code{\link[base]{c}()} function will strip off the essential
+  attributes returning them to strings.  Use the \code{\link{cc}()}
+  function instead to avoid this problem.
 
   Note that if a \code{NeticaBN} object is stored in an R object, and
   the network is subsequently renamed (with a call to the set method of
@@ -95,7 +98,8 @@ e1 != e2
   \code{\link{CreateNetwork}()},\code{\link{DeleteNetwork}()},
   \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()},
   \code{\link{is.active}()}, \code{\link{NetworkAllNodes}()},
-  \code{\link{WriteNetworks}()}, \code{\link{GetNetworkFileName}()}
+  \code{\link{WriteNetworks}()}, \code{\link{GetNetworkFileName}()},
+  \code{\link{cc}()}
 }
 \examples{
 
