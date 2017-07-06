@@ -1,0 +1,366 @@
+All of the source code for RNetica is available at:
+
+https://pluto.coe.fsu.edu/svn/common/RNetica/trunk
+
+The src directory under there contains the C code.  For the most part,
+I think the mapping between the R function and the C function should
+be self-explanatory, but if not you can certainly look there.
+
+You can also download a complete source tarball at 
+https://pluto.coe.fsu.edu/RNetica
+Instructions for compiling R in debugging mode are at 
+http://cran.r-project.org/
+
+Quick list of issues (more detail below):
+
+Hard BUGS:
+1) CreateNetwork_bn seg fault
+2) Recursive errors on GetError_ns
+3) Fatal Error in GetNodeExpectedUtils_bn
+
+Unexpected Behaviors:
+4) CalcNodeValue_bn returns UNDEF_DBL not value.
+5) NodeLikelihood and MPE and FindingsProbability
+6) LearnCPTs does not have a way to test if algorithm converged.
+7) Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
+8) LearnCPTs, ReadFindings and memory case streams.  
+This one is a general issue with memory case streams.  They sometimes
+work, and sometimes not.  This could be user error, but I'm having a
+hard time figuring out under what conditions they work properly.
+
+9) NetworkUndo, Redo do nothing
+
+
+Requests for Enhancement:
+10) IsNetCompiled function?
+11) GetNodesets for Node, Nodes in NodeSet?
+12) CopyNodes does not copy NodeSet information?
+13) EnterLikelihoodFindingClique
+
+
+
+
+Hard BUGS:
+
+1) If CreateNetwork_bn() is called with a null environment I get a
+segmentation fault.  
+
+I've now trapped for this in my code (it should have been the case
+that loading the RNetica package initialize the environment, but at
+least one of my users was too clever for her own good).  I'm bringing
+it to your attention as you might want to raise a more sensible error
+than a seg_fault.
+
+
+2) I'm getting an error GetError_ns:  deleted or damage report_ns passed
+under Windows, 32-bit.  The condition that seemed to trigger this was
+compiling a network with uninitialized CPTs (which generates a
+warning).  This works correctly under Linux and Windows-64 bit.  The
+error seems to persist after it was first encountered.  This is an old
+bug, but I seem to be able to get into a state where I'm repeatedly
+calling get errors to just keep on getting that error.
+
+Yes, my get error message function calls clear errors, maybe that is
+where the problem is occuring.
+
+3)  NodeExpectedUtils {GetNodeExpectedUtils_bn}
+
+Fatal Netica error: In function GetNodeExpectedValue_bn: BNUtils-1083 (nd.isNatureOrStubNode()).
+Error in ReportErrors() : 
+  Fatal errors encountered, recommend restarting Netica
+
+R Script to produce error (I'll attache the network).
+## Read the RTI network from the library.
+rti <- ReadNetworks(paste(library(help="RNetica")$path,
+                           "sampleNets","CostOfTesting.dne",
+                           sep=.Platform$file.sep))
+## The two decision nodes
+Test <- NetworkFindNode(rti,"Test")
+Instruction <- NetworkFindNode(rti,"Instruction")
+
+## Network must be compiled before analysis:
+CompileNetwork(rti)
+
+
+\dontrun{
+## NETICA BUG, these currently give errors.
+NodeExpectedUtils(Test)
+NodeExpectedUtils(Instruction)
+}
+
+
+Unexpected Behaviors
+
+
+4)  CalcNodeValue {CalcNodeValue_bn}
+This is returning UNDEF_DBL (mapped to NA in R) when I expect a value.
+Here is the test code that fails:
+
+lights <- CreateNetwork("lights")
+## Next line creates multiple nodes.
+switchs <- NewDiscreteNode(lights,paste("Switch",1:2,sep=""),c("Up","Down"))
+bulb <- NewDiscreteNode(lights,"Bulb",c("On","Off"))
+
+## Set up a two-way switch (Xor) network
+AddLink(switchs[[1]],bulb)
+AddLink(switchs[[2]],bulb)
+## This sets up a logical table, so that the light is on iff
+## both switches are in the same orientation.
+bulb[] <-"Off"
+bulb[Switch1="Up",Switch2="Up"]<-"On"
+bulb[Switch1="Down",Switch2="Down"]<-"On"
+switchs[[1]][] <- .5
+switchs[[2]][] <- .5
+
+## Assign values 0 and 1
+NodeLevels(bulb) <-c(1,0)
+NodeLevels(switchs[[1]]) <-c(1,0)
+NodeLevels(switchs[[2]]) <-c(1,0)
+
+CompileNetwork(lights)
+## I've saved this network as lights.dne for your reference.
+
+NodeFinding(switchs[[1]]) <- "Up"
+NodeFinding(switchs[[2]]) <- "Up"
+
+## Test
+CalcNodeValue(bulb)
+CalcNodeValue(switchs[[1]])
+
+I'm expecting both of the last two to return 1, but they are returning
+NA (UNDEF_DBL) instead.
+
+5) NodeLikelihood {GetNodeLikelihood_bn}
+
+I have two notes here about confirming the behavior of this function.
+a)  The documentation for the Netica function \nref{MostProbableConfig_bn}
+    states that likelihood findings are not
+    properly taken into account in \code{\link{MostProbableConfig}()}.
+    Some quick tests indicate that it is doing something sensible, but
+    more extensive testing and/or clarification is needed.
+Here I would expect that under MPC propagation, it would give the
+config with the highest likelihood.  I guess my question is why is
+there a warning here?  It seems like you could simply document the
+behavior.
+
+
+b)  The documentation for the Netica function
+    \nref{FindingsProbability_bn} also provides a warning about likelihood
+    evidence.  The function \code{\link{FindingsProbability}(net)} still
+    gives a result, but it is the normalization constant for the network,
+    and not necessarily a probability.
+Is this statement correct?  If so, again, you could update the
+    documentation.
+
+
+6) Learn_CPTs does not have a way to test if algorithm converged.
+
+This is almost a RFE rather than a behavior question, but it is a bit
+more serious, as it precludes many uses of the LearnCPTs function.
+High priority is for a simple flag that tells whether the algorithm
+converged or just ran to the max cycle would be the minimum
+requirement.  Ideally, there would be a way to return the number of
+cycles used and the log-likelihood at convergence as is done in the
+Netica GUI.
+
+In particular, LearnCPTs_bn uses a learner object, presumably its
+state could be queried after a call to LearnCPTs_bn to get details
+about the convergence.
+
+7) Unexpected behavior of EnterGaussianFinding
+{EnterGaussianFinding_bn} 
+This seems to only set a single value, not a probability distribution
+over possible values.  Maybe this is a documentation bug, but then the
+function seems redundant with NodeValue.
+
+Script to reproduce the problem:
+cirt5 <- CreateNetwork("ContinuousIRT5")
+
+theta <- NewContinuousNode(cirt5,"Theta")
+NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
+theta[] <- rep(1/NodeNumStates(theta),NodeNumStates(theta))
+
+CompileNetwork(cirt5) ## Ready to enter findings
+
+EnterGaussianFinding(theta,0,1)
+NodeBeliefs(theta)
+
+I get:
+NodeBeliefs(theta)
+              
+0 0 0 1 0 0 0 
+But I'm expecting
+> diff(pnorm(c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)))
+[1] 0.006209379 0.060597536 0.241730337 0.382924923 0.241730337 0.060597536
+[7] 0.006209379
+
+
+7a) Unexpected behavior of  EnterIntervalFinding
+This is remarkably similar.
+
+Example code
+
+cirt5 <- CreateNetwork("ContinuousIRT5")
+
+theta <- NewContinuousNode(cirt5,"Theta")
+NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
+theta[] <- rep(1/NodeNumStates(theta),NodeNumStates(theta))
+
+CompileNetwork(cirt5) ## Ready to enter findings
+
+EnterIntervalFinding(theta,-1,1)
+NodeBeliefs(theta)
+
+I get:
+              
+0 0 1 0 0 0 0 
+
+But I'm expecting
+
+0 0 1/3 1/3 1/3 0 0
+
+8) LearnCPTs (LearnCPTS_bn, ReviseCPTsByCaseFile_bn) and and case streams.
+
+  In version 5.04 of the Netica API, there is a problem with using
+  Memory Streams that seems to affect the functions
+  \code{\link{LearnCases}} and \code{\link{LearnCPTs}}.  Until this
+  problem is fixed, most uses of Memory Streams will require file
+  streams instead.  Write the case file using
+  \code{\link{write.CaseFile}}, and then create a file stream using
+  \code{\link{CaseFileStream}}. 
+
+The call to LearnCPTs or LearnCases generates the
+Netica warning: In function ReviseCPTsByCaseFile_bn: can't read any applicable information from this set of cases
+
+When the casefile argument is a case stream.
+
+The problem appears to be at an even more fundamental level.
+Sometimes, I can get ReadFinding to work with a case stream, and
+sometimes not.
+
+Here is my test code:
+
+abb <- CreateNetwork("ABB")
+A <- NewDiscreteNode(abb,"A",c("A1","A2"))
+B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
+B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
+
+AddLink(A,B1)
+AddLink(A,B2)
+
+A[] <- c(.5,.5)
+NodeExperience(A) <- 10
+
+B1["A1"] <- c(.8,.2)
+B1["A2"] <- c(.2,.8)
+B2["A1"] <- c(.8,.2)
+B2["A2"] <- c(.2,.8)
+NodeExperience(B1) <- c(10,10)
+NodeExperience(B2) <- c(10,10)
+## I've saved this as abb.dne
+
+casesabb <-
+  data.frame(IDnum=1001:1010, NumCases=rep(1,10),
+             A=c("A1","A1","A1","A1","A1","A2","A2","A2","A2","A2"),
+             B1=c("B1","B1","B1","B2","B2","B2","B2","B2","B1","B1"),
+             B2=c("B1","B1","B1","B1","B2","B2","B2","B2","B2","B1"))
+## LearnCases should take the data frame argument, create the
+  MemoryCaseStream object and then call ReviseCPTsByCaseFile_bn
+LearnCases(casesabb,list(A,B1))
+
+The last call generates a warning:
+Netica warning: In function ReviseCPTsByCaseFile_bn: can't read any applicable information from this set of cases
+
+When I look at the contents of the case stream, it looks fine:
+
+Buffer length 125
+ipos = 125, nrow=11
+Line 0: IDnum	A	B1	B2
+Line 1: 1	A1	B1	B1
+Line 2: 2	A1	B1	B1
+Line 3: 3	A1	B1	B1
+Line 4: 4	A1	B2	B1
+Line 5: 5	A1	B2	B2
+Line 6: 6	A2	B2	B2
+Line 7: 7	A2	B2	B2
+Line 8: 8	A2	B2	B2
+Line 9: 9	A2	B1	B2
+Line 10: 10	A2	B1	B1
+
+But when I call ReadFindings it returns @NO_FINDING for all three
+nodes.
+
+Curiously, I can get the read findings to work on a different example:
+(This one works on the network abc.dne).
+
+casefile <- paste(library(help="RNetica")$path,
+                           "testData","abctestcases.cas",
+                           sep=.Platform$file.sep)
+cases <- read.CaseFile(casefile)
+abcstream <- MemoryCaseStream(cases)
+MemoryStreamContents(abcstream)
+
+This returns:
+Buffer length 68
+ipos = 68, nrow=4
+Line 0: IDnum	NumCases	A	B	C
+Line 1: 1001	1	A1	B1	C1
+Line 2: 1002	2	A2	B2	C2
+Line 3: 1003	1	A3	B3	*
+
+and ReadFindings works fine.
+
+
+Something weird is going on here, and I'm not sure I've given you
+enough clues to figure it out.  The only real difference between those
+two examples is that in the first, I've constructed the data frame by
+hand, and in the second, I've constructed it by writing out a case
+file. If you have anything for me to try (including print statements I
+can add at the C level) I'm happy to try.
+
+Note that I can work around this problem by using casefiles, so it is
+not a big issue, more a matter of completeness.
+
+9) NetworkUndo, Redo do nothing
+
+I've not been able to figure out what they undo/redo. This is only in
+the API.  Not a big issue, but a matter of completeness.
+
+
+Requests for Enhancement:
+10) IsNetCompiled function?
+
+As we discussed in Jersey City, this is not strictly necessary because
+causing CompileNetwork with an already compiled network is a no-op,
+but it would be helpful for documenting what is happening.
+
+11) GetNodesets for Node, Nodes in NodeSet?
+
+I've been finding the node set functions extremely useful for a number
+of things.  Currently supported operations are: 
+AddNodeToNodeset_bn, RemoveNodeFromNodeset_bn, IsNodeInNodeset_bn
+GetAllNodesets_bn,
+
+I would also like a GetNodeSets_bn(node) and a NodesInNodeSet(net,set)
+function.  I can derive them, but I suspect that one or the other of
+those two functions are really fast to implement in the Netica base
+code.  It should also result in a speedup of my code as I would be
+able to avoid a loop in at least one of those two cases.
+
+12) CopyNodes does not copy NodeSet information?
+
+I'm not sure if this is intended in the design or not.  For my part, I
+would prefer it was copied, but I could live with the other way.
+Either way it should be documented.
+
+13) EnterLikelihoodFindingClique
+
+Again, we talked about this one in Jersey City.  I can understand
+where your reluctance comes from, but there are a number of
+efficiencies for a bunch of algorithms with this function.  Bob and I
+wrote a RR on specifications for this one.
+
+Again, I can get away with the adjoin and absorb functions.
+
+
+
