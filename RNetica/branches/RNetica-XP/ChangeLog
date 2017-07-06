@@ -1,0 +1,386 @@
+2017-06-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (cc): Added new c replacement function for lists of
+	nodes. 
+
+2017-05-25  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_AbsorbNodes): Fixed bug in deleting absorbed nodes.
+
+	* src/Node.c (RN_Free_Nodelist): Fixed bug in PROTECT/UNPROTECT
+	count.
+	
+
+2017-05-24  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R ("NodeStates<-"): Added resize switch to control
+	behavior when input state list length is different from current
+	length. 
+
+	* src/Node.c (RN_SetNodeStates): Changed to automatically
+	add/delete states as needed.
+	
+
+2016-05-04  Almond  <ralmond@macox.com>
+
+	* R/LoadFuns.R (.onAttach, .onLoad): changed to use
+	assignInMyNamespace. 
+
+2015-06-05  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NodeUserObj, "NodeUserObj<-"): Added serialized object
+	storage. 
+	("NetworkNodesInSet<-", RemoveNodeFromSets, AddNodeToSets): Made
+	node sets more settable.
+
+	* R/Networks.R (dputToString, dgetFromString, NetworkUserObj)
+	("NetworkUserObj<-"): Added serialized object storage.
+
+2015-03-12  Almond  <ralmond@macox.com>
+
+	* src/Cases.c (RN_GetMemoryStreamContents): Fixed null termination
+	problem.
+2015-03-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (ewoe, woe): Added
+
+2015-03-10  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (as.IDname): Fixed vectorization so that only
+	affected names would be modified.
+
+2015-03-07  Russell G. Almond  <ralmond@Limu>
+
+	* R/Random.R (GenerateRandomCase, NetworkSetRNG, WithRNG)
+	(isNeticaRNGActive, is.NeticaRNG, print.NeticaRNG)
+	(toString.NeticaRNG, FreeNeticaRNG, NewNeticaRNG): Created
+	
+
+	* R/*.R (*): Removed function name from stop statements
+	(rendundant and not alway correct). 
+
+2015-03-04  Russell G. Almond  <ralmond@Limu>
+
+	* src/Random.c (RNGFree, AddRNGRef, FreeRNGs, RN_isRNGActive)
+	(RN_NewRandomGenerator, isNeticaRNG, RN_FreeRNG, RN_isRNGActive):
+	Changed to use lightweight object/weak pointer system, similar to
+	how Case Streams work.
+	(RN_SetNetRandomGen, RN_GenerateRandomCase): Seed argument now
+	accepts both strings and RNG objects.
+
+2015-03-02  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (NodeProbs): Fixed a problem with uninitialized prior
+	nodes. 
+
+	* R/Networks.R (as.IDname): Added maxlen parameter.
+
+2015-02-25  Russell G. Almond  <ralmond@Limu>
+
+	* src/Random.c (SetNetRandomGen_bn): Created.
+
+	* R/Edges.R (NodeProbs): Fixed a bug with uninitialzed tables.
+
+2015-01-28  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (EquationToTable, "NodeEquation<-")
+	(NodeEquation): Naive implementation.  Not worth spending a lot of
+	time on these as CPTtools is more flexible.
+
+	* src/Continuous.c (RN_GetNodeEquataion, RN_SetNodeEquation)
+	(RN_EquationToTable): Created as we need them to test
+	CalcNodeValue. 
+
+2015-01-26  Russell G. Almond  <ralmond@Limu>
+
+	* R/Continuous.R (NodeValue, "NodeValue<-")
+	("EnterGaussianFinding", "EnterIntervalFinding")
+	(NodeExpectedValue, NodeExpectedUtils, CalcNodeState)
+	(CalcNodeValue, MutalInfo, VarianceOfReal): Created
+
+2015-01-25  Russell G. Almond  <ralmond@Limu>
+
+	* src/Continuous.c (RN_GetVarianceOfReal, RN_GetMutualInfo)
+	(RN_CalcNodeValue, RN_CalcNodeState): Created
+
+2015-01-24  Russell G. Almond  <ralmond@Limu>
+
+	* src/Continuous.c (RN_GetNodeValue, RN_SetNodeValue)
+	(RN_SetNodeGaussian, RN_SetNodeInterval)
+	(RN_GetNodeExpectedValue, RN_GetNodeExpectedUtils): Created.
+
+2013-08-01  Russell G. Almond  <ralmond@Limu>
+
+	* R/LoadFuns.R (StartNetica): Bug fix from Nicole Farina
+
+2013-07-26  Russell G. Almond  <ralmond@Limu>
+
+	* R/Experience.R (LearnCPTs, LearnCases): Added
+
+2013-07-24  Russell G. Almond  <ralmond@Limu>
+
+	* src/Experience.c (RN_LearnCPTs, NewCaseset_rn, NewLearner_rn)
+	(RN_LearnCaseStream): Added.
+
+2013-07-17  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (write.CaseFile): Factored this code out, as it is
+	likely quite interesting.
+
+2013-07-16  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (OpenCaseStream): Split OpenCaseStream into separate
+	functions for Memory and File Case Streams
+
+2013-07-14  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (RN_OpenCaseFileStream): Modified the weak reference
+	system so that the stream object is the value, so we can properly
+	mark the stream object as closed.
+
+
+	* R/Cases.R (ReadFindings): Added trap for Netica
+	ReadNetFindings2_bn FIRST/NEXT bug.
+
+2013-07-07  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (RN_WriteFindingsToFile): Renamed to WriteFindings
+	(RN_WriteFindings): Merged functionality of writing to file and
+	stream. 
+
+2013-07-05  Russell G. Almond  <ralmond@Limu>
+
+	* src/Cases.c (CaseStreamClose, AddStreamRef)
+	(CloseOpenCaseStreams, RN_isCaseStreamActive)
+	(RN_OpenCaseFileStream, RN_CloseCaseStream): Added rough code.
+	Still need to work out position mechanism.
+
+2013-06-01  Russell G. Almond  <ralmond@Limu>
+
+	* R/Cases.R (CaseFileDelimiter, CaseFileMissingCode)
+	(WriteFindingsToFile): Added.
+
+	* R/Experience.R (NodeExperience, "NodeExperience<-", FadeCPT)
+	(LearnFindings): Added.
+
+2013-05-07  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (as.IDname): Added.
+
+2013-01-12  Russell G. Almond  <ralmond@Limu>
+
+	* man/RNetica.Rd: Added trademarks.
+
+2013-01-04    <ralmond@ADVENT>
+
+	* R/Edges.R ("[<-.NeticaNode", parseDims, "[.NeticaNode"): added
+	env argument to parseDims to fix problem with this not getting
+	called right inside a function.
+	
+
+2012-11-21    <ralmond@TECH-PC>
+
+	* src/Edges.c (RN_SetNodeParents): Fixed problem with 32 bit
+	version related to parentlist getting overwritten during
+	operation.
+	
+	* src/Registration.c (RN_report_errors): Fixed so that this
+	actually respects number of errors.  Also, Fixed in calling
+	program to make default number more like 10.
+
+2012-11-19  Russell G. Almond  <ralmond@Limu>
+
+	* src/Networks.c (RN_Named_Nets, RN_GetNth_Nets, isNeticaBN):
+	Added a check for corrupted references which will hopefully
+	prevent a similar problem at the node level.
+
+	* src/Node.c (isNeticaNode, GetNode_RRef): Added a check to the
+	node reference function which will hopefully fix bogus references.
+
+2012-11-18  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkFindNode): Fixed names of return value.
+
+	* R/Edges.R (AdjoinNetwork): added a fix for when new nodes are
+	renamed. 
+
+2012-11-03  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkNodesInSet): Changed return to be a true list
+	rather than a pairlist, as the latter was causing problems.
+
+	* R/Edges.R (AdjoinNetwork): Moved this function here.
+	(NetworkFootprint): Added this function.
+
+	* R/Networks.R (AdjoinNetwork): Added this function, in
+	preparation for EMSM test.
+
+2012-10-29  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (JunctionTreeReport, "EliminationOrder<-")
+	(EliminationOrder, NetworkCompiledSize): Created.
+
+	* src/Inference.c (RN_SizeCompiledNetwork)
+	(RN_GetEliminationOrder, RN_SetEliminationOrder)
+	(RN_JunctionTreeReport, RN_SplitReport): SplitReport is an
+	auxiliary for JunctionTreeReport which splits report into lines.
+	
+
+2012-10-28  Russell G. Almond  <ralmond@Limu>
+
+	* src/Inference.c (RN_NextStates, RN_JointProbability): Created.
+	(RN_MostProbableConfig, RN_FindingProbability): Created.
+
+	* R/Edges.R (MakeCliqueNode, is.CliqueNode, GetClique): Created.
+
+	* src/Edges.c (RN_MakeCliqueNode): Created patterned after
+	FormCliqueWith from NeticaEx.c
+
+	* src/Registration.c (RN_Define_Symbols, RN_Free_Symbols): Added
+	new classes and properties for clique nodes.
+
+2012-10-27  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NetworkNodeSetColor): Changed return value to return
+	set color as a hex string.
+	* src/Node.c (RN_NetworkNodeSetColor): Changed return value to
+	return set color as integer.
+
+	* R/Node.R (NetworkNodeSets, NodeSets, "NodeSets<-")
+	(NetworkNodesInSet, NetworkSetPriority, NetworkNodeSetColor): 
+	Created.
+
+	* src/Node.c (RN_SetNodeSets, RN_NetworkNodesInSet)
+	(RN_NetworkSetPriority, RN_NetworkNodeSetColor)
+	(RN_NetworkNodeGetColor): Created.
+	
+
+2012-10-26  Russell G. Almond  <ralmond@Limu>
+
+	* src/Node.c (RN_NetworkNodesSets, RN_ParseNodeString)
+	(RN_GetNodeSets): Added these functions
+	
+2012-10-20  Russell G. Almond  <ralmond@Limu>
+	
+	* R/Edges.R (is.CPF, as.CPF, is.CPA, as.CPA, parseDims)
+	(integerIndex, selectionToConfig, "[.NeticaNode")
+	("[[.NeticaNode", "[<-.NeticaNode"):   node[] redesign.  See
+	Extract.NeticaNode.Rd.
+
+	* src/Edges.c (RN_GetNodeFuncState, RN_SetNodeFuncState)
+	(RN_GetNodeFuncReal, RN_SetNodeFuncReal):  Added as part of the
+	node[] redesign.
+	
+2012-10-14  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (is.CPF, as.CPF, is.CPA, as.CPA):   Reworked in
+	preparation for node[] Redesign.
+
+	
+
+2012-10-08  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (as.CPF): Added.
+
+2012-10-05  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (EnterNegativeFinding, "NodeFinding<-")
+	(NodeFinding): Fixed problem with 0-based coding instead of
+	1-based coding, and with real rather than integer value setting.
+
+
+	* src/Inference.c (RN_SetNodeLikelihood, RN_GetNodeLikelihood):
+	Added functions.
+
+	* R/Inference.R (NodeLikelihood, "NodeLikelihood<-"): Added
+	functions. 
+
+2012-10-02  Russell G. Almond  <ralmond@Limu>
+
+	* R/Inference.R (CompileNet, UncompileNet, RetractNetFindings)
+	(NodeFinding, "NodeFinding<-", EnterNegativeFinding)
+	(IsBeliefUpdated, NodeBeliefs): 
+
+	* src/Inference.c (RN_CompileNet, RN_UncompileNet)
+	(RN_RetractNetFindings, RN_GetNodeFinding)
+	(RN_RetractNodeFinding, RN_SetNodeFinding, RN_SetNodeFindingNot)
+	(RN_IsBeliefUpdated, RN_GetNodeBeliefs): Wrote these functions
+
+	* R/Edges.R (DeleteNodeTable, HasNodeTable, IsNodeDeterministic):
+	Added. Preliminary test complete.  Note cannot currently set
+	incomplete table.
+
+2012-10-01  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_IsNodeDeterministic, RN_HasNodeTable)
+	(RN_DeleteNodeTable): Addes these table information functions.
+
+	* R/Edges.R (pStates): Added this function for faster conversions.
+	(nextconfig): Changed to use -1 as the start (as 0 is a legal
+	value with just one parent).
+	(normCPT): Added this function, as we often need it.
+	(parseDims): Started this.  Figured out the substitute(list(...))
+	trick which captures unparsed argument list.
+
+	* src/Edges.c (RN_AS_PROB_BN, RN_AS_PROBSXP): Modified to convert
+	NAs to UNDEFINED_DBL and vise versa.
+
+2012-09-26  Russell G. Almond  <ralmond@Limu>
+
+	* src/Edges.c (RN_SetNodeInputNames, RN_GetNodeInputNames)
+	(RN_GetRelatedNodes, RN_InNodeRelated, RN_AbsorbNodes)
+	(RN_SetNodeParents):  Added.
+
+	* src/Node.c (RN_Copy_Nodes): Fixed issue with AS_NODELIST, note
+	untested. 
+
+	* src/Edges.c (RN_AddLink, RN_DeleteLink, RN_GetNodeParents)
+	(RN_GetNodeChildren): Added
+
+	* src/Node.c (RN_AS_NODELIST): Changed so that will still NULL in
+	the NODELIST for locations corresponding to NULLs in the R list.
+
+2012-09-25  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R ("NodeLevels<-", NodeLevels): Created functions.
+
+	* src/Node.c (RN_GetNodeLevelsDiscrete)
+	(RN_GetNodeLevelsContinuous, RN_SetNodeLevels): Added linking
+	code.  Separate getter methods because one returns named object
+	the other does not.
+
+	* src/Registration.c (RN_RnumToNnum, RN_NnumToRnum): Added
+	conversion functions to take care of converting infinities.
+
+2012-09-24  Russell G. Almond  <ralmond@Limu>
+
+	* R/Node.R (NodeNumStates, NodeStates, NodeStates<-)
+	(NodeStateTitles, NodeStateTitles<-, NodeStateDescriptions)
+	(NodeStateDescriptions<-): Added but not tested.
+
+2012-09-23  Russell G. Almond  <ralmond@Limu>
+	
+	* src/Registration.c (RN_Define_Symbols, RN_Free_Symbols): Added
+	NodeKinds, and XYnames vectors.
+
+	* R/Node.R (NodeKind, NodeKind<-, NodeVisStyle, NodeVisStyle<-)
+	(NodeVisPos, NodeVisPos):  Added and tested.
+
+
+2012-09-22  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (ReadNetworks, WriteNetworks): Changed these
+	functions so that they tag the return object with the filename.
+	Thus, net <- ReadNetworks(net) should restore a network after an R
+	session is exited.
+	
+
+2012-09-20  Russell G. Almond  <ralmond@Limu>
+
+	* DESCRIPTION (Version): Version 0.1-1 -- First experiments, used
+	string IDs.
+	Version 0.1-2 -- Second experiment, added backpointers for
+	Networks
+	Version 0.1-3 -- Added .onLoad methods, complete Network only.
+	Version 0.1-4 -- Preliminary Node Functions
+

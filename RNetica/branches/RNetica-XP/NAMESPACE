@@ -1,0 +1,132 @@
+import(methods)
+import(utils)
+importFrom("grDevices", "col2rgb")
+importFrom("stats", "runif")
+
+export(StartNetica, StopNetica, NeticaVersion,
+       ReportErrors, ClearAllErrors,
+       CreateNetwork, DeleteNetwork,
+       print.NeticaBN, toString.NeticaBN, is.active,
+       is.IDname, as.IDname, is.NeticaBN,
+       GetNthNetwork, GetNamedNetworks, CopyNetworks)
+
+export(WriteNetworks, ReadNetworks,
+       GetNetworkFileName,
+       NetworkName, "NetworkName<-",
+       NetworkTitle, "NetworkTitle<-",
+       NetworkComment, "NetworkComment<-",
+       GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
+       NetworkUserField, "NetworkUserField<-",
+       NetworkUserObj, "NetworkUserObj<-",
+       NetworkAllUserFields,
+       dputToString, dgetFromString
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+       )
+
+export(
+  NewDiscreteNode, NewContinuousNode, DeleteNodes,
+  CopyNodes,
+  NodeNet, NodeName, "NodeName<-",
+  print.NeticaNode, toString.NeticaNode, is.NeticaNode,
+  is.discrete, is.continuous,
+  NetworkAllNodes, NetworkFindNode,
+  NodeTitle, "NodeTitle<-",
+  NodeDescription, "NodeDescription<-",
+  NodeUserField, "NodeUserField<-", NodeAllUserFields,
+  NodeUserObj, "NodeUserObj<-",
+  NodeKind, "NodeKind<-",
+  NodeVisStyle, "NodeVisStyle<-",
+  NodeVisPos, "NodeVisPos<-"
+  )
+
+export(
+  NodeStates, NodeNumStates, "NodeStates<-",
+  NodeStateTitles, "NodeStateTitles<-",
+  NodeStateComments, "NodeStateComments<-",
+  NodeLevels, "NodeLevels<-", ParentStates, ParentNames
+  )
+
+ export(
+   AddLink, DeleteLink, ReverseLink,
+   NodeParents, "NodeParents<-", NodeChildren,
+   AbsorbNodes, MakeCliqueNode, is.CliqueNode,
+   GetClique, cc,
+   is.NodeRelated, GetRelatedNodes,
+   NodeInputNames, "NodeInputNames<-",
+   AdjoinNetwork, NetworkFootprint
+   )
+
+export(
+  NodeProbs, "NodeProbs<-", normalize.matrix,
+  normalize, normalize.array, normalize.data.frame,
+  is.CPA, as.CPA, normalize.CPA, normalize.default,
+  as.CPF, is.CPF, normalize.CPF, EVERY_STATE,
+  IsNodeDeterministic, HasNodeTable,
+  DeleteNodeTable
+   )
+
+export(
+   CompileNetwork, UncompileNetwork, is.NetworkCompiled,
+   EliminationOrder, "EliminationOrder<-",
+   NetworkCompiledSize, JunctionTreeReport,
+   NodeFinding, "NodeFinding<-", EnterNegativeFinding,
+   RetractNetFindings, RetractNodeFinding, EnterFindings,
+   NodeBeliefs, IsBeliefUpdated,
+   NodeLikelihood, "NodeLikelihood<-",
+   JointProbability, FindingsProbability, MostProbableConfig
+ )
+
+export (
+    NodeSets, "NodeSets<-",
+    AddNodeToSets, RemoveNodeFromSets,
+    NetworkNodeSets, NetworkSetPriority,
+    NetworkNodesInSet, "NetworkNodesInSet<-",
+    NetworkNodeSetColor
+ )
+
+export(CaseFileDelimiter,CaseFileMissingCode,
+       OpenCaseStream, CloseCaseStream,
+       WithOpenCaseStream,
+       is.NeticaCaseStream, isCaseStreamOpen,
+       MemoryCaseStream, CaseFileStream,
+       is.MemoryCaseStream, is.CaseFileStream,
+       getCaseStreamPath,getCaseStreamLastId,
+       getCaseStreamPos,getCaseStreamLastFreq,
+       getCaseStreamDataFrameName,
+       MemoryStreamContents,"MemoryStreamContents<-",
+       read.CaseFile,write.CaseFile,
+       WriteFindings,ReadFindings,
+       NodeExperience, "NodeExperience<-",
+       FadeCPT, LearnFindings,
+       LearnCases, LearnCPTs
+       )
+
+export(NodeValue, "NodeValue<-",
+       EnterGaussianFinding, EnterIntervalFinding,
+       NodeExpectedValue, NodeExpectedUtils,
+       CalcNodeState, CalcNodeValue,
+       MutualInfo, VarianceOfReal,
+       NodeEquation, "NodeEquation<-",EquationToTable,
+       woe, ewoe
+       )
+
+export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
+       is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
+
+S3method(print, NeticaBN)
+S3method(toString, NeticaBN)
+S3method(Ops, NeticaBN)
+S3method(c, NeticaBN)
+S3method(print, NeticaNode)
+S3method(toString, NeticaNode)
+S3method(Ops, NeticaNode)
+S3method(c, NeticaNode)
+S3method("[", NeticaNode)
+S3method("[[", NeticaNode)
+S3method("[<-", NeticaNode)
+S3method(toString, NeticaCaseStream)
+S3method(print, NeticaCaseStream)
+S3method(toString, NeticaRNG)
+S3method(print, NeticaRNG)
+
+

@@ -1,0 +1,180 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 03/04/2015 at 03:53:35 PM.
+
+bnet IRT5 {
+autoupdate = TRUE;
+whenchanged = 1425502400;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (7, 6, 727, 521);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00C0C0C0;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ReportingVars {Disabled = 1; Color = 0x00C8C8C8;};
+	NodeSet Observables {Disabled = 1; Color = 0x00C8C8C8;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		magnify = 1;
+		};
+	};
+
+node Theta {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (pos2, pos1, Zero, neg1, neg2);
+	levels = (2, 1, 0, -1, -2);
+	parents = ();
+	probs = 
+		// pos2         pos1         Zero         neg1         neg2         
+		  (0.1,         0.2,         0.4,         0.2,         0.1);
+	EqnDirty = TRUE;
+	title = "Theta";
+	whenchanged = 1334002092;
+	visual V1 {
+		center = (132, 198);
+		height = 6;
+		};
+	};
+
+node Item_1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.9707,      0.0293,       // pos2  
+		   0.9241,      0.07589996,   // pos1  
+		   0.8176,      0.1824,       // Zero  
+		   0.6255,      0.3745,       // neg1  
+		   0.3775,      0.6225);      // neg2  ;
+	EqnDirty = TRUE;
+	title = "Item_1";
+	whenchanged = 1334002104;
+	visual V1 {
+		center = (432, 36);
+		height = 5;
+		};
+	};
+
+node Item_2 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.9399,      0.0601,       // pos2  
+		   0.852,       0.148,        // pos1  
+		   0.6792,      0.3208,       // Zero  
+		   0.4378,      0.5622,       // neg1  
+		   0.2227,      0.7773);      // neg2  ;
+	EqnDirty = TRUE;
+	title = "Item_2";
+	whenchanged = 1334002051;
+	visual V1 {
+		center = (432, 120);
+		height = 4;
+		link 1 {
+			path = ((208, 179), (352, 141));
+			};
+		};
+	};
+
+node Item_3 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.8088,      0.1912,       // pos2  
+		   0.7311,      0.2689,       // pos1  
+		   0.5,         0.5,          // Zero  
+		   0.2689,      0.7311,       // neg1  
+		   0.1192,      0.8808);      // neg2  ;
+	EqnDirty = TRUE;
+	title = "Item_3";
+	whenchanged = 1334002050;
+	visual V1 {
+		center = (432, 198);
+		height = 1;
+		};
+	};
+
+node Item_4 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.7773,      0.2227,       // pos2  
+		   0.5622,      0.4378,       // pos1  
+		   0.3208,      0.6792,       // Zero  
+		   0.148,       0.852,        // neg1  
+		   0.0601,      0.9399);      // neg2  ;
+	EqnDirty = TRUE;
+	title = "Item_4";
+	whenchanged = 1334002029;
+	visual V1 {
+		center = (432, 282);
+		height = 2;
+		};
+	};
+
+node Item_5 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	inputs = (Theta);
+	parents = (Theta);
+	probs = 
+		// Right        Wrong         // Theta 
+		  (0.6225,      0.3775,       // pos2  
+		   0.3775,      0.6225,       // pos1  
+		   0.1824,      0.8176,       // Zero  
+		   0.0759,      0.9241,       // neg1  
+		   0.0293,      0.9707);      // neg2  ;
+	EqnDirty = TRUE;
+	title = "Item_5";
+	whenchanged = 1334002027;
+	visual V1 {
+		center = (432, 366);
+		height = 3;
+		link 1 {
+			path = ((208, 239), (384, 339));
+			};
+		};
+	};
+NodeSet ReportingVars {Nodes = (Theta);};
+NodeSet Observables {Nodes = (Item_1, Item_2, Item_3, Item_4, Item_5);};
+ElimOrder = (Item_1, Item_2, Item_3, Item_4, Theta, Item_5);
+};
