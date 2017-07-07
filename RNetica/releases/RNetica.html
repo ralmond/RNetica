@@ -43,7 +43,19 @@ as a way of getting started.
 </ul>
 
 <h2>News</h2>
-Started the 0.4 series of releases includes the following
+A new 0.5 series of releases is planned.  Basically, I'm trying to
+redo the basic NeticaBN and NeticaNode classes as true R6 classes
+rather than S3 classes wrapped around symbols.  There will be some
+significant advantages, including automatic loading of node objects
+for networks, and the ability to refer to networks by name within a
+session object.  Potentially, also, multiple session possiblities, and
+I'm hoping a more stable code base.  Finally, by storing the symbol to
+node mapping in a local environment (hash table) instead of the Netica
+callback, I'm hoping to make the system more robust to some mysterious
+erros I'm seeing crop up.
+<p>
+The 0.4 series of releases are now in maintenance mode.
+The 0.4 series of releases includes the following
 improvements:
 <ol>
 <li> Added the functions MutualInfo, NodeExpectedValue and
@@ -61,6 +73,8 @@ improvements:
 <li> Cleaned up the behavior of as.IDname() so that it makes shorter
   names and is properly vectorized.
 <li> Fixed some minor errors and problems with error handling.
+<li> Added a new cc() function (and methods for c()) to keep c() from
+  dropping attributes.  (Only partially successful).
 </ol>
 <p>
 The 0.3 series of releases includes a number of different improvements.
@@ -163,7 +177,7 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.4-1) incorporates approximately 75% of the
+The current version (0.4-6) incorporates approximately 75% of the
 Netica C API Version 5.04 (no new version since 2012).  This is
 sufficient functionality to build, compile and carry out inferences
 with a Bayesian network.  Some of the more advanced functionality,
@@ -177,8 +191,8 @@ valgrind to test for memory leaks.  It is currently a beta release.
 Note that because it uses calls to C code, <i>it is possible for RNetica
 to crash R.</i>  Plan your work accordingly.
 <p>
-The development has been with R version 3.0.1 under Ubuntu
-14.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
+The development has been with R version 3.0.1&ndash;3.4.1 under Ubuntu
+16.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
 runs under Mac OS X and Windows 7 without errors.  Almost all of the
 testing has been with the 64 bit versions of R and Netica.  There may
 be some problems that crop up under 32 bit versions.  
@@ -244,6 +258,12 @@ The following releases are archived here:
 <td><a href="RNetica_0.4-5.tgz">RNetica_0.4-5.tgz</a></td>
 <td><a href="RNetica-manual_0.4-5.pdf">RNetica-manual_0.4-5.pdf</a></td>
 <td>Peanut compatability, User Object support</td></tr>
+<tr>
+<td>0.4-6</td><td><a href="RNetica_0.4-6.tar.gz">RNetica_0.4-6.tar.gz</a></td>
+<td><a href="RNetica_0.4-6.zip">RNetica_0.4-6.zip</a></td>
+<td><a href="RNetica_0.4-6.tgz">RNetica_0.4-6.tgz</a></td>
+<td><a href="RNetica-manual_0.4-6.pdf">RNetica-manual_0.4-6.pdf</a></td>
+<td>Added cc() function and c() methods.</td></tr>
 <!-- NEXT ENTRY HERE -->
 </table>
 <p>
@@ -313,6 +333,6 @@ requests should be sent to the package maintainers.
 
 <hr>
 <!-- Date Start -->
-Site last updated on 2017-03-30.
+Site last updated on 2017-07-07.
 <!-- Date End -->
 </body>

@@ -38,5 +38,15 @@
       <description>[CDATA[ Spreadsheet functions and debugging. ]]</description>
     </item>
 
+    <item>
+      <title>RNetica 0.4-6</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.4-6</guid>
+      <pubDate>Tue Jul 07 17:38:03 EDT 2017</pubDate>
+      <description>[CDATA[ Added cc funciton to build lists of nodes/nets. ]]</description>
+    </item>
+
+
+
   </channel>
 </rss>
