@@ -1,0 +1,20 @@
+ifeq "$(WIN)" "64"
+  NETICA_LIB = ${NETICA_HOME}\lib\64 bit
+  INSTALL_LIB = ${R_PACKAGE_DIR}\libs\x64
+else
+  NETICA_LIB = ${NETICA_HOME}\lib
+  INSTALL_LIB = ${R_PACKAGE_DIR}\libs\i386
+endif
+PKG_LIBS= -L"${NETICA_LIB}" -lnetica 
+PKG_CFLAGS= -I. -I"${NETICA_HOME}\src"
+
+.PHONY:  all NeticaDLL
+
+all: $(SHLIB)
+$(SHLIB): NeticaDLL
+
+NeticaDLL:
+	mkdir -p "$(INSTALL_LIB)"
+	cp "$(NETICA_LIB)/Netica.dll" "$(INSTALL_LIB)" 
+
+

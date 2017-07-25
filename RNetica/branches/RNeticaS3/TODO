@@ -1,0 +1,105 @@
+
+FALSE-node bug (Netica Node object is replaced with FALSE).
+Nasty bug where RReference gets overwritten in network.  Not sure
+where this is coming from, as they should be preserved.
+      Nodelist <- NetworkNodesInSet(LevelMotif,"EMVars")
+      NodeName(Nodelist$LeverTrohies) <- "LeverTrophies"
+The corresponding element of the list is now FALSE and
+    NetworkFindNode(LevelMotif,"LeverTrophies")
+returns FALSE.
+I'm having trouble reproducing this with a small example.  Maybe some
+interaction with the garbage collector?  I've added a check for bad
+object caches in the Net/Node/UserData field, now check to make sure
+the returned object is of the right class, and if not recreates it.  I
+wish I could more reliably reproduce the bugs so I can see if this
+fixed the problem.
+UPDATE:  I've made some changes that may fix this.  I've also now run
+a couple of times using CHECK --gc-torture and not found the problem.
+It may be fixed.
+
+R stack error in BN_SetNodeProbs when passed a matrix of NA's as
+probability table.
+
+Parse the junction tree report
+
+I'm getting an error GetError_ns:  deleted or damage report_ns passed
+under Windows, 32-bit.  The condition that seemed to trigger this was
+compiling a network with uninitialized CPTs (which generates a
+warning).  This works correctly under Linux and Windows-64 bit.  The
+error seems to persist after it was first encountered.
+
+Seg fault if CreateNetwork_bn() is called with a null environment.
+(Thanks to Elise Bethany Gould for spotting this).
+
+
+
+Functions for
+##   ReorderNodeStates, RemoveNodeState,
+These seem to be redundant with current definition of NodeStates<-
+## Update.  Folded AddNodeStates and RemoveNodeState into
+## NodeStates<-.  Reorder Node States does something to the CPT, so
+## There still might be a use for it.
+
+Learning from Data (Both of these depend on Netica API updates)
+## LearnCPTs -- update when Netica Fixes bugs
+## Test Case streams with LearnCPTs and LearnFindings
+
+Equations
+  Equation Suppot is currently pretty minimal.  Probably not important
+  as it is easier to build CPTs in R than use equations.
+
+Continuous Node support
+Decision Net support
+##   EnterGaussianFinding,
+##   EnterIntervalFinding,
+    These two functions are giving unexpected results.  Query out to
+    Norsys about this, i.e., they always give weight 1 to a single
+    state, rather than distributiong the output over a number of
+    states as expected.
+     These two functions return NA in stituations where I'm expecting
+     a numeric value or a state.
+##   CalcNodeState, CalcNodeValue,
+##    GetNodeExpectedUtils,
+   Seems to be generating an internal Netica error.
+
+Testing
+## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
+## GetTestConfusion_bn, GetTestErrorRate_bn, GetTestLogLoss_bn
+## GetTestQuadradicLoss_bn
+## TestWithCaseset_bn, 
+
+Random Generation
+Random generation implemented and tested, but probably very
+inefficient in the simple case were we want to generate a set of
+several hundred cases to a case file.  Should reimplement that on the
+C side so we don't need to constantly do the R->c conversions.
+
+DBNs
+## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
+There are currently no corresponding Get functions for these.
+
+Do Not implement
+#       NetworkUndo, NetworkRedo  # These don't do anything sensible.
+##  SetLearnerRandomGen_bn #This is for future expasion (MCMC?)
+Database Connectivity
+##  NewDBManager_cs, DeleteDBManager_cs
+##  InsertFindingsIntoDB_bn, AddDBCasesToCaseset_cs
+##  ExcecuteDBSql_cs, AddNodesFromDB_bn
+##  WriteCaseset_ns (The only use for this function is in conjunction
+##  with the database stuff.)
+
+
+Ask Brent:
+1. NodeLikelihood and MPE and FindingsProbability
+2. IsNetCompiled function?
+3. GetNodesets for Node, Nodes in NodeSet?
+4. CopyNodes does not copy NodeSet information?
+5. EnterLikelihoodFindingClique
+6. NetworkUndo, Redo
+7. Learn_CPTs return value?
+8. Mysterious behavior of CalcNodeValue
+9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
+10.  Error on NodeExpectedUtils
+11.  Learn_CPTs and case streams.
+12. Crash in AbsorbNode
+13. Getters for DBN properties

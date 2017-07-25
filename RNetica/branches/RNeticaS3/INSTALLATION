@@ -1,0 +1,27 @@
+If you are seeing this file in the code, then you have the source
+rather than the object version of RNetica.  
+
+The current version does not automatically download the Netica API,
+you need to download and unzip it yourself.  You also need to point
+the installation at the place where it is located.  
+
+On Linux and Unix (including Mac OS X) distributions you do that with
+the "--with-netica" switch to configure.  Thus I compile with
+
+R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_504/'
+
+To check I run with
+
+R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504/'"
+
+For Windows installations, set an environmental variable NETICA_HOME
+with the path in which you unpacked the Netica API.  R will give a
+warning about manual configuration, this is the necessary manual
+configuration. 
+
+If you have obtained a valid Netica API license key from Norsys, you
+can insert it in the variable NeticaLicenseKey in the main workspace.
+RNetica will then consult this value when loading the Netica DLL.  All
+of the functions in the man pages work in the unlicensed version, so R
+CMD check RNetica does not require a license key.
+

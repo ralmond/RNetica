@@ -1,0 +1,250 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.05 on Feb 22, 2015 at 09:54:53.
+
+bnet CostOfTesting {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1424616754;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (8, 5, 865, 444);
+	scrollposn = (12, 0);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00E1E1E1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node Skill1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Low, High);
+	levels = (0, 1);
+	parents = ();
+	probs = 
+		// Low          High         
+		  (0.35,        0.65);
+	title = "Skill At Time 1";
+	whenchanged = 1424616030;
+	belief = (0.35, 0.65);
+	visual V1 {
+		center = (156, 300);
+		height = 1;
+		};
+	};
+
+node Test {
+	kind = DECISION;
+	discrete = TRUE;
+	chance = DETERMIN;
+	states = (Yes, No);
+	parents = ();
+	functable = 
+		  (No);
+	title = "Test?";
+	whenchanged = 1424616754;
+	belief = (1, 0);
+	visual V1 {
+		center = (372, 66);
+		height = 4;
+		};
+	};
+
+node Screening {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Unknown, Pass, Fail);
+	parents = (Skill1, Test);
+	probs = 
+		// Unknown      Pass         Fail          // Skill1 Test 
+		  (0,           0.1,         0.9,          // Low    Yes  
+		   1,           0,           0,            // Low    No   
+		   0,           0.85,        0.15,         // High   Yes  
+		   1,           0,           0);           // High   No   ;
+	numcases = 1;
+	title = "Screening Test";
+	whenchanged = 1424616452;
+	belief = (0.5, 0.29375, 0.20625);
+	visual V1 {
+		center = (132, 66);
+		height = 3;
+		};
+	};
+
+node Instruction {
+	kind = DECISION;
+	discrete = TRUE;
+	chance = DETERMIN;
+	states = (Tier1, Tier2);
+	parents = (Test, Screening);
+	functable = 
+		                    // Test Screening 
+		  (Tier1,           // Yes  Unknown   
+		   Tier1,           // Yes  Pass      
+		   Tier2,           // Yes  Fail      
+		   Tier1,           // No   Unknown   
+		   Tier1,           // No   Pass      
+		   Tier1);          // No   Fail      ;
+	whenchanged = 1424616650;
+	belief = (0, 1);
+	visual V1 {
+		center = (360, 168);
+		height = 11;
+		};
+	};
+
+node Skill2 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Low, High);
+	levels = (0, 1);
+	parents = (Skill1, Instruction);
+	probs = 
+		// Low          High          // Skill1 Instruction 
+		  (0.8,         0.2,          // Low    Tier1       
+		   0.5,         0.5,          // Low    Tier2       
+		   0.9,         0.1,          // High   Tier1       
+		   0.9,         0.1);         // High   Tier2       ;
+	title = "Skill At Time 2";
+	whenchanged = 1424616010;
+	belief = (0.8125, 0.1875);
+	visual V1 {
+		center = (480, 300);
+		height = 2;
+		};
+	};
+
+node Benefit {
+	kind = UTILITY;
+	discrete = FALSE;
+	measure = RATIO;
+	chance = DETERMIN;
+	parents = (Skill2);
+	functable = 
+		                 // Skill2 
+		  (0,            // Low    
+		   5);           // High   ;
+	ExperBase = 1;
+	equation = "Benefit (Skill2) = Skill2 == High ? B1 : 0";
+	title = "Benefit of final result";
+	whenchanged = 1424615953;
+	visual V1 {
+		center = (696, 300);
+		height = 7;
+		};
+	};
+
+node InstructionCost {
+	kind = UTILITY;
+	discrete = FALSE;
+	measure = RATIO;
+	chance = DETERMIN;
+	parents = (Instruction);
+	functable = 
+		                 // Instruction 
+		  (0,            // Tier1       
+		   -1);          // Tier2       ;
+	equation = "InstructionCost (Instruction) = \nInstruction == Tier2 ? -C2 : 0";
+	title = "Cost Of Instruction";
+	whenchanged = 1424616537;
+	visual V1 {
+		center = (672, 168);
+		height = 5;
+		};
+	};
+
+node TestCost {
+	kind = UTILITY;
+	discrete = FALSE;
+	measure = RATIO;
+	chance = DETERMIN;
+	parents = (Test);
+	functable = 
+		                 // Test 
+		  (-0.1,         // Yes  
+		   0);           // No   ;
+	ExperBase = 1;
+	equation = "TestCost (Test) = Test== Yes ? -C1 : 0";
+	title = "CostOfTesting";
+	whenchanged = 1424616553;
+	visual V1 {
+		center = (678, 66);
+		height = 6;
+		};
+	};
+
+node C1 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 10);
+	parents = ();
+	EqnDirty = TRUE;
+	title = "Cost of Testing";
+	whenchanged = 1424615572;
+	evidence = #0;
+	value = 0.1;
+	visual V1 {
+		center = (852, 66);
+		height = 8;
+		};
+	};
+
+node C2 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 10);
+	parents = ();
+	EqnDirty = TRUE;
+	title = "Marginal Cost of Tier 2";
+	whenchanged = 1424615585;
+	evidence = #0;
+	value = 1;
+	visual V1 {
+		center = (864, 168);
+		height = 9;
+		};
+	};
+
+node B1 {
+	kind = CONSTANT;
+	discrete = FALSE;
+	chance = CHANCE;
+	levels = (0, 10);
+	parents = ();
+	EqnDirty = TRUE;
+	title = "MarginalBenefit of High Skill";
+	whenchanged = 1424616435;
+	evidence = #0;
+	value = 5;
+	visual V1 {
+		center = (882, 294);
+		height = 10;
+		};
+	};
+ElimOrder = (Skill2, Skill1, Instruction, Screening, Test);
+};

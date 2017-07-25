@@ -1,0 +1,10 @@
+The RNetica package is licensed under the Artistic-2.0
+Changes and derived versions are premitted with attribution.
+
+The library depends on the Netica API available from Norsys
+(http://norsys.com/).  A copy of the current Norsys Netica API License
+is available in $PACKAGE_DIR/doc/LicAgree.txt. or
+$NETICA_HOME/doc/LicAgree.txt.  Users of RNetica will need purchase a
+license key from Norsys. Contact Norsys for terms and licensing
+agreements for the Netica engine.  Netica and Norsys are registered
+trademarks of Norsys, LLC, used with permission.
