@@ -14,7 +14,7 @@
 }
 \usage{
 WriteNetworks(nets, paths)
-ReadNetworks(paths)
+ReadNetworks(paths, session)
 GetNetworkFileName(net)
 }
 \arguments{

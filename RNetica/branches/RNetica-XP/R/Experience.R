@@ -189,10 +189,12 @@ LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
   } else {
     stop("Expected a Case stream or a filename or a data frame to make a case stream.")
   }
+  session <- NodeNet(nodelist[[1]])$session
   WithOpenCaseStream(stream,
    {
      result <- .Call("RN_LearnCPTs",stream,nodelist,method,
-                     maxIters,maxTol,weight, PACKAGE="RNetica")
+                     maxIters,maxTol,weight, session,
+                     PACKAGE="RNeticaXR")
      ecount <- ReportErrors()
      if (ecount[1]>0) {
        stop("Netica Errors Encountered, see console for details.")

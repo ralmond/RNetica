@@ -9,11 +9,16 @@
   number of currently defined networks, this function will return \code{NULL}
 }
 \usage{
-GetNthNetwork(n)
+GetNthNetwork(n, session = getDefaultSession())
 }
 \arguments{
   \item{n}{A vector of integers greater than 1.
-}
+  }
+  \item{session}{An object of class \code{\linkS4class{NeticaSession}}
+    which provides the link to the Netica environment.  If not supplied,
+    then the default value is the value of the function
+    \code{\link{getDefaultSession}()} which is usually the value of
+    \code{DefaultNeticaSession} in the global environment.}
 }
 \details{
   The primary use for this function is probably to loop through all open
@@ -24,6 +29,10 @@ GetNthNetwork(n)
   that open and close networks.
 
   This is a wrapper for the Netica function \code{GetNthNet_bn()}.
+
+  Starting with RNetica 0.5, the session object is a container which
+  contains the open networks, so this function is no longer really
+  needed. 
 }
 \value{
   If \code{n} is of length 1, then a single \code{NeticaBN}
@@ -48,19 +57,20 @@ GetNthNetwork(n)
   a one-based reference system (the first net is 1).
 }
 \seealso{
+  \code{\linkS4class{NeticaSession}}
   \code{\link{CreateNetwork}()}, \code{\link{GetNamedNetworks}()}
 }
 \examples{
+sess <- getDefaultSession()
 
 count <- 1
-while (!is.null(net <- GetNthNetwork(count))) {
+while (!is.null(net <- GetNthNetwork(count,sess))) {
   cat("Network number ",count," is ",net,".\n")
   count <- count +1
 }
 cat("Found ",count-1," networks.\n")
 
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ utilities }% __ONLY ONE__ keyword per line
+\keyword{ utilities }

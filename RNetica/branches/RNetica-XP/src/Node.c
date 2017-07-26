@@ -88,7 +88,8 @@ SEXP GetNode_RRef(node_bn *node) {
  * This function removes the R handles from a node so it can be safely
  * deleted. 
  */
-void RN_Free_Node(node_bn* node_handle) {
+//FIXME
+void RN_Free_Node(node_bn* node_handle, SEXP bn) {
   SEXP node, nodehandle;
   if (!node_handle) return; //Void pointer, nothing to do.
   node = GetNodeUserData_bn(node_handle,0);
@@ -108,10 +109,10 @@ void RN_Free_Node(node_bn* node_handle) {
   return;
 }
 
-void RN_Free_Nodes(const nodelist_bn* nodelist) {
+void RN_Free_Nodes(const nodelist_bn* nodelist, SEXP net) {
   int k, kk=LengthNodeList_bn(nodelist);
   for (k=0; k<kk; k++) {
-    RN_Free_Node(NthNode_bn(nodelist,k));
+    RN_Free_Node(NthNode_bn(nodelist,k),net);
   }
 }
 
@@ -177,7 +178,8 @@ nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net_handle) {
 }
 
 // Frees pointers from R-objects, assumes nodes have been deleted elsewhere.
-void RN_Free_Nodelist(SEXP nodes) {
+//FIXME
+void RN_Free_Nodelist(SEXP nodes, SEXP net) {
   R_len_t n, nn = length(nodes);
   SEXP node, nodehandle;
   
@@ -273,11 +275,13 @@ SEXP RN_NewContinuousNodes(SEXP net, SEXP namelist) {
   return(result);
 }
 
+//FIXME
 SEXP RN_Delete_Nodes(SEXP nodelist) {
 
   R_len_t n, nn = length(nodelist);
   node_bn* node_handle;
   SEXP node, result;
+  net_bn *net=NULL;             /* Fix me! */
 
   PROTECT(result = allocVector(VECSXP,nn));
 
@@ -285,7 +289,7 @@ SEXP RN_Delete_Nodes(SEXP nodelist) {
     PROTECT(node = VECTOR_ELT(nodelist,n));
     node_handle = GetNodeHandle(node);
     if (node_handle) {
-      RN_Free_Node(node_handle);
+      //RN_Free_Node(node_handle,net);
       DeleteNode_bn(node_handle);
       SET_VECTOR_ELT(result,n,node);
     } else {
@@ -363,8 +367,10 @@ SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
   return RN_AS_RLIST(new_nodes);
 }
 
+//FIXME
 SEXP RN_NodeNet(SEXP node) {
-  return GetNet_RRef(GetNodeNet_bn(GetNodeHandle(node)));
+  //return GetNet_RRef(GetNodeNet_bn(GetNodeHandle(node)));
+  return R_NilValue;
 }
 
 //////////////////////////////////////////////////////////////////////////

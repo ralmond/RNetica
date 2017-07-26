@@ -1,3 +1,75 @@
+2017-07-20  Russell G. Almond  <ralmond@Limu>
+
+	* src/Networks.c (MakeNet_RRef): Can't figure out how to create a
+	new NeticaBN object from within R code.  So we will pass in a
+	blank, and use it if can't find an existing one.
+	(RN_New_Nets, RN_Named_Nets, RN_GetNth_Nets, RN_Copy_Nets)
+	(RN_Read_Nets): Needed to add blanks arguments to these files to
+	pass in blank networks to fill.
+
+2017-07-18  Russell G. Almond  <ralmond@Limu>
+
+	* R/Random.R (NewNeticaRNG): Added Session Argument.
+
+	* src/Random.c (RN_NewRandomGenerator, RN_SetNetRandomGen)
+	(RN_GenerateRandomCase): Added session argument.
+
+	* src/Experience.c (NewLearner_rn, NewCaseset_rn, RN_LearnCPTs):
+	Added Session Argument.
+
+	* R/Cases.R (OpenCaseStream, CaseFileStream, MemoryCaseStream):
+	Added Session Argument.
+
+	* src/Cases.c (RN_CaseFileDelimiter, RN_MissingCode): Added
+	Session argument.
+	(RN_WriteFindings, RN_OpenCaseFileStream)
+	(RN_OpenCaseMemoryStream): Need the session to open the stream.
+	
+
+	* R/Cases.R (CaseFileDelimiter, CaseFileMissingCode): Added
+	Session argument.
+
+2017-07-17  Russell G. Almond  <ralmond@Limu>
+
+	* src/Networks.c (MakeNet_RRef): Revived this function.  It now
+	creates NetworkBN objects if a reference cannot be found in the
+	session.  This removes the need for the newnets arguments.
+
+2017-07-16  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (GetNetworkFileName,NetworkName): Added internal
+	argument to say whether to used the RC object or the Netica
+	object. 
+	("NetworkName<-"): Now updates the session object.
+
+	* src/Networks.c (RN_New_Nets, RN_Copy_Nets, RN_Read_Nets): Added
+	handles(newnets) & Session argument.  Now
+	assumes that the network objects are premade in R code.
+	(RN_Delete_Nets, RN_Named_Nets, RN_GetNth_Nets): Added a session
+	argument.	 
+
+
+	* R/Networks.R (Compare.NeticaBN): Changed from Ops to Compare.
+	Breaks backwards compatability of comparing a single net with a
+	list. 
+	(GetNamedNetworks, CheckNamedNetworks): Get Named Networks now
+	works off of the cached objects in the session.
+	CheckNamedNetworks verifies that Netica knows about the networks.
+	
+ 
+	* R/Session.R (NeticaVersion, ReportErrors, ClearAllErrors): These
+	are now methods of the session object.  Note that the network and
+	node object delegate them to the containing session object.
+
+2017-07-10  Russell G. Almond  <ralmond@Limu>
+
+	* R/Session.R: Created new session class.
+	(getDefaultSession): Added getDefaultSession logic.  Not sure this
+	is the way I want to work it yet.
+	
+	* src/Session.c (RN_start_Session): Added new session objects.
+	Moved start/stop operations to this new file.
+
 2017-06-29  Russell G. Almond  <ralmond@Limu>
 
 	* R/Edges.R (cc): Added new c replacement function for lists of

@@ -86,9 +86,10 @@ SEXP RN_isRNGActive(SEXP rng) {
   return result;
 }
 
-SEXP RN_NewRandomGenerator (SEXP seed) {
+SEXP RN_NewRandomGenerator (SEXP seed, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
   const char* seedstring=CHAR(STRING_ELT(seed,0));
-  randgen_ns* rng =  NewRandomGenerator_ns (seedstring,RN_netica_env, NULL);
+  randgen_ns* rng =  NewRandomGenerator_ns (seedstring,netica_env, NULL);
   if (rng == NULL ) 
     return R_NilValue;
   else {
@@ -140,7 +141,8 @@ SEXP RN_FreeRNG (SEXP rng) {
 
 
 
-SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
+SEXP RN_SetNetRandomGen(SEXP net, SEXP seed, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
   net_bn* netica_handle = GetNeticaHandle(net);
   const char* seedstring=NULL;
   randgen_ns* rng = NULL; 
@@ -151,7 +153,7 @@ SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
     }
   } else if (!isNull(seed)) {
     seedstring = CHAR(STRING_ELT(seed,0)); 
-    rng = NewRandomGenerator_ns(seedstring,RN_netica_env,NULL);
+    rng = NewRandomGenerator_ns(seedstring,netica_env,NULL);
     if (!rng) {
       error("Could not create Random Number Generator.");
     }
@@ -165,7 +167,8 @@ SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
 }
 
 SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
-                           SEXP timeout, SEXP seed) {
+                           SEXP timeout, SEXP seed, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
   const nodelist_bn* nodes = RN_AS_NODELIST(nodelist,NULL);
   sampling_bn meth = DEFAULT_SAMPLING;
   const char* methstring=CHAR(STRING_ELT(method,0));
@@ -185,7 +188,7 @@ SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method,
     }
   } else if (!isNull(seed)) {
     seedstring = CHAR(STRING_ELT(seed,0)); 
-    rng = NewRandomGenerator_ns(seedstring,RN_netica_env,NULL);
+    rng = NewRandomGenerator_ns(seedstring,netica_env,NULL);
     newrng = TRUE;
     if (!rng) {
       error("Could not create Random Number Generator.");

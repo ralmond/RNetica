@@ -1,14 +1,14 @@
-\name{RNetica-package}
-\alias{RNetica-package}
-\alias{RNetica}
+\name{RNeticaXR-package}
+\alias{RNeticaXR-package}
+\alias{RNeticaXR}
 \docType{package}
-\title{\packageTitle{RNetica}}
+\title{\packageTitle{RNeticaXR}}
 \description{
-\packageDescription{RNetica}
+\packageDescription{RNeticaXR}
 }
 \details{
 The DESCRIPTION file:
-\packageDESCRIPTION{RNetica}
+\packageDESCRIPTION{RNeticaXR}
 
 This package provides an R interface to the Netica, in particular, it
 binds many of the functions in the Netica C API into the R language.

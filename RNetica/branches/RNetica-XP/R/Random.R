@@ -6,13 +6,14 @@
 ## These should generally be short lived, but we may need to create
 ## one to generate several sets of case files.
 
-NewNeticaRNG <- function (seed=runif(1,0,1000000000)) {
+NewNeticaRNG <- function (seed=runif(1,0,1000000000),
+                          session=getDefaultSession()) {
   seed <- abs(as.integer(seed))
   if (is.null(seed) || is.na(seed)) {
     stop("Seed must be an integer")
   }
   rng <-
-    .Call("RN_NewRandomGenerator",as.character(seed),PACKAGE="RNetica")
+    .Call("RN_NewRandomGenerator",as.character(seed),session,PACKAGE="RNeticaXR")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -69,7 +70,7 @@ NetworkSetRNG <- function (net, seed=runif(1,0,1000000000)) {
     stop("Seed must be an integer.")
   }
   seed <- as.character(seed)
-  result <- .Call("RN_SetNetRandomGen",net,seed,PACKAGE="RNetica")
+  result <- .Call("RN_SetNetRandomGen",net,seed,net$session,PACKAGE="RNeticaXR")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -98,9 +99,10 @@ GenerateRandomCase <- function (nodelist, method="Default",
   if (is.na(timeout) && timeout <= 0) {
     stop("Timeout must be a postive number.")
   }
+  session <- NodeNet(nodelist[[1]])$session
   result <-
     .Call("RN_GenerateRandomCase",nodelist,method,timeout,rng,
-          PACKAGE="RNetica")
+          session,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

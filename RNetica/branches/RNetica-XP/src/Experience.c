@@ -72,8 +72,10 @@ SEXP RN_LearnCaseStream(SEXP stream, SEXP nodelist, SEXP weight) {
  * preserve the learner object across returns to R for speed.  If so,
  * this decsion should be revisited later.
  */
-learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol) {
+learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol,
+                          SEXP session) {
   const char* meth = CHAR(STRING_ELT(method,0));
+  environ_ns* netica_env = GetSessionPtr(session);
   learn_method_bn algorithm;
   if(strcmp(meth,"COUNTING") == 0) {
       algorithm = COUNTING_LEARNING;
@@ -85,7 +87,7 @@ learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol) {
       error("RN_NewLearner: Pos should be 'COUNTING', 'EM' or 'GRADIENT'.");
     }
   learner_bn *result = NewLearner_bn(algorithm, (const char*) NULL,
-                                     RN_netica_env);
+                                     netica_env);
   if (result == NULL) {
     warning("RN_NewLearner:  error creating learner.");
     return NULL;
@@ -106,8 +108,9 @@ learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol) {
  * unlikely to support the database functionality, we can use
  * CaseStreams instead. 
  */
-caseset_cs* NewCaseset_rn(SEXP caseStream) {
-  caseset_cs* result = NewCaseset_cs((const char*)NULL,RN_netica_env);
+caseset_cs* NewCaseset_rn(SEXP caseStream, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
+  caseset_cs* result = NewCaseset_cs((const char*)NULL,netica_env);
   if (result == NULL) {
     warning("RN_NewCaseset:  error creating caseset.");
     return NULL;
@@ -124,7 +127,7 @@ caseset_cs* NewCaseset_rn(SEXP caseStream) {
   /* Debugging:  Somehow the the Caseset doesn't work properly if the
   stream is a memory stream instead of a file stream.  The next
   couple of lines write it out. */
-  /*  stream_ns *temp = NewFileStream_ns("NeticaTest.cas",RN_netica_env,NULL);
+  /*  stream_ns *temp = NewFileStream_ns("NeticaTest.cas",netica_env,NULL);
       WriteCaseset_cs(result, temp, NULL);
       DeleteStream_ns(temp); */
   /* Verified that this file is exactly what was expected.  */
@@ -134,14 +137,15 @@ caseset_cs* NewCaseset_rn(SEXP caseStream) {
 /* Need a return result that discusses convergence.  Waiting for a
    Netica upgrade to cover this. */
 SEXP RN_LearnCPTs (SEXP caseStream, SEXP nodes, SEXP method, 
-                   SEXP maxIters, SEXP maxTol, SEXP weight) {
+                   SEXP maxIters, SEXP maxTol, SEXP weight,
+                   SEXP session) {
   nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
-  learner_bn* learner=NewLearner_rn(method,maxIters,maxTol);
+  learner_bn* learner=NewLearner_rn(method,maxIters,maxTol,session);
   if (learner==NULL) {
     DeleteNodeList_bn(nodelist);
     error("RN_LearnCPTs:  Error creating learner.");
   }
-  caseset_cs* cases = NewCaseset_rn(caseStream);
+  caseset_cs* cases = NewCaseset_rn(caseStream, session);
   if (cases==NULL) {
     DeleteNodeList_bn(nodelist);
     DeleteLearner_bn(learner);
