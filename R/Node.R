@@ -70,6 +70,8 @@ Ops.NeticaNode <- function(e1, e2) {
                 truth,!truth))
 }
 
+setMethod("is.active","NeticaBN",function(x) x$isActive())
+
 ########################################################################
 ## Creation and Destruction
 #######################################################################

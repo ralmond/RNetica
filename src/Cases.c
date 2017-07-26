@@ -25,22 +25,25 @@ mempcpy (void *dest, const void *src, size_t n)
  * can write to a memory buffer and create a case set from that.
  */
 
-SEXP RN_CaseFileDelimiter(SEXP newchar) {
+SEXP RN_CaseFileDelimiter(SEXP newchar, SEXP session) {
   int result;
+  environ_ns* netica_env = GetSessionPtr(session);
+
   if (isNull(newchar)) {
-    result = SetCaseFileDelimChar_ns(QUERY_ns,RN_netica_env);
+    result = SetCaseFileDelimChar_ns(QUERY_ns,netica_env);
   } else {
-    result = SetCaseFileDelimChar_ns(INTEGER(newchar)[0],RN_netica_env);
+    result = SetCaseFileDelimChar_ns(INTEGER(newchar)[0],netica_env);
   }
   return ScalarInteger(result);
 }
 
-SEXP RN_MissingCode(SEXP newchar) {
+SEXP RN_MissingCode(SEXP newchar, SEXP session) {
   int result;
+  environ_ns* netica_env = GetSessionPtr(session);
   if (isNull(newchar)) {
-    result = SetMissingDataChar_ns(QUERY_ns,RN_netica_env);
+    result = SetMissingDataChar_ns(QUERY_ns,netica_env);
   } else {
-    result = SetMissingDataChar_ns(INTEGER(newchar)[0],RN_netica_env);
+    result = SetMissingDataChar_ns(INTEGER(newchar)[0],netica_env);
   }
   return ScalarInteger(result);
 }
@@ -137,10 +140,11 @@ SEXP RN_isCaseStreamActive(SEXP stream) {
   return result;
 }
 
-SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
+SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream, SEXP session) {
   const char* pathname=CHAR(STRING_ELT(path,0));
+  environ_ns* netica_env = GetSessionPtr(session);
   stream_ns* str = 
-    NewFileStream_ns (pathname,RN_netica_env, NULL);
+    NewFileStream_ns (pathname,netica_env, NULL);
   if (str == NULL ) 
     return R_NilValue;
   else {
@@ -173,11 +177,12 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream) {
 }
 
 
-SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream) {
+SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session) {
   const char* lab=CHAR(STRING_ELT(label,0));
+  environ_ns* netica_env = GetSessionPtr(session);
   //Rprintf("Opening Stream for R object %s\n",lab);
   stream_ns* str = 
-    NewMemoryStream_ns (lab,RN_netica_env, NULL);
+    NewMemoryStream_ns (lab,netica_env, NULL);
   if (str == NULL ) 
     return R_NilValue;
   else {
@@ -312,12 +317,15 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
 }
 
 
-SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq) {
+SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq,
+                      SEXP session) {
   nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
   long idnum = -1;
   double freqnum = -1.0;
   stream_ns *stream;
   caseposn_bn pos;
+  environ_ns* netica_env = GetSessionPtr(session);
+
   if (!isNull(id)) idnum = INTEGER(id)[0];
   if (!isNull(freq)) freqnum = REAL(freq)[0];
   if (isNeticaStream(pathOrStream)) {
@@ -328,7 +336,7 @@ SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq) {
     }
   } else {
     const char* filename = CHAR(STRING_ELT(pathOrStream,0));
-    stream = NewFileStream_ns(filename,RN_netica_env,NULL);
+    stream = NewFileStream_ns(filename,netica_env,NULL);
   }
   pos = WriteNetFindings_bn(nodelist,stream,idnum,freqnum);
   if (isNeticaStream(pathOrStream)) {

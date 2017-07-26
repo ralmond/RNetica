@@ -1,7 +1,7 @@
 ## Cases.R -- Functions dealing with cases and case files.
 
 
-CaseFileDelimiter <- function (newdelimiter=NULL) {
+CaseFileDelimiter <- function (newdelimiter=NULL, session=getDefaultSession()) {
   if (length(newdelimiter)> 1) {
     stop("Only one delimiter allowed.")
   }
@@ -15,7 +15,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL) {
     newdelimiter <- utf8ToInt(newdelimiter)
     if (length(newdelimiter)==0) newdelimiter <- 0
   }
-  olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,PACKAGE="RNetica")
+  olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,session,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -23,7 +23,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL) {
   intToUtf8(olddelim)
 }
 
-CaseFileMissingCode <- function (newcode=NULL) {
+CaseFileMissingCode <- function (newcode=NULL,session=getDefaultSession()) {
   if (length(newcode)> 1) {
     stop("Only one code allowed.")
   }
@@ -40,7 +40,7 @@ CaseFileMissingCode <- function (newcode=NULL) {
       newcode <- utf8ToInt(newcode)
     }
   }
-  oldcode <- .Call("RN_MissingCode",newcode,PACKAGE="RNetica")
+  oldcode <- .Call("RN_MissingCode",newcode,session,PACKAGE="RNeticaXR")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -51,7 +51,7 @@ CaseFileMissingCode <- function (newcode=NULL) {
 ###############################################################
 ## Case Stream Objects
 
-OpenCaseStream <- function (oldstream) {
+OpenCaseStream <- function (oldstream,session=getDeafultSession()) {
   if (is.NeticaCaseStream(oldstream)) {
     if (isCaseStreamOpen(oldstream)) {
       warning("Stream is already open:  nothing done.")
@@ -60,12 +60,14 @@ OpenCaseStream <- function (oldstream) {
     if (is.CaseFileStream(oldstream)) {
       source <- getCaseStreamPath(oldstream)
       stream <-
-        .Call("RN_OpenCaseFileStream",source,oldstream,PACKAGE="RNetica")
+        .Call("RN_OpenCaseFileStream",source,oldstream,session,
+              PACKAGE="RNetica")
     } else {
       label <- getCaseStreamDataFrameName(oldstream)
       source <- MemoryStreamContents(oldstream)
       stream <-
-        .Call("RN_OpenCaseMemoryStream",label,oldstream,PACKAGE="RNetica")
+        .Call("RN_OpenCaseMemoryStream",label,oldstream,session,
+              PACKAGE="RNeticaXR")
       print(source)
       MemoryStreamContents(stream) <- source
     }
@@ -79,12 +81,12 @@ OpenCaseStream <- function (oldstream) {
   stream
 }
 
-CaseFileStream <- function (pathname) {
+CaseFileStream <- function (pathname,session=getDefaultSession()) {
   if (!is.character(pathname) || length(pathname)>1) {
     warning("OpenCaseStream:  expected single pathname as argument.")
   }
   stream <-
-    .Call("RN_OpenCaseFileStream",pathname,NULL,PACKAGE="RNetica")
+    .Call("RN_OpenCaseFileStream",pathname,NULL,session,PACKAGE="RNeticaXR")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -93,9 +95,10 @@ CaseFileStream <- function (pathname) {
 }
 
 MemoryCaseStream <- function (data.frame,
-                              label=deparse(substitute(data.frame))) {
+                              label=deparse(substitute(data.frame)),
+                              session=getDefaultSession()) {
   stream <-
-    .Call("RN_OpenCaseMemoryStream",label,NULL,PACKAGE="RNetica")
+    .Call("RN_OpenCaseMemoryStream",label,NULL,session,PACKAGE="RNeticaXR")
   MemoryStreamContents(stream) <- data.frame
   ecount <- ReportErrors()
   if (ecount[1]>0) {
@@ -188,7 +191,9 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
   if (length(freq) >1L) {
     stop("Argument freq must be a numeric scalar.")
   }
-  stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,PACKAGE="RNetica")
+  session <- NodeNet(nodes[[1]])$session
+  stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,
+                  session,PACKAGE="RNetica")
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

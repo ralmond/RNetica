@@ -3,13 +3,21 @@ import(utils)
 importFrom("grDevices", "col2rgb")
 importFrom("stats", "runif")
 
+
+
+export(NeticaSession)
+exportClasses(NeticaSession)
+exportMethods(is.active,startSession,stopSession)
+
 export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,
+       getDefaultSession,startSession,stopSession,
        CreateNetwork, DeleteNetwork,
-       print.NeticaBN, toString.NeticaBN, is.active,
-       is.IDname, as.IDname, is.NeticaBN,
+       is.active, is.IDname, as.IDname, is.NeticaBN,
        GetNthNetwork, GetNamedNetworks, CopyNetworks)
 
+exportClasses(NeticaBN)
+exportMethods(print,Compare,toString)
 export(WriteNetworks, ReadNetworks,
        GetNetworkFileName,
        NetworkName, "NetworkName<-",
@@ -27,7 +35,7 @@ export(
   NewDiscreteNode, NewContinuousNode, DeleteNodes,
   CopyNodes,
   NodeNet, NodeName, "NodeName<-",
-  print.NeticaNode, toString.NeticaNode, is.NeticaNode,
+  is.NeticaNode,
   is.discrete, is.continuous,
   NetworkAllNodes, NetworkFindNode,
   NodeTitle, "NodeTitle<-",
@@ -113,10 +121,6 @@ export(NodeValue, "NodeValue<-",
 export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
        is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
 
-S3method(print, NeticaBN)
-S3method(toString, NeticaBN)
-S3method(Ops, NeticaBN)
-S3method(c, NeticaBN)
 S3method(print, NeticaNode)
 S3method(toString, NeticaNode)
 S3method(Ops, NeticaNode)
@@ -129,4 +133,4 @@ S3method(print, NeticaCaseStream)
 S3method(toString, NeticaRNG)
 S3method(print, NeticaRNG)
 
-
+useDynLib(RNeticaXR)
