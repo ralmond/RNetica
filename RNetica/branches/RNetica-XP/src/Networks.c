@@ -108,30 +108,24 @@ net_bn* RN_AS_NET (const char* name, environ_ns* netica_env){
    NEW_OBJECT function doesn't seem to work properly for R6 classes
    and I can't figure out how to call a non-exported method from C
    code. */
+/* W00t!  The secret is to use "getFromNamespace" to find the
+   constructor!  */
 
-/* SEXP CreateBNObject(const char* name, SEXP sessobj) { */
-/*   SEXP sname, callme, nodeenv, bn; */
-/*   PROTECT(sname= allocVector(STRSXP,1)); */
-/*   SET_STRING_ELT(sname,0,mkChar(name)); */
+SEXP MakeBN(net_bn* net, SEXP sessobj) { 
+  SEXP sname, callme, bn; 
+  PROTECT(sname= allocVector(STRSXP,1));
+  SET_STRING_ELT(sname,0,mkChar(GetNetName_bn(net)));
 
-/*   /\* PROTECT(bn = NEW_OBJECT(bnclass)); *\/ */
-/*   /\* /\\* Not very well documented, but I think this makes a blank object *\/ */
-/*   /\*    and does not call the $initialize() function, so we need to do *\/ */
-/*   /\*    those operations manually. *\\/ *\/ */
-/*   /\* SET_FIELD(bn,namefield,sname); *\/ */
-/*   /\* SET_FIELD(bn,sessionfield,sessobj); *\/ */
+  PROTECT(callme=lang3(bnconstructor,sname,sessobj));
+  SET_TAG(CDR(callme),namefield);
+  SET_TAG(CDDR(callme),sessionfield);
 
-/*   PROTECT(callme=lang3(install("BNmaker"),sname,sessobj)); */
-/*   SET_TAG(CDR(callme),install("Name"));  */
-/*   SET_TAG(CDDR(callme),install("Session"));  */
-/*   PROTECT(bn=eval(callme,R_FindPackageEnv(RNeticaPackage))); */
-/*   /\* SET_FIELD(bn,nodesfield,env); *\/ */
-/*   /\* UNPROTECT(1); *\/ */
-
-/*   RN_RegisterNetwork(sessobj,name,bn); */
-/*   UNPROTECT(3); */
-/*   return bn; */
-/* } */
+  PROTECT(bn=eval(callme,R_GlobalEnv));
+  SetNetworkPtr(bn,net);
+  RN_RegisterNetwork(sessobj,GetNetName_bn(net),bn);
+  UNPROTECT(3);
+  return bn;
+}
 
 
 
@@ -147,25 +141,15 @@ net_bn* RN_AS_NET (const char* name, environ_ns* netica_env){
  * If one exitss, but has a different pointer, then something is wrong
  * and we need to generate an error.
  */
-/* As we can't create R6 objects from inside C, we need to pass in a
-   blank object which we will populate. */
 
-SEXP MakeNet_RRef(net_bn* net, const char* name, SEXP sessobj, SEXP blank) {
+SEXP MakeNet_RRef(net_bn* net, const char* name, SEXP sessobj) {
   net_bn* bn_ptr;
   SEXP bn, sname;
 
   PROTECT(bn=RN_FindNetworkStr(sessobj,name));
-  Rprintf("Searching for existing node named %s.\n",name);
   if (isNull(bn) || RX_isUnbound(bn)) {
-    Rprintf("Didn't find net named %s.\n",name);
-    /* Didn't find one, need to make a new one (or use the blank). */
     UNPROTECT(1);
-    PROTECT(bn=blank);
-  } else {
-    Rprintf("Found a net named %s, object of type %d.\n",name,TYPEOF(bn));
-    if (TYPEOF(bn)==SYMSXP) {
-      Rprintf("It is a symbol:  %s.\n",PRINTNAME(bn));
-    }
+    PROTECT(bn=MakeBN(net,sessobj));
   }
   bn_ptr = GetNetworkPtr(bn);
   if (bn_ptr && bn_ptr != net) {
@@ -173,37 +157,32 @@ SEXP MakeNet_RRef(net_bn* net, const char* name, SEXP sessobj, SEXP blank) {
        something is wrong. */
     error("RNetica Internal error:  pointer mismatch for net %s\n",name);
   }
-  Rprintf("Setting netica handle.\n");
   SetNetworkPtr(bn,net);
   PROTECT(sname= allocVector(STRSXP,1));
   SET_STRING_ELT(sname,0,mkChar(name));
-  Rprintf("Setting node to name %s.\n",name);
   SET_FIELD(bn,namefield,sname);
-  Rprintf("Setting backpointer to session.\n");
   SET_FIELD(bn,sessionfield,sessobj);
-  Rprintf("Registering network with session.\n");
   RN_RegisterNetwork(sessobj,name,bn);
   UNPROTECT(2);
   return bn;
 }
 
-SEXP RN_New_Nets(SEXP namelist, SEXP session, SEXP blanks) {
+SEXP RN_New_Nets(SEXP namelist, SEXP session) {
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
-  SEXP bn,blank;
+  SEXP bn;
   environ_ns* netica_env = GetSessionPtr(session);
   SEXP handles;
 
   PROTECT(handles=allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
-    PROTECT(blank = VECTOR_ELT(blanks,n));
     netica_handle = NewNet_bn(name,netica_env);
-    PROTECT(bn = MakeNet_RRef(netica_handle,name,session,blank));
+    PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
     Rprintf("Bn object created.\n");
     SET_VECTOR_ELT(handles,n,bn);
-    UNPROTECT(2);
+    UNPROTECT(1);
   }
   UNPROTECT(1);
   return(handles);
@@ -221,8 +200,8 @@ SEXP RN_Delete_Nets(SEXP netlist, SEXP session) {
     PROTECT(bnhandle = GET_FIELD(bn,bnatt));
     netica_handle = (net_bn*) R_ExternalPtrAddr(bnhandle);
     if (netica_handle) {
-      //Find and delete all node.
-      RN_Free_Nodes(GetNetNodes_bn(netica_handle),bn);
+      //Find and delete all nodes; Now done on R side.
+      //RN_Free_Nodes(GetNetNodes_bn(netica_handle),bn);
       //Nodes will be autodeleted when net is deleted.
       DeleteNet_bn(netica_handle);
       /* Clear the handle */
@@ -245,11 +224,11 @@ SEXP RN_Delete_Nets(SEXP netlist, SEXP session) {
    session object.  Instead this checks to make sure that the named
    networks actually exists and it returns a vector of true/false
    values. */
-SEXP RN_Named_Nets(SEXP namelist, SEXP session, SEXP blanks) {
+SEXP RN_Named_Nets(SEXP namelist, SEXP session) {
   R_len_t n, nn = length(namelist);
   const char* name;
   net_bn* netica_handle;
-  SEXP bnhandlelist, bn, blank;
+  SEXP bnhandlelist, bn;
   environ_ns* netica_env = GetSessionPtr(session);
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
@@ -260,11 +239,11 @@ SEXP RN_Named_Nets(SEXP namelist, SEXP session, SEXP blanks) {
       /* Fetch the bn object. */
       /* This will generate an error an an object exists and has a
          different pointer */
-      PROTECT(blank = VECTOR_ELT(blanks,n));
       PROTECT(bn = MakeNet_RRef(netica_handle,GetNetName_bn(netica_handle),
-                                session,blank));
+                                session));
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
+      UNPROTECT(1);
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
       //warning("Did not find a network named %s.",name);
@@ -274,11 +253,11 @@ SEXP RN_Named_Nets(SEXP namelist, SEXP session, SEXP blanks) {
   return(bnhandlelist);
 }
 
-SEXP RN_GetNth_Nets(SEXP nlist, SEXP session, SEXP blanks) {
+SEXP RN_GetNth_Nets(SEXP nlist, SEXP session) {
   R_len_t n, nn = length(nlist);
   int *netno;
   net_bn* netica_handle;
-  SEXP bnhandlelist, bn, blank;
+  SEXP bnhandlelist, bn;
   environ_ns* netica_env = GetSessionPtr(session);
 
   PROTECT(bnhandlelist = allocVector(VECSXP,nn));
@@ -287,12 +266,11 @@ SEXP RN_GetNth_Nets(SEXP nlist, SEXP session, SEXP blanks) {
     netica_handle = GetNthNet_bn(netno[n],netica_env);
     if (netica_handle) {
       /* Get corresponding R object */
-      PROTECT(blank = VECTOR_ELT(blanks,n));
       PROTECT(bn = MakeNet_RRef(netica_handle,GetNetName_bn(netica_handle),
-                                session,blank));
+                                session));
       /* Now stick it in array */
       SET_VECTOR_ELT(bnhandlelist,n,bn);
-      //UNPROTECT(1); //bn is preserved, so don't need protection.
+      UNPROTECT(1); 
     } else{
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
       //warning("Did not find a network named %s.",name);
@@ -303,12 +281,12 @@ SEXP RN_GetNth_Nets(SEXP nlist, SEXP session, SEXP blanks) {
 }
 
 SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options, 
-                  SEXP session, SEXP blanks) {
+                  SEXP session) {
   //RN_Define_Symbols();
   R_len_t n, nn = length(namelist);
   const char *newname, *opt;
   net_bn *old_net, *new_net;
-  SEXP bnhandlelist, old_bn, new_bn, blank;
+  SEXP bnhandlelist, old_bn, new_bn;
   environ_ns* netica_env = GetSessionPtr(session);
 
   opt = CHAR(STRING_ELT(options,0));
@@ -320,9 +298,9 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options,
     old_net = GetNetworkPtr(old_bn);
     if (old_net) {
       new_net = CopyNet_bn(old_net,newname,netica_env,opt);
-      PROTECT(blank = VECTOR_ELT(blanks,n));
-      new_bn = MakeNet_RRef(new_net,newname,session,blank);
+      PROTECT(new_bn = MakeNet_RRef(new_net,newname,session));
       SET_VECTOR_ELT(bnhandlelist,n,new_bn);
+      UNPROTECT(1);
     } else {
       SET_VECTOR_ELT(bnhandlelist,n,R_NilValue);
       warning("Did not find a network named %s.",BN_NAME(old_bn));
@@ -337,14 +315,14 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options,
 // Net level File I/O
 ///////////////////////////////////////////////////////////////////////
 
-SEXP RN_Read_Nets(SEXP filelist, SEXP session, SEXP blanks) {
+SEXP RN_Read_Nets(SEXP filelist, SEXP session) {
 
   R_len_t n, nn = length(filelist);
   SEXP filename;
   const char *name;
   stream_ns *file;
   net_bn* netica_handle;
-  SEXP result, bn, blank;
+  SEXP result, bn;
   environ_ns* netica_env = GetSessionPtr(session);
 
   PROTECT(result = allocVector(VECSXP,nn));
@@ -358,11 +336,9 @@ SEXP RN_Read_Nets(SEXP filelist, SEXP session, SEXP blanks) {
 
     if (netica_handle) {
       name = GetNetName_bn(netica_handle);
-      PROTECT(blank = VECTOR_ELT(blanks,n));
-      bn = MakeNet_RRef(netica_handle,name,session,blank);
-      SET_FIELD(bn,pathfield,filename);
+      PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
       SET_VECTOR_ELT(result,n,bn);
-
+      UNPROTECT(1);
     } else {
       SET_VECTOR_ELT(result,n,R_NilValue);
       warning("Could not find network for file %s.",CHAR(filename));
@@ -446,7 +422,7 @@ SEXP RN_GetNetName(SEXP bn) {
   return(result);
 }
 
-//FIXME
+
 SEXP RN_SetNetName(SEXP bn, SEXP newnames, SEXP session) {
   const char *newname;
   net_bn *netica_handle, *other_net;
@@ -461,7 +437,8 @@ SEXP RN_SetNetName(SEXP bn, SEXP newnames, SEXP session) {
       warning("There is already a network named %s.",newname);
     } else {
       SetNetName_bn(netica_handle,newname);
-      // We need to change the bn object to reflect the new name.
+      // We need to change the bn object to reflect the new name; this
+      // is done in the R code.
     }
   } else {
     warning("Could not find network %s.",BN_NAME(bn));
@@ -701,4 +678,38 @@ SEXP RN_Redo(SEXP bn) {
   return(result);
 }
 
+
+////////////////////////////////////////////////////////////////////////
+/// Accessors for the nodes contained with the net environment.
+
+void RN_RegisterNode(SEXP netobj, const char* nodename, SEXP nodeobj) {
+  SEXP net_env = NULL;
+  PROTECT(net_env=GET_FIELD(netobj,nodesfield));
+  defineVar(install(nodename),nodeobj,net_env);
+  UNPROTECT(1);
+}
+
+void RN_UnregisterNode(SEXP netobj, const char* nodename) {
+  SEXP net_env = NULL;
+  PROTECT(net_env=GET_FIELD(netobj,nodesfield));
+  defineVar(install(nodename),R_NilValue,net_env);
+  UNPROTECT(1);
+}
+
+SEXP RN_FindNodeStr(SEXP netobj, const char* nodename) {
+  SEXP net_env;
+  PROTECT(net_env=GET_FIELD(netobj,nodesfield));
+  SEXP result =findVar(install(nodename),net_env);
+  UNPROTECT(1);
+  return result;
+}
+
+/* Moved this to Networks as it exercises the network/session link */
+/* Now assume this function is called if we want to check that the
+   Netica and R side hierarchies are the same. */
+SEXP RN_NodeNet(SEXP node, SEXP session) {
+  net_bn* net = GetNodeNet_bn(GetNodeHandle(node));
+  //This will raise error if there are inconsistent pointers.
+  return MakeNet_RRef(net,GetNetName_bn(net),session);
+}
 

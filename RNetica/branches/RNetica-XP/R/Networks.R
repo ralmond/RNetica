@@ -38,7 +38,8 @@ NeticaBN <-
                        Session="NeticaSession",
                        nodes="environment"),
               methods=list(
-                  initialize = function(Name,Session,...){
+                  initialize = function(Name=".Prototype",
+                                        Session=NeticaSession(SessionName=".Prototype"),...){
                     net <- callSuper(Name=Name,Session=Session,
                                      nodes=new.env(parent=emptyenv()),
                                      Netica_bn=externalptr(),
@@ -46,7 +47,7 @@ NeticaBN <-
                     net
                   },
                   isActive = function() {
-                    .Call("RN_isBNActive",.self,PACKAGE="RNeticaXR")
+                    .Call("RN_isBNActive",.self,PACKAGE=RNetica)
                   },
                   reportErrors = function(maxreport=9,clear=TRUE) {
                     Session$reportErrors(maxreport,clear)
@@ -60,13 +61,18 @@ NeticaBN <-
                   findNode = function(nodename) {
                     nodes[[nodename]]
                   },
-                  deactivate = function() {
+                  searchNodes = function(pattern) {
+                    objects(pattern=pattern,envir=nodes)
+                  },
+                  deactivateNodes = function() {
                     nodenames <- listNodes()
                     for (nn in nodenames) {
-                      ##FIXME
-                      ##findNode(nn)$deactivate()
+                      findNode(nn)$deactivate()
                     }
-                    .Call("RN_DeactivateBN",.self,PACKAGE="RNeticaXR")
+                  },
+                  deactivate = function() {
+                    deactivateNodes()
+                    .Call("RN_DeactivateBN",.self,PACKAGE=RNetica)
                   },
                   show = function() {
                     cat("Netica Network named ",Name,"\n")
@@ -85,9 +91,6 @@ NeticaBN <-
                   }
               ))
 
-BNmaker <- function (Name,Session) {
-  NeticaBN$new(Name,Session)
-}
 
 ## This function creates the Bayesian Network objects.
 ## *Vectorized*
@@ -108,9 +111,7 @@ CreateNetwork <- function (names,session=getDefaultSession()) {
   if (any(existing)) {
     stop("Network(s): ",names[existing]," are already active Netica networks.")
   }
-  ## Need to make the R6 object on the R side.
-  blanks <- lapply(names,function(name) NeticaBN$new(name,session))
-  handles <- .Call("RN_New_Nets",names,session,blanks,PACKAGE="RNeticaXR")
+  handles <- .Call("RN_New_Nets",names,session,PACKAGE=RNetica)
   if (length(handles)==1) handles <- handles[[1]]
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
@@ -171,7 +172,9 @@ DeleteNetwork <- function (nets) {
   if (any(!sapply(nets,is.NeticaBN))) {
     stop("Expected a list of Netica networks, got, ",nets)
   }
-  handles <- .Call("RN_Delete_Nets",nets,session,PACKAGE="RNeticaXR")
+  for (net in nets)
+    net$deactivateNodes()
+  handles <- .Call("RN_Delete_Nets",nets,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -191,11 +194,8 @@ GetNthNetwork <- function (n,session=getDefaultSession()) {
   if (!is(session,"NeticaSession") && is.active(session)) {
     stop("Expected an active Netica Session got ", session)
   }
-  ## Need to generate the R6 objects on the R side.
-  blanks <- lapply(paste("Temporary Object",n),function(name)
-    NeticaBN$new(name,session))
 
-  handles <- .Call("RN_GetNth_Nets",n,session,blanks,PACKAGE="RNeticaXR")
+  handles <- .Call("RN_GetNth_Nets",n,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -212,9 +212,7 @@ GetNamedNetworks <- function (namelist, session=getDefaultSession()) {
 ## Returns a network by its name.
 CheckNamedNetworks <- function (namelist, session=getDefaultSession()) {
   namelist <- as.character(namelist)
-  ## Need to generate the R6 objects on the R side.
-  blanks <- lapply(namelist,function(name) NeticaBN$new(name,session))
-  handles <- .Call("RN_Named_Nets",namelist,session,PACKAGE="RNeticaXR")
+  handles <- .Call("RN_Named_Nets",namelist,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -249,10 +247,8 @@ CopyNetworks <- function (nets, newnamelist, options=character(0)) {
     stop("Network(s): ",newnamelist[existing]," are already active Netica networks.")
   }
 
-  ## Need to create blank R6 objects on R side.
-  blanks <- lapply(newnamelist,function(name) NeticaBN$new(name,session))
-  handles <- .Call("RN_Copy_Nets",nets,newnamelist,options,session,blanks,
-                   PACKAGE="RNeticaXR")
+  handles <- .Call("RN_Copy_Nets",nets,newnamelist,options,session,
+                   PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -284,7 +280,7 @@ WriteNetworks <- function (nets, paths) {
   if (length(nets) != length(paths)) {
     stop("Lengths of net and pathname lists are different")
   }
-  handles <- .Call("RN_Write_Nets",nets,paths,PACKAGE="RNeticaXR")
+  handles <- .Call("RN_Write_Nets",nets,paths,PACKAGE=RNetica)
   ecount <- nets[[1]]$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -311,13 +307,7 @@ ReadNetworks <- function (paths,session=getDefaultSession()) {
   if (any(is.na(paths))) {
     stop("Expected a list of pathnames, got, ",paths)
   }
-  ## Make some temporary objects to hold the networks to pass into the C code.
-  ## We won't know the names until we read the nets, so we will give
-  ## them temporary names.  Need to make sure we clear the temporary
-  ## names at the end.
-  blanks <- lapply(paste("Temporary Object",paths),function(name)
-    NeticaBN$new(name,session))
-  handles <- .Call("RN_Read_Nets",paths,session,blanks,PACKAGE="RNeticaXR")
+  handles <- .Call("RN_Read_Nets",paths,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   ## Re-register networks under new name.
   ## Save filenames for later recovery of network.
@@ -336,7 +326,7 @@ GetNetworkFileName <- function (net,internal=FALSE) {
     stop("Expected a Netica network, got, ",net)
   }
   if (internal) {
-    pathname <- .Call("RN_GetNetFilename",net,PACKAGE="RNeticaXR")
+    pathname <- .Call("RN_GetNetFilename",net,PACKAGE=RNetica)
     ecount <- net$reportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")
@@ -358,14 +348,15 @@ NetworkName <- function (net, internal=FALSE) {
     if (!is.active(net)) {
       stop("Network ",net,"is not currently active")
       }
-    name <- .Call("RN_GetNetName",net,PACKAGE="RNeticaXR")
+    name <- .Call("RN_GetNetName",net,PACKAGE=RNetica)
     ecount <- net$reportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")
     }
     name
-  } else
+  } else {
     net$Name
+  }
 }
 
 "NetworkName<-" <- function (net, value) {
@@ -377,22 +368,22 @@ NetworkName <- function (net, internal=FALSE) {
   if (length(value)>1 || !is.IDname(value)) {
     stop("Illegal Netica Name, ",value)
   }
-  handle <- .Call("RN_SetNetName",net,value,session,PACKAGE="RNeticaXR")
+  handle <- .Call("RN_SetNetName",net,value,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
-  net$name <- value
+  handle$Name <- value
   rm(list=oldname,envir=session$nets)
-  session$nets[[value]] <- net
-  net
+  session$nets[[value]] <- handle
+  handle
 }
 
 NetworkTitle <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  title <- .Call("RN_GetNetTitle",net,PACKAGE="RNeticaXR")
+  title <- .Call("RN_GetNetTitle",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -409,7 +400,7 @@ NetworkTitle <- function (net) {
   }
   value <- as.character(value)
 
-  handle <- .Call("RN_SetNetTitle",net,value,PACKAGE="RNeticaXR")
+  handle <- .Call("RN_SetNetTitle",net,value,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -421,7 +412,7 @@ NetworkComment <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  comment <- .Call("RN_GetNetComment",net,PACKAGE="RNeticaXR")
+  comment <- .Call("RN_GetNetComment",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -438,7 +429,7 @@ NetworkComment <- function (net) {
     stop("Non-character titles in ", value)
   }
   value <- paste(value,collapse="\n")
-  handle <- .Call("RN_SetNetComment",net,value,PACKAGE="RNeticaXR")
+  handle <- .Call("RN_SetNetComment",net,value,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -450,7 +441,7 @@ GetNetworkAutoUpdate <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  autoupdate <- .Call("RN_GetNetAutoUpdate",net,PACKAGE="RNeticaXR")
+  autoupdate <- .Call("RN_GetNetAutoUpdate",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -466,7 +457,7 @@ SetNetworkAutoUpdate <- function (net, newautoupdate) {
     warning("Additional newautoupdate values ignored.")
   }
   newautoupdate <- as.logical(newautoupdate[1])
-  oldautoupdate <- .Call("RN_SetNetAutoUpdate",net,newautoupdate,PACKAGE="RNeticaXR")
+  oldautoupdate <- .Call("RN_SetNetAutoUpdate",net,newautoupdate,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -488,7 +479,7 @@ NetworkUserField <- function (net, fieldname) {
   if (length(fieldname)>1 || !is.IDname(fieldname)) {
     stop("Illegal Netica Field Name, ",fieldname)
   }
-  value <- .Call("RN_GetNetUserField",net,fieldname,PACKAGE="RNeticaXR")
+  value <- .Call("RN_GetNetUserField",net,fieldname,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -507,7 +498,7 @@ NetworkUserField <- function (net, fieldname) {
   if (length(value)>1 || is.na(value)) {
     stop("Illegal field value.")
   }
-  handle <- .Call("RN_SetNetUserField",net,fieldname,value,PACKAGE="RNeticaXR")
+  handle <- .Call("RN_SetNetUserField",net,fieldname,value,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -519,7 +510,7 @@ NetworkAllUserFields <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  values <- .Call("RN_GetAllNetUserFields",net,PACKAGE="RNeticaXR")
+  values <- .Call("RN_GetAllNetUserFields",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -562,7 +553,7 @@ NetworkUndo <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  flag <- .Call("RN_Undo",net,PACKAGE="RNeticaXR")
+  flag <- .Call("RN_Undo",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -577,7 +568,7 @@ NetworkRedo <- function (net) {
   if (!is.NeticaBN(net)) {
     stop("Expected a Netica network, got, ",net)
   }
-  flag <- .Call("RN_Redo",net,PACKAGE="RNeticaXR")
+  flag <- .Call("RN_Redo",net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

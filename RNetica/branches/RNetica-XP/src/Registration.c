@@ -18,11 +18,12 @@
 /**
  * Common Symbols so we don't need to keep redefining them.
  */
-const char* RNETICAPACKNAME = "package:RNeticaXR";
+const char* RNETICAPACKNAME = "RNeticaXR";
 const char* NeticaClass = "NeticaSession";
 const char* SESSIONATT = "NeticaHandle";
 const char* NAMENAME = "Name";
 const char* NETSFIELD = "nets";
+const char* NETFIELD = "Net";
 const char* NetworkClass = "NeticaBN";
 const char* BNATT = "Netica_bn";
 const char* PATHNAMENAME = "Pathname";
@@ -50,17 +51,22 @@ const char* RNGATT = "Netica_RNG";
 
 
 
-SEXP RNeticaPackage=NULL;
+SEXP RNeticaPackageName=NULL;
 SEXP sessionclass=NULL;
+SEXP sessionconstructor=NULL;
 SEXP sessionatt=NULL;
 SEXP namefield=NULL;
 SEXP netsfield=NULL;
+SEXP netfield=NULL;
 SEXP bnclass=NULL;
+SEXP bnconstructor=NULL;
 SEXP pathfield=NULL;
 SEXP sessionfield=NULL;
 SEXP nodesfield=NULL;
 SEXP nodeclass=NULL;
+SEXP nodeconstructor=NULL;
 SEXP cliquenodeclass=NULL;
+SEXP cliquenodeconstructor=NULL;
 SEXP bnatt=NULL;
 SEXP nodeatt=NULL;
 SEXP sdatt=NULL;
@@ -90,9 +96,9 @@ static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
   //printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
-  if (RNeticaPackage==NULL) {
-    R_PreserveObject(RNeticaPackage=allocVector(STRSXP,1));
-    SET_STRING_ELT(RNeticaPackage,0,mkChar(RNETICAPACKNAME));
+  if (RNeticaPackageName==NULL) {
+    R_PreserveObject(RNeticaPackageName=allocVector(STRSXP,1));
+    SET_STRING_ELT(RNeticaPackageName,0,mkChar(RNETICAPACKNAME));
   }
   if (sessionclass==NULL) {
     R_PreserveObject(sessionclass = MAKE_CLASS(NeticaClass));
@@ -118,6 +124,9 @@ void RN_Define_Symbols() {
   if (sessionfield==NULL) { 
     R_PreserveObject(sessionfield = install(SESSIONFIELD));  
   } 
+  if (netfield==NULL) {
+    R_PreserveObject(netsfield = install(NETFIELD));
+  }
   if (nodesfield==NULL) { 
     R_PreserveObject(pathfield = install(NODESFIELD));  
   } 
@@ -160,8 +169,7 @@ void RN_Define_Symbols() {
     SET_STRING_ELT(XYnames,1,mkChar("y"));
   }
   if (cliquenodeclass==NULL) {
-    R_PreserveObject(cliquenodeclass = allocVector(STRSXP,2));
-    SET_STRING_ELT(cliquenodeclass,1,mkChar(NodeClass));
+    R_PreserveObject(cliquenodeclass = allocVector(STRSXP,1));
     SET_STRING_ELT(cliquenodeclass,0,mkChar(CliqueNodeClass));
   }
   if (cliqueatt==NULL) { 
@@ -219,6 +227,37 @@ void RN_Define_Symbols() {
   if (RngList==NULL) { 
     R_PreserveObject(RngList = CONS(R_NilValue, R_NilValue));
   } 
+
+  SEXP getter, cname, callme;
+  PROTECT(cname = allocVector(STRSXP,1));
+  PROTECT(getter=install("getFromNamespace"));
+
+  if (sessionconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NeticaClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(sessionconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (bnconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NetworkClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(bnconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (nodeconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NodeClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(nodeconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (cliquenodeconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(CliqueNodeClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(cliquenodeconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+
+  UNPROTECT(2);
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
@@ -352,9 +391,29 @@ void RN_Free_Symbols() {
       R_ReleaseObject(netsfield);
       netsfield = NULL;
     }
-    if (RNeticaPackage!=NULL) {
-      R_ReleaseObject(RNeticaPackage);
-      RNeticaPackage = NULL;
+    if (netfield!=NULL) {
+      R_ReleaseObject(netfield);
+      netfield = NULL;
+    }
+    if (RNeticaPackageName!=NULL) {
+      R_ReleaseObject(RNeticaPackageName);
+      RNeticaPackageName = NULL;
+    }
+    if (sessionconstructor!=NULL) {
+      R_ReleaseObject(sessionconstructor);
+      sessionconstructor = NULL;
+    }
+    if (bnconstructor!=NULL) {
+      R_ReleaseObject(bnconstructor);
+      bnconstructor = NULL;
+    }
+    if (nodeconstructor!=NULL) {
+      R_ReleaseObject(nodeconstructor);
+      nodeconstructor = NULL;
+    }
+    if (cliquenodeconstructor!=NULL) {
+      R_ReleaseObject(cliquenodeconstructor);
+      cliquenodeconstructor = NULL;
     }
   }
 }
@@ -680,12 +739,12 @@ extern SEXP RN_DeactivateSession(SEXP sessobj);
 // File = Networks.c
 extern SEXP RN_DeactivateBN(SEXP net);
 extern SEXP RN_isBNActive(SEXP net);
-extern SEXP RN_New_Nets(SEXP namelist,SEXP session, SEXP blanks);
+extern SEXP RN_New_Nets(SEXP namelist,SEXP session);
 extern SEXP RN_Delete_Nets(SEXP netlist, SEXP session);
-extern SEXP RN_Named_Nets(SEXP namelist, SEXP session, SEXP blanks);
-extern SEXP RN_GetNth_Nets(SEXP nlist, SEXP session, SEXP blanks);
-extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options, SEXP session, SEXP blanks);
-extern SEXP RN_Read_Nets(SEXP filelist, SEXP newnets, SEXP session, SEXP blanks);
+extern SEXP RN_Named_Nets(SEXP namelist, SEXP session);
+extern SEXP RN_GetNth_Nets(SEXP nlist, SEXP session);
+extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options, SEXP session);
+extern SEXP RN_Read_Nets(SEXP filelist, SEXP session);
 extern SEXP RN_Write_Nets(SEXP nets, SEXP filelist);
 extern SEXP RN_GetNetFilename(SEXP bn);
 extern SEXP RN_GetNetName(SEXP bn);
@@ -710,7 +769,7 @@ extern SEXP RN_Delete_Nodes(SEXP nodelist);
 extern SEXP RN_Find_Node(SEXP net, SEXP namesxp);
 extern SEXP RN_Network_AllNodes(SEXP nodeist);
 extern SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options);
-extern SEXP RN_NodeNet(SEXP node);
+extern SEXP RN_NodeNet(SEXP node, SEXP session);
 extern SEXP RN_GetNodeName(SEXP nd);
 extern SEXP RN_SetNodeName(SEXP nd, SEXP newnames);
 extern SEXP RN_GetNodeTitle(SEXP nd);
@@ -762,7 +821,7 @@ extern SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals);
 extern SEXP RN_IsNodeDeterministic(SEXP n1);
 extern SEXP RN_HasNodeTable(SEXP n1);
 extern SEXP RN_DeleteNodeTable(SEXP n1);
-extern SEXP RN_MakeCliqueNode(SEXP nodelist);
+extern SEXP RN_MakeCliqueNode(SEXP nodelist, SEXP net);
 
 //Inference.c
 extern SEXP RN_CompileNet(SEXP net);
@@ -850,12 +909,12 @@ R_CallMethodDef callMethods[] = {
   //{"RN_Netica_Version", (DL_FUNC) &RN_Netica_Version, 0},
   {"RN_DeactivateBN", (DL_FUNC) &RN_DeactivateBN,1}, 
   {"RN_isBNActive", (DL_FUNC) &RN_isBNActive, 1},
-  {"RN_New_Nets", (DL_FUNC) &RN_New_Nets, 3},
+  {"RN_New_Nets", (DL_FUNC) &RN_New_Nets, 2},
   {"RN_Delete_Nets", (DL_FUNC) &RN_Delete_Nets, 2},
-  {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 3},
-  {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 3},
-  {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 5},
-  {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 4},
+  {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 2},
+  {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 2},
+  {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 4},
+  {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 2},
   {"RN_WriteNets", (DL_FUNC) &RN_Write_Nets, 2},
   {"RN_GetNetFilename", (DL_FUNC) &RN_GetNetFilename, 1},
   {"RN_GetNetName", (DL_FUNC) &RN_GetNetName, 1},
@@ -877,7 +936,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_Find_Node", (DL_FUNC) &RN_Find_Node, 2},
   {"RN_Network_AllNodes", (DL_FUNC) &RN_Network_AllNodes, 1},
   {"RN_Copy_Nodes", (DL_FUNC) &RN_Copy_Nodes, 3},
-  {"RN_NodeNet", (DL_FUNC) &RN_NodeNet, 1},
+  {"RN_NodeNet", (DL_FUNC) &RN_NodeNet, 2},
   {"RN_GetNodeName", (DL_FUNC) &RN_GetNodeName, 1},
   {"RN_SetNodeName", (DL_FUNC) &RN_SetNodeName, 2},
   {"RN_GetNodeTitle", (DL_FUNC) &RN_GetNodeTitle, 1},
@@ -927,7 +986,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_IsNodeDeterministic", (DL_FUNC) &RN_IsNodeDeterministic, 1},
   {"RN_HasNodeTable", (DL_FUNC) &RN_HasNodeTable, 1},
   {"RN_DeleteNodeTable", (DL_FUNC) &RN_DeleteNodeTable, 1},
-  {"RN_MakeCliqueNode", (DL_FUNC) &RN_MakeCliqueNode, 1},
+  {"RN_MakeCliqueNode", (DL_FUNC) &RN_MakeCliqueNode, 2},
   {"RN_CompileNet", (DL_FUNC) &RN_CompileNet, 1},
   {"RN_UncompileNet", (DL_FUNC) &RN_UncompileNet, 1},
   {"RN_RetractNetFindings", (DL_FUNC) &RN_RetractNetFindings, 1},

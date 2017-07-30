@@ -259,7 +259,7 @@ SEXP RN_GetEliminationOrder(SEXP net) {
   if (netica_handle) {
     const nodelist_bn *order = GetNetElimOrder_bn(netica_handle);
     if (order) {
-      return RN_AS_RLIST(order);
+      return RN_AS_RLIST(order,net);
     } else {
       return R_NilValue;
     }

@@ -15,7 +15,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL, session=getDefaultSession()) {
     newdelimiter <- utf8ToInt(newdelimiter)
     if (length(newdelimiter)==0) newdelimiter <- 0
   }
-  olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,session,PACKAGE="RNetica")
+  olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,session,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -61,7 +61,7 @@ OpenCaseStream <- function (oldstream,session=getDeafultSession()) {
       source <- getCaseStreamPath(oldstream)
       stream <-
         .Call("RN_OpenCaseFileStream",source,oldstream,session,
-              PACKAGE="RNetica")
+              PACKAGE=RNetica)
     } else {
       label <- getCaseStreamDataFrameName(oldstream)
       source <- MemoryStreamContents(oldstream)
@@ -115,7 +115,7 @@ CloseCaseStream <- function (stream) {
     warning("CloseCaseStream:  Stream already closed.")
     return (stream)
   }
-  stream <- .Call("RN_CloseCaseStream",stream,PACKAGE="RNetica")
+  stream <- .Call("RN_CloseCaseStream",stream,PACKAGE=RNetica)
   stream
 }
 
@@ -144,7 +144,7 @@ is.CaseFileStream <- function (x) {
 
 isCaseStreamOpen <- function (stream) {
   if (!is.NeticaCaseStream(stream)) return (NA_integer_)
-  .Call("RN_isCaseStreamActive",stream,PACKAGE="RNetica")
+  .Call("RN_isCaseStreamActive",stream,PACKAGE=RNetica)
 }
 
 getCaseStreamPath <- function (stream) {
@@ -193,7 +193,7 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
   }
   session <- NodeNet(nodes[[1]])$session
   stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,
-                  session,PACKAGE="RNetica")
+                  session,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -230,7 +230,7 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
       stop("Argument pos must be a postive integer, 'FIRST' or 'NEXT'.")
     }
   }
-  stream <- .Call("RN_ReadFindings",nodes,stream,pos,add,PACKAGE="RNetica")
+  stream <- .Call("RN_ReadFindings",nodes,stream,pos,add,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -264,7 +264,7 @@ MemoryStreamContents <- function (stream) {
     stop("MemoryStreamContents only worksfor MemoryCaseStreams.")
   }
   if (isCaseStreamOpen(stream)) {
-    contents <- .Call("RN_GetMemoryStreamContents",stream,PACKAGE="RNetica")
+    contents <- .Call("RN_GetMemoryStreamContents",stream,PACKAGE=RNetica)
     ecount <- ReportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")
@@ -305,7 +305,7 @@ MemoryStreamContents <- function (stream) {
       contents <- textConnectionValue(con)
       close(con)
     }
-    stream <- .Call("RN_SetMemoryStreamContents",stream,contents,PACKAGE="RNetica")
+    stream <- .Call("RN_SetMemoryStreamContents",stream,contents,PACKAGE=RNetica)
     ecount <- ReportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")

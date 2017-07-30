@@ -8,7 +8,7 @@ the installation at the place where it is located.
 On Linux and Unix (including Mac OS X) distributions you do that with
 the "--with-netica" switch to configure.  Thus I compile with
 
-R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_504'
+R CMD INSTALL RNeticaXR --configure-args='--with-netica=/home/ralmond/software/Netica_API_504'
 
 To check I run with
 

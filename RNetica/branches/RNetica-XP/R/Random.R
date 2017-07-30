@@ -28,7 +28,7 @@ FreeNeticaRNG <- function (rng) {
     warning("Netica RNG already freed.")
     return (rng)
   }
-  rng <- .Call("RN_FreeRNG",rng,PACKAGE="RNetica")
+  rng <- .Call("RN_FreeRNG",rng,PACKAGE=RNetica)
   rng
 }
 
@@ -49,7 +49,7 @@ is.NeticaRNG <- function (x) {
 
 isNeticaRNGActive <- function (rng) {
   if (!is.NeticaRNG(rng)) return (NA_integer_)
-  .Call("RN_isRNGActive",rng,PACKAGE="RNetica")
+  .Call("RN_isRNGActive",rng,PACKAGE=RNetica)
 }
 
 WithRNG <- function (rng,expr) {
@@ -102,7 +102,7 @@ GenerateRandomCase <- function (nodelist, method="Default",
   session <- NodeNet(nodelist[[1]])$session
   result <-
     .Call("RN_GenerateRandomCase",nodelist,method,timeout,rng,
-          session,PACKAGE="RNetica")
+          session,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

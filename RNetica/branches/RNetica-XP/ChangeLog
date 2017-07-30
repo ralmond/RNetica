@@ -1,3 +1,52 @@
+2017-07-30  Russell G. Almond  <ralmond@Limu>
+
+	* R/Session.R: Added RNetica global variable to be the PACKAGE
+	argument to .Call
+
+	* src/Edges.c (RN_MakeCliqueNode): Added Clique node class, and
+	made dependent on net argument passed in.
+
+	* R/Node.R ("NodeName<-"): Fixed to properly updated nodes cache.
+
+	* src/Networks.c (RN_NodeNet): Moved this function to networks as
+	it needs the MakeNet_RRef function which is internal to Networks,
+	but doen't use any internal Node functions.
+
+	* src/Node.c (RN_Delete_Nodes): Now does unregistration.
+
+2017-07-29  Russell G. Almond  <ralmond@Limu>
+
+	* src/Node.c (RN_NewDiscreteNodes, RN_NewContinuousNodes): Shot
+	out blanks.
+
+	* src/Inference.c (RN_GetEliminationOrder): Fixed RN_AS_RLIST
+	call. 
+
+	* src/Edges.c (RN_GetNodeParents, RN_GetRelatedNodes)
+	(RN_GetNodeChildren): Added back pointer to net to call to
+	RN_AS_RLIST. 
+
+	* src/Node.c (RN_AS_RLIST): This now needs a Net arugment.
+
+2017-07-28  Russell G. Almond  <ralmond@Limu>
+
+	* src/Networks.c (RN_MakeBN, MakeNet_RRef): Now uses internal
+	constructor. 
+	(RN_New_Nets, RN_Named_Nets, RN_GetNth_Nets, RN_Copy_Nets)
+	(RN_Read_Nets): Removed blank argument again.
+
+	* src/Session.c (RN_SessionMaker): At long last, I've figured out
+	how to create R6 objects from inside of C code.  The constructor
+	is found using 'getFromNamespace' inside of the Register Symbols
+	function.  This can then be used in a call back via "eval".
+
+2017-07-27  Russell G. Almond  <ralmond@Limu>
+
+	* src/Node.c (MakeNode_RRef, GetNode_RRef): Added netobj and blank
+	arguments so that the net can be searched for the reference and
+	the blank used if the net object was not found.
+	(RN_NewDiscreteNodes, RN_NewContinuousNodes):  Added blanks.
+
 2017-07-20  Russell G. Almond  <ralmond@Limu>
 
 	* src/Networks.c (MakeNet_RRef): Can't figure out how to create a
