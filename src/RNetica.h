@@ -35,13 +35,15 @@ extern net_bn* GetNetworkPtr(SEXP netobj);
 #define BN_NAME(b)              CHAR(STRING_ELT(GET_FIELD(b,namefield),0))
 extern Rboolean isNeticaBN(SEXP obj);
 //Now for node.
-#define SetNode_RRef(n,r)	SetNodeUserData_bn(n,0,(void *)r)
+/* #define SetNode_RRef(n,r)	SetNodeUserData_bn(n,0,(void *)r) */
 /* This function automatically allocations an object for the node if
    it does not exit */
-extern SEXP GetNode_RRef(node_bn* node);
-#define FastGetNode_RRef(n)		(SEXP) GetNodeUserData_bn(n,0)
-#define GetNodeHandle(n)        (node_bn*) R_ExternalPtrAddr(getAttrib(n,nodeatt))
-#define NODE_NAME(n)            CHAR(STRING_ELT(AS_CHARACTER(n),0))
+extern SEXP GetNode_RRef(node_bn* node, SEXP netobj);
+/* #define FastGetNode_RRef(n)		(SEXP) GetNodeUserData_bn(n,0) */
+extern node_bn* GetNodePtr(SEXP nodeobj);
+#define GetNodeHandle(n)        GetNodePtr(n)
+#define NODE_NAME(n)            CHAR(STRING_ELT(GET_FIELD(n,namefield),0))
+#define NODE_NET(n)             GET_FIELD(n,netfield)
 extern int isNeticaNode(SEXP obj);
 #define GetCaseStream_Handle(cs) (stream_ns*) R_ExternalPtrAddr(getAttrib(cs,casestreamatt))
 extern int isNeticaStream(SEXP obj);
@@ -74,7 +76,7 @@ extern void RN_Free_Nodes(const nodelist_bn* nodelist, SEXP bn);
  * Converts between Netica nodelists and R lists.  Calling programs
  * are responsible for freeing/unprotecting the results.
  */
-extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist);
+extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist, SEXP bn);
 extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
 
 
@@ -82,23 +84,28 @@ extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
  * Common Symbols so we don't need to keep redefining them.
  * Defined in Registration.c
  */
-extern SEXP RNeticaPackage;
+extern SEXP RNeticaPackageName;
 extern const char* NeticaClass;
 extern SEXP sessionatt;
 extern SEXP namefield;
 extern SEXP netsfield;
 extern SEXP sessionclass;
+extern SEXP sessionconstructor;
 extern SEXP bnclass;
+extern SEXP bnconstructor;
 extern SEXP pathfield;
 extern SEXP sessionfield;
 extern SEXP nodesfield;
 extern const char* NetworkClass;
 extern SEXP bnatt;
 extern SEXP nodeclass;
+extern SEXP nodeconstructor;
 extern const char* NodeClass;
 extern SEXP nodeatt;
+extern SEXP netfield;
 extern SEXP nodediscatt;
 extern SEXP cliquenodeclass;
+extern SEXP cliquenodeconstructor;
 extern SEXP cliqueatt;
 extern SEXP sdatt;
 extern SEXP TRUEV;  //Length 1 logical vector containing TRUE
@@ -133,6 +140,10 @@ extern void RN_Free_Symbols();  //Seems we can only allocate them on
 extern SEXP RN_FindNetworkStr(SEXP sessobj, const char* netname);
 extern void RN_RegisterNetwork(SEXP sessobj, const char* netname, SEXP netobj);
 extern void RN_UnregisterNetwork(SEXP sessobj, const char* netname);
+
+extern SEXP RN_FindNodeStr(SEXP netobj, const char* nodename);
+extern void RN_RegisterNode(SEXP netobj, const char* nodename, SEXP nodeobj);
+extern void RN_UnregisterNode(SEXP netobj, const char* nodename);
 
 
 extern SEXP RN_KindToChar (nodekind_bn kind);

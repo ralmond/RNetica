@@ -71,10 +71,11 @@ SEXP RN_DeleteLink(SEXP parent, SEXP child) {
 SEXP RN_GetNodeParents(SEXP node) {
   node_bn* node_handle = GetNodeHandle(node);
   const char* inputname;
-  SEXP result, names;
+  SEXP result, names, bn;
 
   if(node_handle) {
-    PROTECT(result = RN_AS_RLIST(GetNodeParents_bn(node_handle)));
+    PROTECT(bn = GET_FIELD(node,netfield));
+    PROTECT(result = RN_AS_RLIST(GetNodeParents_bn(node_handle),bn));
     int n, nn=length(result);
     PROTECT(names = allocVector(STRSXP,nn));
     for (n = 0 ; n<nn; n++) {
@@ -82,7 +83,7 @@ SEXP RN_GetNodeParents(SEXP node) {
       SET_STRING_ELT(names,n,mkChar(inputname));
     }
     namesgets(result,names);
-    UNPROTECT(2);
+    UNPROTECT(3);
     return result;
   } else {
     error ("NodeParents: Bad node %s.\n", NODE_NAME(node));
@@ -92,9 +93,13 @@ SEXP RN_GetNodeParents(SEXP node) {
 
 SEXP RN_GetNodeChildren(SEXP node) {
   node_bn* node_handle = GetNodeHandle(node);
-
+  SEXP bn, result;
+  
   if(node_handle) {
-    return RN_AS_RLIST(GetNodeChildren_bn(node_handle));
+    PROTECT(bn = GET_FIELD(node,netfield));
+    PROTECT(result = RN_AS_RLIST(GetNodeChildren_bn(node_handle),bn));
+    UNPROTECT(2);
+    return result;
   } else {
     error ("NodeChildren: Bad node %s.\n", NODE_NAME(node));
     return (R_NilValue);
@@ -214,12 +219,13 @@ SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation) {
   const nodelist_bn* nodes;
   nodelist_bn* related;
   net_bn *net_handle=NULL;
-  SEXP result;
+  SEXP bn, result;
 
   if (length(nodelist)) {
     node_bn *node1 = GetNodeHandle(VECTOR_ELT(nodelist,0));
     if (node1) {
       net_handle = GetNodeNet_bn(node1);
+      PROTECT(bn = GET_FIELD(VECTOR_ELT(nodelist,0),netfield));
     } else {
       error("as.nodelist: Can't find source network.\n");
       return R_NilValue;
@@ -231,9 +237,9 @@ SEXP RN_GetRelatedNodes(SEXP nodelist, SEXP relation) {
   related = NewNodeList2_bn(0,net_handle);
 
   GetRelatedNodesMult_bn(related,rel,nodes);
-  PROTECT(result=RN_AS_RLIST(related));
+  PROTECT(result=RN_AS_RLIST(related,bn));
   DeleteNodeList_bn(related);
-  UNPROTECT(1);
+  UNPROTECT(2);
   return result;
   
 }
@@ -285,7 +291,7 @@ SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals) {
 
 //This is a special node that forces all of the other variables into a
 //clique.  Loosely patterned off the NeticaEx function FormCliqueWith
-SEXP RN_MakeCliqueNode(SEXP nodelist) {
+SEXP RN_MakeCliqueNode(SEXP nodelist, SEXP net) {
   net_bn* nt;
   node_bn *node_handle, *new_node;
   int i, num_nodes=length(nodelist);
@@ -296,15 +302,28 @@ SEXP RN_MakeCliqueNode(SEXP nodelist) {
     error("Could not find node %s.", NODE_NAME(VECTOR_ELT(nodelist,0)));
     return(R_NilValue);
   }
-  nt = GetNodeNet_bn(node_handle);
+  nt = GetNetworkPtr(net);
   new_node = NewNode_bn("CliqueNode*",1,nt);
   for (i=0; i< num_nodes; i++) {
     AddLink_bn(GetNodeHandle(VECTOR_ELT(nodelist,i)),new_node);
   }
-  PROTECT(cliquenode = GetNode_RRef(new_node));
-  SET_CLASS(cliquenode,cliquenodeclass);
-  setAttrib(cliquenode,cliqueatt,nodelist);
-  UNPROTECT(1);
+  //As Clique node is a subclass of NeticaNode, need a special
+  //constructor.
+  SEXP sname, callme;
+  PROTECT(sname= allocVector(STRSXP,1));
+  SET_STRING_ELT(sname,0,mkChar(GetNodeName_bn(new_node)));
+
+  PROTECT(callme=lang5(nodeconstructor,sname,net,TRUEV,nodelist));
+  SET_TAG(CDR(callme),namefield);
+  SET_TAG(CDDR(callme),netfield);
+  SET_TAG(CDDDR(callme),nodediscatt);
+  SET_TAG(CDR(CDDDR(callme)),cliqueatt);
+
+  PROTECT(cliquenode = eval(callme,R_GlobalEnv));
+  SetNodePtr(cliquenode,new_node);
+  RN_RegisterNode(net,GetNodeName_bn(new_node),cliquenode);
+  
+  UNPROTECT(3);
   return (cliquenode);
 }
 

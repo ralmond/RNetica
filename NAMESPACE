@@ -31,6 +31,7 @@ export(WriteNetworks, ReadNetworks,
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
        )
 
+exportClasses(NeticaNode)
 export(
   NewDiscreteNode, NewContinuousNode, DeleteNodes,
   CopyNodes,
@@ -54,11 +55,12 @@ export(
   NodeLevels, "NodeLevels<-", ParentStates, ParentNames
   )
 
+exportMethods("[","[[","[<-")
  export(
    AddLink, DeleteLink, ReverseLink,
    NodeParents, "NodeParents<-", NodeChildren,
    AbsorbNodes, MakeCliqueNode, is.CliqueNode,
-   GetClique, cc,
+   GetClique,
    is.NodeRelated, GetRelatedNodes,
    NodeInputNames, "NodeInputNames<-",
    AdjoinNetwork, NetworkFootprint
@@ -121,13 +123,7 @@ export(NodeValue, "NodeValue<-",
 export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
        is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
 
-S3method(print, NeticaNode)
-S3method(toString, NeticaNode)
-S3method(Ops, NeticaNode)
-S3method(c, NeticaNode)
-S3method("[", NeticaNode)
-S3method("[[", NeticaNode)
-S3method("[<-", NeticaNode)
+
 S3method(toString, NeticaCaseStream)
 S3method(print, NeticaCaseStream)
 S3method(toString, NeticaRNG)

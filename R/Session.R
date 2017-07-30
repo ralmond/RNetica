@@ -1,4 +1,9 @@
 
+### Package name string for .Call (this allows me to temporarily change the
+### Name of the package while getting forked.
+RNetica <- "RNeticaXR"
+
+
 ### Redo a Netica Session as an R6 Object
 
 ## R does not provide enough support for manipulating pointer objects
@@ -9,7 +14,7 @@ CCodeLoaded <- FALSE
 
 externalptr <- function () {
   if (CCodeLoaded) {
-    .Call("RX_make_exptr",NULL,PACKAGE="RNeticaXR")
+    .Call("RX_make_exptr",NULL,PACKAGE=RNetica)
   } else {
     ## We are building prototoype objects during the namespace loading
     ## cycle, but before the C code is loaded.  Just create a pointer
@@ -20,7 +25,7 @@ externalptr <- function () {
 
 is_null_ptr <- function(ptr) {
   if (!is(ptr,"externalptr-class")) return (NA)
-  .Call("RX_is_null_ptr",ptr,PACKAGE="RNeticaXR")
+  .Call("RX_is_null_ptr",ptr,PACKAGE=RNetica)
 }
 
 
@@ -46,21 +51,21 @@ NeticaSession <-
                     sess
                   },
                   isActive = function() {
-                    .Call("RN_isSessionActive",.self,PACKAGE="RNeticaXR")
+                    .Call("RN_isSessionActive",.self,PACKAGE=RNetica)
                   },
                   neticaVersion = function() {
-                    .Call("RN_Session_Version",.self,PACKAGE="RNeticaXR")
+                    .Call("RN_Session_Version",.self,PACKAGE=RNetica)
                   },
                   reportErrors = function(maxreport=9,clear=TRUE) {
                     counts <-
                       .Call("RN_Session_errors",.self,as.integer(maxreport),
-                            as.logical(clear),PACKAGE="RNeticaXR")
+                            as.logical(clear),PACKAGE=RNetica)
                     names(counts) <- c("Errors","Warnings","Notices","Reports")
                     invisible(counts)
                   },
                   clearErrors = function(severity="XXX_ERR") {
                     .Call("RN_ClearSessionErrors",.self,
-                          as.character(severity),PACKAGE="RNeticaXR")
+                          as.character(severity),PACKAGE=RNetica)
                     invisible(.self)
                   },
                   listNets = function(pattern=".*") {
@@ -88,7 +93,7 @@ NeticaSession <-
 
 setGeneric("startSession",function (session) standardGeneric("startSession"))
 setMethod("startSession","NeticaSession", function (session) {
-  .Call("RN_start_Session",session,PACKAGE="RNeticaXR")
+  .Call("RN_start_Session",session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -100,7 +105,7 @@ setMethod("stopSession","NeticaSession", function (session) {
   netnames <- session$listNets()
   for (nn in netnames)
     session$findNet(nn)$deactivate()
-  .Call("RN_stop_Session",session,PACKAGE="RNeticaXR")
+  .Call("RN_stop_Session",session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

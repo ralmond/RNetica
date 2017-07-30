@@ -84,6 +84,18 @@ SEXP RX_is_null_ptr(SEXP ptr) {
     return FALSEV;
 }
 
+/******************* Session Constructor **********  */
+
+SEXP RN_SessionMaker() {
+  /* Should worry about license key, but I'm not going to bother. */
+  SEXP callme, sess;
+  PROTECT(callme=lang1(sessionconstructor));
+  PROTECT(sess=eval(callme,R_GlobalEnv));
+  UNPROTECT(2);
+  return sess;
+}
+
+
 /* ********************  Session Objects *********************** */
 environ_ns* GetSessionPtr (SEXP sessobj) {
   environ_ns* netica_env = NULL;
@@ -209,8 +221,6 @@ SEXP RN_start_Session(SEXP sessobj) {
   return sessobj;
 }
 
-extern void RN_UnregisterNetwork(SEXP sessobj, const char* netname);
-
 /**
  * This function closes Netica cleanly.
  */
@@ -227,18 +237,19 @@ SEXP RN_stop_Session(SEXP sessobj) {
   }
 
 
-  Rprintf("Shut down any remaining nets.\n");
-  int nth = 0;
-  net_bn* net;
-  SEXP bn, bnPointer;
-  while (TRUE) {
-    net = GetNthNet_bn (nth++, netica_env);
-    Rprintf("Closing network %s.\n",GetNetName_bn(net));
-    if (!net) break;
-    //Should probably do this on R side, not C side.
-    //RN_Free_Nodes(GetNetNodes_bn(net),net);
-    RN_UnregisterNetwork(sessobj,GetNetName_bn(net));
-  } 
+  /* This is now done in the R code. */
+  /* Rprintf("Shut down any remaining nets.\n"); */
+  /* int nth = 0; */
+  /* net_bn* net; */
+  /* SEXP bn, bnPointer; */
+  /* while (TRUE) { */
+  /*   net = GetNthNet_bn (nth++, netica_env); */
+  /*   Rprintf("Closing network %s.\n",GetNetName_bn(net)); */
+  /*   if (!net) break; */
+  /*   //Should probably do this on R side, not C side. */
+  /*   //RN_Free_Nodes(GetNetNodes_bn(net),net); */
+  /*   RN_UnregisterNetwork(sessobj,GetNetName_bn(net)); */
+  /* }  */
 
   res = CloseNetica_bn(netica_env,mesg);
   netica_env = NULL; //Set to null no matter what.

@@ -12,12 +12,12 @@ NodeExperience <- function (node) {
     result <- array(NA_real_,dim=statecounts,dimnames=parnames)
     config <- -1L
     while (!is.na((config <- nextconfig(config,statecounts))[1L])) {
-      val <- .Call("RN_GetNodeExperience",node,config,PACKAGE="RNetica")
+      val <- .Call("RN_GetNodeExperience",node,config,PACKAGE=RNetica)
       if (!is.null(val))
         result[matrix(config,1)] <- val
     }
   } else { ## Prior node, no parents.
-    result<- .Call("RN_GetNodeExperience",node,NULL,PACKAGE="RNetica")
+    result<- .Call("RN_GetNodeExperience",node,NULL,PACKAGE=RNetica)
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
@@ -60,10 +60,10 @@ NodeExperience <- function (node) {
     config <- -1L
     while (!is.na((config <- nextconfig(config,statecounts))[1L])) {
       .Call("RN_SetNodeExperience",node,config,
-            value[matrix(config,1)],PACKAGE="RNetica")
+            value[matrix(config,1)],PACKAGE=RNetica)
     }
   } else { ## Prior node, no parents.
-    .Call("RN_SetNodeExperience",node,NULL,value,PACKAGE="RNetica")
+    .Call("RN_SetNodeExperience",node,NULL,value,PACKAGE=RNetica)
   }
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
@@ -80,7 +80,7 @@ FadeCPT <- function (node, degree=0.2) {
   if (degree <0 || degree >1) {
     stop("Degree must be between 0 and 1")
   }
-  handle <- .Call("RN_FadeCPT",node,as.double(degree),PACKAGE="RNetica")
+  handle <- .Call("RN_FadeCPT",node,as.double(degree),PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -96,7 +96,7 @@ LearnFindings <- function (nodes, weight=1.0) {
   if (any(!sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
-  handles <- .Call("RN_LearnFindings",nodes,as.double(weight),PACKAGE="RNetica")
+  handles <- .Call("RN_LearnFindings",nodes,as.double(weight),PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -131,7 +131,7 @@ LearnCases <- function(caseStream, nodelist, weight=1.0) {
   }
   WithOpenCaseStream(stream,
    {
-     .Call("RN_LearnCaseStream",stream,nodelist,weight, PACKAGE="RNetica")
+     .Call("RN_LearnCaseStream",stream,nodelist,weight, PACKAGE=RNetica)
      ecount <- ReportErrors()
      if (ecount[1]>0) {
        stop("Netica Errors Encountered, see console for details.")

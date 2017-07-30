@@ -10,7 +10,7 @@ CompileNetwork <- function (net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  .Call("RN_CompileNet",net,PACKAGE="RNetica")
+  .Call("RN_CompileNet",net,PACKAGE=RNetica)
     ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -22,7 +22,7 @@ UncompileNetwork <- function (net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  .Call("RN_UncompileNet",net,PACKAGE="RNetica")
+  .Call("RN_UncompileNet",net,PACKAGE=RNetica)
     ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -34,7 +34,7 @@ RetractNetFindings <-function (net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  .Call("RN_RetractNetFindings",net,PACKAGE="RNetica")
+  .Call("RN_RetractNetFindings",net,PACKAGE=RNetica)
     ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -46,7 +46,7 @@ NodeFinding <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  result <- .Call("RN_GetNodeFinding",node,PACKAGE="RNetica")
+  result <- .Call("RN_GetNodeFinding",node,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -72,7 +72,7 @@ NodeFinding <- function (node) {
   if (is.na(val)) {
     stop("Value ", value, " not legal for node ",node)
   }
-  handle <- .Call("RN_SetNodeFinding",node,val,PACKAGE="RNetica")
+  handle <- .Call("RN_SetNodeFinding",node,val,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -97,7 +97,7 @@ EnterNegativeFinding <- function(node, eliminatedVals) {
     stop("Values ", eliminatedVals, " not legal for node ",node)
   }
   val <- as.integer(val) - 1L
-  handle <- .Call("RN_SetNodeFindingNot",node,val,PACKAGE="RNetica")
+  handle <- .Call("RN_SetNodeFindingNot",node,val,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -109,7 +109,7 @@ RetractNodeFinding <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  handle <- .Call("RN_RetractNodeFinding",node,PACKAGE="RNetica")
+  handle <- .Call("RN_RetractNodeFinding",node,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -137,7 +137,7 @@ IsBeliefUpdated <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  handle <- .Call("RN_IsBeliefUpdated",node,PACKAGE="RNetica")
+  handle <- .Call("RN_IsBeliefUpdated",node,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -149,7 +149,7 @@ NodeBeliefs <- function (node) {
   if (!is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  result <- .Call("RN_GetNodeBeliefs",node,PACKAGE="RNetica")
+  result <- .Call("RN_GetNodeBeliefs",node,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -162,7 +162,7 @@ NodeLikelihood <- function (node) {
   if (!is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  result <- .Call("RN_GetNodeLikelihood",node,PACKAGE="RNetica")
+  result <- .Call("RN_GetNodeLikelihood",node,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -181,7 +181,7 @@ NodeLikelihood <- function (node) {
   if (any(value>1) || any(value <0) || sum(value)==0) {
     stop("Expected values between 0 and 1 with at least one positive value.")
   }
-  handle <- .Call("RN_SetNodeLikelihood",node,value,PACKAGE="RNetica")
+  handle <- .Call("RN_SetNodeLikelihood",node,value,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -195,7 +195,7 @@ JointProbability <- function(nodelist) {
                                           is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
-  result <- .Call("RN_JointProbability",nodelist,PACKAGE="RNetica")
+  result <- .Call("RN_JointProbability",nodelist,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -210,7 +210,7 @@ FindingsProbability <- function(net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  result <- .Call("RN_FindingsProbability",net,PACKAGE="RNetica")
+  result <- .Call("RN_FindingsProbability",net,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -222,7 +222,7 @@ MostProbableConfig <- function(net, nth=0) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
-  config <- .Call("RN_MostProbableConfig",net,as.integer(nth),PACKAGE="RNetica")
+  config <- .Call("RN_MostProbableConfig",net,as.integer(nth),PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -240,7 +240,7 @@ JunctionTreeReport <- function (net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  report <- .Call("RN_JunctionTreeReport",net,PACKAGE="RNetica")
+  report <- .Call("RN_JunctionTreeReport",net,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -253,7 +253,7 @@ NetworkCompiledSize <- function(net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE="RNetica")
+  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -268,7 +268,7 @@ is.NetworkCompiled <- function(net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE="RNetica")
+  result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE=RNetica)
   ClearAllErrors("ERROR_ERR")
   result > 0
 }
@@ -279,7 +279,7 @@ EliminationOrder <- function (net) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  result <- .Call("RN_GetEliminationOrder",net,PACKAGE="RNetica")
+  result <- .Call("RN_GetEliminationOrder",net,PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
@@ -301,7 +301,7 @@ EliminationOrder <- function (net) {
       stop("All elements of value must be active nodes.")
     }
   }
-  handle <- .Call("RN_SetEliminationOrder",net,value, PACKAGE="RNetica")
+  handle <- .Call("RN_SetEliminationOrder",net,value, PACKAGE=RNetica)
   ecount <- ReportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
