@@ -94,11 +94,12 @@ export (
     NetworkNodeSetColor
  )
 
+exportClasses(CaseStream,FileCaseStream,MemoryCaseStream)
 export(CaseFileDelimiter,CaseFileMissingCode,
        OpenCaseStream, CloseCaseStream,
        WithOpenCaseStream,
        is.NeticaCaseStream, isCaseStreamOpen,
-       MemoryCaseStream, CaseFileStream,
+       CaseMemoryStream, CaseFileStream,
        is.MemoryCaseStream, is.CaseFileStream,
        getCaseStreamPath,getCaseStreamLastId,
        getCaseStreamPos,getCaseStreamLastFreq,
@@ -120,13 +121,8 @@ export(NodeValue, "NodeValue<-",
        woe, ewoe
        )
 
+exportClasses(NeticaRNG)
 export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
        is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
-
-
-S3method(toString, NeticaCaseStream)
-S3method(print, NeticaCaseStream)
-S3method(toString, NeticaRNG)
-S3method(print, NeticaRNG)
 
 useDynLib(RNeticaXR)

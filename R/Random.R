@@ -6,15 +6,57 @@
 ## These should generally be short lived, but we may need to create
 ## one to generate several sets of case files.
 
+setRefClass("NeticaRNG",fields=c(Name="character",
+                                 Session="NeticaSession",
+                                 Netica_RNG="externalptr",
+                                 Seed="integer"),
+            methods=list(
+                initialize=function(Name=".Prototype",
+                                    Session=NeticaSession(SessionName=".prototype"),
+                                    Seed=as.integer(runif(1,0,1000000000)),
+                                    ...) {
+                  callSuper(Name=Name,Session=Session,
+                            Netica_RNG=externalptr(),Seed=Seed,...)
+                },
+                isActive = function() {
+                  .Call("RN_isRNGActive",stream,PACKAGE=RNetica)
+                },
+                reportErrors = function(maxreport=9,clear=TRUE) {
+                  Session$reportErrors(maxreport,clear)
+                },
+                clearErrors = function(severity="XXX_ERR") {
+                  Session$clearErrors(severity)
+                },
+                free=function() {
+                  .Call("RN_FreeRNG",.self,PACKAGE=RNetica)
+                  ecount <- Session$reportErrors()
+                  if (ecount[1]>0) {
+                    stop("Netica Errors Encountered, see console for details.")
+                  }
+                },
+                show=function() {
+                  if (isActive()) {
+                    cat("Active Netica RNG ",Name,"\n")
+                  } else {
+                    cat("Inactive Netica RNG ",Name,"\n")
+                  }
+                }))
+
+## Global variable used to generate names for RNGS
+RNGCount <- 0
+
 NewNeticaRNG <- function (seed=runif(1,0,1000000000),
                           session=getDefaultSession()) {
   seed <- abs(as.integer(seed))
   if (is.null(seed) || is.na(seed)) {
     stop("Seed must be an integer")
   }
+  RNGCount <<- RNGCount +1
+  name <- paste("NeticaRNG",RNGCount,sep=".")
+  rng <- NeticaRNG$new(Name=Name,Session=Session,seed=seed)
   rng <-
-    .Call("RN_NewRandomGenerator",as.character(seed),session,PACKAGE="RNeticaXR")
-  ecount <- ReportErrors()
+    .Call("RN_NewRandomGenerator",as.character(seed),rng,PACKAGE="RNeticaXR")
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -28,19 +70,18 @@ FreeNeticaRNG <- function (rng) {
     warning("Netica RNG already freed.")
     return (rng)
   }
-  rng <- .Call("RN_FreeRNG",rng,PACKAGE=RNetica)
+  rng$free()
   rng
 }
 
-toString.NeticaRNG <- function (x, ...) {
+setMethod("toString","NeticaRNG", function (x, ...) {
   status <- ifelse(isNeticaRNGActive(x),"Active","Freed")
-  src <- toString(unclass(x))
-  paste("<",status,class(x)[1],":",src,">")
-}
+  paste("<",status,class(x),":",x$name,">")
+})
 
-print.NeticaRNG <- function(x, ...) {
+setMethod("print","NeticaRNG",function(x, ...) {
   cat(toString(x),"\n")
-}
+})
 
 
 is.NeticaRNG <- function (x) {
@@ -49,7 +90,7 @@ is.NeticaRNG <- function (x) {
 
 isNeticaRNGActive <- function (rng) {
   if (!is.NeticaRNG(rng)) return (NA_integer_)
-  .Call("RN_isRNGActive",rng,PACKAGE=RNetica)
+  rng$isActive()
 }
 
 WithRNG <- function (rng,expr) {
@@ -71,7 +112,7 @@ NetworkSetRNG <- function (net, seed=runif(1,0,1000000000)) {
   }
   seed <- as.character(seed)
   result <- .Call("RN_SetNetRandomGen",net,seed,net$session,PACKAGE="RNeticaXR")
-  ecount <- ReportErrors()
+  ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -103,7 +144,7 @@ GenerateRandomCase <- function (nodelist, method="Default",
   result <-
     .Call("RN_GenerateRandomCase",nodelist,method,timeout,rng,
           session,PACKAGE=RNetica)
-  ecount <- ReportErrors()
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
