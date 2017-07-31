@@ -1,5 +1,8 @@
 2017-07-30  Russell G. Almond  <ralmond@Limu>
 
+	* R/Cases.R (CaseMemoryStream): Changed name from MemoryCaseStream
+	for consistency.
+
 	* R/Session.R: Added RNetica global variable to be the PACKAGE
 	argument to .Call
 

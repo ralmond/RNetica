@@ -67,7 +67,7 @@ void FreeRNGs () {
     if (key != R_NilValue) {
       RNGFree(key);
       if (rng && rng != R_NilValue) {
-        setAttrib(rng,rngatt,R_NilValue);
+        SET_FIELD(rng,rngatt,R_MakeExternalPtr(NULL,rngatt,R_NilValue));
       }
     }
   }
@@ -78,7 +78,7 @@ SEXP RN_isRNGActive(SEXP rng) {
   SEXP rngPtr, result;
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
-  PROTECT(rngPtr = getAttrib(rng,rngatt));
+  PROTECT(rngPtr = GET_FIELD(rng,rngatt));
   if (!isNull(rngPtr) && R_ExternalPtrAddr(rngPtr)) {
     LOGICAL(result)[0] = TRUE;
   }
@@ -86,7 +86,8 @@ SEXP RN_isRNGActive(SEXP rng) {
   return result;
 }
 
-SEXP RN_NewRandomGenerator (SEXP seed, SEXP session) {
+SEXP RN_NewRandomGenerator (SEXP seed, SEXP rngsexp) {
+  SEXP session = GET_FIELD(rngsexp,sessionfield);
   environ_ns* netica_env = GetSessionPtr(session);
   const char* seedstring=CHAR(STRING_ELT(seed,0));
   randgen_ns* rng =  NewRandomGenerator_ns (seedstring,netica_env, NULL);
@@ -95,16 +96,13 @@ SEXP RN_NewRandomGenerator (SEXP seed, SEXP session) {
   else {
     SEXP rngsexp, rngPtr, ref;
     //Allocate new rng object
-    PROTECT(rngsexp = allocVector(STRSXP,1));
-    SET_STRING_ELT(rngsexp,0,mkChar(seedstring));
-    SET_CLASS(rngsexp,rngclass);
     PROTECT(rngPtr = R_MakeExternalPtr(rng,rngatt, R_NilValue));
-    setAttrib(rngsexp,rngatt,rngPtr);
+    SET_FIELD(rngsexp,rngatt,rngPtr);
     PROTECT(ref = R_MakeWeakRefC(rngPtr,rngsexp,
                                  (R_CFinalizer_t) &RNGFree, 
                                  TRUE));
     AddRNGRef(ref);
-    UNPROTECT(3);
+    UNPROTECT(2);
     return rngsexp;
   }
 
@@ -113,29 +111,14 @@ SEXP RN_NewRandomGenerator (SEXP seed, SEXP session) {
 /**
  * Tests whether or not an object is a Netica RNG.
  */
-int isNeticaRNG(SEXP obj) {
-  SEXP klass;
-  int result = FALSE;
-  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
-  R_len_t k, kk=length(klass);
-  for (k=0; k<kk; k++) {
-    if(strcmp(RNGClass,CHAR(STRING_ELT(klass,k))) == 0) {
-      result =TRUE;
-      break;
-    } else {
-    }
-  }
-  UNPROTECT(1);
-  return result;
+Rboolean isNeticaRNG(SEXP obj) {
+  return inherits(obj,RNGClass);
 }
 
 SEXP RN_FreeRNG (SEXP rng) {
 
-  if (!isNeticaRNG(rng)) {
-    warning("Trying to free a non-RNG object.");
-  }
-  RNGFree(getAttrib(rng,rngatt));
-  setAttrib(rng,rngatt,R_NilValue);
+  RNGFree(GET_FIELD(rng,rngatt));
+  SET_FIELD(rng,rngatt,R_MakeExternalPtr(NULL,rngatt,R_NilValue));
   return(rng);
 }
 
@@ -169,7 +152,7 @@ SEXP RN_SetNetRandomGen(SEXP net, SEXP seed, SEXP session) {
 SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
                            SEXP timeout, SEXP seed, SEXP session) {
   environ_ns* netica_env = GetSessionPtr(session);
-  const nodelist_bn* nodes = RN_AS_NODELIST(nodelist,NULL);
+  nodelist_bn* nodes = RN_AS_NODELIST(nodelist,NULL);
   sampling_bn meth = DEFAULT_SAMPLING;
   const char* methstring=CHAR(STRING_ELT(method,0));
   if (methstring[0]=='J') meth=JOIN_TREE_SAMPLING;

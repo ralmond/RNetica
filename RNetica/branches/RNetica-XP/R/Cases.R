@@ -16,7 +16,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL, session=getDefaultSession()) {
     if (length(newdelimiter)==0) newdelimiter <- 0
   }
   olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,session,PACKAGE=RNetica)
-  ecount <- ReportErrors()
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -40,8 +40,8 @@ CaseFileMissingCode <- function (newcode=NULL,session=getDefaultSession()) {
       newcode <- utf8ToInt(newcode)
     }
   }
-  oldcode <- .Call("RN_MissingCode",newcode,session,PACKAGE="RNeticaXR")
-  ecount <- ReportErrors()
+  oldcode <- .Call("RN_MissingCode",newcode,session,PACKAGE=RNetica)
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -51,59 +51,151 @@ CaseFileMissingCode <- function (newcode=NULL,session=getDefaultSession()) {
 ###############################################################
 ## Case Stream Objects
 
-OpenCaseStream <- function (oldstream,session=getDeafultSession()) {
+setRefClass("CaseStream",fields=c(Name="character",
+                                  Session="NeticaSession",
+                                  Netica_Case_Stream="externalptr",
+                                  Case_Stream_Position="integer",
+                                  Case_Stream_Lastid="integer",
+                                  Case_Stream_Lastfreq="numeric"),
+            methods=list(
+                initialize=function(Name=".Prototype",
+                                    Session=NeticaSession(SessionName=".prototype"),
+                                    ...) {
+                  callSuper(Name=Name,Session=Session,
+                            Netica_Case_Stream=externalptr(),
+                            Case_Stream_Position=NA_integer_,
+                            Case_Stream_Lastid=NA_integer_,
+                            Case_Stream_Lastfreq=NA_real_,...)
+                },
+                isActive = function() {
+                  .Call("RN_isCaseStreamActive",stream,PACKAGE=RNetica)
+                },
+                reportErrors = function(maxreport=9,clear=TRUE) {
+                  Session$reportErrors(maxreport,clear)
+                },
+                clearErrors = function(severity="XXX_ERR") {
+                  Session$clearErrors(severity)
+                },
+                isOpen = function() {
+                  isActive()
+                },
+                close = function() {
+                  if (!isOpen()) {
+                    warning("CloseCaseStream:  Stream already closed.")
+                    return (stream)
+                  }
+                  .Call("RN_CloseCaseStream",.self,PACKAGE=RNetica)
+                },
+                show=function() {
+                  if (isOpen()) {
+                    cat(" Stream is currently open.\n")
+                    cat(" Stream is currently pointed at record ",
+                        Case_Stream_Position, " ( ",Case_Stream_Lastid,
+                        " ) x ",Case_Stream_Lastfreq, "\n")
+                  } else {
+                    cat(" Stream is currently closed.\n")
+                  }
+                }))
+
+setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
+            contains="CaseStream",
+            methods=list(
+                initialize=function(Name=basename(Case_Stream_Path),
+                                    Session=NeticaSession(SessionName=".prototype"),
+                                    Case_Stream_Path="/dev/null",
+                                    ...) {
+                  callSuper(Name=Name,Session=Session,
+                            Case_Stream_Path=Case_Stream_Path,...)
+                },
+                open=function() {
+                  if (isOpen()) {
+                    warning("Stream is already open:  nothing done.")
+                    return()
+                  }
+                  stream <-
+                    .Call("RN_OpenCaseFileStream",Case_Stream_Path,
+                          .self,Session,
+                          PACKAGE=RNetica)
+                  ecount <- Session$reportErrors()
+                  if (ecount[1]>0) {
+                    stop("Netica Errors Encountered, see console for details.")
+                  }
+                  stream
+                },
+                show=function() {
+                  cat("Case File Stream ",Name,"\n")
+                  cat("  Pathname = ",Case_Stream_Path,"\n")
+                  callSuper()
+                }))
+
+setRefClass("MemoryCaseStream",fields=c(Case_Stream_DataFrameName="character",
+                                        Case_Stream_DataFrame="data.frame",
+                                        Case_Stream_Buffer="externalptr"),
+            contains="CaseStream",
+            methods=list(
+                initialize=function(Name=Case_Stream_DataFrameName,
+                                    Session=NeticaSession(SessionName=".prototype"),
+                                    Case_Stream_DataFrame=data.frame(),
+                                    Case_Stream_DataFrameName=deparse(substitute(Case_Stream_DataFrame)),
+                                    ...) {
+                  callSuper(Name=Name,Session=Session,
+                            Case_Stream_DataFrame=Case_Stream_DataFrame,
+                            Case_Stream_DataFrameName=Case_Stream_DataFrameName,
+                            Case_Stream_Buffer=externalptr(),
+                            ...)
+                },
+                open=function() {
+                  if (isOpen()) {
+                    warning("Stream is already open:  nothing done.")
+                    return()
+                  }
+                  stream <-
+                    .Call("RN_OpenCaseMemoryStream",
+                          Case_Stream_DataFrameName,
+                          .self,Session,
+                          PACKAGE=RNetica)
+                  ecount <- Session$reportErrors()
+                  if (ecount[1]>0) {
+                    stop("Netica Errors Encountered, see console for details.")
+                  }
+                  stream
+                },
+                show=function() {
+                  cat("Case Memory Stream ",Name,"\n")
+                  cat("  Data Name = ",Case_Stream_DataFrameName,"\n")
+                  cat("  Date:\n")
+                  print(Case_Stream_DataFrame)
+                  callSuper()
+                }))
+
+
+OpenCaseStream <- function (oldstream) {
   if (is.NeticaCaseStream(oldstream)) {
-    if (isCaseStreamOpen(oldstream)) {
-      warning("Stream is already open:  nothing done.")
-      return(oldstream)
-    }
-    if (is.CaseFileStream(oldstream)) {
-      source <- getCaseStreamPath(oldstream)
-      stream <-
-        .Call("RN_OpenCaseFileStream",source,oldstream,session,
-              PACKAGE=RNetica)
-    } else {
-      label <- getCaseStreamDataFrameName(oldstream)
-      source <- MemoryStreamContents(oldstream)
-      stream <-
-        .Call("RN_OpenCaseMemoryStream",label,oldstream,session,
-              PACKAGE="RNeticaXR")
-      print(source)
-      MemoryStreamContents(stream) <- source
-    }
+    oldstream$open()
   } else {
     stop("expected oldstram to be a NeticaCaseStream")
   }
-  ecount <- ReportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
-  stream
 }
+
 
 CaseFileStream <- function (pathname,session=getDefaultSession()) {
   if (!is.character(pathname) || length(pathname)>1) {
     warning("OpenCaseStream:  expected single pathname as argument.")
   }
-  stream <-
-    .Call("RN_OpenCaseFileStream",pathname,NULL,session,PACKAGE="RNeticaXR")
-  ecount <- ReportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  stream <- FileCaseStream(Session=session,Case_Stream_Path=pathname)
+  stream$open()
   stream
 }
 
-MemoryCaseStream <- function (data.frame,
+CaseMemoryStream <- function (data.frame,
                               label=deparse(substitute(data.frame)),
                               session=getDefaultSession()) {
   stream <-
-    .Call("RN_OpenCaseMemoryStream",label,NULL,session,PACKAGE="RNeticaXR")
+    CaseMemoryStream(Session=session,
+                     Case_Stream_DataFrame=data.frame,
+                     Case_Stream_DataFrameName=label)
   MemoryStreamContents(stream) <- data.frame
-  ecount <- ReportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  stream$open()
   stream
 }
 
@@ -111,23 +203,19 @@ MemoryCaseStream <- function (data.frame,
 CloseCaseStream <- function (stream) {
   if (!is.NeticaCaseStream(stream))
     stop("Trying to close a non-stream object.")
-  if (!isCaseStreamOpen(stream)) {
-    warning("CloseCaseStream:  Stream already closed.")
-    return (stream)
-  }
-  stream <- .Call("RN_CloseCaseStream",stream,PACKAGE=RNetica)
+  stream$close()
   stream
 }
 
-toString.NeticaCaseStream <- function (x, ...) {
+setMethod("toString","NeticaCaseStream", function (x, ...) {
   status <- ifelse(isCaseStreamOpen(x),"Open","Closed")
-  src <- toString(unclass(x))
+  src <- x$Name
   paste("<",status,class(x)[1],":",src,">")
-}
+})
 
-print.NeticaCaseStream <- function(x, ...) {
+setMethod("print","NeticaCaseStream",function(x, ...) {
   cat(toString(x),"\n")
-}
+})
 
 
 is.NeticaCaseStream <- function (x) {
@@ -144,27 +232,26 @@ is.CaseFileStream <- function (x) {
 
 isCaseStreamOpen <- function (stream) {
   if (!is.NeticaCaseStream(stream)) return (NA_integer_)
-  .Call("RN_isCaseStreamActive",stream,PACKAGE=RNetica)
+  stream$isOpen()
 }
 
 getCaseStreamPath <- function (stream) {
-  attr(stream,"Case_Stream_Path")
+  stream$Case_Stream_Path
 }
 
 getCaseStreamLastId <- function (stream) {
-  attr(stream,"Case_Stream_Lastid")
+  stream$Case_Stream_Lastid
 }
 getCaseStreamPos <- function (stream) {
-  attr(stream,"Case_Stream_Position")
+  stream$Case_Stream_Position
 }
 getCaseStreamLastFreq <- function (stream) {
-  attr(stream,"Case_Stream_Lastfreq")
+  stream$Case_Stream_Lastfreq
 }
 
 getCaseStreamDataFrameName <- function (stream) {
-  attr(stream,"Case_Stream_DataFrameName")
+  stream$Case_Stream_DataFrameName
 }
-
 
 
 #####################################################################
@@ -194,7 +281,7 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
   session <- NodeNet(nodes[[1]])$session
   stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,
                   session,PACKAGE=RNetica)
-  ecount <- ReportErrors()
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -221,7 +308,7 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
   if (is.character(pos) && length(pos) == 1L &&
       (toupper(pos)=="FIRST" || toupper(pos)=="NEXT")) {
     pos <- toupper(pos)
-    if (pos=="NEXT" && is.null(getCaseStreamPos(stream))) {
+    if (pos=="NEXT" && is.na(getCaseStreamPos(stream))) {
       stop("ReadFindings not yet called on stream with pos='FIRST'")
     }
   } else {
@@ -231,7 +318,7 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
     }
   }
   stream <- .Call("RN_ReadFindings",nodes,stream,pos,add,PACKAGE=RNetica)
-  ecount <- ReportErrors()
+  ecount <- nodes[[1]]$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -265,7 +352,7 @@ MemoryStreamContents <- function (stream) {
   }
   if (isCaseStreamOpen(stream)) {
     contents <- .Call("RN_GetMemoryStreamContents",stream,PACKAGE=RNetica)
-    ecount <- ReportErrors()
+    ecount <- stream$reportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")
     }
@@ -277,11 +364,11 @@ MemoryStreamContents <- function (stream) {
       close(con)
     }
     ## Cache value
-    attr(stream,"Case_Stream_DataFrame") <- result
+    stream$Case_Stream_DataFrame <- result
     result
   } else {
     ## Use cached value
-    attr(stream,"Case_Stream_DataFrame",exact=TRUE)
+    stream$Case_Stream_DataFrame
   }
 }
 
@@ -296,7 +383,7 @@ MemoryStreamContents <- function (stream) {
     ## Force first row to be IDnum
     value <- data.frame(IDnum=1:nrow(value),value)
   }
-  attr(stream,"Case_Stream_DataFrame") <- value
+  stream$Case_Stream_DataFrame <- value
   if (isCaseStreamOpen(stream)) {
     contents <- NULL
     if (!is.null(value)) {
@@ -306,7 +393,7 @@ MemoryStreamContents <- function (stream) {
       close(con)
     }
     stream <- .Call("RN_SetMemoryStreamContents",stream,contents,PACKAGE=RNetica)
-    ecount <- ReportErrors()
+    ecount <- stream$reportErrors()
     if (ecount[1]>0) {
       stop("Netica Errors Encountered, see console for details.")
     }

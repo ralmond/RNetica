@@ -45,10 +45,10 @@ extern node_bn* GetNodePtr(SEXP nodeobj);
 #define NODE_NAME(n)            CHAR(STRING_ELT(GET_FIELD(n,namefield),0))
 #define NODE_NET(n)             GET_FIELD(n,netfield)
 extern int isNeticaNode(SEXP obj);
-#define GetCaseStream_Handle(cs) (stream_ns*) R_ExternalPtrAddr(getAttrib(cs,casestreamatt))
-extern int isNeticaStream(SEXP obj);
-#define GetRNG_Handle(rng) (randgen_ns*) R_ExternalPtrAddr(getAttrib(rng,rngatt))
-extern int isNeticaRng(SEXP obj);
+#define GetCaseStream_Handle(cs) (stream_ns*) R_ExternalPtrAddr(GET_FIELD(cs,casestreamatt))
+extern Rboolean isNeticaStream(SEXP obj);
+#define GetRNG_Handle(rng) (randgen_ns*) R_ExternalPtrAddr(GET_FIELD(rng,rngatt))
+extern Rboolean isNeticaRng(SEXP obj);
 
 
 extern Rboolean RX_isUnbound(SEXP x);

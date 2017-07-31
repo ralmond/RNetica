@@ -132,7 +132,7 @@ SEXP RN_isCaseStreamActive(SEXP stream) {
   SEXP stPtr, result;
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
-  PROTECT(stPtr = getAttrib(stream,casestreamatt));
+  PROTECT(stPtr = GET_FIELD(stream,casestreamatt));
   if (!isNull(stPtr) && R_ExternalPtrAddr(stPtr)) {
     LOGICAL(result)[0] = TRUE;
   }
@@ -149,28 +149,18 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream, SEXP session) {
     return R_NilValue;
   else {
     SEXP stPtr, ref;
-    if (isNull(stream)) {
-      //Allocate new stream object
-      PROTECT(stream = allocVector(STRSXP,1));
-      SET_STRING_ELT(stream,0,mkChar(pathname));
-      SET_CLASS(stream,casefilestreamclass);
-    } else {
-      PROTECT(stream); //To keep protect count constant
-    }
     PROTECT(stPtr = R_MakeExternalPtr(str,casestreamatt, R_NilValue));
-    setAttrib(stream,casestreamatt,stPtr);
+    SET_FIELD(stream,casestreamatt,stPtr);
     PROTECT(ref = R_MakeWeakRefC(stPtr,stream,
                                  (R_CFinalizer_t) &CaseStreamClose, 
                                  TRUE));
     AddStreamRef(ref);
-    setAttrib(stream,casestreampathatt,path);
-    // Use pos of NULL to indicate start from the beginning.
-    setAttrib(stream,casestreamposatt,R_NilValue);
-    setAttrib(stream,casestreamlastidatt,R_NilValue);
-    setAttrib(stream,casestreamlastfreqatt,R_NilValue);
-    setAttrib(stream,casestreamdfatt,R_NilValue);
-    setAttrib(stream,casestreamdfnameatt,R_NilValue);
-    UNPROTECT(3);
+    SET_FIELD(stream,casestreampathatt,path);
+    // Use pos of -1 to indicate start from the beginning.
+    SET_FIELD(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
+    SET_FIELD(stream,casestreamlastidatt,ScalarInteger(NA_INTEGER));
+    SET_FIELD(stream,casestreamlastfreqatt,ScalarReal(NA_REAL));
+    UNPROTECT(2);
     return stream;
   }
 
@@ -187,28 +177,18 @@ SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session) {
     return R_NilValue;
   else {
     SEXP stPtr, ref;
-    if (isNull(stream)) {
-      //Allocate new stream object
-      PROTECT(stream = allocVector(STRSXP,1));
-      SET_STRING_ELT(stream,0,mkChar(lab));
-      SET_CLASS(stream,memorystreamclass);
-    } else {
-      PROTECT(stream); //To keep protect count constant
-    }
     PROTECT(stPtr = R_MakeExternalPtr(str,casestreamatt, R_NilValue));
-    setAttrib(stream,casestreamatt,stPtr);
+    SET_FIELD(stream,casestreamatt,stPtr);
     PROTECT(ref = R_MakeWeakRefC(stPtr,stream,
                                  (R_CFinalizer_t) &CaseStreamClose, 
                                  TRUE));
     AddStreamRef(ref);
-    setAttrib(stream,casestreamdfnameatt,label);
-    // Use pos of NULL to indicate start from the beginning.
-    setAttrib(stream,casestreamposatt,R_NilValue);
-    setAttrib(stream,casestreamlastidatt,R_NilValue);
-    setAttrib(stream,casestreamlastfreqatt,R_NilValue);
-    setAttrib(stream,casestreamdfatt,R_NilValue);
-    setAttrib(stream,casestreampathatt,R_NilValue);
-    UNPROTECT(3);
+    SET_FIELD(stream,casestreamdfnameatt,label);
+    // Use pos of -1 to indicate start from the beginning.
+    SET_FIELD(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
+    SET_FIELD(stream,casestreamlastidatt,ScalarInteger(NA_INTEGER));
+    SET_FIELD(stream,casestreamlastfreqatt,ScalarReal(NA_REAL));
+    UNPROTECT(2);
     return stream;
   }
 
@@ -217,11 +197,9 @@ SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session) {
 
 SEXP RN_CloseCaseStream (SEXP stream) {
 
-  if (!isNeticaStream(stream)) {
-    warning("Trying to close a non-Stream object.");
-  }
-  CaseStreamClose(getAttrib(stream,casestreamatt));
-  setAttrib(stream,casestreamatt,R_NilValue);
+  CaseStreamClose(GET_FIELD(stream,casestreamatt));
+  SET_FIELD(stream,casestreamatt,
+            R_MakeExternalPtr(NULL,casestreamatt,R_NilValue));
   return(stream);
 }
 
@@ -229,19 +207,8 @@ SEXP RN_CloseCaseStream (SEXP stream) {
 /**
  * Tests whether or not an object is a Netica stream
  */
-int isNeticaStream(SEXP obj) {
-  SEXP klass;
-  int result = FALSE;
-  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
-  R_len_t k, kk=length(klass);
-  for (k=0; k<kk; k++) {
-    if(strcmp(CaseStreamClass,CHAR(STRING_ELT(klass,k))) == 0) {
-      result = TRUE;
-      break;
-    }
-  }
-  UNPROTECT(1);
-  return result;
+Rboolean isNeticaStream(SEXP obj) {
+  return inherits(obj,CaseStreamClass);
 }
 
 SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
@@ -273,9 +240,9 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
   const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
   //Rprintf("Buffer contents now:\n%s\n",obuf);
 
-  setAttrib(stream,casestreamposatt,R_NilValue);
-  setAttrib(stream,casestreamlastidatt,R_NilValue);
-  setAttrib(stream,casestreamlastfreqatt,R_NilValue);
+  SET_FIELD(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
+  SET_FIELD(stream,casestreamlastidatt,ScalarInteger(NA_INTEGER));
+  SET_FIELD(stream,casestreamlastfreqatt,ScalarReal(NA_REAL));
   return (stream);  
 }
 
@@ -340,9 +307,9 @@ SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq,
   }
   pos = WriteNetFindings_bn(nodelist,stream,idnum,freqnum);
   if (isNeticaStream(pathOrStream)) {
-    setAttrib(pathOrStream,casestreamposatt,ScalarInteger(pos));
-    setAttrib(pathOrStream,casestreamlastidatt,ScalarInteger(idnum));
-    setAttrib(pathOrStream,casestreamlastfreqatt,ScalarReal(freqnum));
+    SET_FIELD(pathOrStream,casestreamposatt,ScalarInteger(pos));
+    SET_FIELD(pathOrStream,casestreamlastidatt,ScalarInteger(idnum));
+    SET_FIELD(pathOrStream,casestreamlastfreqatt,ScalarReal(freqnum));
   } else {
     DeleteStream_ns(stream);
   }
@@ -382,12 +349,12 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
   ReadNetFindings2_bn(&case_posn,stream_handle,addflag,nodelist,
                       &idnum,&freqnum);
   if (case_posn == NO_MORE_CASES) {
-    setAttrib(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
+    SET_FIELD(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
   } else {
-    setAttrib(stream,casestreamposatt,ScalarInteger(case_posn));
+    SET_FIELD(stream,casestreamposatt,ScalarInteger(case_posn));
   }
-  setAttrib(stream,casestreamlastidatt,ScalarInteger(idnum));
-  setAttrib(stream,casestreamlastfreqatt,ScalarReal(freqnum));
+  SET_FIELD(stream,casestreamlastidatt,ScalarInteger(idnum));
+  SET_FIELD(stream,casestreamlastfreqatt,ScalarReal(freqnum));
 
   DeleteNodeList_bn(nodelist);
   return stream;
