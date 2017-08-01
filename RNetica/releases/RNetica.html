@@ -43,6 +43,14 @@ as a way of getting started.
 </ul>
 
 <h2>News</h2>
+There is now an RNetica user survey.  I want to count my users so I
+can tell the funding agencies they should give me more money to work
+on
+it.  <a href="https://fsu.qualtrics.com/jfe/form/SV_7QVrVvd4NlwOYrb">Click
+  here</a> to fill out the survey.
+
+
+<p>
 A new 0.5 series of releases is planned.  Basically, I'm trying to
 redo the basic NeticaBN and NeticaNode classes as true R6 classes
 rather than S3 classes wrapped around symbols.  There will be some
@@ -53,6 +61,20 @@ I'm hoping a more stable code base.  Finally, by storing the symbol to
 node mapping in a local environment (hash table) instead of the Netica
 callback, I'm hoping to make the system more robust to some mysterious
 erros I'm seeing crop up.
+<p>
+  The current development is taking place on a fork in the SVN
+  repository.  
+  <ol>
+    <li> The
+    branch <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNetica-XP/">RNetica-XP</a>
+    (I meant to type XR, for <i>Extending R</i>, but I made a typo.)
+    Current version has the S3 objects converted to the new R6
+    objects, but is documentation and testing is not complete.
+    <li> The original (0.4 series) code is archived on the branch
+      <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNeticaS3/">RNeticaS3</a>.
+      That branch will continue to mark the old version when the
+      RNeticaXR becomes the active branch.
+  </ol>
 <p>
 The 0.4 series of releases are now in maintenance mode.
 The 0.4 series of releases includes the following
@@ -74,7 +96,8 @@ improvements:
   names and is properly vectorized.
 <li> Fixed some minor errors and problems with error handling.
 <li> Added a new cc() function (and methods for c()) to keep c() from
-  dropping attributes.  (Only partially successful).
+  dropping attributes.  (Only partially successful; RNetica 0.5 should
+  fix this problem.).
 </ol>
 <p>
 The 0.3 series of releases includes a number of different improvements.
@@ -333,6 +356,6 @@ requests should be sent to the package maintainers.
 
 <hr>
 <!-- Date Start -->
-Site last updated on 2017-07-07.
+Site last updated on 2017-08-01.
 <!-- Date End -->
 </body>
