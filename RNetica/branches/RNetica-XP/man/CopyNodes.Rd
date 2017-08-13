@@ -86,19 +86,19 @@ CopyNodes(nodes, newnamelist = NULL, newnet = NULL, options = character(0))
 }
 \seealso{
   \code{\link{CopyNetworks}()}, \code{\link{NeticaNode}},
-  \code{\link{NeticaBN}()}, \code{\link{NodeProbs}()},
+  \code{\linkS4class{NeticaBN}()}, \code{\link{NodeProbs}()},
   \code{\link{NodeParents}()}, \code{\link{AbsorbNodes}()},
   \code{\link{DeleteNodes}()}
 
 }
 \examples{
-System <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","System.dne",
-                           sep=.Platform$file.sep))
+sess <- NeticaSession()
+startSession(sess)
+System <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","System.dne"), session=sess)
 
-EMTask1a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne",
-                           sep=.Platform$file.sep))
+EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask1a.dne"), session=sess)
 
 student1 <- CopyNetworks(System, "Student1")
 student1.sysnodes <- NetworkAllNodes(student1)
@@ -151,8 +151,8 @@ stopifnot(
 
 
 DeleteNetwork(list(System,student1,EMTask1a))
-
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

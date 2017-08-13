@@ -17,7 +17,7 @@ EliminationOrder(net) <- value
 }
 \arguments{
   \item{net}{
-    An active \code{\link{NeticaBN}}/
+    An active \code{\linkS4class{NeticaBN}}
   }
   \item{value}{
     Either \code{NULL} (to clear the elimination order) or a list of
@@ -83,14 +83,15 @@ EliminationOrder(net) <- value
   variation on the greedy algorithm, which works well in many cases.
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NetworkAllNodes}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NetworkAllNodes}()},
   \code{\link{CompileNetwork}()}, \code{\link{JunctionTreeReport}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-EMSMMotif <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne",
-                           sep=.Platform$file.sep))
+EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMSMMotif.dne"), session=sess)
 
 ## Should be null before we do anything.
 stopifnot(
@@ -126,8 +127,8 @@ stopifnot(
 )
 
 DeleteNetwork(EMSMMotif)
-
+stopSession(sess)
 }
 
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ utility }

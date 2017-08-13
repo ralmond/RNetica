@@ -10,7 +10,7 @@
 NeticaNode <-
   setRefClass("NeticaNode",
               fields=c(Name="character",
-                       Netica_bn="externalptr",
+                       Netica_Node="externalptr",
                        Net="NeticaBN",
                        discrete="logical"),
               methods=list(
@@ -23,7 +23,7 @@ NeticaNode <-
                     node
                   },
                   isActive = function() {
-                    .Call("RN_isBNActive",.self,PACKAGE=RNetica)
+                    .Call("RN_isNodeActive",.self,PACKAGE=RNetica)
                   },
                   reportErrors = function(maxreport=9,clear=TRUE) {
                     Net$reportErrors(maxreport,clear)
@@ -107,7 +107,7 @@ setMethod("Compare","NeticaNode", function(e1, e2) {
                 truth,!truth))
 })
 
-setMethod("is.active","NeticaBN",function(x) x$isActive())
+setMethod("is.active","NeticaNode",function(x) x$isActive())
 
 ########################################################################
 ## Creation and Destruction
@@ -183,6 +183,11 @@ DeleteNodes <- function (nodes) {
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
+  }
+  for (nd in handles) {
+    if (is(nd,"NeticaNode")) {
+      rm(list=nd$Name,envir=net$nodes)
+    }
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)

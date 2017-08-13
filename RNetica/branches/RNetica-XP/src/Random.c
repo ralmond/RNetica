@@ -94,7 +94,7 @@ SEXP RN_NewRandomGenerator (SEXP seed, SEXP rngsexp) {
   if (rng == NULL ) 
     return R_NilValue;
   else {
-    SEXP rngsexp, rngPtr, ref;
+    SEXP rngPtr, ref;
     //Allocate new rng object
     PROTECT(rngPtr = R_MakeExternalPtr(rng,rngatt, R_NilValue));
     SET_FIELD(rngsexp,rngatt,rngPtr);

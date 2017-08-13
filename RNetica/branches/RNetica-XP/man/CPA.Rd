@@ -107,6 +107,9 @@ as.CPA(x)
   arrays in column-major order, and hence the rows in the printed tables
   always correspond to the second dimension.  A new print method for
   \code{CPA} would be nice.
+
+  This is an S3 object, as it just an array with a special
+  interpretation. 
 }
 \seealso{
   \code{\link{NodeProbs}()}, \code{\link{Extract.NeticaNode}},
@@ -135,4 +138,4 @@ stopifnot(
 }
 }
 \keyword{ array }
-\keyword{ classes }% __ONLY ONE__ keyword per line
+\keyword{ classes }

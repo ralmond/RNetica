@@ -73,7 +73,10 @@ CalcNodeValue(node)
 }
 \examples{
 
-lights <- CreateNetwork("lights")
+sess <- NeticaSession()
+startSession(sess)
+
+lights <- CreateNetwork("lights", session=sess)
 switchs <- NewDiscreteNode(lights,paste("Switch",1:2,sep=""),c("Up","Down"))
 bulb <- NewDiscreteNode(lights,"Bulb",c("On","Off"))
 
@@ -114,6 +117,7 @@ CalcNodeValue(switchs[[1]])
 
 DeleteNetwork(lights)
 
+stopSession(sess)
 
 }
 \keyword{ interface }

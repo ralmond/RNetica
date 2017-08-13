@@ -289,6 +289,9 @@ SEXP RN_SetNodeInputNames(SEXP nd, SEXP newvals) {
   return(nd);
 }
 
+// Need this for the next function
+extern void SetNodePtr (SEXP nodeobj, node_bn* node_ptr);
+
 //This is a special node that forces all of the other variables into a
 //clique.  Loosely patterned off the NeticaEx function FormCliqueWith
 SEXP RN_MakeCliqueNode(SEXP nodelist, SEXP net) {
@@ -313,7 +316,7 @@ SEXP RN_MakeCliqueNode(SEXP nodelist, SEXP net) {
   PROTECT(sname= allocVector(STRSXP,1));
   SET_STRING_ELT(sname,0,mkChar(GetNodeName_bn(new_node)));
 
-  PROTECT(callme=lang5(nodeconstructor,sname,net,TRUEV,nodelist));
+  PROTECT(callme=lang5(cliquenodeconstructor,sname,net,TRUEV,nodelist));
   SET_TAG(CDR(callme),namefield);
   SET_TAG(CDDR(callme),netfield);
   SET_TAG(CDDDR(callme),nodediscatt);

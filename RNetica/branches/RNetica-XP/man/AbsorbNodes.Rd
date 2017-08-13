@@ -38,12 +38,14 @@ AbsorbNodes(nodes)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeChildren}()}, \code{\link{NodeParents}()},
   \code{\link{ReverseLink}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
-anet <- CreateNetwork("Absorbent")
+sess <- NeticaSession()
+startSession(sess)
+anet <- CreateNetwork("Absorbent",sess)
 
 xnodes <- NewDiscreteNode(anet,paste("X",1:5,sep="_"))
 AddLink(xnodes[[1]],xnodes[[2]])
@@ -78,6 +80,7 @@ stopifnot(
 )
 
 DeleteNetwork(anet)
+stopSession(sess)
 
 }
 \keyword{ interface }

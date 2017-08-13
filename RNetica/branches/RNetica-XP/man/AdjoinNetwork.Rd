@@ -29,12 +29,12 @@ AdjoinNetwork(sm, em, setname = character())
 }
 \details{
 
-  This follows the System Model--Evidence Model protocol laid out in
-  Almond et al (1999) and Almond and Mislevy (1999).  The idea is that
-  the network \code{sm} is a complete network that encodes beliefs about
-  the current status of a system.  In particular, it often encodes the
-  state of knowledge about a student and is then called a \emph{student
-    model}.
+  This follows the System Model--Evidence Model (or Hub-and-spoke)
+  protocol laid out in Almond et al (1999) and Almond and Mislevy
+  (1999).  The idea is that the network \code{sm} is a complete network
+  that encodes beliefs about the current status of a system.  In
+  particular, it often encodes the state of knowledge about a student
+  and is then called a \emph{student model}.
 
   The second network \code{em} is an incomplete network: a fragment of a
   network, some of whose nodes could be stub nodes referring to nodes in
@@ -83,33 +83,31 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AbsorbNodes}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AbsorbNodes}()},
   \code{\link{JointProbability}()}, \code{\link{NodeSets}()},
   \code{\link{CopyNodes}()},\code{\link{NetworkFootprint}()}
 
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
 ## System/Student model
-EMSMSystem <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","System.dne",
-                           sep=.Platform$file.sep))
+EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","System.dne"), session=sess)
+
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne",
-                           sep=.Platform$file.sep))
+EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask1a.dne"), session=sess)
 
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne",
-                           sep=.Platform$file.sep))
+EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask2a.dne"), session=sess)
 
 ## Evidence model for Task 2b
-EMTask2b <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask2b.dne",
-                           sep=.Platform$file.sep))
-
+EMTask2b <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask2b.dne"), session=sess)
 
 ## Task 1a has a footprint of Skill1 and Skill2 (those are the
 ## referenced student model nodes.  So we want joint the footprint into
@@ -174,7 +172,8 @@ AdjoinNetwork(student1,EMTask2b)
 DeleteNetwork(student1)
 DeleteNetwork(EMTask2b)
 DeleteNetwork(EMSMSystem)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

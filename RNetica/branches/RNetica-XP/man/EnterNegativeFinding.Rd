@@ -5,9 +5,9 @@
 }
 \description{
   This is conceptually equivalent to setting
-  \code{\link{NodeFinding}{node}<-not(eliminatedVals)} (although this will not
-  work as \code{NodeFinding} does not accept set values).  It
-  essentially eliminates any of the \code{eliminatedVals} as possible
+  \code{\link{NodeFinding}(\var{node})<-not(\var{eliminatedVals})} (although
+  this will not work as \code{NodeFinding} does not accept set values).
+  It essentially eliminates any of the \code{eliminatedVals} as possible
   values (assigns them zero probability).
 }
 \usage{
@@ -15,14 +15,14 @@ EnterNegativeFinding(node, eliminatedVals)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose value was observed or
+    An active \code{\linkS4class{NeticaNode}} whose value was observed or
     hypothesized. 
 }
   \item{eliminatedVals}{
     A character or integer vector indicating the values to be ruled out.
     Character values should be one of the values in
     \code{\link{NodeStates}(node)}.  Integer values should be between 1
-    and \code{\link{NodeNumStates}(node)} inclusive. 
+    and \code{\link{NodeNumStates}(\var{node})} inclusive. 
   }
 }
 \details{
@@ -34,7 +34,7 @@ EnterNegativeFinding(node, eliminatedVals)
   Note calling \code{EngerNegativeFining(node, ...)} clears any previous
   findings (including virtual findings set through
   \code{\link{NodeLikelihood}()} or simple finding set through
-  \code{\link{NodeFinding}(node)<-value}).  The function
+  \code{\link{NodeFinding}(\var{node})<-\var{value}}).  The function
   \code{\link{RetractNodeFinding}(node)} will clear the current finding
   without setting it to a new value.
 
@@ -64,14 +64,15 @@ EnterNegativeFinding(node, eliminatedVals)
   entire list.
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{NodeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()}
 }
 \examples{
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+sess <- NeticaSession()
+startSession(sess)
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
@@ -93,7 +94,8 @@ stopifnot(
 
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

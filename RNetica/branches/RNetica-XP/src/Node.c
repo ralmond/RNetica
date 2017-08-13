@@ -8,6 +8,8 @@
 #include <Rdefines.h>
 #include <RNetica.h>
 
+//#define DEBUGNODES
+
 /***************************************************************************
  * Low Level Node Utilities
  ***************************************************************************/
@@ -102,11 +104,17 @@ SEXP MakeNode(node_bn* node, SEXP bn) {
 SEXP MakeNode_RRef(node_bn* node, const char* name, SEXP netobj) {
   node_bn* old_ptr;
   SEXP nd, ndhandle;
-  
+
+#ifdef DEBUGNODES
+  Rprintf("Searching R net for node named %s.\n",name);
+#endif
   PROTECT(nd=RN_FindNodeStr(netobj,name));
 
   if (isNull(nd) || RX_isUnbound(nd)) {
     /* Didn't find one, need to make a new one. */
+#ifdef DEBUGNODES
+    Rprintf("Making a new node named %s.\n",name);
+#endif
     UNPROTECT(1);
     PROTECT(nd=MakeNode(node,netobj));
   } 
@@ -117,6 +125,9 @@ SEXP MakeNode_RRef(node_bn* node, const char* name, SEXP netobj) {
     error("RNetica Internal error:  pointer mismatch for node %s\n",name);
   }
   // I think this might be redundant, but too lazy to prove it.
+#ifdef DEBUGNODES
+  Rprintf("Setting fields for node named %s.\n",name);
+#endif
   SetNodePtr(nd,node);
   SET_FIELD(nd,netfield,netobj);
   RN_RegisterNode(netobj,name,nd);
@@ -125,7 +136,7 @@ SEXP MakeNode_RRef(node_bn* node, const char* name, SEXP netobj) {
   } else {
     SET_FIELD(nd,nodediscatt,FALSEV);
   }    
-  UNPROTECT(2);
+  UNPROTECT(1);
   return nd;
 }
 
@@ -312,7 +323,7 @@ SEXP RN_NewContinuousNodes(SEXP net, SEXP namelist) {
   if (!net_handle) {
     error("Network %s is not valid",BN_NAME(net));
   }
-  
+
   PROTECT(result = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));

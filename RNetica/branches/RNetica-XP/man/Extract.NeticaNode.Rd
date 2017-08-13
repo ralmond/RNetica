@@ -1,8 +1,8 @@
 \name{Extract.NeticaNode}
 \alias{Extract.NeticaNode}
-\alias{[.NeticaNode}
-\alias{[[.NeticaNode}
-\alias{[<-.NeticaNode}
+\alias{[<-,NeticaNode-method}
+\alias{[,NeticaNode-method}
+\alias{[[,NeticaNode-method}
 \alias{EVERY_STATE}
 \title{
   Extracts portions of the conditional probability table of a Netica node.
@@ -21,7 +21,7 @@ EVERY_STATE
 }
 \arguments{
   \item{x}{
-    An active, discrete \code{\link{NeticaNode}} whose conditional
+    An active, discrete \code{\linkS4class{NeticaNode}} whose conditional
     probability table is to be accessed.
   }
   \item{\ldots}{
@@ -51,7 +51,7 @@ EVERY_STATE
   }
 }
 \details{
-  The function \code{\link{NodeProbs}(node)} allows one to access the
+  The function \code{\link{NodeProbs}(\var{node})} allows one to access the
   entire conditional probability at once as a conditional probability
   array (\code{\link{CPA}}).  Although the built-in R array replacement
   mechanisms allow one to make various kinds of edits, it is relatively
@@ -159,7 +159,7 @@ EVERY_STATE
     selected.
   }
   The order of the entries should be the same as the order of the parent
-  variables in \code{\link{NodeParents}{node}}.  The selection looks
+  variables in \code{\link{NodeParents}{\var{node}}}.  The selection looks
   very similar to selection using a data frame, where the data frame
   consists of applying  \code{\link[base]{expand.grid}(\ldots)}.
 
@@ -267,19 +267,19 @@ EVERY_STATE
   probabilities, however, the deterministic rows will then print out as
   unconstrained probabilities with \eqn{0} and \eqn{1} values.
 
-  Continuous nodes (nodes for which \code{\link{is.continuous}(node) ==
+  Continuous nodes (nodes for which \code{\link{is.continuous}(\var{node}) ==
   TRUE}) use a variation of this system.  Here the value is an arbitrary
   numeric value.  For this to be meaningful, it is assumed that all of
   the parents of \code{node} are either discrete or have been
   discretized. 
 
   Warning:  Setting an unconditional discrete node to a constant value,
-  that is executing an expression like \code{node[] <- value} 
+  that is executing an expression like \code{node[] <- \var{value}} 
   is almost certainly a mistake.  Probably what is intended by that
-  expression is \code{\link{NodeFinding}(node) <- value}.  In
+  expression is \code{\link{NodeFinding}(\var{node}) <- \var{value}}.  In
   particular, if the former expression is used and the later someone
-  attempts to set \code{\link{NodeFinding}(node) <- value1}, where
-  \code{ value1 != value}, this will produce a contradiction
+  attempts to set \code{\link{NodeFinding}(\var{node}) <- \var{value1}}, where
+  \code{ \var{value1} != \var{value}}, this will produce a contradiction
   (probability zero event) and all kinds of error will follow.
   
 }
@@ -312,7 +312,7 @@ EVERY_STATE
   For the form \code{node[\ldots]} the return value is a data frame in
   the \code{\link{CPF}} format giving the conditional probability
   table.  If the node is deterministic
-  (\code{IsNodeDetermistic(node)==TRUE}), then the probabilities will be
+  (\code{IsNodeDetermistic(\var{node})==TRUE}), then the probabilities will be
   replaced with a single column giving the value of the node.  If the
   node is discrete, then the value will be a factor.  If the node is
   continuous, then the value will be a real vector.
@@ -324,7 +324,7 @@ EVERY_STATE
   factor (discrete node) or real vector (continuous node) giving the
   value of the node for each parent configuration.
 
-  The form \code{node[\ldots]<-value} returns \code{node} invisibly.
+  The form \code{node[\ldots]<-\var{value}} returns \code{node} invisibly.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -360,14 +360,16 @@ EVERY_STATE
   This documentation file is longer than \emph{War and Peace}.
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
   \code{\link{ParentStates}()}, \code{\link{CPF}}, \code{\link{CPA}} 
 }
 \examples{
 
 ## Setup
-xnet <- CreateNetwork("X")
+sess <- NeticaSession()
+startSession(sess)
+xnet <- CreateNetwork("X", session=sess)
 
 A <- NewDiscreteNode(xnet,"A",c("A1","A2","A3","A4"))
 Aalt <- NewDiscreteNode(xnet,"Aalt",c("A1","A2","A3","A4"))
@@ -842,6 +844,7 @@ for (i in 1:12) {
 }
 
 DeleteNetwork(xnet)
+stopSession(sess)
 
 }
 \keyword{array}

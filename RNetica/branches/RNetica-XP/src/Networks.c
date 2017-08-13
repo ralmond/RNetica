@@ -8,6 +8,8 @@
 #include <Rdefines.h>
 #include <RNetica.h>
 
+//#define DEBUGNETS
+//#define DEBUGNODES
 
 /*****************************************************************************
  * Creating and Destroying Bayesian Networks.
@@ -180,7 +182,7 @@ SEXP RN_New_Nets(SEXP namelist, SEXP session) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = NewNet_bn(name,netica_env);
     PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
-    Rprintf("Bn object created.\n");
+    //Rprintf("Bn object created.\n");
     SET_VECTOR_ELT(handles,n,bn);
     UNPROTECT(1);
   }
@@ -699,6 +701,9 @@ void RN_UnregisterNode(SEXP netobj, const char* nodename) {
 SEXP RN_FindNodeStr(SEXP netobj, const char* nodename) {
   SEXP net_env;
   PROTECT(net_env=GET_FIELD(netobj,nodesfield));
+#ifdef DEBUGNODES
+  Rprintf("Looking for node %s\n",nodename);
+#endif
   SEXP result =findVar(install(nodename),net_env);
   UNPROTECT(1);
   return result;

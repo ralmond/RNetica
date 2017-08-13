@@ -6,6 +6,7 @@
 ## These should generally be short lived, but we may need to create
 ## one to generate several sets of case files.
 
+NeticaRNG <-
 setRefClass("NeticaRNG",fields=c(Name="character",
                                  Session="NeticaSession",
                                  Netica_RNG="externalptr",
@@ -13,13 +14,13 @@ setRefClass("NeticaRNG",fields=c(Name="character",
             methods=list(
                 initialize=function(Name=".Prototype",
                                     Session=NeticaSession(SessionName=".prototype"),
-                                    Seed=as.integer(runif(1,0,1000000000)),
+                                    Seed=sample.int(.Machine$integer.max,1L),
                                     ...) {
                   callSuper(Name=Name,Session=Session,
                             Netica_RNG=externalptr(),Seed=Seed,...)
                 },
                 isActive = function() {
-                  .Call("RN_isRNGActive",stream,PACKAGE=RNetica)
+                  .Call("RN_isRNGActive",.self,PACKAGE=RNetica)
                 },
                 reportErrors = function(maxreport=9,clear=TRUE) {
                   Session$reportErrors(maxreport,clear)
@@ -45,15 +46,14 @@ setRefClass("NeticaRNG",fields=c(Name="character",
 ## Global variable used to generate names for RNGS
 RNGCount <- 0
 
-NewNeticaRNG <- function (seed=runif(1,0,1000000000),
+NewNeticaRNG <- function (seed=sample.int(.Machine$integer.max,1L),
                           session=getDefaultSession()) {
   seed <- abs(as.integer(seed))
   if (is.null(seed) || is.na(seed)) {
     stop("Seed must be an integer")
   }
-  RNGCount <<- RNGCount +1
-  name <- paste("NeticaRNG",RNGCount,sep=".")
-  rng <- NeticaRNG$new(Name=Name,Session=Session,seed=seed)
+  name <- tempvar("NeticaRNG")
+  rng <- NeticaRNG$new(Name=name,Session=session,Seed=seed)
   rng <-
     .Call("RN_NewRandomGenerator",as.character(seed),rng,PACKAGE="RNeticaXR")
   ecount <- session$reportErrors()
@@ -92,6 +92,8 @@ isNeticaRNGActive <- function (rng) {
   if (!is.NeticaRNG(rng)) return (NA_integer_)
   rng$isActive()
 }
+
+setMethod("is.active","NeticaRNG",function(x) x$isActive())
 
 WithRNG <- function (rng,expr) {
   if (!isNeticaRNGActive(rng)) {
