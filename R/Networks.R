@@ -67,7 +67,10 @@ NeticaBN <-
                   deactivateNodes = function() {
                     nodenames <- listNodes()
                     for (nn in nodenames) {
-                      findNode(nn)$deactivate()
+                      nd <- findNode(nn)
+                      if (is(nd,"NeticaNode")) {
+                        nd$deactivate()
+                      }
                     }
                   },
                   deactivate = function() {
@@ -129,9 +132,9 @@ setMethod("is.active","NeticaBN",function(x) x$isActive())
 
 setMethod("toString","NeticaBN",function(x,...) {
   if (is.active(x))
-    paste("<Netica BN:",as.character(x),">")
+    paste("<Netica BN:",x$Name,">")
   else
-    paste("<Deleted Netica BN:",as.character(x),">")
+    paste("<Deleted Netica BN:",x$Name,">")
 })
 
 setMethod("print","NeticaBN", function(x, ...) {
@@ -205,7 +208,9 @@ GetNthNetwork <- function (n,session=getDefaultSession()) {
 }
 
 GetNamedNetworks <- function (namelist, session=getDefaultSession()) {
-  lapply(namelist,function(name) session$nets[[name]])
+  result <- lapply(namelist,function(name) session$nets[[name]])
+  if (length(result)==1L) result <- result[[1]]
+  result
 }
 
 

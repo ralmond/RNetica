@@ -1,13 +1,12 @@
 \name{NeticaBN}
 \alias{NeticaBN}
-\alias{toString.NeticaBN}
-\alias{print.NeticaBN}
-\alias{is.NeticaBN}
-\alias{Ops.NeticaBN}
 \title{
 An object referencing a Bayesian network in Netica.
 }
 \description{
+  This file is now obsolete:  See \code{\linkS4class{NeticaBN}} for the
+  new class description.
+
   This object is returned by various RNetica functions which create or
   find network objects, and contain handles to the Bayesian network.  A
   \code{NeticaBN} object represents an active network.  The function
@@ -20,8 +19,6 @@ is.NeticaBN(x)
 \method{toString}{NeticaBN}(x, ...)
 \method{print}{NeticaBN}(x, ...)
 \method{Ops}{NeticaBN}(e1, e2)
-e1 == e2
-e1 != e2
 
 }
 \arguments{
@@ -72,6 +69,9 @@ e1 != e2
   Russell Almond
 }
 \note{
+  [This reflects RNetica version 0.1--0.4.  It is no longer current as
+  of version 0.5.]
+
   Internally, the \code{NeticaBN} objects are
   character strings with extra attributes.  So \code{as.character(net)}
   will return the name of the network.  Because of this, the default
@@ -102,7 +102,7 @@ e1 != e2
   \code{\link{cc}()}
 }
 \examples{
-
+\dontrun{
 net1 <- CreateNetwork("aNet")
 stopifnot(is.NeticaBN(net1))
 stopifnot(is.active(net1))
@@ -124,7 +124,7 @@ stopifnot(as.character(netd)=="Unused")
 stopifnot(netd == net1)
 ## Warning:  The following expression is true!
 net1 != net2
-
+}
 }
 \keyword{ classes }
 \keyword{ graphs }

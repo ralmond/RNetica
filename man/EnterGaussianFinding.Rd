@@ -12,9 +12,9 @@ EnterGaussianFinding(node, mean, sem, retractFirst = TRUE)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object that references the node.
+    An active \code{\linkS4class{NeticaNode}} object that references the node.
     Node should be continuous, or have numeric value ranges assigned to
-    it using \code{\link{NodeLevels}(node)}.
+    it using \code{\link{NodeLevels}(\var{node})}.
   }
   \item{mean}{
     A numeric scalar giving the observed value (mean of the normal).
@@ -62,8 +62,10 @@ EnterGaussianFinding(node, mean, sem, retractFirst = TRUE)
   \code{\link{NodeValue}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-cirt5 <- CreateNetwork("ContinuousIRT5")
+cirt5 <- CreateNetwork("ContinuousIRT5", session=sess)
 
 theta <- NewContinuousNode(cirt5,"Theta")
 NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
@@ -79,9 +81,8 @@ diff(pnorm(c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)))
 ## But it doesn't!
 
 DeleteNetwork(cirt5)
+stopSession(sess)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

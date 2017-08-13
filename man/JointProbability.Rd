@@ -4,17 +4,19 @@
   Calculates the joint probability over several network nodes.
 }
 \description{
+
   The Bayesian network, once compiled, gives the joint probability of
   all nodes in the network given the findings.  This function calculates
   the joint probability over all of the nodes its argument and returns
   it as an array.
+
 }
 \usage{
 JointProbability(nodelist)
 }
 \arguments{
   \item{nodelist}{
-    A list of active \code{\link{NeticaNode}} objects from the same
+    A list of active \code{\linkS4class{NeticaNode}} objects from the same
     network. 
   }
 }
@@ -29,10 +31,12 @@ JointProbability(nodelist)
 
 }
 \value{
+
   A multidimensional array given the probabilities of the various
   configurations.  The dimensions correspond to the variables in
   \code{nodelist}, and the dimnames of the result are the result of
   \code{sapply(nodelist,\link{NodeStates})}. 
+
 }
 \references{
 Almond, R. G. & Mislevy, R. J. (1999) Graphical models and computerized
@@ -51,21 +55,26 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
   Russell Almond
 }
 \note{
+
   One possible use for the joint probability function is to get a joint
   likelihood over the footprint nodes in an evidence model (see Almond
   et al, 1999; Almond & Mislevy, 1999).  However, Netica currently does
   not support inserting a likelihood on a clique, just on a single
   node.
+
 }
 \seealso{
-  \code{\link{NeticaNode}},\code{\link{NodeBeliefs}()}
+  \code{\linkS4class{NeticaNode}},\code{\link{NodeBeliefs}()}
   \code{\link{MakeCliqueNode}()}, \code{\link{AddLink}()},
   \code{\link{JunctionTreeReport}()}, \code{\link{MostProbableConfig}()} 
 }
 \examples{
-EMSMMotif <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne",
-                           sep=.Platform$file.sep))
+sess <- NeticaSession()
+startSession(sess)
+
+EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMSMMotif.dne"), session=sess)
+
 ## Force Skills 1 and 2 into the same clique.
 Skills12 <- NetworkFindNode(EMSMMotif,c("Skill1","Skill2"))
 cn <- MakeCliqueNode(Skills12)
@@ -86,8 +95,7 @@ post <- JointProbability(GetClique(cn))
 stopifnot (abs(sum(post)-1) <.0001)
 
 DeleteNetwork(EMSMMotif)
+stopSession(sess)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

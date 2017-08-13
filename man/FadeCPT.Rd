@@ -12,7 +12,7 @@ FadeCPT(node, degree = 0.2)
 }
 \arguments{
   \item{node}{
-    A \code{\link{NeticaNode}} object.
+    A \code{\linkS4class{NeticaNode}} object.
 }
   \item{degree}{
     A scalar value between 0 and 1 providing the amount of fading to be
@@ -59,8 +59,10 @@ FadeCPT(node, degree = 0.2)
   \code{\link{LearnFindings}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-aaa <- CreateNetwork("AAA")
+aaa <- CreateNetwork("AAA", session=sess)
 A <- NewDiscreteNode(aaa,paste("A",1:5,sep=""),c("true","false"))
 
 for( i in 1:length(A)) {
@@ -100,7 +102,8 @@ stopifnot (
 )
 
 DeleteNetwork(aaa)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ model }

@@ -159,6 +159,8 @@ ClearAllErrors <- function(severity="XXX_ERR",session=getDefaultSession()) {
 setGeneric("is.active",
            function(x) return(NA))
 setMethod("is.active","NeticaSession",function(x) x$isActive())
+setMethod("is.active","list",function(x) sapply(x, is.active))
+
 
 ## ## Searches active sessions looking for network by name.
 ## ## May return multiple results if different sessions have networks of

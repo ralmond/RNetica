@@ -1,47 +1,34 @@
-\name{NeticaCaseStream}
-\alias{NeticaCaseStream}
-\alias{OpenCaseStream}
-\alias{CloseCaseStream}
-\alias{is.NeticaCaseStream}
-\alias{isCaseStreamOpen}
-\alias{getCaseStreamPos}
-\alias{getCaseStreamLastId}
-\alias{getCaseStreamLastFreq}
-\title{A stream of cases for reading/writing Netica findings}
+\name{CaseStream-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{CaseStream-class}
+
+\title{Class \code{"CaseStream"}}
 \description{
 
   This object is a wrapper around a Netica stream which is used to
   read/write cases---sets of findings entered into a Netica network.
-  There are two subclasses:  \code{\link{CaseFileStream}} and
-  \code{\link{MemoryCaseStream}}.  The function
+  There are two subclasses:  \code{\linkS4class{CaseFileStream}} and
+  \code{\linkS4class{MemoryCaseStream}}.  The function
   \code{\link{ReadFindings}} reads the findings from the stream and the
   function \code{\link{WriteFindings}} writes them out.
 
 }
-\usage{
-OpenCaseStream(oldstream)
-CloseCaseStream(stream)
-is.NeticaCaseStream(x)
-isCaseStreamOpen(stream)
-getCaseStreamPos(stream)
-getCaseStreamLastId(stream)
-getCaseStreamLastFreq(stream)
-}
-\arguments{
-  \item{oldstream}{A previously closed \code{NeticaCaseStream} object.
-  }
-  \item{stream}{A \code{NeticaCaseStream} object.}
-  \item{x}{A object to be printed or whose type is to be determined.}
-  \item{...}{Other arguments to \code{toString}.  These are ignored.}
+\section{Extends}{
+
+All reference classes extend and inherit methods from
+\code{"\linkS4class{envRefClass}"}. Note that because this is a reference
+class unlike traditional S3 and S4 classes it can be destructively
+modified.  Also fields (slots) are accessed using the \sQuote{$}
+operator.
 }
 \details{
 
-  A \code{\linkS4class{NeticaCaseStream}} object is an R wrapper around
-  a Netica stream object.  There are two special cases:
-  \code{\linkS4class{CaseFileStream}} objects are streams focused on a
-  case file, and \code{\linkS4class{MemoryCaseStream}} objects are
-  streams focused on a hunk of memory corresponding to an R data frame
-  object. 
+  A \code{NeticaCaseStream} object is an R wrapper around a Netica stream
+  object.  There are two special cases: \code{\link{CaseFileStream}}
+  objects are streams focused on a case file, and
+  \code{\link{MemoryCaseStream}} objects are streams focused on a hunk of
+  memory corresponding to an R data frame object.
 
   Although the function \code{\link{WriteFindings}} always appends a new
   case to the end of a file (and hence does not need to keep the stream
@@ -51,58 +38,31 @@ getCaseStreamLastFreq(stream)
 
   The functions \code{\link{CaseFileStream}} and
   \code{\link{CaseMemoryStream}} create new streams and open them.
-  The function \code{OpenCaseStream} will reopen a previously closed
+  The function \code{\link{OpenCaseStream}} will reopen a previously closed
   stream, and will issue a warning if the stream is already open.
-  The function \code{CloseCaseStream} closes an open case stream (and is
+  The function \code{\link{CloseCaseStream}} closes an open case stream (and is
   harmless if the stream is already closed).  Although RNetica tries to
   close open case streams when they are garbage collected, users should
   not count on this behavior and should close them manually.  Also be
   aware that all case streams are automatically closed when R is closes
-  or RNetica is unloaded.  The function \code{isCaseStreamOpen} tests to
-  see if the stream is open or closed. The function
+  or RNetica is unloaded.  The function \code{\link{isCaseStreamOpen}}
+  tests to see if the stream is open or closed. The function
   \code{\link{WithOpenCaseStream}} executes an arbitrary R expression in
   a context where the stream is open, and then closed afterwards.
 
   Netica internally keeps track of the current position of the stream
-  when it is read or written.  The functions \code{getCaseStreamPos},
-  \code{getCaseStreamLastId} and \code{getCaseStreamLastFreq} get
+  when it is read or written.  The functions \code{\link{getCaseStreamPos}},
+  \code{\link{getCaseStreamLastId}} and
+  \code{\link{getCaseStreamLastFreq}} get 
   information about the position in the file, the user generated id
   number and the frequency/weight assigned to the case at the time the
   stream was last read or written.  In particular, the function
-  \code{\link{ReadFindings}} returns a \code{\linkS4class{CaseStream}}
-  object, which should be queried to find the ID and Frequencies read
-  from the stream.  When \code{\link{ReadFindings}} reaches the end of
-  the stream, the value of \code{getCaseStreamPos(\var{stream})} will be
-  \code{NA}.
+  \code{\link{ReadFindings}} returns a \code{CaseStream} object, which
+  should be queried to find the ID and Frequencies read from the
+  stream.  When \code{\link{ReadFindings}} reaches the end of the
+  stream, the value of \code{\link{getCaseStreamPos}(\var{stream})} will
+  be \code{NA}.  
   
-}
-\value{
-
-  The functions \code{OpenCaseStream} and \code{CloseCaseStream} both
-  return their argument, which should be a \code{NeticaCaseStream}.
-
-  The function \code{toString.CaseStream} returns a string providing
-  information about the source and status its argument.
-
-  The functions \code{is.NeticaCaseStream} and \code{isCaseStreamOpen} both
-  return logical values indicating whether or not the condition holds.
-  The latter function returns \code{NA} if its argument is not a
-  \code{NeticaCaseStream}.
-
-  The function \code{getCaseStreamPos} returns a scalar integer values
-  giving the position of the last record read from or written to the
-  stream.  The position is an integer corresponding to the number of
-  characters that have been read in the stream.  If an attempt has been
-  made to read past the end of the stream, this value will be \code{NA}.
-
-  The function \code{getCaseStreamLastId} is a user specified integer
-  associated with the case last read from or written to the stream.
-  It's value is \code{-1} if the user did not assign ID numbers.
-
-  The function \code{getCaseStreamLastFreq} returns a numeric scalar
-  which is the weight associated with the last case read from or written
-  to \code{stream}.  If the user did not specify frequencies when the
-  stream was written, the value returned is \code{-1}.
 }
 \references{
   \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -133,19 +93,23 @@ getCaseStreamLastFreq(stream)
   reopen the stream.  Note that any position information will be lost.
   
 }
+
+
 \seealso{
-  See \code{\linkS4class{CaseStream}} for details about the stream
-  object. See \code{\linkS4class{FileCaseStream}} and
-  \code{\linkS4class{MemoryCaseStream}} for specific details about these
-  stream types. 
+
+  See \code{\linkS4class{FileCaseStream}} and
+  \code{\linkS4class{MemoryCaseStream}} for specific details about the
+  two subtypes.   \code{\link{CaseMemoryStream}} and
+  \code{\link{CaseFileStream}} are the two constructors.
 
 
+  \code{\link{OpenCaseStream}},
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
-  \code{\link{CaseMemoryStream}},\code{\link{CaseFileStream}},
   \code{\link{WithOpenCaseStream}}
 }
 \examples{
+
 sess <- NeticaSession()
 startSession(sess)
 
@@ -226,9 +190,47 @@ CloseCaseStream(filestream)
 CloseCaseStream(filestream) ## This should issue a warning but be
 ## harmless. 
 DeleteNetwork(abc)
-
 stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }
+\keyword{classes}
+\section{Fields}{
+  \describe{
+    \item{\code{Name}:}{Object of class \code{character} an identifier
+      for the case stream, derived from the filename for
+      \code{\linkS4class{FileCaseStream}} objects, and from the name of
+      the R object for \code{\linkS4class{MemoryCaseStream}} }
+    \item{\code{Session}:}{Object of class \code{NeticaSession}:: a back
+      pointer to the \code{\linkS4class{NeticaSession}} object in which
+      the stream was created. }
+    \item{\code{Netica_Case_Stream}:}{Object of class \code{externalptr}
+      a link to the stream in internal Netica memory. }
+    \item{\code{Case_Stream_Position}:}{Object of class \code{integer}
+      the number of the last read/writen record. This is \code{NA} if
+      the end of the file has been reached. }
+    \item{\code{Case_Stream_Lastid}:}{Object of class \code{integer} the
+    ID number of the last read/written record.}
+    \item{\code{Case_Stream_Lastfreq}:}{Object of class \code{numeric}
+      giving the frequence of the last read/written record.  This is
+      used as a weight in learning applications. }
+  }
+}
+\section{Methods}{
+  \describe{
+    \item{\code{show()}:}{ Provides a printed record. }
+    \item{\code{close()}:}{ Closes the stream.  Equivalent to
+      \code{\link{CloseCaseStream}(\var{stream})}. }
+    \item{\code{isOpen()}:}{ Checks to see if the stream is currently
+      open.  Equivalent to \code{\link{isCaseStreamOpen}(\var{stream})}. }
+    \item{\code{isActive()}:}{ Equivalent to \code{isOpen()}, name is
+      symmetric with other Netica reference objects. }
+    \item{\code{clearErrors(severity)}:}{ Calls \code{clearErrors} on
+      the \code{Session} object. }
+    \item{\code{reportErrors(maxreport, clear)}:}{ Calls
+      \code{reportErrors} on the \code{Session} object. }
+    \item{\code{initialize(Name, Session, ...)}:}{ Internal initializer.
+     User code should not call.}
+  }
+}

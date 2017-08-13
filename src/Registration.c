@@ -32,7 +32,7 @@ const char* SESSIONFIELD = "Session";
 const char* NodeClass = "NeticaNode";
 const char* NODEATT = "Netica_Node";
 const char* SDATT = "std_dev";
-const char* DISCRETEATT = "node_discrete";
+const char* DISCRETEATT = "discrete";
 const char* CliqueNodeClass = "CliqueNode";
 const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
@@ -126,10 +126,10 @@ void RN_Define_Symbols() {
     R_PreserveObject(sessionfield = install(SESSIONFIELD));  
   } 
   if (netfield==NULL) {
-    R_PreserveObject(netsfield = install(NETFIELD));
+    R_PreserveObject(netfield = install(NETFIELD));
   }
   if (nodesfield==NULL) { 
-    R_PreserveObject(pathfield = install(NODESFIELD));  
+    R_PreserveObject(nodesfield = install(NODESFIELD));  
   } 
   if (nodeclass==NULL) {
     R_PreserveObject(nodeclass = allocVector(STRSXP,1));

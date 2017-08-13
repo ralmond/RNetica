@@ -61,9 +61,11 @@ CopyNetworks(nets, newnamelist, options = character(0))
   \code{\link{DeleteNetwork}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-net1 <- CreateNetwork("Original")
-nets <- CreateNetwork(paste("Original",2:3,sep=""))
+net1 <- CreateNetwork("Original", session=sess)
+nets <- CreateNetwork(paste("Original",2:3,sep=""), session=sess)
 
 copy1 <-CopyNetworks(net1,"Copy1")
 stopifnot(is(copy1,"NeticaBN"))
@@ -75,10 +77,9 @@ stopifnot(all(sapply(netc,is,"NeticaBN")))
 stopifnot(as.character(netc) == c("Copy2","Copy3"))
 
 DeleteNetwork(c(netc,nets,list(copy1,net1)))
+stopSession(sess)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
 \keyword{ utilities }
 

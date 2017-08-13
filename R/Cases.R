@@ -51,12 +51,14 @@ CaseFileMissingCode <- function (newcode=NULL,session=getDefaultSession()) {
 ###############################################################
 ## Case Stream Objects
 
+CaseStream <-
 setRefClass("CaseStream",fields=c(Name="character",
                                   Session="NeticaSession",
                                   Netica_Case_Stream="externalptr",
                                   Case_Stream_Position="integer",
                                   Case_Stream_Lastid="integer",
                                   Case_Stream_Lastfreq="numeric"),
+            contains="VIRTUAL",
             methods=list(
                 initialize=function(Name=".Prototype",
                                     Session=NeticaSession(SessionName=".prototype"),
@@ -68,7 +70,7 @@ setRefClass("CaseStream",fields=c(Name="character",
                             Case_Stream_Lastfreq=NA_real_,...)
                 },
                 isActive = function() {
-                  .Call("RN_isCaseStreamActive",stream,PACKAGE=RNetica)
+                  .Call("RN_isCaseStreamActive",.self,PACKAGE=RNetica)
                 },
                 reportErrors = function(maxreport=9,clear=TRUE) {
                   Session$reportErrors(maxreport,clear)
@@ -97,6 +99,7 @@ setRefClass("CaseStream",fields=c(Name="character",
                   }
                 }))
 
+FileCaseStream <-
 setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
             contains="CaseStream",
             methods=list(
@@ -128,6 +131,7 @@ setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
                   callSuper()
                 }))
 
+MemoryCaseStream <-
 setRefClass("MemoryCaseStream",fields=c(Case_Stream_DataFrameName="character",
                                         Case_Stream_DataFrame="data.frame",
                                         Case_Stream_Buffer="externalptr"),
@@ -173,7 +177,7 @@ OpenCaseStream <- function (oldstream) {
   if (is.NeticaCaseStream(oldstream)) {
     oldstream$open()
   } else {
-    stop("expected oldstram to be a NeticaCaseStream")
+    stop("expected oldstram to be a CaseStream")
   }
 }
 
@@ -182,7 +186,7 @@ CaseFileStream <- function (pathname,session=getDefaultSession()) {
   if (!is.character(pathname) || length(pathname)>1) {
     warning("OpenCaseStream:  expected single pathname as argument.")
   }
-  stream <- FileCaseStream(Session=session,Case_Stream_Path=pathname)
+  stream <- FileCaseStream$new(Session=session,Case_Stream_Path=pathname)
   stream$open()
   stream
 }
@@ -207,19 +211,21 @@ CloseCaseStream <- function (stream) {
   stream
 }
 
-setMethod("toString","NeticaCaseStream", function (x, ...) {
+setMethod("toString","CaseStream", function (x, ...) {
   status <- ifelse(isCaseStreamOpen(x),"Open","Closed")
   src <- x$Name
   paste("<",status,class(x)[1],":",src,">")
 })
 
-setMethod("print","NeticaCaseStream",function(x, ...) {
+setMethod("print","CaseStream",function(x, ...) {
   cat(toString(x),"\n")
 })
 
+setMethod("is.active","CaseStream",function(x) x$isActive())
+
 
 is.NeticaCaseStream <- function (x) {
-  is(x,"NeticaCaseStream")
+  is(x,"CaseStream")
 }
 
 is.MemoryCaseStream <- function (x) {

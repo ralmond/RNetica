@@ -3,19 +3,20 @@
 \title{Learn Conditional Probability Tables from a Netica Case Stream
 }
 \description{
+
   This function updates the conditional probabilities associated with
   the given list of nodes based on the findings associated with that
   node and its parents found in the \code{caseStream} argument, which
-  should be a \code{\link{NeticaCaseStream}} object.
+  should be a \code{\linkS4class{CaseStream}} object.
 }
 \usage{
 LearnCases(caseStream, nodelist, weight = 1)
 }
 \arguments{
-  \item{caseStream}{This should be a \code{\link{NeticaCaseStream}}
+  \item{caseStream}{This should be a \code{\linkS4class{CaseStream}}
     object, or else an object which can be made into a case stream:
     either a pathname for a case file, or a data frame of the format
-    described in \code{\link{MemoryCaseStream}}.  The case stream can be
+    described in \code{\linkS4class{MemoryCaseStream}}.  The case stream can be
     either opened or closed.  If closed it is reopened before updating.
     In either case, it is closed at the end of the function.
     \bold{Warning}, due to a bug in Netica, memory streams are not
@@ -23,7 +24,7 @@ LearnCases(caseStream, nodelist, weight = 1)
     below. 
   }
   \item{nodelist}{
-    A list of active \code{\link{NeticaNode}} objects that reference the
+    A list of active \code{\linkS4class{NeticaNode}} objects that reference the
     conditional probability tables to be updated.
   }
   \item{weight}{
@@ -50,7 +51,8 @@ LearnCases(caseStream, nodelist, weight = 1)
 
 }
 \value{
-  This function returns the \code{\link{NeticaCaseStream}} used in the
+
+  This function returns the \code{\linkS4class{CaseStream}} used in the
   analysis.  This might have either been passed directly as the
   \code{caseStream} argument, or created from the value of the
   \code{caseStream} argument.  In either case, the stream is closed at
@@ -63,10 +65,13 @@ LearnCases(caseStream, nodelist, weight = 1)
 }
 \author{Russell Almond}
 \note{
+
   To learn without using the current probabilities as priors, call
   \code{\link{DeleteNodeTable}} first.
+
 }
 \section{Netica Bugs}{
+
   In version 5.04 of the Netica API, there is a problem with using
   Memory Streams that seems to affect the functions
   \code{\link{LearnCases}} and \code{\link{LearnCPTs}}.  Until this
@@ -74,6 +79,7 @@ LearnCases(caseStream, nodelist, weight = 1)
   streams instead.  Write the case file using
   \code{\link{write.CaseFile}}, and then create a file stream using
   \code{\link{CaseFileStream}}. 
+
 }
 \seealso{
   \code{\link{NodeExperience}}, \code{\link{NodeProbs}},
@@ -82,8 +88,10 @@ LearnCases(caseStream, nodelist, weight = 1)
   \code{\link{LearnCPTs}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -127,6 +135,7 @@ stopifnot(
 )
 
 DeleteNetwork(abb)
+stopSession(sess)
 
 }
 \keyword{ interface }

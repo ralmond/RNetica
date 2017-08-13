@@ -13,23 +13,31 @@
 #include <Rdefines.h>
 #include <RNetica.h>
 
+
+
 /* RX_... functions for accessing fields in RC classes.
   This is currently implemented by using an .xData slot which
   contains an environment.  This might break if the R implementation
   changes */
 
+//#define DEBUGFIELDS
+
 SEXP RX_do_RC_field(SEXP obj, SEXP name) {
   SEXP rho,result;                     
   if (!isS4(obj)) {
     error("Can only get fields for RC (S4) objects (field %s).",
-          PRINTNAME(name));
+          CHAR(PRINTNAME(name)));
   }
-  //Rprintf("Extracting environment\n");
+#ifdef DEBUGFIELDS
+  Rprintf("Extracting environment\n");
+#endif
   PROTECT(rho=GET_SLOT(obj,install(".xData")));
   if (isNull(rho)) {
     error("The .xData slot is null, is this an RC class?\n");
   }
-  //Rprintf("Extracting variable %s\n",PRINTNAME(name));
+#ifdef DEBUGFIELDS
+  Rprintf("Extracting variable %s\n",CHAR(PRINTNAME(name)));
+#endif
   PROTECT(result=findVar(name,rho));
   UNPROTECT(2);
   return result;
@@ -41,10 +49,16 @@ SEXP RX_do_RC_field_assign(SEXP obj, SEXP name, SEXP value) {
     error("Can only set fields for RC (S4) objects (field %s).",
           PRINTNAME(name));
   }
+#ifdef DEBUGFIELDS
+  Rprintf("Extracting environment\n");
+#endif
   PROTECT(rho=GET_SLOT(obj,install(".xData")));
   if (isNull(rho)) {
     error("The .xData slot is null, is this an RC class?\n");
   }
+#ifdef DEBUGFIELDS
+  Rprintf("Assigning variable %s\n",CHAR(PRINTNAME(name)));
+#endif
   defineVar(name,value,rho);
   UNPROTECT(1);
   return obj;
@@ -56,10 +70,16 @@ int RX_has_RC_field(SEXP obj, SEXP name) {
   if (!isS4(obj)) {
     error("Can only get fields for RC (S4) objects.\n");
   }
+#ifdef DEBUGFIELDS
+  Rprintf("Extracting environment\n");
+#endif
   PROTECT(rho=GET_SLOT(obj,install(".xData")));
   if (isNull(rho)) {
     error("The .xData slot is null, is this an RC class?\n");
   }
+#ifdef DEBUGFIELDS
+  Rprintf("Searching for  variable %s\n",PRINTNAME(name));
+#endif
   PROTECT(fvalue=findVar(name,rho));
   result = !isNull(fvalue);
   UNPROTECT(2);
@@ -296,6 +316,7 @@ void RN_UnregisterNetwork(SEXP sessobj, const char* netname) {
 SEXP RN_FindNetworkStr(SEXP sessobj, const char* netname) {
   SEXP sess_env;
   PROTECT(sess_env=GET_FIELD(sessobj,netsfield));
+  //Rprintf("Looking for netname %s\n",netname);
   SEXP result =findVar(install(netname),sess_env);
   UNPROTECT(1);
   return result;

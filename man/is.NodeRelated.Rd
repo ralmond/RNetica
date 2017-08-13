@@ -5,10 +5,12 @@
   Computes topological proprieties of a \code{Netica} network.
 }
 \description{
+
   The function \code{is.NodeRelated()} tests to see if \code{relation}
   holds between \code{node1} and \code{node2}.  The function
   \code{GetRelatedNodes} creates a list of all nodes that satisfy the
   \code{relation} with any node in \code{nodelist}.
+
 }
 \usage{
 is.NodeRelated(node1, node2, relation = "connected")
@@ -16,10 +18,10 @@ GetRelatedNodes(nodelist, relation = "connected")
 }
 \arguments{
   \item{node1}{
-    An active \code{\link{NeticaNode}} whose relationship will be tested.
+    An active \code{\linkS4class{NeticaNode}} whose relationship will be tested.
   }
   \item{node2}{
-    Another active \code{\link{NeticaNode}} whose relationship will be tested.
+    Another active \code{\linkS4class{NeticaNode}} whose relationship will be tested.
   }
   \item{relation}{
     A character scalar which should be one of the values:  "parents",
@@ -28,10 +30,11 @@ GetRelatedNodes(nodelist, relation = "connected")
     are also allowed, see details.
   }
   \item{nodelist}{
-    A list of active \code{\link{NeticaNode}} whose relationship will be tested.
+    A list of active \code{\linkS4class{NeticaNode}} whose relationship will be tested.
   }
 }
 \details{
+
   These functions are useful for testing the topology of a network.
   Each of the functions offers a measure related to the network.  The
   \code{is.NodeRelated()} form tests the relationship between
@@ -90,12 +93,14 @@ GetRelatedNodes(nodelist, relation = "connected")
   the result.
 }
 \value{
+
   For \code{is.NodeRelated()} \code{TRUE} or \code{FALSE}, or \code{NA}
   if one of the input nodes was not active.
 
-  For \code{GetNodeRelated()} a list of \code{NeticaNode} objects which
+  For \code{GetNodeRelated()} a list of \code{\linkS4class{NeticaNode}} objects which
   have the target relationship with one of the nodes in
   \code{nodelist}.  There may be duplicates in this list.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -110,6 +115,7 @@ GetRelatedNodes(nodelist, relation = "connected")
   Russell Almond
 }
 \note{
+
   \code{GetRelatedNodes()} uses \code{GetRelatedNodesMult_bn()}, not
   \code{GetRelatedNode_bn()}, but that should not present any serious
   issues.  Also, it always passes an empty list for the
@@ -119,11 +125,14 @@ GetRelatedNodes(nodelist, relation = "connected")
   similar functions.
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeChildren}()}, \code{\link{AddLink}()}
 }
 \examples{
-testnet <- CreateNetwork("ABCDEFG")
+sess <- NeticaSession()
+startSession(sess)
+
+testnet <- CreateNetwork("ABCDEFG", session=sess)
 ###  A   D
 ###   \ / \
 ###    C   F - G
@@ -172,9 +181,9 @@ stopifnot(
 )
 
 DeleteNetwork(testnet)
+stopSession(sess)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
 \keyword{ graphs }
-\keyword{ logic }% __ONLY ONE__ keyword per line
+\keyword{ logic }

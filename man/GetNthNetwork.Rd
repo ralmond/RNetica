@@ -1,15 +1,21 @@
 \name{GetNthNetwork}
 \alias{GetNthNetwork}
 \title{
+
   Fetch a Netica network by its position in the Netica list.
+
 }
 \description{
+
   Fetches networks according to an internal sequence list of networks
   maintained inside of Netica.  If the number passed is greater than the
   number of currently defined networks, this function will return \code{NULL}
+
 }
 \usage{
+
 GetNthNetwork(n, session = getDefaultSession())
+
 }
 \arguments{
   \item{n}{A vector of integers greater than 1.
@@ -21,6 +27,7 @@ GetNthNetwork(n, session = getDefaultSession())
     \code{DefaultNeticaSession} in the global environment.}
 }
 \details{
+
   The primary use for this function is probably to loop through all open
   networks.  As this function will return \code{NULL} when there are no
   more networks, that can be used to terminate the loop.
@@ -33,15 +40,18 @@ GetNthNetwork(n, session = getDefaultSession())
   Starting with RNetica 0.5, the session object is a container which
   contains the open networks, so this function is no longer really
   needed. 
+
 }
 \value{
-  If \code{n} is of length 1, then a single \code{NeticaBN}
+
+  If \code{n} is of length 1, then a single \code{\linkS4class{NeticaBN}}
   object or \code{NULL} will be returned.
 
   If \code{n} is of length greater than 1, then a list of the
   same length as \code{n} is returned.  Each element is a
   \code{NeticaBN} related or \code{NULL} if the number is greater than
   the number of open networks.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -57,11 +67,12 @@ GetNthNetwork(n, session = getDefaultSession())
   a one-based reference system (the first net is 1).
 }
 \seealso{
-  \code{\linkS4class{NeticaSession}}
+  \code{\linkS4class{NeticaSession}},
   \code{\link{CreateNetwork}()}, \code{\link{GetNamedNetworks}()}
 }
 \examples{
-sess <- getDefaultSession()
+sess <- NeticaSession()
+startSession(sess)
 
 count <- 1
 while (!is.null(net <- GetNthNetwork(count,sess))) {
@@ -70,6 +81,7 @@ while (!is.null(net <- GetNthNetwork(count,sess))) {
 }
 cat("Found ",count-1," networks.\n")
 
+stopSession(sess)
 
 }
 \keyword{ interface }

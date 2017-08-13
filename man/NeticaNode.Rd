@@ -8,6 +8,9 @@
   An object referencing a node in a Netica Bayesian network.
 }
 \description{
+  OBSOLETE:  See \code{\linkS4class{NeticaNode}} (class) for current
+  (RNetica 0.5 and beyond) implementation.
+
   This object is returned by various RNetica functions which create or
   find nodes in a \code{\link{NeticaBN}} network.  A \code{NeticaNode}
   object represents a node object inside of Netica's memory.  The
@@ -34,6 +37,9 @@ e1 != e2
   }
 }
 \details{
+  This information is current only for Version 0.4 and earlier of
+  RNetica. 
+
   This is an object of class \code{NeticaNode}.  It consists of a name,
   and an invisible handle to a Netica node.  The function
   \code{\link{is.active}()} tests the state of that handle and returns
@@ -80,6 +86,8 @@ e1 != e2
   Russell Almond
 }
 \note{
+  The first two paragraphs are obsolete as of Version 0.5.
+
   Internally, the \code{NeticaNode} objects are
   character strings with extra attributes.  So \code{as.character(node)}
   will return the name of the node.  Because of this, the default
@@ -117,7 +125,7 @@ e1 != e2
 
 }
 \examples{
-
+\dontrun{
 nety <- CreateNetwork("yNode")
 
 node1 <- NewContinuousNode(nety,"aNode")
@@ -143,6 +151,8 @@ stopifnot(noded == node1)
 node1 != node2
 
 DeleteNetwork(nety)
+
+}
 }
 \keyword{ classes }
 \keyword{ graphs }
