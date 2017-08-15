@@ -133,7 +133,7 @@ operator.
 sess <- NeticaSession()
 startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -143,14 +143,14 @@ AddLink(A,C)
 AddLink(B,C)
 
 ## This is the file written in CaseFileStream help.
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
-CaseFileDelimiter("\t")
-CaseFileMissingCode("*")
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
+                     
+CaseFileDelimiter("\t", session=sess)
+CaseFileMissingCode("*", session=sess)
 cases <- read.CaseFile(casefile)
 
-memstream <- MemoryCaseStream(cases)
+memstream <- CaseMemoryStream(cases, session=sess)
 
 
 ##Case 1
@@ -193,6 +193,7 @@ stopSession(sess)
 \keyword{ IO }
 \keyword{classes}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{Name}:}{Object of class \code{character} identifier for
       stream. Default is the expression used to reference the data. }

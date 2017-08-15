@@ -99,7 +99,7 @@ setMethod("Compare","NeticaNode", function(e1, e2) {
   if (is.na(bothdeleted)) return(!truth) ## At least one non-bn
   if (bothdeleted) {
     ## Both deleted, use cached names.
-    return(ifelse(e1$Name==e2$Name,e1$Net==e2$Net,truth,!truth))
+    return(ifelse(e1$Name==e2$Name & e1$Net==e2$Net,truth,!truth))
   }
   ## Okay have two valid NeticaNodes or one valid one and one inactive.
   ## Either way we can get by by comparing pointers.
@@ -269,7 +269,7 @@ NetworkAllNodes <- function(net) {
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
-  names(handles) <- sapply(handles,as.character)
+  names(handles) <- sapply(handles,NodeName)
   handles
 }
 
@@ -314,7 +314,7 @@ NodeName <- function (node, internal=FALSE) {
     stop("Illegal Netica Name, ",value)
   }
   oldname <- NodeName(node)
-  session <- node$Net
+  net <- node$Net
   handle <- .Call("RN_SetNodeName",node,value,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1]>0) {
@@ -383,7 +383,7 @@ NodeDescription <- function (node) {
   handle <- .Call("RN_SetNodeComment",node,value,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
+   stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
@@ -778,13 +778,15 @@ NetworkNodesInSet <- function(net, setname) {
 
 "NetworkNodesInSet<-" <- function(net, setname, value) {
   oldset <- NetworkNodesInSet(net,setname)
+  oldsetNames <- names(oldset)
+  newsetNames <- sapply(value,NodeName)
   ## setdiff doesn't work with objects, so need to do this the hard way
   for (nd in oldset) {
-    if (!(nd %in% value))
+    if (!(NodeName(nd) %in% newsetNames))
       RemoveNodeFromSets(nd,setname)
   }
   for (nd in value) {
-    if (!(nd %in% oldset))
+    if (!(NodeName(nd) %in% oldsetNames))
       AddNodeToSets(nd,setname)
   }
   invisible(net)

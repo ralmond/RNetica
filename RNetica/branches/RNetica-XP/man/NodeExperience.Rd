@@ -4,10 +4,12 @@
 \title{Gets or sets the amount of experience associated with a node.
 }
 \description{
+
   In learning, if the row of the conditional probability table has a
   Dirichlet distribution, this sets the sum of the parameters for the
   row.  This is the number of pseudo observations for that row of the
   CPT. 
+
 }
 \usage{
 NodeExperience(node)
@@ -15,12 +17,12 @@ NodeExperience(node) <- value
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}}.
+    An active \code{\linkS4class{NeticaNode}}.
 }
   \item{value}{
     An array of pseudo counts, these should be positive values.  The
     shape of the array should match the
-    \code{\link{ParentStates}(node)}.  
+    \code{\link{ParentStates}(\var{node})}.  
   }
 }
 \details{
@@ -42,14 +44,14 @@ NodeExperience(node) <- value
   An unconditional distribution has exactly one normalization constant.
   A conditional distribution has on for each row of the conditional
   probability, that is associated with each possible configuration of
-  the parent variables.  The value of \code{NodeExperience(node)} is an
-  array with dimnames matching \code{\link{ParentStates}(node)}.  In
+  the parent variables.  The value of \code{NodeExperience(\var{node})} is an
+  array with dimnames matching \code{\link{ParentStates}(\var{node})}.  In
   particular, this means that specific values of experience can be
   accessed by using the names of the parent states.
   
 }
 \value{
-  An array whose dimnames are \code{\link{ParentStates}(node)}.  If the
+  An array whose dimnames are \code{\link{ParentStates}(\var{node})}.  If the
   node has no parents, the value is a scalar.
 }
 \references{
@@ -59,18 +61,22 @@ NodeExperience(node) <- value
 }
 \author{Russell Almond}
 \note{
+
   I tend to refer to this distribution as a "hyper-Dirichlet"
   distribution, although Spiegelhalter and Lauritzen (1990) used that
   term to refer to a network in which all of the nodes were
   parameterized in that way.
+
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeProbs}()}, \code{\link{CPA}}
 
 }
 \examples{
-abc <- CreateNetwork("ABC")
+sess <- NeticaSession()
+startSession(sess)
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -108,6 +114,7 @@ stopifnot(
 
 
 DeleteNetwork(abc)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ model }

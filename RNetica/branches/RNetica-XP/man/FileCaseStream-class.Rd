@@ -119,6 +119,7 @@ stopSession(sess)
 \keyword{ IO }
 \keyword{classes}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{Name}:}{Object of class \code{character} used in printed
       representation.  Default is

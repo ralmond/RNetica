@@ -2,12 +2,16 @@
 \alias{NodeInputNames}
 \alias{NodeInputNames<-}
 \title{
+
   Associates names with incoming edges on a Netica node.
+
 }
 \description{
+
   The function \code{NodeInputNames()} can be used to set or retrieve
-  names for each of the parents of \code{node}.  This facilitates
+  names for each of the parents of \var{node}.  This facilitates
   operations such as copying and reconnecting the nodes.
+
 }
 \usage{
 NodeInputNames(node)
@@ -15,16 +19,17 @@ NodeInputNames(node) <- value
 }
 \arguments{
   \item{node}{
-    A \code{\link{NeticaNode}} object whose parent link names will be
+    A \code{\linkS4class{NeticaNode}} object whose parent link names will be
     retrieved or set.
   }
   \item{value}{
-    A character vector of length \code{length(\link{NodeParents}(node)}
+    A character vector of length \code{length(\link{NodeParents}(\var{node})}
     giving the new names.  Names must conform to the
     \code{\link{IDname}} convention.
     }
 }
 \details{
+
   When a parent node is detached from a child, Netica names the link
   with the name of the old node.  For example, suppose that the
   following commands were executed \code{AddLink(A,C); AddLink(B,C)}.
@@ -35,7 +40,8 @@ NodeInputNames(node) <- value
   the old node was attached.
 
   Rather than relying on the automatic naming scheme, the node names can
-  be directly set using \code{NodeInputNames(node)<-newvals}.  Netica
+  be directly set using
+  \code{NodeInputNames(\var{node})<-\var{newvals}}.  Netica 
   will not rename a detached link if there already exists a name for
   that link.  Explicitly naming the links rather than relying on
   Netica's naming scheme is probably good practice.  If node input names
@@ -48,12 +54,14 @@ NodeInputNames(node) <- value
   \code{NodeParents()} has a name of \code{""}.
 }
 \value{
+
   The function \code{NodeInputNames()} returns a character vector of
   the same length as \code{GetNodeParents()} giving the current names of
   the links.  If a link has not yet been named, the corresponding entry
   of the vector will be the empty string.
 
   The setter function returns the node object invisibly.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -70,11 +78,13 @@ NodeInputNames(node) <- value
   \code{NULL}.  
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeParents}()}
 }
 \examples{
-abnet <- CreateNetwork("AB")
+sess <- NeticaSession()
+startSession(sess)
+abnet <- CreateNetwork("AB", session=sess)
 
 anodes <- NewDiscreteNode(abnet, paste("A",1:3,sep=""))
 B <- NewDiscreteNode(abnet,"B")
@@ -111,6 +121,7 @@ stopifnot(
 )
 
 DeleteNetwork(abnet)
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

@@ -104,7 +104,7 @@ WithRNG <- function (rng,expr) {
 }
 
 
-NetworkSetRNG <- function (net, seed=runif(1,0,1000000000)) {
+NetworkSetRNG <- function (net, seed=sample.int(.Machine$integer.max,1L)) {
   if (!is.NeticaBN(net)) {
     stop("Net must be a Netica BN.")
   }
@@ -113,12 +113,12 @@ NetworkSetRNG <- function (net, seed=runif(1,0,1000000000)) {
     stop("Seed must be an integer.")
   }
   seed <- as.character(seed)
-  result <- .Call("RN_SetNetRandomGen",net,seed,net$session,PACKAGE="RNeticaXR")
+  result <- .Call("RN_SetNetRandomGen",net,seed,net$Session,PACKAGE="RNeticaXR")
   ecount <- net$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
-  result
+  invisible(result)
 }
 
 GenerateRandomCase <- function (nodelist, method="Default",

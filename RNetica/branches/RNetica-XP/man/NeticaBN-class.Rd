@@ -72,7 +72,6 @@ destructively modified.  Also fields (slots) are accessed using the
   the net.
 
 }
-
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
   \url{http://norsys.com/onLineAPIurl/index.html}:
@@ -136,9 +135,12 @@ stopSession(sess)
 \keyword{interface}
 \keyword{graphs}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{Name}:}{Object of class \code{character} giving the
-      Netica name of the network. Must follow the \code{\link{IDname}} rules.}
+      Netica name of the network. Must follow the \code{\link{IDname}}
+      rules.  This should not be set by user code, use
+      \code{\link{NetworkName}} instead.}
     \item{\code{PathnameName}:}{Object of class \code{character} giving
       the path from which the network was last read or to which it was
       last saved. }

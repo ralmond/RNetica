@@ -1,9 +1,5 @@
 \name{NeticaNode}
 \alias{NeticaNode}
-\alias{is.NeticaNode}
-\alias{toString.NeticaNode}
-\alias{print.NeticaNode}
-\alias{Ops.NeticaNode}
 \title{
   An object referencing a node in a Netica Bayesian network.
 }
@@ -19,11 +15,6 @@
 }
 \usage{
 is.NeticaNode(x)
-\method{toString}{NeticaNode}(x, ...)
-\method{print}{NeticaNode}(x, ...)
-\method{Ops}{NeticaNode}(e1, e2)
-e1 == e2
-e1 != e2
 }
 \arguments{
   \item{x}{The object to print or test

@@ -8,9 +8,11 @@
 
 \title{Class \code{"NeticaSession"}}
 \description{
-  An R object which provides a link to the RNetica session.  One of
+
+  An R object which provides a link to the Netica session.  One of
   these must be present and active to allow access to Netica from R.
   This object is also how one enables the Netica license.
+
 }
 \section{Extends}{
 
@@ -73,16 +75,16 @@ destructively modified.  Also fields (slots) are accessed using the
   share dumps of the NeticaSession object with people who are not
   eligible to use your license.}
 
-  The \code{nets} field of the NeticaSession object contains a collection
-  (actually an \link[base]{environment}) of all of the networks.  They
-  are referenced using their Netica names.  In particular, the construct
-  \code{session$nets$netname} will return the network named netname if
-  it exists, or \code{NULL}.  Similarly, the construct
-  \code{session$nets[[netname]]} will attempt to return the network
-  whose name is the value of \code{netname}.  The method
-  \code{session$listNets()} lists the names of all networks registered
-  with the session.  This collection is maintained by the
-  \code{\link{CreateNetwork}}, \code{\link{DeleteNetwork}}, and 
+  The \code{nets} field of the NeticaSession object contains a
+  collection (actually an \link[base]{environment}) of all of the
+  networks.  They are referenced using their Netica names.  In
+  particular, the construct \code{session$nets$netname} will return the
+  network named netname if it exists, or \code{NULL}.  Similarly, the
+  construct \code{\var{session}$nets[[\var{netname}]]} will attempt to
+  return the network whose name is the value of \code{netname}.  The
+  method \code{session$listNets()} lists the names of all networks
+  registered with the session.  This collection is maintained by the
+  \code{\link{CreateNetwork}}, \code{\link{DeleteNetwork}}, and
   \code{\link{ReadNetworks}}, so it is almost certainly an error to try
   and manually change it.  Network objects should be renamed using
   \code{\link{NetworkName}} which will update the collection.
@@ -135,18 +137,18 @@ destructively modified.  Also fields (slots) are accessed using the
     added.  This looks for an object called \code{DefaultNeticaSession}
     in the gobal environment.  If this object does not exist, the user
     will be prompted to make one the first time
-    \code{\link{getDefaultSession()}} is called.  This is the default
+    \code{\link{getDefaultSession}()} is called.  This is the default
     for most high level functions which take a section argument;
     hopefully, this will provide backwards compatability.
 
     The error reporting mechanism now also works through the session
     object.  The \code{session$reportErrors()} and
-    \code{session$clearErrors()} methods are used to maintain this
+    \code{\var{session}$clearErrors()} methods are used to maintain this
     system.  The \code{\link{NeticaBN}} object contains a back pointer
     to its session, and delegates error reporting to the session.  In
-    particular, \code{net$Session} returns the session object.
+    particular, \code{\var{net}$Session} returns the session object.
     Similarly, a \code{\link{NeticaNode}} contains a back pointer to the
-    \code{\link{NeticaBN}}, so \code{node$Net$Session} accesses the
+    \code{\link{NeticaBN}}, so \code{\var{node}$Net$Session} accesses the
     session. 
 
 }
@@ -159,7 +161,7 @@ destructively modified.  Also fields (slots) are accessed using the
   \code{\link{CaseFileStream}}, \code{\link{MemoryCaseStream}},
   \code{\link{OpenCaseStream}} and \code{\link{NewNeticaRNG}}.
 
-%%  \code{\linkS4class{NeticaBN}} 
+  \code{\linkS4class{NeticaBN}} 
 
 }
 \examples{
@@ -199,6 +201,7 @@ for (netname in DefaultNeticaSession$listNets()) {
 \keyword{classes}
 \keyword{interface}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{LicenseKey}:}{Object of class \code{character} giving
       the license key obtained from Norsys

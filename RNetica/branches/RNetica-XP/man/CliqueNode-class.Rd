@@ -95,6 +95,7 @@ stopSession(sess)
 \keyword{ misc }
 \keyword{classes}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{Name}:}{Object of class \code{character} giving the
       Netica name of the node.  Must follow the \code{\link{IDname}} rules. }

@@ -148,9 +148,12 @@ stopSession(sess)
 }
 \keyword{classes}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
   \describe{
     \item{\code{Name}:}{Object of class \code{character} giving the
-      Netica name of the node.  Must follow the \code{\link{IDname}} rules. }
+      Netica name of the node.  Must follow the \code{\link{IDname}}
+      rules. This should not be modified by user code, use
+      \code{\link{NodeName}} instead.}
     \item{\code{Netica_Node}:}{Object of class \code{externalptr} giving
       the address of the node in Netica's memory space. }
     \item{\code{Net}:}{Object of class \code{\linkS4class{NeticaBN}}, a

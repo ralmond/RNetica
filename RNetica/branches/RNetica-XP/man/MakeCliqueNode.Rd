@@ -10,7 +10,7 @@
 
   When a junction tree is compiled, if the nodes are in the same clique,
   it is easier to calculate their joint probability.  The function
-  \code{MakeCliqueNode(nodelist)} forces the nodes in \code{nodelist} by
+  \code{MakeCliqueNode(\var{nodelist})} forces the nodes in \code{nodelist} by
   making a special one state clique node with all of the nodes in
   \code{nodelist} as a parent.
 
@@ -23,7 +23,7 @@ GetClique(cliquenode)
 \arguments{
 
   \item{nodelist}{
-    A list of active \code{\link{NeticaNode}} objects from the same
+    A list of active \code{\linkS4class{NeticaNode}} objects from the same
     network. 
   }
   \item{x}{
