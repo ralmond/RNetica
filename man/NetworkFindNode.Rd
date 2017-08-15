@@ -7,7 +7,7 @@
 \description{
 
   The function \code{NetworkFindNode} finds a node in a
-  \code{\link{NeticaBN}} with the given name.  If no node with the
+  \code{\linkS4class{NeticaBN}} with the given name.  If no node with the
   specified name found, it will return \code{NULL}. The function
   \code{NetworkAllNodes()} returns a list of all nodes in the network.
 
@@ -18,7 +18,7 @@ NetworkAllNodes(net)
 }
 \arguments{
   \item{net}{
-    The \code{NeticaBN} to search.
+    The \code{\linkS4class{NeticaBN}} to search.
 }
   \item{name}{
     A character vector giving the name or names of the desired nodes.
@@ -26,7 +26,8 @@ NetworkAllNodes(net)
 }
 }
 \details{
-  Although each \code{\link{NeticaNode}} belongs to a single network, a
+
+  Although each \code{\linkS4class{NeticaNode}} belongs to a single network, a
   network contains many nodes.  Within a network, a node is uniquely
   identified by its name.  However, nodes can be renamed (see
   \code{\link{NodeName}()}).  
@@ -34,12 +35,36 @@ NetworkAllNodes(net)
   The function \code{NetworkAllNodes()} returns all the nodes in the
   network, however, the order of the nodes in the network could be
   different in different calls to this function.
+
+  Starting with RNetica version 0.5, \code{\linkS4class{NeticaBN}}
+  objects keep a cache of node objects in the environment
+  \code{\var{net}$nodes}.  In particular, the methods
+  \code{\var{net}$findNode()} will search the cache, and
+  \code{\var{net}$listNodes()} will list the names of the nodes in the
+  cache.  Also, \code{\var{net}$nodes$\var{nodename}} or
+  \code{\var{net}$nodes[["\var{nodename}"]]} will fetch the cached node
+  (if it exists) or return \code{NULL} if it does not.
+
+  Nodes that are created in RNetica, using \code{\link{NewDiscreteNode}}
+  or \code{\link{NewContinuousNode}} are automatically added to the
+  cache.  This is also true of other functions which return
+  \code{\linkS4class{NeticaNode}} objects.  For example,
+  \code{\link{NodeParents}(\var{node})} will add the parents of
+  \var{node} to the cache if they are not there already.
+
+  A potential problem arises when the network is read from a file using
+  \code{\link{ReadNetworks}}.  This function does not automatically
+  cache the nodes.  Calling \code{NetworkFindNode} will add the nodes to
+  the cache.  Calling \code{NetworkAllNodes} will add all nodes to the
+  cache.  Calling \code{\link{NetworkNodesInSet}} can be used to pull
+  just a subsetof nodes into the cache.
   
 }
 \value{
-  The \code{\link{NeticaNode}} object or list of \code{NeticaNode}
+  The \code{\linkS4class{NeticaNode}} object or list of \code{NeticaNode}
   objects corresponding to \code{names}, or a list of all node objects for
-  \code{NetworkAllNodes()}.  In the latter case, the names will be set
+  \code{NetworkAllNodes()}.  In the latter case, the \sQuote{names}
+  attribute of the returned list will be set
   to the node names.
 }
 \references{
@@ -57,10 +82,20 @@ NetworkAllNodes(net)
   \code{NetworkFindNode()} after the network is reloaded.
 }
 \seealso{
+  \code{\linkS4class{NeticaBN}} talks more about the node cache and has
+  other functions for manipulating it.
+  
+  \code{\link{NetworkNodesInSet}} can be used to find a labeled subset
+  of nodes.
+
   \code{\link{NodeNet}()} retrieves the network from the node.
+
 }
 \examples{
-tnet <- CreateNetwork("TestNet")
+sess <- NeticaSession()
+startSession(sess)
+
+tnet <- CreateNetwork("TestNet", session=sess)
 nodes <- NewDiscreteNode(tnet,c("A","B","C"))
 
 nodeA <- NetworkFindNode(tnet,"A")
@@ -80,10 +115,13 @@ tnet <- WriteNetworks(tnet,"Tnet.neta")
 q(save="yes")
 # R
 library(RNetica)
-tnet <- ReadNetworks(tnet)
+sess <- NeticaSession()
+startSession(sess)
+tnet <- ReadNetworks(tnet, session=sess)
 nodes <- NetworkFindNodes(tnet,as.character(nodes))
 }
 DeleteNetwork(tnet)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ graphs }

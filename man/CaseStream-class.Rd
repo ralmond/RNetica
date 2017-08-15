@@ -197,6 +197,8 @@ stopSession(sess)
 \keyword{ IO }
 \keyword{classes}
 \section{Fields}{
+  Note these should be regarded as read-only from user code.
+
   \describe{
     \item{\code{Name}:}{Object of class \code{character} an identifier
       for the case stream, derived from the filename for

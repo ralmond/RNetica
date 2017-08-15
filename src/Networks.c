@@ -436,7 +436,7 @@ SEXP RN_SetNetName(SEXP bn, SEXP newnames, SEXP session) {
     newname = CHAR(STRING_ELT(newnames,0)); 
     other_net = RN_AS_NET(newname,netica_env);
     if ( other_net && other_net != netica_handle) {
-      warning("There is already a network named %s.",newname);
+      error("There is already a network named %s.",newname);
     } else {
       SetNetName_bn(netica_handle,newname);
       // We need to change the bn object to reflect the new name; this

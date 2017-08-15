@@ -81,7 +81,7 @@ Object of class \code{numeric} containing an
   the value of \code{getDefaultSession()}.
 
   In the previous version the session was created an the
-  \code{\link{StartNetica()}} function was called when the RNetica
+  \code{\link{StartNetica}()} function was called when the RNetica
   namespace was attached.  Thus the user did not need to worry about
   starting the Netica session.  To be backwards compatable, the function
   \code{getDefaultSession()} searches for a default NeticaSession object
@@ -119,6 +119,7 @@ Object of class \code{numeric} containing an
 \author{Russell Almond
 }
 \section{License}{
+
   The Netica API is not free-as-in-speech software, the use of the
   Netica shared library makes you subject to the Netica License
   agreement (which can be found in the RNetica folder in your R library.
@@ -140,8 +141,6 @@ Object of class \code{numeric} containing an
   \code{\link{startSession}}, \code{\link{stopSession}},
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}},
   \code{\link{GetNamedNetwork}}, and \code{\link{ReadNetworks}}.  It is
-
-  
 
 
 }

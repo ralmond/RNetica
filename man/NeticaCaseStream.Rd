@@ -1,5 +1,4 @@
 \name{NeticaCaseStream}
-\alias{NeticaCaseStream}
 \alias{OpenCaseStream}
 \alias{CloseCaseStream}
 \alias{is.NeticaCaseStream}
@@ -7,13 +6,14 @@
 \alias{getCaseStreamPos}
 \alias{getCaseStreamLastId}
 \alias{getCaseStreamLastFreq}
-\title{A stream of cases for reading/writing Netica findings}
+\title{Functions for manipulating Netica case streams}
 \description{
 
-  This object is a wrapper around a Netica stream which is used to
-  read/write cases---sets of findings entered into a Netica network.
-  There are two subclasses:  \code{\link{CaseFileStream}} and
-  \code{\link{MemoryCaseStream}}.  The function
+  The \code{\linkS4class{CaseStream}} object is a wrapper around a
+  Netica stream which is used to read/write cases---sets of findings
+  entered into a Netica network.  There are two subclasses:
+  \code{\linkS4class{FileCaseStream}} and
+  \code{\linkS4class{MemoryCaseStream}}.  The function
   \code{\link{ReadFindings}} reads the findings from the stream and the
   function \code{\link{WriteFindings}} writes them out.
 
@@ -28,15 +28,15 @@ getCaseStreamLastId(stream)
 getCaseStreamLastFreq(stream)
 }
 \arguments{
-  \item{oldstream}{A previously closed \code{NeticaCaseStream} object.
+  \item{oldstream}{A previously closed \code{\linkS4class{CaseStream}} object.
   }
-  \item{stream}{A \code{NeticaCaseStream} object.}
+  \item{stream}{A \code{\linkS4class{CaseStream}} object.}
   \item{x}{A object to be printed or whose type is to be determined.}
   \item{...}{Other arguments to \code{toString}.  These are ignored.}
 }
 \details{
 
-  A \code{\linkS4class{NeticaCaseStream}} object is an R wrapper around
+  A \code{\linkS4class{CaseStream}} object is an R wrapper around
   a Netica stream object.  There are two special cases:
   \code{\linkS4class{CaseFileStream}} objects are streams focused on a
   case file, and \code{\linkS4class{MemoryCaseStream}} objects are
@@ -79,7 +79,7 @@ getCaseStreamLastFreq(stream)
 \value{
 
   The functions \code{OpenCaseStream} and \code{CloseCaseStream} both
-  return their argument, which should be a \code{NeticaCaseStream}.
+  return their argument, which should be a \code{\linkS4class{CaseStream}}.
 
   The function \code{toString.CaseStream} returns a string providing
   information about the source and status its argument.
@@ -87,7 +87,7 @@ getCaseStreamLastFreq(stream)
   The functions \code{is.NeticaCaseStream} and \code{isCaseStreamOpen} both
   return logical values indicating whether or not the condition holds.
   The latter function returns \code{NA} if its argument is not a
-  \code{NeticaCaseStream}.
+  \code{\linkS4class{CaseStream}}.
 
   The function \code{getCaseStreamPos} returns a scalar integer values
   giving the position of the last record read from or written to the
@@ -103,6 +103,10 @@ getCaseStreamLastFreq(stream)
   which is the weight associated with the last case read from or written
   to \code{stream}.  If the user did not specify frequencies when the
   stream was written, the value returned is \code{-1}.
+
+  The functions \code{\link{LearnCPTs}} and \code{\link{LearnCases}}
+  update the CPTs of a Bayesian network based on the cases in the case
+  stream. 
 }
 \references{
   \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -118,7 +122,7 @@ getCaseStreamLastFreq(stream)
   \code{\link{WriteNetworks}} also use Netica streams
   internally. However, as it is almost certainly a mistake to keep the
   stream open after the network has been read or written, no
-  \code{NeticaCaseStream} object is created.
+  \code{\linkS4class{CaseStream}} object is created.
   
   Internally, a weak reference system is used to keep a list of Netica
   stream objects which need to be closed when RNetica is unloaded.
@@ -131,6 +135,11 @@ getCaseStreamLastFreq(stream)
   an R session.  However, the object retains information about itself,
   so that calling \code{OpenCaseStream} on the saved object, should
   reopen the stream.  Note that any position information will be lost.
+
+  The functions \code{\link{LearnCPTs}} and \code{\link{LearnCases}}
+  don't seem to work with \code{\linkS4class{MemoryCaseStream}}s; for
+  now, work around by writing the data out to a file and then writing
+  using a \code{\linkS4class{FileCaseStream}}.
   
 }
 \seealso{
@@ -144,6 +153,9 @@ getCaseStreamLastFreq(stream)
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
   \code{\link{CaseMemoryStream}},\code{\link{CaseFileStream}},
   \code{\link{WithOpenCaseStream}}
+  \code{\link{LearnCPTs}},   \code{\link{LearnCases}}
+
+
 }
 \examples{
 sess <- NeticaSession()
@@ -231,4 +243,4 @@ stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }

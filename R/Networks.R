@@ -368,7 +368,7 @@ NetworkName <- function (net, internal=FALSE) {
   if (!is.NeticaBN(net) || !is.active(net)) {
     stop("Expected an active Netica network, got, ",net)
   }
-  oldname <- GetNetworkName(net)
+  oldname <- NetworkName(net)
   session <- net$Session
   if (length(value)>1 || !is.IDname(value)) {
     stop("Illegal Netica Name, ",value)

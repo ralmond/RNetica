@@ -128,4 +128,4 @@ net1 != net2
 }
 \keyword{ classes }
 \keyword{ graphs }
-\keyword{ interface }% __ONLY ONE__ keyword per line
+\keyword{ interface }

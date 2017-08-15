@@ -1,5 +1,4 @@
 \name{NeticaRNG}
-\alias{NeticaRNG}
 \alias{NewNeticaRNG}
 \alias{FreeNeticaRNG}
 \alias{WithRNG}
@@ -13,7 +12,7 @@
   calling \code{FreeNeticaRNG(rng)}. 
 }
 \usage{
-NewNeticaRNG(seed = round(runif(1, 0, 1e+09)), session=getDefaultSession())
+NewNeticaRNG(seed = sample.int(.Machine$integer.max,1L), session=getDefaultSession())
 FreeNeticaRNG(rng)
 WithRNG(rng,expr)
 is.NeticaRNG(x)
@@ -39,19 +38,19 @@ isNeticaRNGActive(rng)
   primary use for creating a NeticaRNG is to produce a reproducable
   sequence of random cases.
 
-  Creating a random number generator with \code{rng <-
-  NewNeticaRNG(seed)} generates an object in Netica space.  The memory
+  Creating a random number generator with \code{\var{rng} <-
+  NewNeticaRNG(\var{seed})} generates an object in Netica space.  The memory
   for that object should be freed when that is complete.  The expression
-  \code{FreeNeticaRNG(rng)} frees this object.  The function
+  \code{FreeNeticaRNG(\var{rng})} frees this object.  The function
   \code{WithRNG} can be used to execute code in a context where the RNG
   will be freed after after completion or in the case of early
   termination due to an error.  
 
   When the random number generator is freed, or if the R session or
   Netica session is terminated, the NeticaRNG object will become
-  inactive.   The function \code{isNeticaRNGActive(rng)} tests to see if
-  the random number generator is active (the Netica version still
-  exists).  
+  inactive.  The function \code{isNeticaRNGActive(\var{rng})} tests to
+  see if the random number generator is active (the Netica version still
+  exists).
   
 }
 \value{
@@ -77,6 +76,7 @@ isNeticaRNGActive(rng)
 }
 \author{Russell Almond}
 \note{
+
   There are two other uses of newly created Netica RNG objects in the
   Netica Manual which are not currently supported by RNetica.  One is to
   simply generate uniform random numbers which seems superfluous given
@@ -94,6 +94,7 @@ isNeticaRNGActive(rng)
   The weak reference system is somewhat experimental, so well designed
   code should manually close the RNG when the program is through
   with it.
+
 }
 \seealso{
   An object of \code{\linkS4class{NeticaRNG}} which is what is produced

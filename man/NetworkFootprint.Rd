@@ -15,25 +15,25 @@ NetworkFootprint(net)
 }
 \arguments{
   \item{net}{
-    An active \code{\link{NeticaBN}} to be examined.
+    An active \code{\linkS4class{NeticaBN}} to be examined.
   }
 }
 \details{
 
   Stub nodes -- unsatisfied links or connections -- can happen in two
   ways.  Either by setting one of the values of
-  \code{\link{NodeParents}(node)} to \code{NULL}, or by copying a node
+  \code{\link{NodeParents}(\var{node})} to \code{NULL}, or by copying a node
   (using \code{\link{CopyNodes}()}) without copying its parents.  (This
   can also be done in the Netica GUI by detaching the link from the
   parent end).  This this case Netica names the
   \code{\link{NodeInputNames}()} according to the name of the old node.
 
-  The function \code{NetworkFootprint(net)} search all of the nodes in
+  The function \code{NetworkFootprint(\var{net})} search all of the nodes in
   \code{net} to find stub nodes, and reports the
   \code{NodeInputNames()} of the stub nodes.  This function provides a
   test for unsatisfied connections, and should be of assistance when
   joining two networks together.  The function
-  \code{\link{AdjoinNetwork}(sm,em)} joins two networks together and
+  \code{\link{AdjoinNetwork}(\var{sm},\var{em})} joins two networks together and
   attempts to resolve the unsatisfied connections in \code{em}.
 
   One particular application of the footprint is in the EM--SM algorithm
@@ -61,24 +61,25 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{MakeCliqueNode}()}, \code{\link{NodeInputNames}()},
   \code{\link{CopyNodes}()},\code{\link{AdjoinNetwork}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
 ## System/Student model
-EMSMSystem <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","System.dne",
-                           sep=.Platform$file.sep))
+EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","System.dne"), session=sess)
 
 CompileNetwork(EMSMSystem)
 JunctionTreeReport(EMSMSystem)
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne",
-                           sep=.Platform$file.sep))
+EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask1a.dne"), session=sess)
+
 NetworkFootprint(EMTask1a)
 ## The corresponding clique is not in system model, so force it in.
 MakeCliqueNode(NetworkFindNode(EMSMSystem, NetworkFootprint(EMTask1a)))
@@ -86,16 +87,15 @@ CompileNetwork(EMSMSystem)
 JunctionTreeReport(EMSMSystem)
 
 
-
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne",
-                           sep=.Platform$file.sep))
+EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask2a.dne"), session=sess)
 NetworkFootprint(EMTask2a)
 ## This is already a clique, so nothing to do.
 
 DeleteNetwork(list(EMSMSystem,EMTask1a,EMTask2a))
+stopSession(sess)
 
 }
 \keyword{ interface}
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

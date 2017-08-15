@@ -5,11 +5,13 @@
   Gets or changes the kind of a node in a Netica network.
 }
 \description{
+
   Netica supports nodes of four different kinds:  \code{"Nature"},
   \code{"Decision"}, \code{"Utility"}, and \code{"Constant"}.  A fifth
   kind, \code{"Stub"} is used for a reference to a node when an edge has
   been detached from a node.  The function \code{NodeKind()} returns the
   current kind.
+
 }
 \usage{
 NodeKind(node)
@@ -17,7 +19,7 @@ NodeKind(node) <- value
 }
 \arguments{
   \item{node}{
-    A \code{\link{NeticaNode}} object whose kind is to be determined or
+    A \code{\linkS4class{NeticaNode}} object whose kind is to be determined or
     manipulated. 
   }
   \item{value}{
@@ -28,6 +30,7 @@ NodeKind(node) <- value
   }
 }
 \details{
+
   A \code{"Nature"} node (the default when the node is created) is a
   random variable whose value can be predicted using the network.  Pure
   Bayesian networks use only \code{"Nature"} nodes.
@@ -48,6 +51,7 @@ NodeKind(node) <- value
   a real node will later be attached in that location.  This kind can
   only be set internally to Netica; the expression
   \code{NodeKind(node) <- "Stub"} will generate an error.
+
 }
 \value{
   A character vector of length one containing one of the values:
@@ -63,16 +67,20 @@ NodeKind(node) <- value
   Russell Almond
 }
 \note{
+
   Internal to Netica, \code{"Stub"}s are called
   \code{DISCONNECTED_NODE}s.  I changed the name to make them start with
   a unique letter.
+
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{is.discrete}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{is.discrete}()},
   \code{\link{NodeParents}()} 
 }
 \examples{
-knet <- CreateNetwork("kNet")
+sess <- NeticaSession()
+startSession(sess)
+knet <- CreateNetwork("kNet", session=sess)
 
 skills <- NewContinuousNode(knet,paste("SkillAtTime",1:2,sep=""))
 
@@ -120,6 +128,8 @@ stopifnot(
 )
 
 DeleteNetwork(knet)
+stopSession(sess)
+
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

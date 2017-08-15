@@ -470,7 +470,7 @@ SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
     newname = CHAR(STRING_ELT(newnames,0)); 
     other_node = GetNodeNamed_bn(newname, GetNodeNet_bn(node_handle));
     if ( other_node && other_node != node_handle) {
-        warning("There is already a node named %s.",newname);
+        error("There is already a node named %s.",newname);
     } else {
       SetNodeName_bn(node_handle,newname);
       // We need to change the nd object to reflect the new name.
