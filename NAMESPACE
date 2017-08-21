@@ -1,5 +1,6 @@
 import(methods)
 import(utils)
+importFrom("utils","getFromNamespace")
 importFrom("grDevices", "col2rgb")
 importFrom("stats", "runif")
 importFrom("R.utils","tempvar")
@@ -18,7 +19,7 @@ export(StartNetica, StopNetica, NeticaVersion,
        CopyNetworks)
 
 exportClasses(NeticaBN)
-exportMethods(print,Compare,toString)
+exportMethods(print,Compare,toString,as.character,is.element)
 export(WriteNetworks, ReadNetworks,
        GetNetworkFileName,
        NetworkName, "NetworkName<-",

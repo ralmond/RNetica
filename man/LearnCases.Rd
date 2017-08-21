@@ -119,7 +119,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCases(outfile,list(A,B1))
 
 ## Probs for A & B1 modified, but B2 left alone

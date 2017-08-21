@@ -131,7 +131,7 @@ stopifnot(
   !is.element("TestSet",NodeSets(XX[[5]]))
 )
 NetworkNodesInSet(nsnet,"TestSet") <-
-  c(NetworkNodesInSet(nsnet,"TestSet"),X[[5]])
+  c(NetworkNodesInSet(nsnet,"TestSet"),XX[[5]])
 stopifnot(
   !is.element("TestSet",NodeSets(XX[[1]])),
   is.element("TestSet",NodeSets(XX[[2]])),
@@ -139,10 +139,6 @@ stopifnot(
   is.element("TestSet",NodeSets(XX[[4]])),
   is.element("TestSet",NodeSets(XX[[5]]))
 )
-
-
-
-
 
 DeleteNetwork(nsnet)
 stopSession(sess)

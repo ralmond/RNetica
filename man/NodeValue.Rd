@@ -11,10 +11,9 @@
 NodeValue(node)
 NodeValue(node) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object that references the node.
+    An active \code{\linkS4class{NeticaNode}} object that references the node.
     The node should be continuous or have a numeric value associated
     with each level (see \code{\link{NodeLevels}}).
 }
@@ -23,48 +22,51 @@ NodeValue(node) <- value
 }
 }
 \details{
-  The behavior of the levels depends on whether the node is discrete
-  (\code{\link{is.discrete}(node)==TRUE}) or continuous
-  (\code{\link{is.discrete}(node)==TRUE}).
 
-  \bold{Discrete.}  For if \code{node} is a discrete node, then the
-  states of \code{node} must have been assigned numeric values with
-  \code{\link{NodeLevels}(node)} in order for \code{NodeValue()} to make
-  sense.  If all states have not been assigned values,
+  The behavior of the levels depends on whether the node is discrete
+  (\code{\link{is.discrete}(\var{node})==TRUE}) or continuous
+  (\code{\link{is.discrete}(\var{node})==FALSE}).
+
+  \bold{Discrete.}  For if \var{node} is a discrete node, then the
+  states of \var{node} must have been assigned numeric values with
+  \code{\link{NodeLevels}(\var{node})} in order for \code{NodeValue()}
+  to make sense.  If all states have not been assigned values,
   \code{NodeValue()} will generate an error.
 
   If the value of the node is determined, either because the value of
   the node has been set with \code{\link{NodeFinding}()} or because the
   value can be determined exactly from the value of other nodes in the
   network (through logical probability distributions or formulae), then
-  \code{NodeValue(node)} will return the value associated with the
+  \code{NodeValue(\var{node})} will return the value associated with the
   state of the node.  Otherwise, it will return \code{NA}.
 
-  The expression \code{NodeValue(node)<-value}, can be used to
-  set the value of \code{node} to the state associate with the numerical
-  \code{value}.  If \code{value} does not correspond to one of the node
+  The expression \code{NodeValue(\var{node})<-\var{value}}, can be used to
+  set the value of \var{node} to the state associate with the numerical
+  \var{value}.  If \var{value} does not correspond to one of the node
   levels, this will generate an error.
 
   \bold{Continuous.}  For continuous nodes,
-  \code{\link{NodeFinding}(node)} returns the value associated with the
+  \code{\link{NodeFinding}(\var{node})} returns the value associated with the
   node, either set with a previous call to
-  \code{NodeValue(node)<-value}, or which can be determined
+  \code{NodeValue(\var{node})<-\var{value}}, or which can be determined
   through formulae.
 
-  The expression \code{NodeValue(node) <- value} will set the
+  The expression \code{NodeValue(\var{node}) <- \var{value}} will set the
   value (the equivalent of a finding for a discrete node) to
-  \code{value}.  If \code{node} has been associated with cut
-  scores through a previous call to \code{\link{NodeLevels}(node)}, then
+  \var{value}.  If \var{node} has been associated with cut
+  scores through a previous call to \code{\link{NodeLevels}(\var{node})}, then
   this will also associate a finding with the node.
 
 }
 \value{
-  The function \code{NodeValue(node)} returns the value of \code{node}
+
+  The function \code{NodeValue(\var{node})} returns the value of \var{node}
   if that can be determined (see Details) or \code{NA} if it cannot.  It
   may generate an error if \code{node} is discrete and has not had
   numeric values associated with its states.
 
-  The expression \code{NodeValue(node) <- value} returns \code{node}. 
+  The expression \code{NodeValue(\var{node}) <- \var{value}} returns
+  \code{\var{node}}.  
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -86,8 +88,10 @@ NodeValue(node) <- value
   \code{\link{NodeExpectedValue}()}, \code{\link{NodeBeliefs}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-aNet <- CreateNetwork("aNet")
+aNet <- CreateNetwork("aNet", session=sess)
 
 dTheta <- NewDiscreteNode(aNet, "ThetaD",
           c("neg2","neg1","zero","pos1","pos2"))
@@ -120,7 +124,7 @@ stopifnot(is.na(NodeValue(cTheta)))
 
 
 DeleteNetwork(aNet)
-
+stopSession(sess)
 
 }
 \keyword{ interface }

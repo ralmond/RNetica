@@ -82,6 +82,10 @@ setMethod("print","NeticaNode",function(x, ...) {
   cat(toString(x),"\n")
 })
 
+setMethod("as.character", "NeticaNode", function(x, ...) {
+  toString(x)
+})
+
 is.NeticaNode <- function (x) {
   is(x,"NeticaNode")
 }
@@ -106,6 +110,9 @@ setMethod("Compare","NeticaNode", function(e1, e2) {
   return(ifelse(identical(e1$Netica_Node,e2$Netica_Node),
                 truth,!truth))
 })
+
+setMethod("is.element",c("NeticaNode","list"),
+          function (el,set) is.element(list(el),set))
 
 setMethod("is.active","NeticaNode",function(x) x$isActive())
 

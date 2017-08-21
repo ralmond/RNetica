@@ -69,12 +69,12 @@ nets <- CreateNetwork(paste("Original",2:3,sep=""), session=sess)
 
 copy1 <-CopyNetworks(net1,"Copy1")
 stopifnot(is(copy1,"NeticaBN"))
-stopifnot(as.character(copy1) == "Copy1")
+stopifnot(copy1$Name == "Copy1")
 stopifnot(copy1 != net1)
 
 netc <- CopyNetworks(nets,paste("Copy",2:3,sep=""))
 stopifnot(all(sapply(netc,is,"NeticaBN")))
-stopifnot(as.character(netc) == c("Copy2","Copy3"))
+stopifnot(netc$Name == c("Copy2","Copy3"))
 
 DeleteNetwork(c(netc,nets,list(copy1,net1)))
 stopSession(sess)

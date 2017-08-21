@@ -122,6 +122,9 @@ student1 <- CopyNetworks(EMSMSystem,"student1")
 student1.prof <- NetworkNodesInSet(student1,"Proficiency")
 
 student1.t1a <- AdjoinNetwork(student1,EMTask1a)
+stopifnot(setequal(student1$listNodes(),
+ c("CliqueNode1", "Obs1a1", "Obs1a2", "Skill1", "Skill2", "Skill3")))
+
 ## We are done with the original EMTask1a now
 DeleteNetwork(EMTask1a)
 
@@ -131,9 +134,11 @@ NodeFinding(student1.t1a$Obs1a1) <- "Right"
 NodeFinding(student1.t1a$Obs1a2) <- "Right"
 
 student1.probt1a <- JointProbability(student1.prof)
-
 ## Done with the observables, absorb them
 AbsorbNodes(student1.t1a)
+stopifnot(setequal(student1$listNodes(),
+ c("CliqueNode1", "Skill1", "Skill2", "Skill3")))
+
 CompileNetwork(student1)
 student1.probt1ax <- JointProbability(student1.prof)
 
@@ -147,6 +152,8 @@ student1.t2a <- AdjoinNetwork(student1,EMTask2a,as.IDname("t2a"))
 stopifnot(
   setequal(names(student1.t2a),names(NetworkNodesInSet(student1,"t2a")))
 )
+stopifnot(setequal(student1$listNodes(),
+ c("CliqueNode1", "Obs2a", "Skill1", "Skill2", "Skill3")))
 DeleteNetwork(EMTask2a)
 
 ## Add findings
@@ -156,6 +163,8 @@ NodeFinding(student1.t2a$Obs2a) <- "Half"
 student1.probt1a2a <- JointProbability(student1.prof)
 
 AbsorbNodes(student1.t2a)
+stopifnot(setequal(student1$listNodes(),
+ c("CliqueNode1", "Skill1", "Skill2", "Skill3")))
 CompileNetwork(student1)
 student1.probt1a2ax <- JointProbability(student1.prof)
 
@@ -168,6 +177,8 @@ stopifnot(
 ##   numbers.
 AdjoinNetwork(student1,EMTask2b)
 AdjoinNetwork(student1,EMTask2b)
+stopifnot(setequal(student1$listNodes(),
+ c("CliqueNode1", "Obs2b", "Obs2b1", "Skill1", "Skill2", "Skill3")))
 
 DeleteNetwork(student1)
 DeleteNetwork(EMTask2b)

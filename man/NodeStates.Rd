@@ -5,23 +5,25 @@
 \title{ Accessor for states of a Netica node.
 }
 \description{
+
   This function returns a list associated with a Netica node.  The
   function \code{NodeNumStates()} returns the number of states,
   \code{NodeStates} returns or manipulates them.
+
 }
 \usage{
 NodeStates(node)
 NodeNumStates(node)
 NodeStates(node, resize=FALSE) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object whose states are to be accessed.
+    An active \code{\linkS4class{NeticaNode}} object whose states are to
+    be accessed. 
   }
   \item{value}{
-    A character vector of length \code{NodeNumStates(node)} giving the
-    names of the states.  State names must conform to the
+    A character vector of length \code{NodeNumStates(\var{node})} giving
+    the names of the states.  State names must conform to the
     \code{\link{IDname}} rules.
   }
   \item{resize}{
@@ -33,10 +35,11 @@ NodeStates(node, resize=FALSE) <- value
   }
 }
 \details{
+
   States behave slightly differently for discrete and continuous nodes
   (see \code{is.discrete()}.  For discrete nodes, the random variable
   represented by the node can take on one of the values represented by
-  \code{NodeStates(node)}.
+  \code{NodeStates(\var{node})}.
 
   \bold{Discrete.} The number of states for a discrete node is
   determined when the node is created (through a call to
@@ -52,38 +55,37 @@ NodeStates(node, resize=FALSE) <- value
   \code{\link{NodeStateTitles}()}, and \code{\link{NodeLevels}()} (for
   discrete nodes).
 
-  Calling \code{NodeStates(node,resize=TRUE) <- value} will adjust the
-  number of states in the node to match the length of \code{value}.
-  Note that this is a somewhat dangerous operation.  If there is a CPT
-  associated with the node, Netica will adjust it to the right size
-  using an operation which has not been documented, but seems like a
-  sensible default.  If there is a finding associated with the node,
-  Netica may raise an error if this state is deleted (RNetica simply
-  deletes the unneeded states from the end of the list).  It is probably
-  safe to resize the node only in early stages of development.  This is
-  why the default is to raise an error.
+  Calling \code{NodeStates(\var{node},resize=TRUE) <- \var{value}} will
+  adjust the number of states in the node to match the length of
+  \var{value}.  Note that this is a somewhat dangerous operation.  If
+  there is a CPT associated with the node, Netica will adjust it to the
+  right size using an operation which has not been documented, but seems
+  like a sensible default.  If there is a finding associated with the
+  node, Netica may raise an error if this state is deleted (RNetica
+  simply deletes the unneeded states from the end of the list).  It is
+  probably safe to resize the node only in early stages of development.
+  This is why the default is to raise an error.
 
   \bold{Continuous.}  States for a continuous node are determined by the
   \code{\link{NodeLevels}()} of the node, which describe a series of
   endpoints for intervals that cut the continuous space into the
-  states.  The function \code{NodeNumStates(node)} should return
-  \code{length(NodeLevels(node))-1} unless the levels have not been set
+  states.  The function \code{NodeNumStates(\var{node})} should return
+  \code{length(NodeLevels(\var{node}))-1} unless the levels have not been set
   in which case it will be zero.  If \code{NodeStates} are set for a
   continuous node, they must have length
-  \code{length(NodeLevels(node))-1}. 
-
-  
-
+  \code{length(NodeLevels(\var{node}))-1}. 
   
 }
 \value{
+
   The function \code{NodeNumStates()} returns an integer giving the
   number of states.
 
   The function \code{NodeStates()} returns a character vector of length
-  \code{NodeNumStates(node)} whose values and names are both set to the
+  \code{NodeNumStates(\var{node})} whose values and names are both set to the
   state names.  The setter version of this function invisibly returns the
-  \code{node} object.
+  \var{node} object.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -97,13 +99,15 @@ NodeStates(node, resize=FALSE) <- value
   Russell Almond
 }
 \seealso{
-  \code{\link{NewDiscreteNode}()}, \code{\link{NeticaNode}},
+  \code{\link{NewDiscreteNode}()}, \code{\linkS4class{NeticaNode}},
   \code{\link{NodeName}()}, \code{\link{is.discrete}()},
   \code{\link{is.active}()}, \code{\link{NodeStateTitles}()},
   \code{\link{NodeLevels}()}, \code{\link{NodeStateComments}()},
 }
 \examples{
-anet <- CreateNetwork("Annette")
+sess <- NeticaSession()
+startSession(sess)
+anet <- CreateNetwork("Annette", session=sess)
 
 ## Discrete Nodes
 nodel2 <- NewDiscreteNode(anet,"TwoLevelNode")
@@ -168,7 +172,8 @@ NodeStates(wnode) <- c("Low","Medium","High")
 
 
 DeleteNetwork(anet)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ graphs }% __ONLY ONE__ keyword per line
+\keyword{ graphs }

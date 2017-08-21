@@ -161,6 +161,20 @@ setGeneric("is.active",
 setMethod("is.active","NeticaSession",function(x) x$isActive())
 setMethod("is.active","list",function(x) sapply(x, is.active))
 
+setMethod("toString","NeticaSession",function(x,...) {
+  if (is.active(x))
+    paste("<Netica Session:",x$Name,">")
+  else
+    paste("<Inactive Netica Session:",x$Name,">")
+})
+
+setMethod("print","NeticaSession", function(x, ...) {
+  cat(toString(x),"\n")
+})
+
+setMethod("as.character", "NeticaSession", function(x, ...) {
+  toString(x)
+})
 
 ## ## Searches active sessions looking for network by name.
 ## ## May return multiple results if different sessions have networks of
@@ -193,7 +207,7 @@ getDefaultSession <- function() {
       stop("Could not find DefaultNeticaSession")
     cat("No ",dQuote("DefaultNeticaSession"), " variable exists in the global enviornment.\n")
     cat("Creating one will modify the global environment.\n")
-    yn <- prompt("Should RNetica create one? (y/N)")
+    yn <- readline("Should RNetica create one? (y/N)")
     if (!grepl("y",yn,ignore.case=TRUE)) {
       stop("Could not find DefaultNeticaSession")
     }

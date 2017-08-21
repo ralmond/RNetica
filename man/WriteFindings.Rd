@@ -2,21 +2,23 @@
 \alias{WriteFindings}
 \title{Appends the current findings to a Netica case file.}
 \description{
+
   This function writes the current findings for a network as a row in a
-  Netica case file.  If \code{filename} already exists, the new row is
+  Netica case file.  If \var{filename} already exists, the new row is
   appended on the end of the file.  Variables that are not instantiated
   are written out using the missing code.
+
 }
 \usage{
 WriteFindings(nodes, pathOrStream, id = -1L, freq = -1.0)
 }
 \arguments{
   \item{nodes}{
-    The a list of active \code{\link{NeticaNode}} objects to be written out.
+    The a list of active \code{\linkS4class{NeticaNode}} objects to be written out.
   }
   \item{pathOrStream}{Either a character scalar giving the path name of
     the file to which the results are to be written, or a
-    \code{\link{NeticaCaseStream}} object.  It is recommended that it have
+    \code{\linkS4class{CaseStream}} object.  It is recommended that it have
     the extension \dQuote{.cas}.
   }
   \item{id}{An integer scalar giving the case ID.  The default value of
@@ -33,8 +35,8 @@ WriteFindings(nodes, pathOrStream, id = -1L, freq = -1.0)
 \details{
   A case file is a table where the rows represent cases, and the columns
   represent variables.  \code{WriteFindings} writes out the
-  currently instantiated value of the nodes in \code{nodeset}.  If a
-  node in \code{nodeset} does not currently have a finding attached,
+  currently instantiated value of the nodes in \var{nodeset}.  If a
+  node in \var{nodeset} does not currently have a finding attached,
   then the value of \code{\link{CaseFileMissingCode}()} is printed out
   instead.  The values in the columns are separated by the value of
   \code{\link{CaseFileDelimiter}()}.
@@ -59,10 +61,11 @@ WriteFindings(nodes, pathOrStream, id = -1L, freq = -1.0)
 
 }
 \value{
-  Returns the \code{caseOrStream} argument invisibly.  Note that the
-  values of \code{\link{getCaseStreamPos}(stream)},
-  \code{\link{getCaseStreamLastId}(stream)}, and
-  \code{\link{getCaseStreamLastFreq}(stream)} will be updated to reflect
+
+  Returns the \var{caseOrStream} argument invisibly.  Note that the
+  values of \code{\link{getCaseStreamPos}(\var{stream})},
+  \code{\link{getCaseStreamLastId}(\var{stream})}, and
+  \code{\link{getCaseStreamLastFreq}(\var{stream})} will be updated to reflect
   the values from the last read record.
 }
 \references{
@@ -74,11 +77,13 @@ WriteFindings(nodes, pathOrStream, id = -1L, freq = -1.0)
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{NodeFinding}}, \code{\link{RetractNetFindings}}
-  \code{\link{ReadFindings}}, \code{\link{NeticaCaseStream}}
+  \code{\link{ReadFindings}}, \code{\linkS4class{CaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -89,7 +94,7 @@ AddLink(B,C)
 
 ## Outputfilename
 casefile <- tempfile("testcase",fileext=".cas")
-filestream <- CaseFileStream(casefile)
+filestream <- CaseFileStream(casefile, session=sess)
 stopifnot(is.CaseFileStream(filestream),
           isCaseStreamOpen(filestream))
 
@@ -116,7 +121,8 @@ RetractNetFindings(abc)
 
 
 DeleteNetwork(abc)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }

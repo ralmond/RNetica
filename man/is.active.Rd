@@ -1,5 +1,11 @@
 \name{is.active}
 \alias{is.active}
+\alias{is.active,NeticaSession-method}
+\alias{is.active,NeticaBN-method}
+\alias{is.active,NeticaNode-method}
+\alias{is.active,NeticaRNG-method}
+\alias{is.active,CaseStream-method}
+\alias{is.active,list-method}
 \title{
   Check to see if a Netica network or node object is still valid.
 }

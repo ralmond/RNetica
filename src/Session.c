@@ -21,6 +21,7 @@
   changes */
 
 //#define DEBUGFIELDS
+//#define DEBUG_NETICA_ERRORS
 
 SEXP RX_do_RC_field(SEXP obj, SEXP name) {
   SEXP rho,result;                     
@@ -458,8 +459,10 @@ SEXP RN_ClearSessionErrors(SEXP sessobj, SEXP severity) {
       etype = NOTHING_ERR;
     }
   }
+#ifdef DEBUG_NETICA_ERRORS  
   Rprintf("Clearing errors for network @%x, of type %d.\n",
           (long) netica_env, etype);
+#endif
   ClearErrors_ns(netica_env,etype);
   return sessobj;
 }

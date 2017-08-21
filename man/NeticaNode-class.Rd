@@ -5,6 +5,8 @@
 \alias{Compare,NeticaNode,ANY-method}
 \alias{print,NeticaNode-method}
 \alias{toString,NeticaNode-method}
+\alias{as.character,NeticaNode-method}
+\alias{is.element,NeticaNode,list-method}
 
 \title{Class \code{"NeticaNode"}}
 \description{
@@ -33,6 +35,8 @@ destructively modified.  Also fields (slots) are accessed using the
       probabliity table for node, see \link{Extract.NeticaNode}. }
     \item{Compare}{\code{signature(e1 = "NeticaNode", e2 = "ANY")}:
       Tests two nodes for equality }
+    \item{is.element}{\code{signature(el = "NeticaNode", set = "list")}:
+      Checks to see if \var{el} is in list of nodes.}
     \item{print}{\code{signature(x = "NeticaNode")}: Makes printed
       representation.  }
     \item{toString}{\code{signature(x = "NeticaNode")}: Makes character
@@ -74,6 +78,11 @@ destructively modified.  Also fields (slots) are accessed using the
   function \code{\link{NetworkAllNodes}(\var{net})} will as a side
   effect create node objects for all of the nodes in \code{\var{net}}.
   
+  The function \code{\link[base]{match}} (and consequently \code{\%in\%}
+  does not like it when the first argument is a node.  To get around
+  this problem, wrap the node in a list.  I've added a method for the
+  function \code{\link[base]{is.element}} which does this
+  automatically. 
 
 }
 

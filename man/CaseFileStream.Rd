@@ -105,7 +105,7 @@ getCaseStreamPath(stream)
   properties of Netica streams.
 
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
-  \code{\link{MemoryCaseStream}},
+  \code{\link{CaseMemoryStream}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
 }
 \examples{
@@ -160,4 +160,4 @@ stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }

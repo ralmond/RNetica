@@ -4,9 +4,10 @@
   Reverses a link in a Netica network.
 }
 \description{
-  This reverses the link between \code{parent} and \code{child} so that
-  it now points from \code{child} to \code{parent}.  If \code{child} has
-  additional parents, they are connected to \code{parent} and the
+
+  This reverses the link between \var{parent} and \var{child} so that
+  it now points from \var{child} to \var{parent}.  If \var{child} has
+  additional parents, they are connected to \var{parent} and the
   conditional probability tables are adjusted so that the joint
   probability distribution across all nodes in the network remains the same.
 }
@@ -15,12 +16,12 @@ ReverseLink(parent, child)
 }
 \arguments{
   \item{parent}{
-    An active \code{\link{NeticaNode}} which is currently a parent of
-    \code{child} and which will be the child after the transformation.
+    An active \code{\linkS4class{NeticaNode}} which is currently a parent of
+    \var{child} and which will be the child after the transformation.
   }
   \item{child}{
-    An active \code{\link{NeticaNode}} which is currently a child of
-    \code{parent} and which will be the parent after the transformation.
+    An active \code{\linkS4class{NeticaNode}} which is currently a child of
+    \var{parent} and which will be the parent after the transformation.
   }
 }
 \details{
@@ -32,9 +33,12 @@ ReverseLink(parent, child)
   \code{C}.  After reversing the arc between \code{B} and \code{C},
   \code{A} will also become a parent of \code{B} to maintain the joint
   distribution. 
+
 }
 \value{
+
   Returns \code{NULL} if successful and \code{NA} if there was a problem.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -48,12 +52,15 @@ ReverseLink(parent, child)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeChildren}()}, \code{\link{NodeParents}()},
   \code{\link{AbsorbNodes}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
-abcnet <- CreateNetwork("ABC")
+sess <- NeticaSession()
+startSession(sess)
+
+abcnet <- CreateNetwork("ABC", session=sess)
 
 A <- NewDiscreteNode(abcnet,"A")
 B <- NewDiscreteNode(abcnet,"B")
@@ -75,7 +82,8 @@ stopifnot(
 )
 
 DeleteNetwork(abcnet)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ graphs }% __ONLY ONE__ keyword per line
+\keyword{ graphs }

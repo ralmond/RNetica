@@ -9,9 +9,11 @@
   Starting and stopping the Netica shared library.
 }
 \description{
+
   This function creates (or destroys) a Netica environment.  The
   \code{StartNetica} function also allows you to set various parameters
   associated with the Netica environment.
+
 }
 \usage{
 startSession(session)
@@ -30,7 +32,7 @@ StopNetica(session=getDefaultSession())
     version of Netica is used rather than the full version.  If the
     variable \code{NeticaLicenseKey} is set before \code{RNetica} is
     loaded, then the value of that variable at the time the package is
-    loaded will become the default for \code{license}.
+    loaded will become the default for \var{license}.
 }
   \item{checking}{A character string containing one of the keywords:
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
@@ -44,6 +46,7 @@ StopNetica(session=getDefaultSession())
 }
 }
 \details{
+
   The generic functions \code{startSession} and \code{stopSession} start
   and stop the connection to Netica.  Note that the session is active
   (\code{\link{is.active}}) if the session has been started, and
@@ -72,7 +75,6 @@ StopNetica(session=getDefaultSession())
   \code{NULL} then the demonstration version is used instead of the
   licensed version (could be useful for testing).
 
-  
   Prior to RNetica version 0.5, RNetica looked for a variable
   called \code{NeticaLicenseKey} in the global workspace when 
   \code{RNetica} is loaded.  This then becomes the default value for
@@ -110,6 +112,7 @@ StopNetica(session=getDefaultSession())
 
 }
 \value{
+
   These functions now all return an object of class
   \code{\linkS4class{NeticaSession}}.  Note that \code{StartNetica} sets
   the value of \code{DefaultNeticaSession} in the global environment to
@@ -185,7 +188,5 @@ StopNetica()
 
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interfaces }
-\keyword{ environment }% __ONLY ONE__ keyword per line
+\keyword{ environment }

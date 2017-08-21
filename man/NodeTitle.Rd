@@ -7,9 +7,11 @@
   Gets the title or Description associated with a Netica node.
 }
 \description{
+
   The title is a longer name for a node which is not subject to the
   Netica \code{\link{IDname}} restrictions.  The description is a free form
   text associated with a node.
+
 }
 \usage{
 NodeTitle(node)
@@ -19,19 +21,20 @@ NodeDescription(node) <- value
 }
 \arguments{
   \item{node}{
-    A \code{\link{NeticaNode}} object.
+    A \code{\linkS4class{NeticaNode}} object.
   }
   \item{value}{
     A character object giving the new title or description.
   }
 }
 \details{
+
   The title is meant to be a human readable alternative to the name,
   which is not limited to the \code{\link{IDname}} restrictions.  The
   title also affects how the node is displayed in the Netica GUI.
 
   The description is any text the user chooses to attach to the node.  If
-  \code{value} has length greater than 1, the vector is collapsed into a
+  \var{value} has length greater than 1, the vector is collapsed into a
   long string with newlines separating the components.
 }
 \value{
@@ -51,10 +54,12 @@ NodeDescription(node) <- value
   "Comments" in the API.
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeName}()} 
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeName}()} 
 }
 \examples{
-net2 <- CreateNetwork("secondNet")
+sess <- NeticaSession()
+startSession(sess)
+net2 <- CreateNetwork("secondNet", session=sess)
 
 firstNode <- NewDiscreteNode(net2,"firstNode")
 
@@ -70,6 +75,7 @@ stopifnot(NodeDescription(firstNode) ==
 cat(NodeDescription(firstNode),"\n")
 
 DeleteNetwork(net2)
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

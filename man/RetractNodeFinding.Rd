@@ -5,12 +5,14 @@
   Clears any findings for a Netica node or network.
 }
 \description{
-  The function \code{RetractNodeFinding(node)} clears any findings or
+
+  The function \code{RetractNodeFinding(\var{node})} clears any findings or
   virtual findings set with \code{\link{NodeFinding}()},
   \code{\link{EnterNegativeFinding}()} or
-  \code{\link{NodeLikelihood}()} and associated with \code{node}.  The
-  function \code{RetractNetFindings(net)} clears any findings associated
+  \code{\link{NodeLikelihood}()} and associated with \var{node}.  The
+  function \code{RetractNetFindings(\var{net})} clears any findings associated
   with any node in the network.
+
 }
 \usage{
 RetractNodeFinding(node)
@@ -18,19 +20,21 @@ RetractNetFindings(net)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose findings are to be
+    An active \code{\linkS4class{NeticaNode}} whose findings are to be
     retracted. 
   }
   \item{net}{
-    An active \code{\link{NeticaBN}} whose findings are to be
+    An active \code{\linkS4class{NeticaBN}} whose findings are to be
     retracted. 
   }
 }
 \details{
+
   This is an undo function for \code{\link{NodeFinding}()},
   \code{\link{EnterNegativeFinding}()} or
   \code{\link{NodeLikelihood}()}.  In particular, it allows for entering
   hypothesized findings for various calculations.
+
 }
 \value{
   Returns its argument invisibly.
@@ -55,15 +59,17 @@ RetractNetFindings(net)
   user does not need to worry about this.
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\linkS4class{NeticaNode}},
+  \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
   \code{\link{EnterGaussianFinding}()}, \code{\link{EnterIntervalFinding}()},
   \code{\link{NodeFinding}()}, \code{\link{NodeLikelihood}()}
 }
 \examples{
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+sess <- NeticaSession()
+startSession(sess)
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
@@ -99,7 +105,8 @@ stopifnot(
 )
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

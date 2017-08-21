@@ -50,6 +50,8 @@ EnterFindings(net, findings)
   \code{\link{FindingsProbability}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
 Motif <- ReadNetworks(file.path(library(help="RNetica")$path,
                            "sampleNets","EMSMMotif.dne"), session=sess)

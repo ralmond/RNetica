@@ -8,12 +8,14 @@
   collection of the networks associated with this Netica session.  
 }
 \usage{
-NeticaSession(LicenseKey=character(),
+NeticaSession(...,LicenseKey=character(),
               SessionName=paste("RNetica Session", date()),
               Checking=character(), maxmem=integer())
-getDefaultNeticaSession()
+getDefaultSession()
 }
 \arguments{
+  \item{...}{Possible to pass other fields initializers for subclasses.
+    Base class uses fields below.}
   \item{LicenseKey}{If supplied, this should be a character scalar
     providing the license key purchased from Norsys
     \url{http://www.norsys.com/}.  If left as default, RNetica will run
@@ -71,11 +73,11 @@ Object of class \code{numeric} containing an
   the c layer of RNetica.  Thus, the session was an implicit argument to
   several functions.  In particular, the functions
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}}, 
-  \code{\link{GetNamedNetwork}}, and \code{\link{ReadNetworks}} all now
+  \code{\link{GetNamedNetworks}}, and \code{\link{ReadNetworks}} all now
   have a session argument.  A session argument is
   also needed by some lower level functions which create Netica objects:
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
-  \code{\link{CaseFileStream}}, \code{\link{MemoryCaseStream}},
+  \code{\link{CaseFileStream}}, \code{\link{CaseMemoryStream}},
   \code{\link{OpenCaseStream}} and \code{\link{NewNeticaRNG}}.  For
   backwards compatability, the default for the session argument is now
   the value of \code{getDefaultSession()}.
@@ -140,7 +142,7 @@ Object of class \code{numeric} containing an
 
   \code{\link{startSession}}, \code{\link{stopSession}},
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}},
-  \code{\link{GetNamedNetwork}}, and \code{\link{ReadNetworks}}.  It is
+  \code{\link{GetNamedNetworks}}, and \code{\link{ReadNetworks}}.  It is
 
 
 }

@@ -6,11 +6,13 @@
   Netica node.
 }
 \description{
+
   A complete Bayesian networks defines a conditional probability
   distribution for a node given its parents.  If all the nodes are
   discrete, this comes in the form of a conditional probability table a
   multidimensional array whose first several dimensions follow the
   parent variable and whose last dimension follows the child variable.
+
 }
 \usage{
 NodeProbs(node)
@@ -18,7 +20,7 @@ NodeProbs(node) <- value
 }
 \arguments{
   \item{node}{
-    An active, discrete \code{\link{NeticaNode}} whose conditional
+    An active, discrete \code{\linkS4class{NeticaNode}} whose conditional
     probability table is to be accessed.
   }
   \item{value}{
@@ -30,17 +32,19 @@ NodeProbs(node) <- value
 
   Let \code{node} be the node of interest and \code{parent\var{1}},
   \code{parent\var{2}}, ..., \code{parent\var{p}}, where \eqn{p} is
-  the number of parents.  Let \code{pdim = sapply(\link{NodeParents}(node),
+  the number of parents.  Let \code{\var{pdim} =
+  sapply(\link{NodeParents}(\var{node}), 
   \link{NodeNumStates})} be a vector with the number of states for each parent.
   A parent configuration is defined by assigning each of the parent
   values to one of its possible states.  Each parent configuration
   defines a (conditional) probability distribution over the possible
-  states of \code{node}.
+  states of \var{node}.
 
-  The result of \code{NodeProbs(node)} will be an array with dimensions
-  \code{c(pdim, NodeNumStates(node))}.  The first \eqn{p} dimensions will be
-  named according to the \code{\link{NodeInputNames}(node)} or the
-  \code{\link{NodeName}(parent)} if the input names are not set.  The
+  The result of \code{NodeProbs(\var{node})} will be an array with dimensions
+  \code{c(\var{pdim}, NodeNumStates(\var{node}))}.  The first \eqn{p}
+  dimensions will be named according to the
+  \code{\link{NodeInputNames}(\var{node})} or the 
+  \code{\link{NodeName}(\var{parent})} if the input names are not set.  The
   last dimension will be named according to the node itself.  The
   \code{dimnames} for the resulting array will correspond to the state
   names.  
@@ -77,12 +81,14 @@ NodeProbs(node) <- value
 }
 \seealso{
   \code{\link{Extract.NeticaNode}},
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
   \code{\link{CPA}}, \code{\link{CPF}}, \code{\link{normalize}()}
 }
 \examples{
-abc <- CreateNetwork("ABC")
+sess <- NeticaSession()
+startSession(sess)
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -105,6 +111,7 @@ stopifnot(
 )
 
 DeleteNetwork(abc)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ model }

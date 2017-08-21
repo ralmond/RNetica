@@ -182,16 +182,14 @@ void RN_Define_Symbols() {
     SET_STRING_ELT(casestreamclass,0,mkChar(CaseStreamClass));
   }
   if (memorystreamclass==NULL) {
-    memorystreamclass = allocVector(STRSXP,2);
+    memorystreamclass = allocVector(STRSXP,1);
     R_PreserveObject(memorystreamclass);
     SET_STRING_ELT(memorystreamclass,0,mkChar(MemoryStreamClass));
-    SET_STRING_ELT(memorystreamclass,1,mkChar(CaseStreamClass));
   }
   if (casefilestreamclass==NULL) {
-    casefilestreamclass = allocVector(STRSXP,2);
+    casefilestreamclass = allocVector(STRSXP,1);
     R_PreserveObject(casefilestreamclass);
     SET_STRING_ELT(casefilestreamclass,0,mkChar(CaseFileStreamClass));
-    SET_STRING_ELT(casefilestreamclass,1,mkChar(CaseStreamClass));
   }
   if (casestreamatt==NULL) { 
     R_PreserveObject(casestreamatt = install(CASESTREAMATT));  

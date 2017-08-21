@@ -83,6 +83,9 @@ setMethod("print","NeticaRNG",function(x, ...) {
   cat(toString(x),"\n")
 })
 
+setMethod("as.character", "NeticaRNG", function(x, ...) {
+  toString(x)
+})
 
 is.NeticaRNG <- function (x) {
   is(x,"NeticaRNG")
@@ -142,7 +145,7 @@ GenerateRandomCase <- function (nodelist, method="Default",
   if (is.na(timeout) && timeout <= 0) {
     stop("Timeout must be a postive number.")
   }
-  session <- NodeNet(nodelist[[1]])$session
+  session <- NodeNet(nodelist[[1]])$Session
   result <-
     .Call("RN_GenerateRandomCase",nodelist,method,timeout,rng,
           session,PACKAGE=RNetica)

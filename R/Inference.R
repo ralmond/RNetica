@@ -269,7 +269,7 @@ is.NetworkCompiled <- function(net) {
     stop("Expected an active Netica network, got, ",net)
   }
   result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE=RNetica)
-  ClearAllErrors("ERROR_ERR")
+  net$clearErrors("ERROR_ERR")
   result > 0
 }
 

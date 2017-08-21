@@ -1,3 +1,30 @@
+2017-08-20  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (is.element): Added is.element() method as match()
+	expects a vector as the first argument, I've tweaked is.element to
+	accept nets in a reasonable way.
+	* R/Nodes.R (is.element): Ditto.
+
+	* R/Session.R (as.character): Added as.character() method so we
+	can report on this object in error messages.
+	* R/Network.R (as.character): Ditto.
+	* R/Node.R (as.character): Ditto.
+	* R/Cases.R (as.character): Ditto.
+	* R/Random.R (as.character): Ditto.
+
+2017-08-19  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (parseDims, doSelection): Changed parseDims so it now
+	looks at the frame of the [ or [[ argument.  To do this, I needed
+	to split out a doSelection() function which did most of the work
+	so the code would not be repeated for [ and [[ arguments.
+
+2017-08-18  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R (parseDims): I need to add an i & j argument to
+	parseDims, to get the signatures of [, [[ and [[<- to match the
+	generic functions.
+
 2017-07-30  Russell G. Almond  <ralmond@Limu>
 
 	* R/Cases.R (CaseMemoryStream): Changed name from MemoryCaseStream

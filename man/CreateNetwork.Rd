@@ -89,13 +89,13 @@ startSession(sess)
 
 net1 <- CreateNetwork("EmptyNet", session=sess)
 stopifnot(is(net1,"NeticaBN"))
-stopifnot(as.character(net1)=="EmptyNet")
+stopifnot(net1$Name=="EmptyNet")
 stopifnot(is.active(net1))
 
 netd <- DeleteNetwork(net1)
 stopifnot(!is.active(netd))
 stopifnot(!is.active(net1))
-stopifnot(as.character(netd)=="EmptyNet")
+stopifnot(netd$Name=="EmptyNet")
 
 stopSession(sess)
 }

@@ -8,15 +8,17 @@
   Netica case file format.
 }
 \usage{
-write.CaseFile(x, file, ...)
-read.CaseFile(file, ...)
+write.CaseFile(x, file, ..., session=getDefaultSession())
+read.CaseFile(file, ..., session=getDefaultSession())
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{A data frame to be written to the file.  See details.}
   \item{file}{A file name or a connection object.  By convention, Netica
     expects case files to end in the \dQuote{.cas} suffix.}
   \item{\dots}{Other arguments to \code{read.table} or \code{write.table}}
+  \item{session}{An object of class \code{\linkS4class{NeticaSession}}
+    which encapsulates the connection to Netica.  Used to find the
+    current delimiters.}
 }
 \details{
 
@@ -59,22 +61,25 @@ read.CaseFile(file, ...)
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
-  \code{\link{MemoryCaseStream}},\code{\link{CaseFileStream}},
+  \code{\link{CaseMemoryStream}},\code{\link{CaseFileStream}},
   \code{\link{MemoryStreamContents}},
   \code{\link[utils]{read.table}},\code{\link[utils]{write.table}}
 
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
-CaseFileDelimiter("\t")
-CaseFileMissingCode("*")
-cases <- read.CaseFile(casefile)
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
+CaseFileDelimiter("\t", session=sess)
+CaseFileMissingCode("*", session=sess)
+cases <- read.CaseFile(casefile, session=sess)
 
 outfile <- tempfile("testcase",fileext=".cas")
-write.CaseFile(cases,outfile)
+write.CaseFile(cases,outfile, session=sess)
+
+stopSession(sess)
 
 }
 \keyword{ interface }

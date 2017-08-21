@@ -74,7 +74,8 @@ stopifnot(
 
 for (node in NetworkAllNodes(ab1)) {
   if (!all(HasNodeTable(node))) {
-   cat("Node ", node, " still needs a conditional probability table.\n")
+   cat("Node ", toString(node),
+  " still needs a conditional probability table.\n") 
   }
 }
 

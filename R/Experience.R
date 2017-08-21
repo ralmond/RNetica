@@ -114,7 +114,7 @@ LearnCases <- function(caseStream, nodelist, weight=1.0) {
                                           is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
-  session <- nodes[[1]]$Net$Session
+  session <- nodelist[[1]]$Net$Session
   weight <- as.numeric(weight)
   if (length(weight) >1) {
     warning("LearnCases:  Only the first value of weight will be used.")
@@ -151,7 +151,7 @@ LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
                                           is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
-  session <- nodes[[1]]$Net$Session
+  session <- nodelist[[1]]$Net$Session
   weight <- as.numeric(weight)
   if (length(weight) >1) {
     warning("LearnCPTs:  Only the first value of weight will be used.")

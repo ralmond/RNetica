@@ -5,12 +5,14 @@
   Returns a list of the names of the states of the parents of a Netica node.
 }
 \description{
+
   This function returns a list each of whose elements is a character
   vector giving the states of the parent variables (i.e., the result of
   calling \code{\link{NodeStates})} on each of the elements of
-  \code{\link{NodeParents}(node)}).   The names of this list are the
-  names assigned to the edges through \code{\link{NodeInputNames}(node)},
+  \code{\link{NodeParents}(\var{node})}).   The names of this list are the
+  names assigned to the edges through \code{\link{NodeInputNames}(\var{node})},
   or the names of the parent variables if edge names were not supplied.
+
 }
 \usage{
 ParentStates(node)
@@ -18,32 +20,36 @@ ParentNames(node)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object whose parent states are to
+    An active \code{\linkS4class{NeticaNode}} object whose parent states are to
     be determined.
 }
 }
 \value{
-  For \code{ParentStates(node)}, named list where each element
-  corresponds to the states of a parent variable.  If \code{node} has no
+  For \code{ParentStates(\var{node})}, named list where each element
+  corresponds to the states of a parent variable.  If \var{node} has no
   parents, it returns a list of length 0.
 
-  The function \code{ParentName(node)} returns
-  \code{names(ParentNames(node)}, only is faster.
+  The function \code{ParentNames(\var{node})} returns
+  \code{names(ParentNames(\var{node})}, only is faster.
 }
 \author{
   Russell Almond
 }
 \note{
+
   This is a slightly more sophisticated version of
   \code{lapply(NodeParents(node), NodeStates)}.  It does minimal
   checking so that it can be fast.
+
 }
 \seealso{
   \code{\link{NodeStates}()}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}
 }
 \examples{
-abc1 <- CreateNetwork("ABC1")
+sess <- NeticaSession()
+startSession(sess)
+abc1 <- CreateNetwork("ABC1", session=sess)
 A <- NewDiscreteNode(abc1,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc1,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc1,"C",c("C1","C2"))
@@ -75,7 +81,7 @@ stopifnot(
 )
 
 DeleteNetwork(abc1)
-
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ utility }% __ONLY ONE__ keyword per line
+\keyword{ utility }

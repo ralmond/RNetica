@@ -459,7 +459,6 @@ SEXP RN_GetNodeName(SEXP nd) {
   return(result);
 }
 
-//FIXME
 SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   const char *newname;
   node_bn *node_handle, *other_node;

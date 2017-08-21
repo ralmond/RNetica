@@ -61,8 +61,10 @@ MemoryStreamContents(stream) <- value
 
 }
 \value{
+
   A data frame which corresponds to the contents of the stream buffer,
   or \code{NULL} if the stream buffer is empty.
+
 }
 \references{
   \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -95,12 +97,13 @@ casefile <- file.path(library(help="RNetica")$path,
                      
 CaseFileDelimiter("\t", session=sess)
 CaseFileMissingCode("*", session=sess)
-cases <- read.CaseFile(casefile)
+cases <- read.CaseFile(casefile, session=sess)
 
 memstream <- CaseMemoryStream(cases, session=sess)
 
 ## Should be the same as cases
-MemoryStreamContents(memstream)
+stopifnot(all.equal(MemoryStreamContents(memstream),cases))
+
 
 MemoryStreamContents(memstream) <- cases
 
@@ -131,7 +134,7 @@ abbstream <- CaseMemoryStream(casesabb, session=sess)
 MemoryStreamContents(abbstream)
 CloseCaseStream(abbstream)
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -149,7 +152,7 @@ B2["A2"] <- c(.2,.8)
 NodeExperience(B1) <- c(10,10)
 NodeExperience(B2) <- c(10,10)
 
-abbstream <- MemoryCaseStream(casesabb)
+abbstream <- CaseMemoryStream(casesabb, session=sess)
 ## This does not appear to work correctly
 abbstream <- ReadFindings(list(A,B1,B2),abbstream,"FIRST")
 NodeFinding(A)

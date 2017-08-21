@@ -5,9 +5,11 @@
   Gets, sets the visual position of the node on the Netica display.
 }
 \description{
+
   When displayed in the GUI, Netica nodes have a position.  The
   \code{NodeVisPos()} attribute controls where the node will be
   displayed.  
+
 }
 \usage{
 NodeVisPos(node)
@@ -15,16 +17,17 @@ NodeVisPos(node) <- value
 }
 \arguments{
   \item{node}{
-    A \code{\link{NeticaNode}} object whose position is to be determined.
+    A \code{\linkS4class{NeticaNode}} object whose position is to be determined.
   }
   \item{value}{
     A numeric vector of length 2 giving the \eqn{x} and \eqn{y} coordinates.
   }
 }
 \details{
+
   The visual position of the node doesn't make much different in RNetica,
   as R does not display the node.  However, it will control the
-  appearance when the node is loaded into the Netica GUI.
+  appearance when the net is loaded into the Netica GUI.
 
 }
 \value{
@@ -39,17 +42,21 @@ NodeVisPos(node) <- value
   Russell Almond
 }
 \note{
+
   The minimum possible node position appears to be (0,0) and the maximum
   is never stated.  Netica appears to round positions to the nearest
   integer.  Also, if the position appears too close to the boarder
   (Netica positions the center of the node), Netica will move it away
   from the edge.
+
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeVisPos}()}
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeVisPos}()}
 }
 \examples{
-pnet <- CreateNetwork("PositionNet")
+sess <- NeticaSession()
+startSession(sess)
+pnet <- CreateNetwork("PositionNet", session=sess)
 
 pnode <- NewDiscreteNode(pnet,"PlaceMe")
 
@@ -78,8 +85,8 @@ stopifnot(
 )
 
 DeleteNetwork(pnet)
-
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

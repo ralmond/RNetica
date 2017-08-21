@@ -8,12 +8,14 @@
   Gets user definable fields associated with a Netica node.
 }
 \description{
+
   Netica provides a mechanism for associating user defined values with a
   node as a series of key/value pairs.  The key must be a
   \code{\link{IDname}} and the value can be an arbitrary string.  The
   function \code{NodeUserField} accesses the string value associated
   with the key, and the function \code{NodeUserObj} accesses an R object
   associated with the key.
+
 }
 \usage{
 NodeUserField(node, fieldname)
@@ -22,10 +24,9 @@ NodeUserObj(node, fieldname)
 NodeUserObj(node, fieldname) <- value
 NodeAllUserFields(node)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
-    A \code{\link{NeticaBN}} object indicating the node.
+    A \code{\linkS4class{NeticaNode}} object indicating the node.
 }
   \item{fieldname}{
     A character scalar conforming to the \code{\link{IDname}} rules.
@@ -38,6 +39,7 @@ NodeAllUserFields(node)
 }
 }
 \details{
+
   Netica contains a mechanism for associating user data with nodes.
   In the Netica documentation, they note that only strings are really
   supported as only strings are portable across implementations.The
@@ -52,13 +54,14 @@ NodeAllUserFields(node)
 
 }
 \value{
+
   The function \code{NodeUserField} returns a character scalar with
-  the value stored in the field \code{fieldname}, or \code{NA} if no
+  the value stored in the field \var{fieldname}, or \code{NA} if no
   such field exists.
 
   The function \code{NodeUserObj} returns an arbitrary object created
   by calling \code{\link{dgetFromString}} on the value stored in the
-  field \code{fieldname}, or \code{NULL} if no such field exists.  If
+  field \var{fieldname}, or \code{NULL} if no such field exists.  If
   the string cannot be interpreted as an R object, it generates an
   error. 
 
@@ -79,12 +82,21 @@ NodeAllUserFields(node)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeDescription}()}
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeDescription}()}
   \code{\link{NetworkUserField}}, \code{\link{dputToString}()}
+}
+\note{
+
+  In his book \emph{Extending R} John Chambers suggest serializing R
+  objects through XML or JSON mechanisms rather than the older dump
+  protocol.  I may move to that later, although it will likely cause
+  backwards compatability issues.
 
 }
 \examples{
-usedNet <- CreateNetwork("UsedNet")
+sess <- NeticaSession()
+startSession(sess)
+usedNet <- CreateNetwork("UsedNet", session=sess)
 
 userNode <- NewContinuousNode(usedNet, "UserNode")
 NodeUserField(userNode,"Author") <- "Russell Almond"
@@ -108,6 +120,7 @@ stopifnot(all(x==x1))
 
 
 DeleteNetwork(usedNet)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ attribute }

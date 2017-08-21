@@ -2,9 +2,11 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{NeticaSession-class}
-\alias{is.active,NeticaSession-method}
 \alias{startSession,NeticaSession-method}
 \alias{stopSession,NeticaSession-method}
+\alias{print,NeticaSession-method}
+\alias{toString,NeticaSession-method}
+\alias{as.character,NeticaSession-method}
 
 \title{Class \code{"NeticaSession"}}
 \description{
@@ -43,10 +45,10 @@ destructively modified.  Also fields (slots) are accessed using the
   Netica workspace.  It is used by a number of high-level Netica
   functions to provide access to the workspace, notably:
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}},
-  \code{\link{GetNamedNetwork}}, and \code{\link{ReadNetworks}}.  It is
+  \code{\link{GetNamedNetworks}}, and \code{\link{ReadNetworks}}.  It is
   also needed by some lower level functions which create Netica objects:
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
-  \code{\link{CaseFileStream}}, \code{\link{MemoryCaseStream}},
+  \code{\link{CaseFileStream}}, \code{\link{CaseMemoryStream}},
   \code{\link{OpenCaseStream}} and \code{\link{NewNeticaRNG}}.
 
   When initially created, the NeticaSession object is not active; that
@@ -55,7 +57,7 @@ destructively modified.  Also fields (slots) are accessed using the
   session, making it active.  The method \code{stopSession} will
   deallocate the Netica workspace.  Note that it will also make any
   \code{\link{NeticaBN}} or \code{\link{NeticaNode}} objects it contains
-  inactive. The function \code{\link{is.active()}} tests to see whether
+  inactive. The function \code{\link{is.active}()} tests to see whether
   the session is currently active.
 
   Starting with the introduction of the NeticaSession class, a license
@@ -133,7 +135,7 @@ destructively modified.  Also fields (slots) are accessed using the
     }
     
     In the earlier design, the session object was hidden.  For that
-    reason, the function \code{\link{getDefaultSession()}} has been
+    reason, the function \code{\link{getDefaultSession}()} has been
     added.  This looks for an object called \code{DefaultNeticaSession}
     in the gobal environment.  If this object does not exist, the user
     will be prompted to make one the first time
@@ -155,10 +157,10 @@ destructively modified.  Also fields (slots) are accessed using the
 
 \seealso{
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}},
-  \code{\link{GetNamedNetwork}}, and \code{\link{ReadNetworks}}.  It is
+  \code{\link{GetNamedNetworks}}, and \code{\link{ReadNetworks}}.  It is
   also needed by some lower level functions which create Netica objects:
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
-  \code{\link{CaseFileStream}}, \code{\link{MemoryCaseStream}},
+  \code{\link{CaseFileStream}}, \code{\link{CaseMemoryStream}},
   \code{\link{OpenCaseStream}} and \code{\link{NewNeticaRNG}}.
 
   \code{\linkS4class{NeticaBN}} 

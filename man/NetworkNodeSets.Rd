@@ -35,8 +35,8 @@ NetworkNodeSets(net, incSystem = FALSE)
   is to label a set of nodes that play a similar role in the model.  For
   example, \code{"ReportingVariable"} or \code{"Observable"}.
 
-  The expression \code{NetworkNodeSets}(\var{net})} returns the node
-  sets that   are currently associated with any node in \var{net}.  If
+  The expression \code{NetworkNodeSets(\var{net})} returns the node
+  sets that are currently associated with any node in \var{net}.  If
   \code{incSystem=TRUE}, then the internal Netica system node sets will
   be included as well.  These begin with a colon (\sQuote{:}).  This
   value cannot be set directly, only indirectly through the use of
