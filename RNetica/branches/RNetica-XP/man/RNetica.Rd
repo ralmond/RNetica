@@ -24,24 +24,38 @@ conditional probabilities from a Netica network.
   is different from the GUI license key) from Norsys(R)
   (\url{http://www.norsys.com/}).
 
-  Once you have a license key, you can use it in one of two ways.
-  First, it can be used as an argument to the function
-  \code{\link{StartNetica}()}.  As this function is called when RNetica
-  is loaded, you may need to call \code{StopNetica()} first and restart
-  the licensed version.  Alternatively, if you set the variable
-  \code{NeticaLicenseKey} in the R top-level environment before the call
-  to \code{library(RNetica)}, RNetica will pick up the license key from
-  that location.
+  Once you have a license key, you can use it in one of three ways.
+  The currently (RNetica 0.5 and later) recommended way of using it is
+  to create a Netica  Session object that contains it:
+  \code{DefaultNeticaSession <-
+  NeticaSession(LicenseKey="License Key from Norsys")}.  This will store
+  the key in a \code{\linkS4class{NeticaSession}} object.  The special
+  variable \code{DefaultNeticaSession} is used as a default for every
+  function requiring a session argument, so can be used to skip the need
+  for explicitly stating the session argument.  
+
+  Two other mechanisms continue to be supported for backwards
+  compatibility.  First, the license key can be used as an argument to
+  the function \code{\link{StartNetica}()}.  This will create a session
+  and store it in \code{NeticaDefaultSession}.   If the variable 
+  \code{NeticaLicenseKey} in the R top-level environment is set before
+  the call to \code{library(RNetica)}, \code{StartNetica()} will pick up
+  the license key from that location.
 
   Without the license key, the Netica shared library will be restricted
   to a student/demonstration mode with limited functionality.  Note that
   all of the example code (and hence \code{R CMD check RNetica}) can be
   run using the limited version.
 
+  Note that the \code{\linkS4class{NeticaSession}} object stores the
+  complete Netica license key.  Do not share dumps of the session object
+  (including the \code{.RData} file containing
+  \code{DefaultNeticaSession}) with any third-party.
+
 }
 \section{Index}{
 
-  \packageIndices{Peanut}
+  \packageIndices{RNetica}
 
 }
 \section{RNetica Environment and Netica Objects}{
@@ -52,80 +66,197 @@ for manipulating Bayesian networks (the Netica API).  The RNetica
 package binds the API version of Netica to a series of R functions which
 do much of the work of manipulating the network.  The file format
 for the GUI and API version of Netica is identical, so analysts can
-easily move back and forth between the two.
-
-The function \code{\link{StartNetica}()} (invoked automatically when
-\code{library(RNetica)} is called) builds a Netica environment which can be
-accessed from R.  Networks created and loaded into the RNetica
-environment can then be manipulated from inside of R.  Note that the
+easily move back and forth between the two.  Note that the
 RNetica environment is separate from other Netica environments that may
 be created using the Netica GUI (or API invoked from a different
 program); RNetica can only manipulate the networks that are currently
 loaded into its environment.
 
-The key to this process is that the two most common functions for
-creating networks, \code{\link{CreateNetwork}()} and
-\code{\link{ReadNetworks}()} both return a special object of class
-\code{\link{NeticaBN}} which encapsulates a pointer back to the Bayesian
-network in the RNetica environment.  This object can be manipulated with
-the functions in this package.
+There are five objects which provide a handle for objects in the Netica
+session.  These are:
+\describe{
 
-Netica nodes (created through \code{\link{NewDiscreteNode}()} or
-\code{\link{NewContinuousNode}()}, or retrieved from the network using
-\code{\link{NetworkFindNode}()}, \code{\link{NetworkAllNodes}()},
-\code{\link{NetworkNodesInSet}()}, or one of a variety of other
-functions that return nodes) are represented as special objects of class
-\code{NeticaNode} which contain pointers to the node in a Netica
-network.  Netica nodes know which network they belong to, so each node
-implicitly references its network.
+  \item{\code{\linkS4class{NeticaSession}}}{This is a container for the
+  overall Netica session.  It is referenced when creating other Netica
+  objects (\code{\linkS4class{NeticaBN}}s,
+  {\code{\linkS4class{CaseStream}}}s and
+  {\code{\linkS4class{NeticaRNG}}}) and contains the license key needed
+  to activate Netica.  Its field \code{$nets} is an environment which
+  contains references to all of the networks which have been associate
+  with this session. }
 
-Note that if more than one network is loaded they may have identically
-named nodes that are not identical.  For example, \code{net1} and
-\code{net2} may both have a node named \dQuote{Proficiency}.  If the R
-variable \code{Proficiency} is bound to the \code{NeticaNode} object
-corresponding to the variable \dQuote{Proficiency} in \code{net1}, it
-can only be used to access the instance of that variable in \code{net1},
-not the one in \code{net2}.
+  \item{\code{\linkS4class{NeticaBN}}}{This is a handle for a network
+  object.  {\code{\linkS4class{NeticaNode}}} objects are created within
+  a network, and the \code{$nodes} field is an environment which
+  contains node references, at least for those nodes which have been
+  referenced in R code.  Networks must have unique names within a
+  session.}
 
-Because of the way R likes to hang onto references to objects, it is
-quite possible for a \code{NeticaBN} or \code{NeticaNode} object to hang
-around after it has been deleted, renamed or otherwise rendered
-invalid.  The function \code{\link{is.active}()} does a quick check to
-make sure that the pointer to the object in the RNetica environment has
-not be set to \code{NULL}.
+  \item{\code{\linkS4class{NeticaNode}}}{This is a handle for a
+  particular Netica node.  Nodes must have unique names within a
+  network.  Many inference functions are done based on nodes.}
 
-Note that unlike ordinary R objects, \code{NeticaBN} and
-\code{NeticaNode} objects only last as long as the RNetica environment
-lasts.  In particular, if \code{\link{StopNetica}()} is called to close
-the RNetica environment, or the R session is exited (either cleanly or
-through a crash), then all of the \code{NeticaBN} and \code{NeticaNode}
-objects should become inactive.  It is an error to execute RNetica
-functions with the old objects.
+  \item{\code{\linkS4class{CaseStream}}}{This is a stream of Netica case
+  data, values for particular nodes.  There are two subclasses:
+  \code{\linkS4class{FileCaseStream}} and
+  \code{\linkS4class{MemoryCaseStream}}.  As of version 5.04 of the
+  Netica API, there are some issues with
+  \code{\linkS4class{MemoryCaseStream}}s, so the
+  \code{\linkS4class{FileCaseStream}}s should be used instead.}
 
-For networks, the simplest solution is to save each network to a file
-using \code{\link{WriteNetworks}()}.  If a \code{NeticaBN} object
-\code{net} is used in either a \code{net <- ReadNetworks()} or
-\code{WriteNetworks(net)} call, then the R object will be badged with
-the name of the last used filename.  Thus, after saving and restoring a
-R session, the expression \code{net <- ReadNetworks(net)} will recreate
-\code{net} as an object pointing to a new network that is identical to
-the last saved version.
-
-For nodes, the best solution is to use a query function to return a list
-of the desired nodes, in particular, \code{\link{NetworkFindNode}()} or
-\code{\link{NetworkAllNodes}()}.  If a particular subset of nodes should
-be loaded every time the network is loaded, then they can be placed in a
-node set, and the function \code{\link{NetworkNodesInSet}()} can be used
-to retrieve just the interesting nodes.  All of these functions return a
-list of \code{NeticaBN} objects, which can be used to provide convenient
-access.  For example, if \code{net} was previously saved and
-\dQuote{Proficiency} is a node in \code{net}, then:
-\preformatted{
-  net <- ReadNetworks(net)
-  net.nodes <- NetworkAllNodes(net)
+  \item{\code{\linkS4class{NeticaRNG}}}{This a random number generator
+  used by Netica for generating random cases.}
 }
-will load all of the nodes in \code{net}, and the expression
-\code{net.nodes$Proficiency} will access the \dQuote{Proficiency} node.
+
+All of these follow the \code{\linkS4class{envRefClass}} protocol.  In
+particular, their fields are referenced using \sQuote{$}.  Also, all of
+them have a method \code{$isActive} (which is called from the
+generic function \code{\link{is.active}}) which determines whether or not
+the pointer to the Netica object currently exists or not.  Calling
+\code{\link{stopSession}} will render all Netica objects inactive.
+
+In particular, when quitting and restarting R, the pointers will all be
+initialised to null, and all of the session, node and network objects
+will become inactive.  Some examples of how to restart an RNetica
+session are provided below.
+
+To connect R to Netica, it is necessary to create and start a
+\code{\linkS4class{NeticaSession}}.  This is done by first calling the
+constructor \code{\link{NeticaSession}()} and then calling the function
+\code{\link{startSession}(\var{session})}.  If you have purchased a
+Netica license key from Norsys, this can be passed to the constructor
+with the argument \code{LicenseKey} given the value of the license key
+as a string.  Note that the session object can be saved in the
+workspace, so that it can be used in future R session (it does not need
+to be recreated, but it must be restarted with a call to
+\code{startSession}).  If it is saved to \code{DefaultNeticaSession},
+this value will be used as a default by all of the functions that use
+the session as an argument.
+
+\emph{Note that this is a change from how RNetica operated prior to
+  version 0.5.}  In older versions of RNetica, the session pointer was
+held inside of the C code, and the function
+\code{\link{StartNetica}()} was invoked automatically when
+the \code{RNetica} package was attached.  Nowt this needs to be
+done manually through a call to \code{\link{startSession}}.
+
+The function \code{\link{getDefaultSession}()} emulates the behaviour of
+the previous version of RNetica.  It is the default value for all of
+the functions which require a session argument.  When invoked, it looks
+for an object call \code{DefaultNeticaSession} in the global
+environment.  If that exists, it is used, if not, a new
+\code{\linkS4class{NeticaSession}} is created.  If the new session is
+created, it looks for a variable \code{NeticaLicenseKey} in the global
+environment.  If that is present, it will use this as a license key.
+Finally, if the \code{DefaultNeticaSession} is not active, it will start
+it.
+
+Note that it is almost certainly a mistake to have two sessions open at
+the same time.  Users should either set the \code{DefaultNeticaSession},
+and use the default, or always explicitly pass the session argument to
+functions that need it.
+
+The following functions take a session argument:
+\code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
+\code{\link{CaseFileStream}}, \code{\link{CaseMemoryStream}},
+\code{\link{ClearAllErrors}}, \code{\link{CreateNetwork}},
+\code{\link{GetNthNetwork}}, \code{\link{GetNamedNetworks}},
+\code{\link{NeticaVersion}}, \code{\link{ReadNetworks}},
+\code{\link{ReportErrors}},  \code{\link{StartNetica}},
+\code{\link{StopNetica}}, \code{\link{startSession}},
+and \code{\link{stopSession}}.
+
+}
+\section{Netica Networks}{
+
+  \code{\linkS4class{NeticaBN}} objects are created through one of three
+  functions:  \code{\link{CreateNetwork}()},
+  \code{\link{ReadNetworks}()} and \code{\link{CopyNetworks}}.  The
+  first two both require a session argument, while the third uses the
+  session from its \var{net} argument.  When a network is created it is
+  added as a symbol (using its name) to the \code{$nets} field of the
+  session.  It can then be referenced using
+  \code{\var{session}$nets$\var{netname}} or
+  \code{\var{session}$nets[["\var{netname}"]]}.  The field
+  \code{$Session} of the \code{\linkS4class{NeticaBN}} points to the
+  \code{\linkS4class{NeticaSession}} object in which the network was
+  created. 
+  
+  Note that \code{\var{session}$nets} cache may contain inactive network
+  objects for one of two reasons:  (1) it is a deleted network object,
+  or (2) this is a session which has been restored from a file, and
+  the Netica pointers have not been reconnected.  In particular,
+  quitting R will always deactivate the network.
+  
+  For networks, the simplest solution is to save each network to a file
+  using \code{\link{WriteNetworks}()}.  If a
+  \code{\linkS4class{NeticaBN}} object \var{net} is used in either a
+  \code{\var{net} <- \link{ReadNetworks}()} or
+  \code{\link{WriteNetworks}(\var{net})} call, then the R object will be
+  badged with the name of the last used filename.  Thus, after saving
+  and restoring a R session, the expression \code{\var{net} <-
+  ReadNetworks(\var{net})} will recreate \var{net} as an object
+  pointing to a new network that is identical to the last saved version.
+
+}
+\section{Netica Nodes}{
+
+  \code{\linkS4class{NeticaNode}} objects are created through
+  \code{\link{NewDiscreteNode}()} or \code{\link{NewContinuousNode}()},
+  or retrieved from the network using \code{\link{NetworkFindNode}()},
+  \code{\link{NetworkAllNodes}()}, \code{\link{NetworkNodesInSet}()}, or
+  one of a variety of other functions that return nodes.  When a node
+  is created it is  added as a symbol (using its name) to the
+  \code{$node} field of the network.  It can then be referenced using
+  \code{\var{net}$nodes\var{nodename}} or
+  \code{\var{net}$nodes[["\var{nodename}"]]}.
+
+  
+  Note that if more than one network is loaded they may have identically
+  named nodes that are not identical.  For example, \var{net1} and
+  \var{net2} may both have a node named \dQuote{Proficiency}.  If the R
+  variable \var{Proficiency} is bound to the
+  \code{\linkS4class{NeticaNode}} object corresponding to the variable
+  \dQuote{Proficiency} in \var{net1}, it can only be used to access the
+  instance of that variable in \var{net1}, not the one in \var{net2}.
+
+  Note that the \code{\linkS4class{NeticaNode}} object is created when
+  then node is first references in R.  In particular, this means when a
+  network is loaded through a call to \code{\link{ReadNetworks}}, the R
+  objects for the corresponding Netica nodes are not immediately
+  created.  The function \code{\link{NetworkAllNodes}()} returns a list
+  of all nodes in the network, and as a side effect, creates
+  \code{\linkS4class{NeticaNode}} object for all of the nodes found in
+  the network.  If the network has many nodes, it may be more efficient
+  to just create R objects for the ones which are used.  In this case
+  the functions \code{\link{NetworkFindNode}()}, and
+  \code{\link{NetworkNodesInSet}} are useful for finding (and creating R
+  objects for) a subset of nodes.
+
+  The following procedure can be used to save and restore a Netica
+  network across sessions.  In the first session:
+
+  \preformatted{
+    DefaultNeticaSession <- NeticaSession()
+    startSession(DefaultNeticaSession)
+    net <- CreateNetwork("myNet",DefaultNeticaSession)
+    # Work on the network.
+    WriteNetworks(net,"myNet.dne")
+    q("yes")
+  }
+  The variables \code{DefaultNeticaSession} and \code{net} will be saved
+  in \code{.Rdata}.  Then in the next R session
+
+  \preformatted{
+    startSession(DefaultNeticaSession)
+    net <- ReadNetworks(net,DefaultNeticaSession)
+    net.nodes <- NetworkAllNodes(net)
+  }
+
+  This will read \var{net} from the place it was last saved.  It will
+  also create R objects for all of the nodes in \var{net}.  This can now
+  be access through \code{\var{net}$nodes} or the variable
+  \code{net.nodes}. 
 
 }
 \section{Creating and Editing Networks}{
@@ -150,13 +281,13 @@ will load all of the nodes in \code{net}, and the expression
   \code{\link{IDname}} rules.
 
   Edges between nodes are created using the
-  \code{\link{AddLink}(parent,child)} function.  This forms
+  \code{\link{AddLink}(\var{parent},\var{child})} function.  This forms
   a directed graph which must be acyclic (that is it must not be
   possible to follow a path along the direction of the arrows and return
   to the starting place).  The function
-  \code{\link{NodeParents}(child)} returns the current set of
-  parents for the node \kbd{child} (nodes which have edges pointing
-  towards \kbd{child}).  \code{NodeParents(child)} may be set,
+  \code{\link{NodeParents}(\var{child})} returns the current set of
+  parents for the node \var{child} (nodes which have edges pointing
+  towards \var{child}).  \code{NodeParents(\var{child})} may be set,
   which serves several purposes.  First, it allows connections to be
   added and removed.  Second, setting one of the parent locations to
   \code{NULL} produces a special \emph{Stub} node, which serves as a
@@ -170,13 +301,14 @@ will load all of the nodes in \code{net}, and the expression
   in the graph.  RNetica provides two functions for accessing and
   setting this CPT.  The function \code{\link{NodeProbs}()} returns (or
   sets) the conditional probability table as a multi-dimensional
-  array. However, using the array extractor \code{\link{[.NeticaNode}} %]
-  allows the conditional probability table to be manipulated as a data
-  frame, where the first several columns provide the states of the
-  parent variables, and the remaining columns the probabilities of the
-  the node being in each of those states given the parent
-  configurations.  This latter approach has a number of features for
-  working with large tables and tables with complex structure.
+  array. However, using the array extractor \dQuote{[} %]
+  (\code{\link{Extract.NeticaNode}}) allows the conditional probability
+  table to be manipulated as a data frame, where the first several
+  columns provide the states of the parent variables, and the remaining
+  columns the probabilities of the the node being in each of those
+  states given the parent configurations.  This latter approach has a
+  number of features for working with large tables and tables with
+  complex structure.
 
   Finally, when the network is complete, the function
   \code{\link{WriteNetworks}()} can be used to save it to a file, which
@@ -188,8 +320,8 @@ will load all of the nodes in \code{net}, and the expression
 
   The basic purpose for building a Bayesian network is to rapidly
   calculate conditional probabilities.  In Netica language, one enters
-  \dQuote{findings} (conditions) on the known or hypothesized variables
-  and then calculates \dQuote{beliefs} (conditional probabilities) on
+  \emph{findings} (conditions) on the known or hypothesised variables
+  and then calculates \emph{beliefs} (conditional probabilities) on
   certain variables of interest.
 
   Netica, like most Bayesian network software, uses two different
@@ -212,20 +344,20 @@ will load all of the nodes in \code{net}, and the expression
   recompiled after a call to \code{AbsorbNodes()} though.)
 
   The principle way to enter observed evidence is setting
-  \code{\link{NodeFinding}(node) <- value}.  The function
-  \code{\link{NodeLikelihood}()} can be used to enter \dQuote{virtual
+  \code{\link{NodeFinding}(\var{node}) <- \var{value}}.  The function 
+  \code{\link{NodeLikelihood}()} can be used to enter \emph{virtual
   evidence}, however, some care must be taken as it alters the meanings
   of several of the other functions.
 
   The conditional (given the entered findings and likelihoods)
   probability distribution can be queried at any time using the function
-  \code{\link{NodeBeliefs}(node)}.  If the states of a node have been
-  given numeric values using \code{\link{NodeLevels}(node)}, then
-  \code{\link{NodeExpectedValue}(node)} will calculate the expected
+  \code{\link{NodeBeliefs}(\var{node})}.  If the states of a node have been
+  given numeric values using \code{\link{NodeLevels}(\var{node})}, then
+  \code{\link{NodeExpectedValue}(\var{node})} will calculate the expected
   numeric value (and the standard deviation).  The function
-  \code{\link{JointProbability}(nodelist)} calculates the joint
+  \code{\link{JointProbability}(\var{nodelist})} calculates the joint
   distribution over a collection of nodes, and the function
-  \code{\link{FindingsProbability}(net)} calculates the prior
+  \code{\link{FindingsProbability}(\var{net})} calculates the prior
   probability of all the findings entered into the network.  The
   function \code{\link{MostProbableConfig}(nodelist)} finds the mode of
   the joint probability distribution (given the current findings and
@@ -239,8 +371,8 @@ will load all of the nodes in \code{net}, and the expression
   lazy updating mode, when the evidence from the findings are only
   propagated when required for a call to \code{NodeBeliefs()} or a
   similar function.  The function
-  \code{\link{WithoutAutoUpdate}(net,expr)} is useful for
-  setting findings in a large number of nodes in \kbd{net} without the
+  \code{\link{WithoutAutoUpdate}(\var{net},\var{expr})} is useful for
+  setting findings in a large number of nodes in \var{net} without the
   overhead of belief updating.
   
 }
@@ -269,16 +401,16 @@ will load all of the nodes in \code{net}, and the expression
 }
 \section{Warning}{
 
-  The current status of RNetica is that of a late alpha to early beta
+  The current status of RNetica is that of a beta
   release.  The code base is stable enough to do useful work, but more
   testing is still required.  Users are advised to work in such a way
   that they can easily recover from problems.
 
   In particular, because RNetica calls C code, there is a possibility
   that it will crash R.  There is also a possibility that pointers
-  embedded in \code{\link{NeticaBN}} and \code{\link{NeticaNode}}
-  objects will become corrupted.  If such problems occur, it is best to
-  restart R and reload the networks.
+  embedded in \code{\linkS4class{NeticaBN}} and
+  \code{\linkS4class{NeticaNode}} objects will become corrupted.  If
+  such problems occur, it is best to restart R and reload the networks.
 
   Please send information about both serious and not-so-serious problems
   to the maintainer.
@@ -320,8 +452,10 @@ Maintainer: Russell Almond <almond@acm.org>
 \examples{
 ###########################################################
 ## Network Construction:
+sess <- NeticaSession()
+startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -340,19 +474,17 @@ DeleteNetwork(abc)
 ###################################################################
 ##  Inference using the EM-SM algorithm (Almond & Mislevy, 1999).  
 ## System/Student model
-EMSMSystem <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","System.dne",
-                           sep=.Platform$file.sep))
+EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","System.dne"), session=sess)
+
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne",
-                           sep=.Platform$file.sep))
+EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask1a.dne"), session=sess)
 
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne",
-                           sep=.Platform$file.sep))
+EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMTask2a.dne"), session=sess)
 
 ## Task 1a has a footprint of Skill1 and Skill2 (those are the
 ## referenced student model nodes.  So we want joint the footprint into
@@ -395,5 +527,6 @@ CompileNetwork(student1)
 student1.probt1a2ax <- JointProbability(student1.prof)
 
 DeleteNetwork(list(student1, EMSMSystem))
+stopSession(sess)
 
 }

@@ -16,8 +16,8 @@
   object, so it can be used to check for inconsistencies.
 }
 \usage{
-GetNamedNetworks(namelist, session=getDeafultSession())
-CheckNamedNetworks(namelist, session=getDeafultSession())
+GetNamedNetworks(namelist, session=getDefaultSession())
+CheckNamedNetworks(namelist, session=getDefaultSession())
 }
 \arguments{
   \item{namelist}{
@@ -67,7 +67,7 @@ CheckNamedNetworks(namelist, session=getDeafultSession())
 
   Each \code{\linkS4class{NeticaBN}} is given a name when it is
   created.  When the network is created, either through a call to
-  \code{\link{CreateNetworks}} or \code{\link{ReadNetworks}}, the
+  \code{\link{CreateNetwork}} or \code{\link{ReadNetworks}}, the
   \code{\link{NeticaSession}} object updates its cache of the network
   names in its \code{nets} field. The \code{nets} field of the session
   object is an \code{\link[base]{environment}} which associate the

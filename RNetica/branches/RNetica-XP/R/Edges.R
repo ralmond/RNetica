@@ -241,11 +241,19 @@ AbsorbNodes <- function (nodes) {
   if (any(!sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
-  print(nodes)
+  ## print(nodes)
+  net <- nodes[[1]]$Net
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE=RNetica)
-  ecount <- nodes[[1]]$reportErrors()
+  ecount <- net$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
+  }
+  ## Delete the node objects from the net cache.
+  for (nd in nodes) {
+    if (is(nd,"NeticaNode")) {
+      nd$deactivate()
+      rm(list=nd$Name,envir=net$nodes)
+    }
   }
   if (length(handles)==1L) handles <- handles[[1L]]
   invisible(handles)
@@ -571,20 +579,27 @@ as.CPA <- function (x) {
 ## integer matrix which does the selection.
 ## env is frame in which to do the evaluation, which is probably the
 ## parent frame of the calling funciton
-parseDims <- function (node,...,env) {
+## Now getting this using the sys.call function.
+parseDims <- function (node, dropvalue=FALSE) {
   ## This creates a call object with the arguments
-  clist <- substitute(list(...))
+  calling.frame <- 2
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  if (dropvalue) clist <- clist[-length(clist)]
+  if (!is.null(names(clist))) {
+    dropme <- names(clist) == "drop"
+    clist <- clist[!dropme]
+  }
   ## Empty condition
-  if (length(clist)==2 && class(clist[[2]]) == "name" &&
-      clist[[2]]=="") return (NULL)
+  if (length(clist)==1 && class(clist[[1]]) == "name" &&
+      clist[[1]]=="") return (NULL)
   ## Need to find and irradicate stray marks
-  for (idim in 2:length(clist)) {
+  for (idim in 1:length(clist)) {
     if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
       ## Blank entry, replace with 1:n
-      clist[idim] <- RNetica:::EVERY_STATE
+      clist[idim] <- EV_STATE
     }
   }
-  selection <- eval(clist,env)
+  selection <- do.call("list",clist,envir=parent.frame(calling.frame))
   ## Unwrap selections by data frame and matrix.
   if (length(selection) == 1L) {
     if (is.data.frame(selection[[1]])) {
@@ -621,7 +636,7 @@ parseDims <- function (node,...,env) {
   names(selection) <- inames[matches]
   unmatched <- setdiff(inames,names(selection))
   if (length(unmatched)>0) {
-    uml <- as.list(rep(EVERY_STATE),length(unmatched))
+    uml <- as.list(rep(EV_STATE,length(unmatched)))
     names(uml) <- unmatched
     selection <- c(selection,uml)
   }
@@ -642,7 +657,7 @@ integerIndex <- function(node,selection,expandEvery=FALSE) {
       } else if (is.character(selection[[i]])) {
         names <- c(NodeStates(NodeParents(node)[[i]]),"*")
         selection[[i]] <- match(selection[[i]],names)
-        selection[[i]][selection[[i]]==length(names)] <- EVERY_STATE
+        selection[[i]][selection[[i]]==length(names)] <- EV_STATE
         if (any(is.na(selection[[i]]))) {
           stop("Illegal state name.")
         }
@@ -684,14 +699,18 @@ integerIndex <- function(node,selection,expandEvery=FALSE) {
   if (ncol(selection) != length(NodeParents(node))) {
     stop("Configuration specification number of columns must match number of parents.")
   }
-  if (expandEvery && any(selection == EVERY_STATE)) {
+  ## Okay, now we have a matrix of numbers.  Substitute EVERY_STATE
+  ## (external advertised value) for EV_STATE (internal Netica value).
+  selection <- ifelse(selection==EVERY_STATE,EV_STATE,selection)
+
+  if (expandEvery && any(selection == EV_STATE)) {
     pdims <- lapply(NodeParents(node),
                     function(par) 1L:NodeNumStates(par))
     result <- NULL
     for (irow in 1L:nrow(selection)) {
       expanded <- selection[irow,]
-      if (any(expanded==EVERY_STATE)) {
-        wild <- expanded==EVERY_STATE
+      if (any(expanded==EV_STATE)) {
+        wild <- expanded==EV_STATE
         grid <- do.call("expand.grid",pdims[wild])
         expanded <- matrix(expanded,nrow(grid),length(pdims),byrow=TRUE)
         expanded[,wild] <- as.matrix(grid)
@@ -718,17 +737,20 @@ selectionToConfig <- function(node,selection) {
   result
 }
 
-setMethod("[","NeticaNode", function(x, ...,  drop=FALSE) {
+setMethod("[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node.")
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
-  selection <- parseDims(x,...,env=parent.frame(1))
+  selection <- parseDims(x)             #Reads call to get args.
   if (is.null(selection) && length(NodeParents(x))>0) {
-    selection <- rep(EVERY_STATE,length(NodeParents(x)))
+    selection <- rep(EV_STATE,length(NodeParents(x)))
   }
+  doSelection(x,selection,drop)
+})
 
+doSelection <- function (x,selection,drop) {
   ## No parent case
   if (is.null(selection)) {
     if (IsNodeDeterministic(x)) {
@@ -820,18 +842,28 @@ setMethod("[","NeticaNode", function(x, ...,  drop=FALSE) {
       }
     }
   }
-  ecount <- node$reportErrors()
+  ecount <- x$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
   result
+}
+
+setMethod("[[", "NeticaNode", function(x, i, j, ...) {
+  if (!is.NeticaNode(x) || !is.active(x)) {
+    stop("Expected an active netica node.")
+  }
+  ## Massage selection into a matrix of numeric indexes, EVERY_STATE
+  ## values are only recognized on setting values, so expand them
+  selection <- parseDims(x)             #Reads call to get args.
+  if (is.null(selection) && length(NodeParents(x))>0) {
+    selection <- rep(EV_STATE,length(NodeParents(x)))
+  }
+  doSelection(x,selection,drop=TRUE)
 })
 
-setMethod("[[", "NeticaNode", function(x, ...) {
-  x[...,drop=TRUE]
-})
 
-setMethod("[<-","NeticaNode",function(x, ..., value) {
+setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node, got",x)
   }
@@ -839,7 +871,7 @@ setMethod("[<-","NeticaNode",function(x, ..., value) {
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are handled specially by Netica, so leave them in place.
   ## env is where
-  selection <- parseDims(x,...,env=parent.frame(1))
+  selection <- parseDims(x,dropvalue=TRUE)
   npar <- length(NodeParents(x))
   nstate <- NodeNumStates(x)
   if (is.null(selection) && is.data.frame(value)) {
@@ -855,7 +887,7 @@ setMethod("[<-","NeticaNode",function(x, ..., value) {
     }
   }
   if (is.null(selection) && npar>0) {
-    selection <- rep(EVERY_STATE,npar)
+    selection <- rep(EV_STATE,npar)
   }
   if (is.list(selection)) {
     selection <- integerIndex(x,selection,expandEvery=FALSE)
@@ -885,17 +917,18 @@ setMethod("[<-","NeticaNode",function(x, ..., value) {
   if (is.matrix(value)) {
     if (nrow(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=nrow(value))) {
-      stop("Number of rows selected and rows in value do not match; node",x)
+      stop("Number of rows selected and rows in value do not match; node",
+           x$Name)
     }
     if (!is.numeric(value) || any(value<0) || any(value>1)) {
-      stop("Expected a matrix of values between 0 and 1; node",x)
+      stop("Expected a matrix of values between 0 and 1; node", x$Name)
     }
     if (ncol(value) == nstate-1L) {
       ## Normalize
       value <- cbind(value,1-apply(value,1L,sum))
     }
     if (ncol(value) != nstate) {
-      stop("Probabilities not supplied for every state; node",x)
+      stop("Probabilities not supplied for every state; node", x$Name)
     }
   } else {
     if (is.numeric(value) && all(value == as.integer(value)) &&
@@ -913,7 +946,8 @@ setMethod("[<-","NeticaNode",function(x, ..., value) {
     }
     if (length(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=length(value))) {
-      stop("Number of rows selected and rows in value do not match; node",x)
+      stop("Number of rows selected and rows in value do not match; node",
+           x$Name)
     }
     if(is.discrete(x) && nstate==2 && valisprobs) {
       ## Single column and binary node, normalize
@@ -983,7 +1017,7 @@ setMethod("[<-","NeticaNode",function(x, ..., value) {
       }
     }
   }
-  ecount <- node$reportErrors()
+  ecount <- x$reportErrors()
   if (ecount[1L]>0) {
     stop("Node: ", x,"Netica Errors Encountered, see console for details.")
   }
@@ -1047,10 +1081,12 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
     ## Singleton response from copy-nodes might have been unlisted.
     newnodes <- list (newnodes)
   }
+  allstubs <- list()
   for (i in 1:length(newnodes)) {
     node <- newnodes[[i]]
     stubs <- sapply(NodeParents(node),NodeKind) == "Stub"
     if (any(stubs)) {
+      allstubs <- c(NodeParents(node)[stubs],allstubs)
       NodeParents(node)[stubs] <- smnodes[NodeInputNames(node)[stubs]]
       if (any(sapply(NodeParents(node),NodeKind) == "Stub")) {
         warning("Node ",as.character(node)," has unresolved stub parents.")
@@ -1059,6 +1095,14 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
     ## Node may have been renamed.
     enode <- emnodes[[i]]
     NodeSets(node) <- c(setname,NodeSets(enode))
+  }
+  ## Remove stubs
+  for (stub in allstubs) {
+    if (is(stub,"NeticaNode")) {
+      ##cat("Removing stub ",stub$Name,"\n")
+      stub$deactivate()
+      rm(list=stub$Name,envir=sm$nodes)
+    }
   }
   names(newnodes) <- sapply(newnodes,NodeName)
   newnodes

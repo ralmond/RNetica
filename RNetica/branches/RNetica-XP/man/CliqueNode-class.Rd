@@ -113,7 +113,7 @@ stopSession(sess)
     \item{\code{show()}:}{ Prints a description of the node. }
     \item{\code{initialize(..., clique)}:}{ Internal initializer, should
     not be called directly by user code.  Use
-    \code{\link{NewCliqueNode}} instead.}
+    \code{\link{MakeCliqueNode}} instead.}
   }
 
 The following methods are inherited (from the \code{\linkS4class{NeticaNode}}): 

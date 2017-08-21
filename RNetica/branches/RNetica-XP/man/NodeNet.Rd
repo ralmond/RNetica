@@ -7,7 +7,7 @@
 }
 \description{
 
-  Each active \code{\link{NeticaNode}} object lives inside of a
+  Each active \code{\linkS4class{NeticaNode}} object lives inside of a
   \code{\link{NeticaBN}} object.  This function finds the network
   corresponding to a node.
 
@@ -35,8 +35,9 @@ NodeNet(node, internal=FALSE)
   field \code{\var{node}$Net} has the \code{\linkS4class{NeticaBN}}
   object associated with this node.  The second is by going into the
   Netica node object, finding the corresponding network and then looking
-  it up by name in the \code{\linkS4class{Session}} object.  With the
-  option \code{internal=TRUE} this is what is done to check the node.
+  it up by name in the \code{\linkS4class{NeticaSession}} object.  With
+  the option \code{internal=TRUE} this is what is done to check the
+  node.
 
   The node must be active.  If   \code{\link{is.active}(\var{node})}
   returns false, this function will return \code{NULL}.  Note that the

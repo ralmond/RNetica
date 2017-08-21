@@ -13,9 +13,9 @@
   many rows a CPT to the same value.
 }
 \usage{
-\method{[}{NeticaNode}(x, \ldots, drop=FALSE) 
-\method{[[}{NeticaNode}(x, \ldots)  
-\method{[}{NeticaNode}(x, \ldots) <- value 
+\S4method{[}{NeticaNode}(x, i, j,\ldots, drop=FALSE) 
+\S4method{[[}{NeticaNode}(x, i, j, \ldots)  
+\S4method{[}{NeticaNode}(x, i, j, \ldots) <- value 
 EVERY_STATE
 %]]]]  To make parens come out right.
 }
@@ -24,7 +24,7 @@ EVERY_STATE
     An active, discrete \code{\linkS4class{NeticaNode}} whose conditional
     probability table is to be accessed.
   }
-  \item{\ldots}{
+  \item{i,j,\ldots}{
     Indices specifying rows of the table to extract or
     replace.  If a single index, \code{i}, is given, it should be a data
     frame selecting the parent states, or an integer pointing at a
@@ -97,6 +97,7 @@ EVERY_STATE
 
 }
 \section{Selecting Rows Using Data Frames}{
+
   This selection uses the syntax \code{node[df]} or
   \code{node[df]<-value}, where \code{df} is a data frame or a matrix. 
   It is assumed that the columns represent the variables, and the rows
@@ -356,6 +357,14 @@ EVERY_STATE
   Internally R uses 1-based indexing and Netica uses 0-based indexing.
   RNetica makes the translation inside of the C layer, so these
   function should be called with R-style 1-based indexing.
+
+  I'm having weird race conditions when trying to set the value of
+  \code{EVERY_STATE} (I can't figure out how to call the C function to
+  set its value after the C code is loaded but before the namespace is
+  exported.  So for now the exported \code{EVERY_STATE} is different
+  from the internal Netica value (which is \code{RNetica:::EVERY_STATE},
+  at least in the current implementation).  This should not be a visible
+  change to the user.
 
   This documentation file is longer than \emph{War and Peace}.
 }
@@ -842,6 +851,21 @@ for (i in 1:12) {
     abs(C2[[i]][1] - i/100) <.0001
   )
 }
+
+### Try some things with three parents, just to make sure that works
+### too.
+C2tab <- C2[[]]
+AddLink(C3,C2)
+C2.1tab <- C2[[,,"C1"]]
+stopifnot(all.equal(C2tab,C2.1tab),
+          all.equal(C2tab,C2[[,,"C1"]]),
+          all.equal(C2tab,C2[[C="C3"]]))
+
+stopifnot(all(abs(C2[["A1","B1","C1"]]-NodeProbs(C2)[1,1,1,])<.0001),
+          all.equal(C2["A1",,],C2[A="A1"]),
+          all.equal(C2[,"B2",],C2[B="B2"]),
+          all.equal(C2["A1","B2",],C2[B="B2",A="A1"]))
+
 
 DeleteNetwork(xnet)
 stopSession(sess)

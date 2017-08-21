@@ -69,7 +69,7 @@ operator.
 sess <- NeticaSession()
 startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -81,7 +81,7 @@ AddLink(B,C)
 ## Outputfilename
 casefile <- tempfile("testcase",fileext=".cas")
 
-filestream <- CaseFileStream(casefile)
+filestream <- CaseFileStream(casefile, session=sess)
 stopifnot(is.CaseFileStream(filestream),
           isCaseStreamOpen(filestream))
 

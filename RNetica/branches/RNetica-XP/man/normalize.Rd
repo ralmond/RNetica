@@ -10,11 +10,13 @@
   Normalizes a conditional probability table.
 }
 \description{
+
   A conditional probability table (CPT) represents a collection of
   probability distribution, one for each configuration of the parent
   variables. This function normalizes the
   CPT, insuring that the probabilities in each conditional distribution
   sum to 1.
+
 }
 \usage{
 normalize(cpt)
@@ -129,4 +131,4 @@ stopifnot(
 
 }
 \keyword{ array }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

@@ -84,7 +84,7 @@ setRefClass("CaseStream",fields=c(Name="character",
                 close = function() {
                   if (!isOpen()) {
                     warning("CloseCaseStream:  Stream already closed.")
-                    return (stream)
+                    return (.self)
                   }
                   .Call("RN_CloseCaseStream",.self,PACKAGE=RNetica)
                 },
@@ -131,15 +131,23 @@ setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
                   callSuper()
                 }))
 
+
+
+## If the Memory stream is to be used as input to Netica, then it
+## should be a data frame.  If Netica is going to write to it, then it should
+## be NULL
+setClassUnion("streamContents",c("data.frame","NULL"))
+
+
 MemoryCaseStream <-
 setRefClass("MemoryCaseStream",fields=c(Case_Stream_DataFrameName="character",
-                                        Case_Stream_DataFrame="data.frame",
+                                        Case_Stream_DataFrame="streamContents",
                                         Case_Stream_Buffer="externalptr"),
             contains="CaseStream",
             methods=list(
                 initialize=function(Name=Case_Stream_DataFrameName,
                                     Session=NeticaSession(SessionName=".prototype"),
-                                    Case_Stream_DataFrame=data.frame(),
+                                    Case_Stream_DataFrame=NULL,
                                     Case_Stream_DataFrameName=deparse(substitute(Case_Stream_DataFrame)),
                                     ...) {
                   callSuper(Name=Name,Session=Session,
@@ -195,11 +203,11 @@ CaseMemoryStream <- function (data.frame,
                               label=deparse(substitute(data.frame)),
                               session=getDefaultSession()) {
   stream <-
-    CaseMemoryStream(Session=session,
+    MemoryCaseStream(Session=session,
                      Case_Stream_DataFrame=data.frame,
                      Case_Stream_DataFrameName=label)
-  MemoryStreamContents(stream) <- data.frame
   stream$open()
+  MemoryStreamContents(stream) <- data.frame
   stream
 }
 
@@ -221,6 +229,10 @@ setMethod("print","CaseStream",function(x, ...) {
   cat(toString(x),"\n")
 })
 
+setMethod("as.character", "CaseStream", function(x, ...) {
+  toString(x)
+})
+
 setMethod("is.active","CaseStream",function(x) x$isActive())
 
 
@@ -233,7 +245,7 @@ is.MemoryCaseStream <- function (x) {
 }
 
 is.CaseFileStream <- function (x) {
-  is(x,"CaseFileStream")
+  is(x,"FileCaseStream")
 }
 
 isCaseStreamOpen <- function (stream) {
@@ -277,14 +289,14 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
          pathOrStream)
   }
   id <- as.integer(id)
-  if (length(id) >1L) {
+  if (length(id) >1L || is.na(id)) {
     stop("Argument id must be an integer scalar.")
   }
   freq <- as.numeric(freq)
-  if (length(freq) >1L) {
+  if (length(freq) >1L || is.na(freq)) {
     stop("Argument freq must be a numeric scalar.")
   }
-  session <- NodeNet(nodes[[1]])$session
+  session <- NodeNet(nodes[[1]])$Session
   stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,
                   session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
@@ -331,12 +343,12 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
   stream
 }
 
-read.CaseFile <- function(file,...) {
-  read.table(file,header=TRUE,sep=CaseFileDelimiter(),
-             na.strings=CaseFileMissingCode(),...)
+read.CaseFile <- function(file,...,session=getDefaultSession()) {
+  read.table(file,header=TRUE,sep=CaseFileDelimiter(session=session),
+             na.strings=CaseFileMissingCode(session=session),...)
 }
 
-write.CaseFile <- function(x,file,...) {
+write.CaseFile <- function(x,file,...,session=getDefaultSession()) {
   if (!is.data.frame(x)) {
     stop("Must be data frame.")
   }
@@ -348,7 +360,8 @@ write.CaseFile <- function(x,file,...) {
   if (has.freq) vars <- c("NumCases",vars)
   if (has.id) vars <- c("IDnum",vars)
   write.table(x[,vars],file,col.names=TRUE,row.names=FALSE, quote=FALSE,
-              sep=CaseFileDelimiter(), na=CaseFileMissingCode())
+              sep=CaseFileDelimiter(session=session),
+              na=CaseFileMissingCode(session=session))
 
 }
 
@@ -366,7 +379,7 @@ MemoryStreamContents <- function (stream) {
       result <- NULL
     } else {
       con <- textConnection(contents)
-      result <- read.CaseFile(con)
+      result <- read.CaseFile(con,session=stream$Session)
       close(con)
     }
     ## Cache value
@@ -394,7 +407,7 @@ MemoryStreamContents <- function (stream) {
     contents <- NULL
     if (!is.null(value)) {
       con <- textConnection(NULL,open="w")
-      write.CaseFile(value,con)
+      write.CaseFile(value,con,session=stream$Session)
       contents <- textConnectionValue(con)
       close(con)
     }

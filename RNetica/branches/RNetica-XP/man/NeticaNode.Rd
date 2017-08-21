@@ -1,5 +1,6 @@
 \name{NeticaNode}
 \alias{NeticaNode}
+\alias{is.NeticaNode}
 \title{
   An object referencing a node in a Netica Bayesian network.
 }
@@ -10,7 +11,7 @@
   This object is returned by various RNetica functions which create or
   find nodes in a \code{\link{NeticaBN}} network.  A \code{NeticaNode}
   object represents a node object inside of Netica's memory.  The
-  function \code{is.active()} tests whether the node is still a valid
+  function \code{\link{is.active}()} tests whether the node is still a valid
   reference. 
 }
 \usage{
@@ -18,13 +19,6 @@ is.NeticaNode(x)
 }
 \arguments{
   \item{x}{The object to print or test
-  }
-  \item{\dots}{Other arguments to \code{\link[base]{print}()} or
-    \code{\link[base]{toString}()}
-  }
-  \item{e1}{A \code{NeticaNode} object to test.
-  }
-  \item{e2}{A \code{NeticaNode} object to test, or a list of such objects.
   }
 }
 \details{
@@ -58,11 +52,6 @@ is.NeticaNode(x)
 
   The function \code{is.NeticaNode()} returns a logical scalar depending
   on whether or not its argument is a \code{NeticaBN}.
-
-  The function \code{Ops.NeticaNode()} returns a logical value depending on
-  whether the objects are equal.  If the second argument is a list of
-  \code{NeticaNode} objects, then a logical vector is returned, testing
-  \code{e1} against every element of \code{e2}.
 
 }
 \references{

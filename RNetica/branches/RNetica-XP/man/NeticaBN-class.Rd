@@ -3,9 +3,10 @@
 \docType{class}
 \alias{NeticaBN-class}
 \alias{Compare,NeticaBN,NeticaBN-method}
-\alias{is.active,NeticaBN-method}
 \alias{print,NeticaBN-method}
 \alias{toString,NeticaBN-method}
+\alias{as.character,NeticaBN-method}
+\alias{is.element,NeticaBN,list-method}
 
 \title{Class \code{"NeticaBN"}}
 \description{
@@ -34,7 +35,9 @@ destructively modified.  Also fields (slots) are accessed using the
       representation. }
     \item{toString}{\code{signature(x = "NeticaBN")}: Creates a
       character representation. }
-	 }
+    \item{is.element}{\code{signature(el = "NeticaBN", set = "list")}:
+      Checks to see if \var{el} is in list of nets.}
+  }
 }
 \details{
 
@@ -42,7 +45,7 @@ destructively modified.  Also fields (slots) are accessed using the
   Netica nework.  A network is said to be \sQuote{active} if it
   references a network object in a current Netica session.  A network
   become inactive when it is deleted (with a call to
-  \code{\link{DeleteNetworks}}) or when the R session is saved an
+  \code{\link{DeleteNetwork}}) or when the R session is saved an
   restored.  In the latter case, if the network was saved with a call to
   \code{\link{WriteNetworks}}, then calling \code{\link{ReadNetworks}}
   on the inactive network will reload it from the save file.
@@ -68,7 +71,7 @@ destructively modified.  Also fields (slots) are accessed using the
   will be reference in the R code.  The function
   \code{\link{NetworkFindNode}()} will find a node by name and create
   the R object corresponding to the node if needed.  The function
-  \code{\link{NetworkAllNodes()}} will create R objects for all nodes in
+  \code{\link{NetworkAllNodes}()} will create R objects for all nodes in
   the net.
 
 }

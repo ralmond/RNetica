@@ -76,7 +76,7 @@ NetworkName(net) <- value
 
 }
 \seealso{
-  \code{\linkS4class{CreateNetwork}()}, \code{\link{NeticaBN}},
+  \code{\link{CreateNetwork}()}, \code{\linkS4class{NeticaBN}},
   \code{\link{GetNamedNetworks}()}, \code{\link{NetworkTitle}()} 
 }
 \examples{

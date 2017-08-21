@@ -171,7 +171,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1))
 
 ## Probs for A & B1 modified, but B2 left alone
@@ -195,7 +195,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2))
 
 stopifnot(
@@ -241,7 +241,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1),method="EM")
 
 ## Complete data, this should look identical to the counting case.
@@ -266,7 +266,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="EM")
 
 stopifnot(
@@ -281,7 +281,7 @@ casesabb2 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile2 <- tempfile("casesabb2",fileext=".cas")
-write.CaseFile(casesabb1,outfile2)
+write.CaseFile(casesabb1,outfile2, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="EM")
 
 stopifnot(
@@ -323,7 +323,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1),method="GRADIENT")
 
 ## Complete data, this should look identical to the counting case.
@@ -352,7 +352,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="GRADIENT")
 
 ## Gradient algorithm sets experience to -infinity, so need to reset.
@@ -366,7 +366,7 @@ casesabb2 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile2 <- tempfile("casesabb2",fileext=".cas")
-write.CaseFile(casesabb1,outfile2)
+write.CaseFile(casesabb1,outfile2, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="GRADIENT")
 
 DeleteNetwork(abb)

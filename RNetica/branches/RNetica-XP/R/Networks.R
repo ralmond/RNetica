@@ -141,6 +141,10 @@ setMethod("print","NeticaBN", function(x, ...) {
   cat(toString(x),"\n")
 })
 
+setMethod("as.character", "NeticaBN", function(x, ...) {
+  toString(x)
+})
+
 is.NeticaBN <- function (x) {
   is(x,"NeticaBN")
 }
@@ -158,7 +162,7 @@ setMethod("Compare",c("NeticaBN","NeticaBN"), function(e1, e2) {
   if (bothdeleted) {
     ## Both deleted, use cached names.
     return(ifelse(
-        e1$Name==e2$Name && e1$Pathname == e2$Pathname,
+        e1$Name==e2$Name && all(e1$PathnameName == e2$PathnameName),
         truth,!truth))
   }
   ## Okay have two valid NeticaBNs or one valid one and one inactive.
@@ -166,6 +170,11 @@ setMethod("Compare",c("NeticaBN","NeticaBN"), function(e1, e2) {
   return(ifelse(identical(e1$Netica_bn,e2$Netica_bn),
                 truth,!truth))
 })
+
+setMethod("is.element",c("NeticaBN","list"),
+          function (el,set) is.element(list(el),set))
+
+
 
 DeleteNetwork <- function (nets) {
   if (is.NeticaBN(nets) && length(nets) ==1) {
@@ -285,8 +294,9 @@ WriteNetworks <- function (nets, paths) {
   if (length(nets) != length(paths)) {
     stop("Lengths of net and pathname lists are different")
   }
-  handles <- .Call("RN_Write_Nets",nets,paths,PACKAGE=RNetica)
-  ecount <- nets[[1]]$reportErrors()
+  session <- nets[[1]]$Session
+  handles <- .Call("RN_Write_Nets",nets,paths,session,PACKAGE=RNetica)
+  ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -338,7 +348,7 @@ GetNetworkFileName <- function (net,internal=FALSE) {
     }
     pathname
   } else
-    net$Pathname
+    net$PathnameName
 }
 
 ################################################################

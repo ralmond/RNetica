@@ -17,6 +17,8 @@ mempcpy (void *dest, const void *src, size_t n)
 #include <Rdefines.h>
 #include <RNetica.h>
 
+//#define DEBUG_MEMSTREAMS
+
 /**
  * Case sets are generally tab separated files of variable values,
  * with each column representing a variable.  Generally, we will want
@@ -170,7 +172,6 @@ SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream, SEXP session) {
 SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session) {
   const char* lab=CHAR(STRING_ELT(label,0));
   environ_ns* netica_env = GetSessionPtr(session);
-  //Rprintf("Opening Stream for R object %s\n",lab);
   stream_ns* str = 
     NewMemoryStream_ns (lab,netica_env, NULL);
   if (str == NULL ) 
@@ -208,7 +209,12 @@ SEXP RN_CloseCaseStream (SEXP stream) {
  * Tests whether or not an object is a Netica stream
  */
 Rboolean isNeticaStream(SEXP obj) {
-  return inherits(obj,CaseStreamClass);
+  // Looks like inherits doesn't work properly with S4 classes.  Do it
+  // the hard way.
+  Rboolean val = inherits(obj,CaseStreamClass) ||
+    inherits(obj,CaseFileStreamClass) ||
+    inherits(obj,MemoryStreamClass);
+  return val;
 }
 
 SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
@@ -235,10 +241,14 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
     }
     mempcpy(pos,"\0",1);
   }
-  //Rprintf("Length at creation time %ld\n",totlen);
+#ifdef DEBUG_MEMSTREAMS
+  Rprintf("Length at creation time %ld\n",totlen);
+#endif
   SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
   const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
-  //Rprintf("Buffer contents now:\n%s\n",obuf);
+#ifdef DEBUG_MEMSTREAMS
+  Rprintf("Buffer contents now:\n%s\n",obuf);
+#endif
 
   SET_FIELD(stream,casestreamposatt,ScalarInteger(NA_INTEGER));
   SET_FIELD(stream,casestreamlastidatt,ScalarInteger(NA_INTEGER));
@@ -256,7 +266,9 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
 
   const char *nbuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
   //Copy so we can tokenize it.
+#ifdef DEBUG_MEMSTREAMS
   Rprintf("Buffer length %ld\n",(size_t) totlen);
+#endif
   if (totlen == 0) return R_NilValue;
   buf = (char *) R_alloc((size_t) totlen+1,sizeof(char));
   if (buf == NULL) {
@@ -269,12 +281,16 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
     if (buf[ipos]=='\n') nrow++;
   }
   buf[totlen] = '\0';
+#ifdef DEBUG_MEMSTREAMS
   Rprintf("ipos = %ld, nrow=%ld\n",ipos,nrow);
+#endif
   PROTECT(contents = allocVector(STRSXP,nrow));
   line = strtok(buf,"\n");
   irow=0;
   while (line) {
+#ifdef DEBUG_MEMSTREAMS
     Rprintf("Line %ld: %s\n",irow,line);
+#endif
     SET_STRING_ELT(contents,irow++,mkChar(line));
     line = strtok(NULL,"\n");
   }
@@ -345,7 +361,9 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
     error("RN_ReadFindings:  stream is not a open.");
   }
   stream_ns *stream_handle = GetCaseStream_Handle(stream);
-  //Rprintf("RN_ReadFindings: Stream_handle %ld.\n",stream_handle);
+#ifdef DEBUG_MEMSTREAMS
+  Rprintf("RN_ReadFindings: Stream_handle %ld.\n",stream_handle);
+#endif
   ReadNetFindings2_bn(&case_posn,stream_handle,addflag,nodelist,
                       &idnum,&freqnum);
   if (case_posn == NO_MORE_CASES) {

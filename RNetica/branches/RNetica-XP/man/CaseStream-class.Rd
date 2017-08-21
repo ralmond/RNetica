@@ -2,13 +2,16 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{CaseStream-class}
+\alias{print,CaseStream-method}
+\alias{toString,CaseStream-method}
+\alias{as.character,CaseStream-method}
 
 \title{Class \code{"CaseStream"}}
 \description{
 
   This object is a wrapper around a Netica stream which is used to
   read/write cases---sets of findings entered into a Netica network.
-  There are two subclasses:  \code{\linkS4class{CaseFileStream}} and
+  There are two subclasses:  \code{\linkS4class{FileCaseStream}} and
   \code{\linkS4class{MemoryCaseStream}}.  The function
   \code{\link{ReadFindings}} reads the findings from the stream and the
   function \code{\link{WriteFindings}} writes them out.
@@ -24,11 +27,12 @@ operator.
 }
 \details{
 
-  A \code{NeticaCaseStream} object is an R wrapper around a Netica stream
-  object.  There are two special cases: \code{\link{CaseFileStream}}
-  objects are streams focused on a case file, and
-  \code{\link{MemoryCaseStream}} objects are streams focused on a hunk of
-  memory corresponding to an R data frame object.
+  A \code{CaseStream} object is an R wrapper around a Netica stream
+  object.  There are two subclasses:
+  \code{\linkS4class{FileCaseStream}} objects are streams focused on a
+  case file, and \code{\linkS4class{MemoryCaseStream}} objects are
+  streams focused on a hunk of memory corresponding to an R data frame
+  object.
 
   Although the function \code{\link{WriteFindings}} always appends a new
   case to the end of a file (and hence does not need to keep the stream

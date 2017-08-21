@@ -4,6 +4,7 @@
 \alias{NeticaRNG-class}
 \alias{print,NeticaRNG-method}
 \alias{toString,NeticaRNG-method}
+\alias{as.character,NeticaRNG-method}
 
 \title{Class \code{"NeticaRNG"}}
 \description{

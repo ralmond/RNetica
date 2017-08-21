@@ -107,7 +107,7 @@ stopifnot(nodeBC[[2]]==nodes[[3]])
 
 allnodes <- NetworkAllNodes(tnet)
 stopifnot(length(allnodes)==3)
-stopifnot(any(nodeA==allnodes)) ## NodeA in there somewhere.
+stopifnot(is.element(nodeA,allnodes)) ## NodeA in there somewhere.
 
 \dontrun{
 ## Safe way to preserve node and network objects across R sessions.
@@ -118,7 +118,7 @@ library(RNetica)
 sess <- NeticaSession()
 startSession(sess)
 tnet <- ReadNetworks(tnet, session=sess)
-nodes <- NetworkFindNodes(tnet,as.character(nodes))
+nodes <- NetworkFindNodes(tnet,tnet$listNodes())
 }
 DeleteNetwork(tnet)
 stopSession(sess)

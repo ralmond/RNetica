@@ -5,19 +5,26 @@
 \description{
   Calculates the weight of evidence provided by the current findings for
   the specified hypothesis.  A hypothesis consists of a statement that a
-  particular set of nodes (\code{hnodes}) will fall in a specified set
-  of states (\code{hstatelists}).
+  particular set of nodes (\var{hnodes}) will fall in a specified set
+  of states (\var{hstatelists}).
 }
 \usage{
-woe(hnodes, hstatelists)
+woe(enodes, estates, hnodes, hstatelists)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{hnodes}{A list of \code{\link{NeticaNode}}s
+  \item{enodes}{A list of \code{\linkS4class{NeticaNode}}s
+    which are providing evidence.  As a special case, a single
+    \code{NeticaNode} is treated as a list of length one.}
+  \item{estates}{A list of character vectors the same length as
+    \var{enodes} corresponding to the observed or hypothesized state of
+    the evidence nodes and representing states of the corresponding node.
+    As a special case, a character vector is turned into a list of
+    length one.}
+  \item{hnodes}{A list of \code{\linkS4class{NeticaNode}}s
     whose values are of interest.  As a special case, a single
     \code{NeticaNode} is treated as a list of length one.}
   \item{hstatelists}{A list of character vectors the same length as
-    \code{hnodes} corresponding to the hypothesized state of the nodes
+    \var{hnodes} corresponding to the hypothesized state of the nodes
     and representing states of the corresponding node.
     As a special case, a character vector is turned into a list of
     length one.}
@@ -28,8 +35,6 @@ woe(hnodes, hstatelists)
   \deqn{W(H:E) = log \frac{P(E|H)}{P(E|\not H)} =
     log \frac{P(H|E)}{P(\not H|E)} - log \frac{P(H)}{P(\not H)}.}
   
-
-
 }
 \value{
 %%  ~Describe the value returned
@@ -41,15 +46,10 @@ woe(hnodes, hstatelists)
 \references{
 %% ~put references to the literature/web site here ~
 }
-\author{
-%%  ~~who you are~~
-}
+\author{Russell Almond}
 \note{
 %%  ~~further notes~~
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
@@ -97,4 +97,4 @@ function (hnodes, hstatelists)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd2 }

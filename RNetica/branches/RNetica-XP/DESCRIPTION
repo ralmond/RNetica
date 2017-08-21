@@ -1,12 +1,12 @@
 Package: RNeticaXR
 Version: 0.5-1
-Date: 2017/07/04
+Date: 2017/08/19
 Title: R interface to Netica(R) Bayesian Network Engine (XR classes)
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
-Depends: R (>= 3.0), methods, 
-Imports: utils, grDevices, tools, R.utils
-Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API
+Depends: R (>= 3.0), methods, utils
+Imports: grDevices, R.utils
+Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
 License: Artistic-2.0 + file LICENSE
 URL: http://pluto.coe.fsu.edu/RNetica
 Collate: Session.R Networks.R Node.R Edges.R Inference.R Cases.R Experience.R Continuous.R Random.R LoadFuns.R

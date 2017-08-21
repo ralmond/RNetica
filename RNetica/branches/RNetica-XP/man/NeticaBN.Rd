@@ -1,5 +1,6 @@
 \name{NeticaBN}
 \alias{NeticaBN}
+\alias{is.NeticaBN}
 \title{
 An object referencing a Bayesian network in Netica.
 }
@@ -16,20 +17,9 @@ An object referencing a Bayesian network in Netica.
 }
 \usage{
 is.NeticaBN(x)
-\method{toString}{NeticaBN}(x, ...)
-\method{print}{NeticaBN}(x, ...)
-\method{Ops}{NeticaBN}(e1, e2)
-
 }
 \arguments{
   \item{x}{The object to print or test
-  }
-  \item{\dots}{Other arguments to \code{\link[base]{print}()} or
-    \code{\link[base]{toString}()}
-  }
-  \item{e1}{A \code{NeticaBN} object to test.
-  }
-  \item{e2}{A \code{NeticaBN} object to test.
   }
 }
 \details{
@@ -106,24 +96,24 @@ is.NeticaBN(x)
 net1 <- CreateNetwork("aNet")
 stopifnot(is.NeticaBN(net1))
 stopifnot(is.active(net1))
-stopifnot(as.character(net1)=="aNet")
+stopifnot(net1$Name=="aNet")
 
 net2 <- GetNamedNetworks("aNet")
-stopifnot(as.character(net2)=="aNet")
+stopifnot(net2$Name=="aNet")
 stopifnot(net1==net2)
 
 NetworkName(net1) <- "Unused"
 stopifnot(net1==net2)
-## Warning:  The following expression is true!
-as.character(net1) != as.character(net2)
 
 netd <- DeleteNetwork(net1)
 stopifnot(!is.active(net1))
 stopifnot(!is.active(net2))
-stopifnot(as.character(netd)=="Unused")
+stopifnot(netd$Name=="Unused")
 stopifnot(netd == net1)
-## Warning:  The following expression is true!
-net1 != net2
+## Warning:  The following expression used to not be true (RNetica <0.5)
+## but now is.
+net1 = net2
+
 }
 }
 \keyword{ classes }

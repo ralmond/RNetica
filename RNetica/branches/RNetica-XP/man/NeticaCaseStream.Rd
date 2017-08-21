@@ -38,7 +38,7 @@ getCaseStreamLastFreq(stream)
 
   A \code{\linkS4class{CaseStream}} object is an R wrapper around
   a Netica stream object.  There are two special cases:
-  \code{\linkS4class{CaseFileStream}} objects are streams focused on a
+  \code{\linkS4class{FileCaseStream}} objects are streams focused on a
   case file, and \code{\linkS4class{MemoryCaseStream}} objects are
   streams focused on a hunk of memory corresponding to an R data frame
   object. 

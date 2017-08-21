@@ -12,7 +12,7 @@ R CMD INSTALL RNeticaXR --configure-args='--with-netica=/home/ralmond/software/N
 
 To check I run with
 
-R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504'"
+R CMD check RNeticaXR --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504'"
 
 For Windows installations, set an environmental variable NETICA_HOME
 with the path in which you unpacked the Netica API.  R will give a

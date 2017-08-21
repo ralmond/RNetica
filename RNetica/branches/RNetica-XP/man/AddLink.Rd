@@ -81,15 +81,15 @@ B <- NewDiscreteNode(abnet, "B")
 AddLink(A,B)
 
 stopifnot(
-  match(A,NodeParents(B),nomatch=0)>0,
-  match(B,NodeChildren(A),nomatch=0)>0
+  is.element(list(A),NodeParents(B)),
+  is.element(list(B),NodeChildren(A))
 )
 
 DeleteLink(A,B)
 
 stopifnot(
-  match(A,NodeParents(B),nomatch=0)==0,
-  match(B,NodeChildren(A),nomatch=0)==0
+  !is.element(list(A),NodeParents(B)),
+  !is.element(list(B),NodeChildren(A))
 )
 
 DeleteNetwork(abnet)
@@ -97,4 +97,4 @@ stopSession(sess)
 }
 \keyword{ interface}
 \keyword{ graphs }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

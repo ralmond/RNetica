@@ -148,7 +148,7 @@ casefile <- file.path(library(help="RNetica")$path,
                      
 CaseFileDelimiter("\t", session=sess)
 CaseFileMissingCode("*", session=sess)
-cases <- read.CaseFile(casefile)
+cases <- read.CaseFile(casefile, session=sess)
 
 memstream <- CaseMemoryStream(cases, session=sess)
 
@@ -213,7 +213,9 @@ stopSession(sess)
     \item{\code{Case_Stream_DataFrameName}:}{Object of class
       \code{character} giving the expression used for the data frame.}
     \item{\code{Case_Stream_DataFrame}:}{Object of class
-      \code{data.frame} the data object that is the contents of the buffer.}
+      \code{data.frame} or \code{NULL} the data object that is the
+      contents of the buffer, or \code{NULL} if the stream was created
+      for writing.}
     \item{\code{Case_Stream_Buffer}:}{Object of class \code{externalptr}
       used for an R-side string buffer, currently not used. }
   }

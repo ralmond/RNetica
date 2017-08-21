@@ -17,6 +17,18 @@ UPDATE:  I've made some changes that may fix this.  I've also now run
 a couple of times using CHECK --gc-torture and not found the problem.
 It may be fixed.
 
+
+The test suite is failing here; which is odd because the error must
+take place before that.
+
+> peanut <- CreateNetwork("peanut", session=sess)
+Netica error: In function DeleteStream_ns: deleted or damaged stream_ns passed
+Error in CreateNetwork("peanut", session = sess) : 
+  Netica Errors Encountered, see console for details.
+Execution halted
+
+
+
 R stack error in BN_SetNodeProbs when passed a matrix of NA's as
 probability table.
 
