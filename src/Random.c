@@ -36,7 +36,7 @@ SEXP RNGFree (SEXP rngptr) {
       }
     }
   }
-  return R_NilValue;
+  return rngptr;
 }
 
 void AddRNGRef(SEXP ref) {
@@ -65,9 +65,9 @@ void FreeRNGs () {
     SEXP rng = R_WeakRefValue(rr);
     next = CDR(r);
     if (key != R_NilValue) {
-      RNGFree(key);
+      key = RNGFree(key);
       if (rng && rng != R_NilValue) {
-        SET_FIELD(rng,rngatt,R_MakeExternalPtr(NULL,rngatt,R_NilValue));
+        SET_FIELD(rng,rngatt,key);
       }
     }
   }
@@ -116,9 +116,10 @@ Rboolean isNeticaRNG(SEXP obj) {
 }
 
 SEXP RN_FreeRNG (SEXP rng) {
-
-  RNGFree(GET_FIELD(rng,rngatt));
-  SET_FIELD(rng,rngatt,R_MakeExternalPtr(NULL,rngatt,R_NilValue));
+  
+  SEXP ptr;
+  PROTECT(ptr = RNGFree(GET_FIELD(rng,rngatt)));
+  SET_FIELD(rng,rngatt,ptr);
   return(rng);
 }
 

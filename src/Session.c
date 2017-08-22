@@ -242,6 +242,9 @@ SEXP RN_start_Session(SEXP sessobj) {
   return sessobj;
 }
 
+extern void CloseOpenCaseStreams();
+extern void FreeRNGs();
+
 /**
  * This function closes Netica cleanly.
  */
@@ -272,6 +275,10 @@ SEXP RN_stop_Session(SEXP sessobj) {
   /*   RN_UnregisterNetwork(sessobj,GetNetName_bn(net)); */
   /* }  */
 
+  //Make sure all streams are closed.
+  CloseOpenCaseStreams();
+  FreeRNGs();
+  
   res = CloseNetica_bn(netica_env,mesg);
   netica_env = NULL; //Set to null no matter what.
   //Save pointer in session object

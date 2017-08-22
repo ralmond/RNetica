@@ -92,7 +92,7 @@ SEXP CaseStreamClose (SEXP streamptr) {
       }
     }
   }
-  return R_NilValue;
+  return streamptr;
 }
 
 void AddStreamRef(SEXP ref) {
@@ -121,9 +121,9 @@ void CloseOpenCaseStreams () {
     SEXP stream = R_WeakRefValue(r);
     next = CDR(s);
     if (key != R_NilValue) {
-      CaseStreamClose(key);
+      key = CaseStreamClose(key);
       if (stream && stream != R_NilValue) {
-        setAttrib(stream,casestreamatt,R_NilValue);
+        SET_FIELD(stream,casestreamatt,key);
       }
     }
   }
@@ -198,9 +198,10 @@ SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session) {
 
 SEXP RN_CloseCaseStream (SEXP stream) {
 
-  CaseStreamClose(GET_FIELD(stream,casestreamatt));
-  SET_FIELD(stream,casestreamatt,
-            R_MakeExternalPtr(NULL,casestreamatt,R_NilValue));
+  SEXP ptr;
+  PROTECT(ptr = CaseStreamClose(GET_FIELD(stream,casestreamatt)));
+  SET_FIELD(stream,casestreamatt,ptr);
+  UNPROTECT(1);
   return(stream);
 }
 
