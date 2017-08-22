@@ -16,16 +16,8 @@ fixed the problem.
 UPDATE:  I've made some changes that may fix this.  I've also now run
 a couple of times using CHECK --gc-torture and not found the problem.
 It may be fixed.
-
-
-The test suite is failing here; which is odd because the error must
-take place before that.
-
-> peanut <- CreateNetwork("peanut", session=sess)
-Netica error: In function DeleteStream_ns: deleted or damaged stream_ns passed
-Error in CreateNetwork("peanut", session = sess) : 
-  Netica Errors Encountered, see console for details.
-Execution halted
+UPDATE 2:  This is probably now irrelevant after going from S3 to R6
+classes for Nodes and Nets.  Will watch for it.
 
 
 
@@ -42,7 +34,6 @@ error seems to persist after it was first encountered.
 
 Seg fault if CreateNetwork_bn() is called with a null environment.
 (Thanks to Elise Bethany Gould for spotting this).
-
 
 
 Functions for
