@@ -53,7 +53,7 @@ as.CPF(x)
   function \code{normalize} scales the numeric values of \code{CPF} so
   that each row is normalized.
 
-  The method \code{"[.NeticaNode"} %]
+  The \code{[} method for a \code{\linkS4class{NeticaNode}} %]
   returns a \code{CPF} (if the node is not deterministic).
 
   The function \code{as.CPF()} is designed to convert between
@@ -91,6 +91,9 @@ as.CPF(x)
   conditional probability tables where the first parent variable varies
   fastest.  The Netica GUI displays tables in which the last parent
   variable varies fastest.
+
+  Note, this is an S3 class, as it is basically a data.frame with
+  special structure.
 }
 \seealso{
   \code{\link{NodeProbs}()}, \code{\link{Extract.NeticaNode}},
@@ -122,4 +125,4 @@ as.CPF(as.CPA(arf))
 }
 }
 \keyword{ array }
-\keyword{ classes }% __ONLY ONE__ keyword per line
+\keyword{ classes }

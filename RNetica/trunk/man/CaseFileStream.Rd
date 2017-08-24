@@ -5,16 +5,16 @@
 \title{A stream of cases for reading/writing Netica findings to a file}
 \description{
 
-  This object is subclass of \code{\link{NeticaCaseStream}} so it is a
-  wrapper around a Netica stream which is used to read/write cases.  In
-  this subclass, the case stream is associated with a Netica case file
-  ('.cas' extension).  The function \code{\link{ReadFindings}} reads the
-  findings from the stream and the function \code{\link{WriteFindings}}
-  writes them out.
+  This is the constructor for \code{\linkS4class{FileCaseStream}}
+  objects which provide a wrapper around a Netica stream which is used
+  to read/write cases.  In this subclass, the case stream is associated
+  with a Netica case file (\sQuote{.cas} extension).  The function
+  \code{\link{ReadFindings}} reads the findings from the stream and the
+  function \code{\link{WriteFindings}} writes them out.
 
 }
 \usage{
-CaseFileStream(pathname)
+CaseFileStream(pathname, session=getDefaultSession())
 is.CaseFileStream(x)
 getCaseStreamPath(stream)
 }
@@ -22,13 +22,15 @@ getCaseStreamPath(stream)
   \item{pathname}{A character scalar giving a path to the case file.
     Netica expects case files to end with the extension ".cas"
   }
+  \item{session}{An object of type \code{\linkS4class{NeticaSession}}
+    which defines the reference to the Netica workspace.}
   \item{stream}{A \code{CaseFileStream} object.}
   \item{x}{A object to be printed or whose type is to be determined.}
 }
 \details{
 
-  A \code{CaseFileStream} object is a subclass of the
-  \code{\link{NeticaCaseStream}} object, which is an R wrapper around a
+  A \code{\linkS4class{FileCaseStream}} object is a subclass of the
+  \code{\linkS4class{CaseStream}} object, which is an R wrapper around a
   Netica stream object, in this case one that reads or writes to a case
   file.  Case files are tab (or comma, see
   \code{\link{CaseFileDelimiter}}) separated value files where columns 
@@ -40,7 +42,7 @@ getCaseStreamPath(stream)
   to be kept open between calls.
 
   The function \code{CaseFileStream} will open a stream in Netica and
-  create a new \code{CaseFileStream} if necessary.  The argument
+  create a new \code{\linkS4class{FileCaseStream}} if necessary.  The argument
   \code{pathname} should be the pathname of the case file in the file
   system.  This file should be a file previously written by
   \code{\link{WriteFindings}} or be in the same format.  The delimiter
@@ -59,16 +61,13 @@ getCaseStreamPath(stream)
   previously closed case stream.
 
   The functions \code{getCaseStreamPath} returns the path on which the
-  \code{CaseFileStream} is focused.
-
-  For other properties of \code{CaseFileStream}, see
-  \code{\link{NeticaCaseStream}}. 
+  \code{\linkS4class{FileCaseStream}} is focused.
 
 }
 \value{
 
   The function \code{CaseFileStream} returns a new, open
-  \code{CaseFileStream} object.
+  \code{\linkS4class{FileCaseStream}} object.
 
   The functions \code{is.CaseFileStream} returns a logical value
   indicating whether or not the argument is a \code{CaseFileStream}.
@@ -101,13 +100,20 @@ getCaseStreamPath(stream)
   
 }
 \seealso{
+  See \code{\linkS4class{FileCaseStream}} for properties of file case
+  stream objects and \code{\linkS4class{CaseStream}} for general
+  properties of Netica streams.
+
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
-  \code{\link{NeticaCaseStream}}, \code{\link{MemoryCaseStream}},
+  \code{\link{CaseMemoryStream}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
 }
 \examples{
 
-abc <- CreateNetwork("ABC")
+sess <- NeticaSession()
+startSession(sess)
+
+abc <- CreateNetwork("ABC", sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -119,7 +125,7 @@ AddLink(B,C)
 ## Outputfilename
 casefile <- tempfile("testcase",fileext=".cas")
 
-filestream <- CaseFileStream(casefile)
+filestream <- CaseFileStream(casefile, session=sess)
 stopifnot(is.CaseFileStream(filestream),
           isCaseStreamOpen(filestream))
 
@@ -150,7 +156,8 @@ stopifnot(getCaseStreamLastId(filestream)==1001,
 ##Clean Up
 CloseCaseStream(filestream)
 DeleteNetwork(abc)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }

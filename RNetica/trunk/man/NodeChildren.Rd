@@ -1,35 +1,40 @@
 \name{NodeChildren}
 \alias{NodeChildren}
 \title{
+
   Returns a list of the children of a node in a Netica network.
+
 }
 \description{
-  The children of a node \code{parent} are the nodes which are directly
-  connected to \code{parent} with an edge oriented from
-  \code{parent}. The function \code{NodeChildren(parent)} returns a list of the
-  children of \code{parent}
+
+  The children of a node \var{parent} are the nodes which are directly
+  connected to \var{parent} with an edge oriented from
+  \var{parent}. The function \code{NodeChildren(\var{parent})} returns a
+  list of the children of \var{parent}
 }
 \usage{
 NodeChildren(parent)
 }
 \arguments{
   \item{parent}{
-    A \code{\link{NeticaNode}} whose children are to be found.
+    A \code{\linkS4class{NeticaNode}} whose children are to be found.
   }
 }
 \details{
-  The function \code{NodeChildren(parent)} only returns the immediate
+  The function \code{NodeChildren(\var{parent})} only returns the immediate
   descendants of \code{parent}.  A list of all descendants can be found
   using the function
-  \code{\link{GetRelatedNodes}(parent,"decendents")}.
+  \code{\link{GetRelatedNodes}(\var{parent},"decendents")}.
 
   The function \code{link{NodeParents}()} returns the opposite end of the
   link, however, unlike \code{NodeParents()}, \code{NodeChildren()}
   cannot be directly set.
 }
 \value{
-  A list (possibly empty) of \code{NeticaNode} objects which are the
-  children of \code{parent}.
+
+  A list (possibly empty) of \code{\linkS4class{NeticaNode}} objects
+  which are the children of \var{parent}.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -40,13 +45,14 @@ NodeChildren(parent)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeParents}()}, \code{\link{GetRelatedNodes}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-chnet <- CreateNetwork("ChildcareCenter")
-
+chnet <- CreateNetwork("ChildcareCenter", session=sess)
 mom <- NewContinuousNode(chnet,"Mother")
 stopifnot(
   length(NodeChildren(mom))==0
@@ -61,9 +67,8 @@ stopifnot(
 )
   
 DeleteNetwork(chnet)
+stopSession(sess)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ graphs }% __ONLY ONE__ keyword per line
+\keyword{ graphs }

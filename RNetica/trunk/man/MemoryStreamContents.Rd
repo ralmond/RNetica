@@ -4,7 +4,7 @@
 \title{Access the contents of a MemoryCaseStream}
 \description{
   This function returns the contents of a
-  \code{\link{MemoryCaseStream}}'s internal buffer as a
+  \code{\linkS4class{MemoryCaseStream}}'s internal buffer as a
   \code{\link[base]{data.frame}}.  Alternatively, it sets the contents
   of the buffer to a given data frame.
 }
@@ -14,7 +14,7 @@ MemoryStreamContents(stream) <- value
 }
 
 \arguments{
-  \item{stream}{A \code{\link{MemoryCaseStream}} object whose contents
+  \item{stream}{A \code{\linkS4class{MemoryCaseStream}} object whose contents
   is to be access.
 }
   \item{value}{Either a data frame giving the new value (see details),
@@ -36,11 +36,11 @@ MemoryStreamContents(stream) <- value
   rows to be differentially weighted (this correspond to the \code{freq}
   argument of \code{\link{WriteFindings}}).
 
-  A \code{MemoryCaseStream} contains an R data frame object written out
-  in string form.  This function converts between the internal string
-  object and the data frame representation.  When called as
-  \code{MemoryStreamContents(stream)} it reads the current value of the
-  stream and converts it to a data frame.  When called as setter
+  A \code{\linkS4class{MemoryCaseStream}} contains an R data frame
+  object written out in string form.  This function converts between the
+  internal string object and the data frame representation.  When called
+  as \code{MemoryStreamContents(\var{stream})} it reads the current value of
+  the stream and converts it to a data frame.  When called as setter
   function, it converts the value into a string and focuses the
   \code{MemoryCaseStream} object on this string.
 
@@ -61,8 +61,10 @@ MemoryStreamContents(stream) <- value
 
 }
 \value{
+
   A data frame which corresponds to the contents of the stream buffer,
   or \code{NULL} if the stream buffer is empty.
+
 }
 \references{
   \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -71,8 +73,9 @@ MemoryStreamContents(stream) <- value
 }
 \author{Russell Almond}
 \note{
+
   The cached value of the stream can be accessed with the expression
-  \code{attr(stream,"Case_Stream_DataFrame")}.  While it is almost
+  \code{\var{stream}$Case_Stream_DataFrame}.  While it is almost
   certainly a mistake to set this value directly, there may be
   situations (e.g., avoiding duplicating the data frame when the stream
   is essentially open for reading only) where it is useful.  On the
@@ -83,21 +86,24 @@ MemoryStreamContents(stream) <- value
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
-  \code{\link{MemoryCaseStream}}, \code{\link{NeticaCaseStream}}
+  \code{\linkS4class{MemoryCaseStream}}, \code{\linkS4class{CaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
-CaseFileDelimiter("\t")
-CaseFileMissingCode("*")
-cases <- read.CaseFile(casefile)
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
+                     
+CaseFileDelimiter("\t", session=sess)
+CaseFileMissingCode("*", session=sess)
+cases <- read.CaseFile(casefile, session=sess)
 
-memstream <- MemoryCaseStream(cases)
+memstream <- CaseMemoryStream(cases, session=sess)
 
 ## Should be the same as cases
-MemoryStreamContents(memstream)
+stopifnot(all.equal(MemoryStreamContents(memstream),cases))
+
 
 MemoryStreamContents(memstream) <- cases
 
@@ -124,11 +130,11 @@ casesabb <-
              B1=c("B1","B1","B1","B2","B2","B2","B2","B2","B1","B1"),
              B2=c("B1","B1","B1","B1","B2","B2","B2","B2","B2","B1"))
 
-abbstream <- MemoryCaseStream(casesabb)
+abbstream <- CaseMemoryStream(casesabb, session=sess)
 MemoryStreamContents(abbstream)
 CloseCaseStream(abbstream)
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -146,7 +152,7 @@ B2["A2"] <- c(.2,.8)
 NodeExperience(B1) <- c(10,10)
 NodeExperience(B2) <- c(10,10)
 
-abbstream <- MemoryCaseStream(casesabb)
+abbstream <- CaseMemoryStream(casesabb, session=sess)
 ## This does not appear to work correctly
 abbstream <- ReadFindings(list(A,B1,B2),abbstream,"FIRST")
 NodeFinding(A)
@@ -155,6 +161,7 @@ NodeFinding(B2)
 
 CloseCaseStream(abbstream)
 DeleteNetwork(abb)
+stopSession(sess)
 
 }
 \keyword{ interface }

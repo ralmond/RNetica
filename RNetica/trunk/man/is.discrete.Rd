@@ -5,7 +5,8 @@
   Determines whether a Netica node is discrete or continuous.
 }
 \description{
-  A \code{\link{NeticaNode}} object can take on either a discrete set of
+
+  A \code{\linkS4class{NeticaNode}} object can take on either a discrete set of
   values or an arbitrary real value.  These functions determine which
   type of node this is.
 }
@@ -15,10 +16,11 @@ is.continuous(node)
 }
 \arguments{
   \item{node}{
-    A \code{NeticaNode} object to test.
+    A \code{\linkS4class{NeticaNode}} object to test.
   }
 }
 \details{
+
   While in the Netica GUI, one first creates a node and then determines
   whether it will be discrete or continuous, in the API this is
   determined at the time of creation (by calling
@@ -30,10 +32,13 @@ is.continuous(node)
   levels are cut points for getting a discrete state from the node.  For
   a discrete node, the levels are real values representing the midpoint
   of the states.  
+
 }
 \value{
+
   \code{TRUE} or \code{FALSE} depending on whether a node is discrete or
   continuous. 
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -44,17 +49,22 @@ is.continuous(node)
   Russell Almond
 }
 \note{
+
   Currently, this function does not actually look at the internal Netica
-  state, but rather looks at the attribute \code{"node_discrete"} which
+  state, but rather looks at the field \code{"discrete"} which
   is set when the node is created.
+
 }
 \seealso{
   \code{\link{NewDiscreteNode}()}, \code{\link{NewContinuousNode}()},
-  \code{\link{NeticaNode}}, \code{\link{NodeLevels}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeLevels}()},
   \code{\link{NodeStates}()} 
 }
 \examples{
-netx <- CreateNetwork("netx")
+sess <- NeticaSession()
+startSession(sess)
+
+netx <- CreateNetwork("netx", session=sess)
 
 bnode <- NewDiscreteNode(netx,"bool",c("True","False"))
 stopifnot(is.discrete(bnode))
@@ -65,6 +75,8 @@ stopifnot(!is.discrete(rnode))
 stopifnot(is.continuous(rnode))
 
 DeleteNetwork(netx)
+stopSession(sess)
+
 }
 \keyword{ interface }
-\keyword{ logic }% __ONLY ONE__ keyword per line
+\keyword{ logic }

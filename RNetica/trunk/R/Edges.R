@@ -3,6 +3,40 @@
 ## conditional probability tables.
 
 
+## #############################################################
+## Clique node is a subclass of node
+
+CliqueNode <-
+  setRefClass("CliqueNode",
+              fields=c(clique="list"),
+              contains="NeticaNode",
+              methods=list(
+                  initialize = function(...,clique=list()) {
+                    node <- callSuper(...,clique=clique)
+                    node
+                  },
+                  show = function() {
+                    cat(ifelse(discrete,"Discrete ","Continuous"),
+                        "Netica Clique Node named ",Name,"in network ",Net$Name,"\n")
+                    if (isActive()) {
+                      cat("  Node is currently active.\n")
+                    } else {
+                      cat("  Node is not currently active.\n")
+                    }
+                    cat("Contains nodes: ",paste(sapply(clique,NodeName),
+                                                 collapse=","),"\n")
+                  }
+              ))
+
+setMethod("toString","CliqueNode", function(x,...) {
+  if (is.active(x))
+    paste("<Clique Node:",x$Name,">")
+  else
+    paste("<Deleted Clique Node:",x$Name,">")
+})
+
+
+
 AddLink <- function (parent, child) {
   if (length(parent)>1L || !is.NeticaNode(parent) || !is.active(parent)) {
     stop ("Parent is not an active Netica node", parent)
@@ -10,8 +44,8 @@ AddLink <- function (parent, child) {
   if (length(child)>1L || !is.NeticaNode(child) || !is.active(child)) {
     stop ("Child is not an active Netica node", child)
   }
-  handle <- .Call("RN_AddLink",parent,child,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_AddLink",parent,child,PACKAGE=RNetica)
+  ecount <- parent$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -25,8 +59,8 @@ DeleteLink <- function (parent, child) {
   if (length(child)>1L || !is.NeticaNode(child) || !is.active(child)) {
     stop ("Child is not an active Netica node", child)
   }
-  handle <- .Call("RN_DeleteLink",parent,child,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_DeleteLink",parent,child,PACKAGE=RNetica)
+  ecount <- parent$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -40,8 +74,8 @@ ReverseLink <- function (parent, child) {
   if (length(child)>1L || !is.NeticaNode(child) || !is.active(child)) {
     stop ("Child is not an active Netica node", child)
   }
-  handle <- .Call("RN_ReverseLink",parent,child,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_ReverseLink",parent,child,PACKAGE=RNetica)
+  ecount <- parent$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -52,8 +86,8 @@ NodeChildren <- function (parent) {
   if (length(parent)>1L || !is.NeticaNode(parent) || !is.active(parent)) {
     stop ("Parent is not an active Netica node", parent)
   }
-  handle <- .Call("RN_GetNodeChildren",parent,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_GetNodeChildren",parent,PACKAGE=RNetica)
+  ecount <- parent$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -65,8 +99,8 @@ NodeParents <- function (child) {
   if (length(child)>1L || !is.NeticaNode(child) || !is.active(child)) {
     stop ("Child is not an active Netica node", child)
   }
-  handle <- .Call("RN_GetNodeParents",child,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_GetNodeParents",child,PACKAGE=RNetica)
+  ecount <- child$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -111,55 +145,57 @@ NodeParents <- function (child) {
     ##Then add new links.
     oldnames <- names(oldpar)
     oldpar <- vector("list",length(oldpar))
-    .Call("RN_SetNodeParents",child, oldpar,PACKAGE="RNetica")
+    .Call("RN_SetNodeParents",child, oldpar,PACKAGE=RNetica)
     ## This sets names to old parent names, which is probabily not
     ## what was wanted, so clear names.
-    .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE="RNetica")
+    .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE=RNetica)
   }
-  handle <- .Call("RN_SetNodeParents",child, value,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_SetNodeParents",child, value,PACKAGE=RNetica)
+  ecount <- child$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
   invisible(handle)
 }
 
-## This is another workaround for an ancient S design flaw (I think
-## this one has been around since the Blue Book.  The c() function
-## strips attributes, which turns NeticaNodes and NeticaBN objects
-## into ordinary strings.  This is a replacement for c() which (a)
-## only works on lists and (b) does not strip attributes.
-cc <- function (...) {
-  args <- list(...)
-  isList <- sapply(args,function(x) is(x,"list"))
-  lens <- sapply(args,length)
-  lens <- ifelse(isList,lens,1L)
-  result <- vector("list",sum(lens))
-  n <- 1
-  for (arg in args) {
-    if (is(arg,"list")) {
-      m <- length(arg)
-      result[n:(n+m-1)] <- arg
-      n <- n+m
-    } else {
-      result[[n]] <- arg
-      n <- n+1
-    }
-  }
-  result
-}
+## Now that these are formal R6 objects instead of strings with
+## attributes, this should no longer be an issue.
 
-c.NeticaBN <- cc
-c.NeticaNode <- cc
+## ## This is another workaround for an ancient S design flaw (I think
+## ## this one has been around since the Blue Book.  The c() function
+## ## strips attributes, which turns NeticaNodes and NeticaBN objects
+## ## into ordinary strings.  This is a replacement for c() which (a)
+## ## only works on lists and (b) does not strip attributes.
+## cc <- function (...) {
+##   args <- list(...)
+##   isList <- sapply(args,function(x) is(x,"list"))
+##   lens <- sapply(args,length)
+##   lens <- ifelse(isList,lens,1L)
+##   result <- vector("list",sum(lens))
+##   n <- 1
+##   for (arg in args) {
+##     if (is(arg,"list")) {
+##       m <- length(arg)
+##       result[n:(n+m-1)] <- arg
+##       n <- n+m
+##     } else {
+##       result[[n]] <- arg
+##       n <- n+1
+##     }
+##   }
+##   result
+## }
 
+## c.NeticaBN <- cc
+## c.NeticaNode <- cc
 
 
 NodeInputNames <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  names <- .Call("RN_GetNodeInputNames",node,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  names <- .Call("RN_GetNodeInputNames",node,PACKAGE=RNetica)
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -174,8 +210,8 @@ NodeInputNames <- function (node) {
   if (any(is.na(value)) || any(!is.IDname(value))) {
     stop("Illegal link names: ", value)
   }
-  handle <- .Call("RN_SetNodeInputNames",node, value,PACKAGE="RNetica");
-  ecount <- ReportErrors()
+  handle <- .Call("RN_SetNodeInputNames",node, value,PACKAGE=RNetica);
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -205,11 +241,19 @@ AbsorbNodes <- function (nodes) {
   if (any(!sapply(nodes,is.NeticaNode))) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
-  print(nodes)
-  handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  ## print(nodes)
+  net <- nodes[[1]]$Net
+  handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE=RNetica)
+  ecount <- net$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
+  }
+  ## Delete the node objects from the net cache.
+  for (nd in nodes) {
+    if (is(nd,"NeticaNode")) {
+      nd$deactivate()
+      rm(list=nd$Name,envir=net$nodes)
+    }
   }
   if (length(handles)==1L) handles <- handles[[1L]]
   invisible(handles)
@@ -231,8 +275,8 @@ is.NodeRelated <- function (node1, node2, relation="connected") {
   if (length(relation) >1L) {
     warning("Relation has length > 1, only first value is used.")
   }
-  handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE=RNetica)
+  ecount <- node1$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -253,8 +297,8 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   if (length(relation) >1L) {
     warning("Relation has length > 1, only first value is used.")
   }
-  handle <- .Call("RN_GetRelatedNodes",nodelist,relation,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_GetRelatedNodes",nodelist,relation,PACKAGE=RNetica)
+  ecount <- nodelist[[1]]$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -266,8 +310,9 @@ MakeCliqueNode <- function(nodelist) {
                                           is.active(nd)}))) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
-  handle <- .Call("RN_MakeCliqueNode",nodelist,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  net <- nodelist[[1]]$Net
+  handle <- .Call("RN_MakeCliqueNode",nodelist,net,PACKAGE=RNetica)
+  ecount <- net$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -279,7 +324,7 @@ is.CliqueNode <- function (x) {
 }
 
 GetClique <- function (cliquenode) {
-  attr(cliquenode,"clique")
+  cliquenode$clique
 }
 
 
@@ -337,16 +382,16 @@ NodeProbs <- function (node) {
   if (length(statecounts)>0) {
     config <- -1L
     while (!is.na((config <- nextconfig(config,statecounts))[1L])) {
-      row <- .Call("RN_GetNodeProbs",node,config,PACKAGE="RNetica")
+      row <- .Call("RN_GetNodeProbs",node,config,PACKAGE=RNetica)
       if (!is.null(row))
         result[configindex(config,nstates)] <- row
     }
   } else { ## Prior node, no parents.
-    row <- .Call("RN_GetNodeProbs",node,NULL,PACKAGE="RNetica")
+    row <- .Call("RN_GetNodeProbs",node,NULL,PACKAGE=RNetica)
     if (!is.null(row))
       result[] <- row
   }
-  ecount <- ReportErrors()
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -381,12 +426,12 @@ NodeProbs <- function (node) {
     config <- -1L
     while (!is.na((config <- nextconfig(config,statecounts))[1L])) {
       ci <- configindex(config,nstates)
-      .Call("RN_SetNodeProbs",node,config,value[ci],PACKAGE="RNetica")
+      .Call("RN_SetNodeProbs",node,config,value[ci],PACKAGE=RNetica)
     }
   } else { ## Prior node with no parents.
-    .Call("RN_SetNodeProbs",node,NULL,value,PACKAGE="RNetica")
+    .Call("RN_SetNodeProbs",node,NULL,value,PACKAGE=RNetica)
   }
-  ecount <- ReportErrors()
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -398,8 +443,8 @@ IsNodeDeterministic <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  handle <- .Call("RN_IsNodeDeterministic",node,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_IsNodeDeterministic",node,PACKAGE=RNetica)
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -410,8 +455,8 @@ HasNodeTable <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  result <- .Call("RN_HasNodeTable",node,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  result <- .Call("RN_HasNodeTable",node,PACKAGE=RNetica)
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -423,8 +468,8 @@ DeleteNodeTable <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  handle <- .Call("RN_DeleteNodeTable",node,PACKAGE="RNetica")
-  ecount <- ReportErrors()
+  handle <- .Call("RN_DeleteNodeTable",node,PACKAGE=RNetica)
+  ecount <- node$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
@@ -534,20 +579,27 @@ as.CPA <- function (x) {
 ## integer matrix which does the selection.
 ## env is frame in which to do the evaluation, which is probably the
 ## parent frame of the calling funciton
-parseDims <- function (node,...,env) {
+## Now getting this using the sys.call function.
+parseDims <- function (node, dropvalue=FALSE) {
   ## This creates a call object with the arguments
-  clist <- substitute(list(...))
+  calling.frame <- 2
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  if (dropvalue) clist <- clist[-length(clist)]
+  if (!is.null(names(clist))) {
+    dropme <- names(clist) == "drop"
+    clist <- clist[!dropme]
+  }
   ## Empty condition
-  if (length(clist)==2 && class(clist[[2]]) == "name" &&
-      clist[[2]]=="") return (NULL)
+  if (length(clist)==1 && class(clist[[1]]) == "name" &&
+      clist[[1]]=="") return (NULL)
   ## Need to find and irradicate stray marks
-  for (idim in 2:length(clist)) {
+  for (idim in 1:length(clist)) {
     if (is.name(clist[[idim]]) && nchar(clist[[idim]]) == 0) {
       ## Blank entry, replace with 1:n
-      clist[idim] <- RNetica:::EVERY_STATE
+      clist[idim] <- EV_STATE
     }
   }
-  selection <- eval(clist,env)
+  selection <- do.call("list",clist,envir=parent.frame(calling.frame))
   ## Unwrap selections by data frame and matrix.
   if (length(selection) == 1L) {
     if (is.data.frame(selection[[1]])) {
@@ -584,7 +636,7 @@ parseDims <- function (node,...,env) {
   names(selection) <- inames[matches]
   unmatched <- setdiff(inames,names(selection))
   if (length(unmatched)>0) {
-    uml <- as.list(rep(EVERY_STATE),length(unmatched))
+    uml <- as.list(rep(EV_STATE,length(unmatched)))
     names(uml) <- unmatched
     selection <- c(selection,uml)
   }
@@ -605,7 +657,7 @@ integerIndex <- function(node,selection,expandEvery=FALSE) {
       } else if (is.character(selection[[i]])) {
         names <- c(NodeStates(NodeParents(node)[[i]]),"*")
         selection[[i]] <- match(selection[[i]],names)
-        selection[[i]][selection[[i]]==length(names)] <- EVERY_STATE
+        selection[[i]][selection[[i]]==length(names)] <- EV_STATE
         if (any(is.na(selection[[i]]))) {
           stop("Illegal state name.")
         }
@@ -647,14 +699,18 @@ integerIndex <- function(node,selection,expandEvery=FALSE) {
   if (ncol(selection) != length(NodeParents(node))) {
     stop("Configuration specification number of columns must match number of parents.")
   }
-  if (expandEvery && any(selection == EVERY_STATE)) {
+  ## Okay, now we have a matrix of numbers.  Substitute EVERY_STATE
+  ## (external advertised value) for EV_STATE (internal Netica value).
+  selection <- ifelse(selection==EVERY_STATE,EV_STATE,selection)
+
+  if (expandEvery && any(selection == EV_STATE)) {
     pdims <- lapply(NodeParents(node),
                     function(par) 1L:NodeNumStates(par))
     result <- NULL
     for (irow in 1L:nrow(selection)) {
       expanded <- selection[irow,]
-      if (any(expanded==EVERY_STATE)) {
-        wild <- expanded==EVERY_STATE
+      if (any(expanded==EV_STATE)) {
+        wild <- expanded==EV_STATE
         grid <- do.call("expand.grid",pdims[wild])
         expanded <- matrix(expanded,nrow(grid),length(pdims),byrow=TRUE)
         expanded[,wild] <- as.matrix(grid)
@@ -681,28 +737,31 @@ selectionToConfig <- function(node,selection) {
   result
 }
 
-"[.NeticaNode" <- function(x, ...,  drop=FALSE) {
+setMethod("[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node.")
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
-  selection <- parseDims(x,...,env=parent.frame(1))
+  selection <- parseDims(x)             #Reads call to get args.
   if (is.null(selection) && length(NodeParents(x))>0) {
-    selection <- rep(EVERY_STATE,length(NodeParents(x)))
+    selection <- rep(EV_STATE,length(NodeParents(x)))
   }
+  doSelection(x,selection,drop)
+})
 
+doSelection <- function (x,selection,drop) {
   ## No parent case
   if (is.null(selection)) {
     if (IsNodeDeterministic(x)) {
       if (is.discrete(x)) {
-        val <- .Call("RN_GetNodeFuncState",x,NULL,PACKAGE="RNetica")
+        val <- .Call("RN_GetNodeFuncState",x,NULL,PACKAGE=RNetica)
         result <- NodeStates(x)[val]
       } else {
-        result <- .Call("RN_GetNodeFuncReal",x,NULL,PACKAGE="RNetica")
+        result <- .Call("RN_GetNodeFuncReal",x,NULL,PACKAGE=RNetica)
       }
     } else {
-      result <- .Call("RN_GetNodeProbs",x,NULL,PACKAGE="RNetica")
+      result <- .Call("RN_GetNodeProbs",x,NULL,PACKAGE=RNetica)
       if (is.null(result)) {
         result <- rep(NA_real_,length(NodeStates(x)))
       }
@@ -720,13 +779,13 @@ selectionToConfig <- function(node,selection) {
       ## Single Row case
       if (IsNodeDeterministic(x)) {
         if (is.discrete(x)) {
-          val <- .Call("RN_GetNodeFuncState",x,selection,PACKAGE="RNetica")
+          val <- .Call("RN_GetNodeFuncState",x,selection,PACKAGE=RNetica)
           result <- NodeStates(x)[val]
         } else {
-          result <- .Call("RN_GetNodeFuncReal",x,selection,PACKAGE="RNetica")
+          result <- .Call("RN_GetNodeFuncReal",x,selection,PACKAGE=RNetica)
         }
       } else {
-        result <- .Call("RN_GetNodeProbs",x,selection,PACKAGE="RNetica")
+        result <- .Call("RN_GetNodeProbs",x,selection,PACKAGE=RNetica)
         if (is.null(result)) {
           result <- rep(NA_real_,length(NodeStates(x)))
         }
@@ -746,13 +805,13 @@ selectionToConfig <- function(node,selection) {
         if (is.discrete(x)) {
           for (i in 1L:nsel) {
             val[i] <- .Call("RN_GetNodeFuncState",x,selection[i,],
-                            PACKAGE="RNetica")
+                            PACKAGE=RNetica)
           }
           val <- factor(val,levels=1L:NodeNumStates(x),NodeStates(x))
         } else {
           for (i in 1L:nsel) {
             val[i] <- .Call("RN_GetNodeFuncReal",x,selection[i,],
-                            PACKAGE="RNetica")
+                            PACKAGE=RNetica)
           }
         }
         if (drop) {
@@ -764,7 +823,7 @@ selectionToConfig <- function(node,selection) {
       } else {
         probs <- matrix(NA,nsel,max(NodeNumStates(x),1L))
         for (i in 1L:nsel) {
-          val <- .Call("RN_GetNodeProbs",x,selection[i,],PACKAGE="RNetica")
+          val <- .Call("RN_GetNodeProbs",x,selection[i,],PACKAGE=RNetica)
           if (!is.null(val)) {
             probs[i,] <- val
           }
@@ -783,18 +842,28 @@ selectionToConfig <- function(node,selection) {
       }
     }
   }
-  ecount <- ReportErrors()
+  ecount <- x$reportErrors()
   if (ecount[1L]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
   result
 }
 
-"[[.NeticaNode" <- function(x, ...) {
-  x[...,drop=TRUE]
-}
+setMethod("[[", "NeticaNode", function(x, i, j, ...) {
+  if (!is.NeticaNode(x) || !is.active(x)) {
+    stop("Expected an active netica node.")
+  }
+  ## Massage selection into a matrix of numeric indexes, EVERY_STATE
+  ## values are only recognized on setting values, so expand them
+  selection <- parseDims(x)             #Reads call to get args.
+  if (is.null(selection) && length(NodeParents(x))>0) {
+    selection <- rep(EV_STATE,length(NodeParents(x)))
+  }
+  doSelection(x,selection,drop=TRUE)
+})
 
-"[<-.NeticaNode" <- function(x, ..., value) {
+
+setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node, got",x)
   }
@@ -802,7 +871,7 @@ selectionToConfig <- function(node,selection) {
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are handled specially by Netica, so leave them in place.
   ## env is where
-  selection <- parseDims(x,...,env=parent.frame(1))
+  selection <- parseDims(x,dropvalue=TRUE)
   npar <- length(NodeParents(x))
   nstate <- NodeNumStates(x)
   if (is.null(selection) && is.data.frame(value)) {
@@ -818,7 +887,7 @@ selectionToConfig <- function(node,selection) {
     }
   }
   if (is.null(selection) && npar>0) {
-    selection <- rep(EVERY_STATE,npar)
+    selection <- rep(EV_STATE,npar)
   }
   if (is.list(selection)) {
     selection <- integerIndex(x,selection,expandEvery=FALSE)
@@ -848,17 +917,18 @@ selectionToConfig <- function(node,selection) {
   if (is.matrix(value)) {
     if (nrow(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=nrow(value))) {
-      stop("Number of rows selected and rows in value do not match; node",x)
+      stop("Number of rows selected and rows in value do not match; node",
+           x$Name)
     }
     if (!is.numeric(value) || any(value<0) || any(value>1)) {
-      stop("Expected a matrix of values between 0 and 1; node",x)
+      stop("Expected a matrix of values between 0 and 1; node", x$Name)
     }
     if (ncol(value) == nstate-1L) {
       ## Normalize
       value <- cbind(value,1-apply(value,1L,sum))
     }
     if (ncol(value) != nstate) {
-      stop("Probabilities not supplied for every state; node",x)
+      stop("Probabilities not supplied for every state; node", x$Name)
     }
   } else {
     if (is.numeric(value) && all(value == as.integer(value)) &&
@@ -876,7 +946,8 @@ selectionToConfig <- function(node,selection) {
     }
     if (length(value) > 1L && (is.null(nrow(selection)) ||
                             nrow(selection)!=length(value))) {
-      stop("Number of rows selected and rows in value do not match; node",x)
+      stop("Number of rows selected and rows in value do not match; node",
+           x$Name)
     }
     if(is.discrete(x) && nstate==2 && valisprobs) {
       ## Single column and binary node, normalize
@@ -886,25 +957,25 @@ selectionToConfig <- function(node,selection) {
   if (is.null(selection)) {
     ## No parents
     if (is.continuous(x)) {
-      .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),PACKAGE="RNetica")
+      .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),PACKAGE=RNetica)
     } else {
       if (valisprobs) {
-        .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE="RNetica")
+        .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE=RNetica)
       } else {
-        .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE="RNetica")
+        .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE=RNetica)
       }
     }
   } else {
     if (is.null(nrow(selection))) {
       ## Single Row case
       if (is.continuous(x)) {
-        .Call("RN_SetNodeFuncReal",x,selection,as.double(value),PACKAGE="RNetica")
+        .Call("RN_SetNodeFuncReal",x,selection,as.double(value),PACKAGE=RNetica)
       } else {
         if (valisprobs) {
-          .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE="RNetica")
+          .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE=RNetica)
         } else {
           .Call("RN_SetNodeFuncState",x,selection,as.integer(value),
-                PACKAGE="RNetica")
+                PACKAGE=RNetica)
         }
       }
     } else {
@@ -914,7 +985,7 @@ selectionToConfig <- function(node,selection) {
         for (i in 1L:nsel) {
           .Call("RN_SetNodeFuncReal",x,selection[i,],
                 as.double(ifelse(length(value)==1L,value,value[i])),
-                PACKAGE="RNetica")
+                PACKAGE=RNetica)
         }
       } else if (valisprobs) {
         if (is.matrix(value) && nrow(value) ==1L) {
@@ -923,35 +994,35 @@ selectionToConfig <- function(node,selection) {
         if (is.matrix(value)) {
           for (i in 1L:nsel) {
             .Call("RN_SetNodeProbs",x,selection[i,],
-                  as.double(value[i,]),PACKAGE="RNetica")
+                  as.double(value[i,]),PACKAGE=RNetica)
           }
         } else {
           for (i in 1L:nsel) {
             .Call("RN_SetNodeProbs",x,selection[i,],as.double(value),
-                  PACKAGE="RNetica")
+                  PACKAGE=RNetica)
           }
         }
       } else {
         if (length(value) > 1L) {
           for (i in 1L:nsel) {
             .Call("RN_SetNodeFuncState",x,selection[i,],
-                  as.integer(value[i]), PACKAGE="RNetica")
+                  as.integer(value[i]), PACKAGE=RNetica)
           }
         } else {
           for (i in 1L:nsel) {
             .Call("RN_SetNodeFuncState",x,selection[i,],
-                  as.integer(value), PACKAGE="RNetica")
+                  as.integer(value), PACKAGE=RNetica)
           }
         }
       }
     }
   }
-  ecount <- ReportErrors()
+  ecount <- x$reportErrors()
   if (ecount[1L]>0) {
     stop("Node: ", x,"Netica Errors Encountered, see console for details.")
   }
   invisible(x)
-}
+})
 
 
 
@@ -1010,10 +1081,12 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
     ## Singleton response from copy-nodes might have been unlisted.
     newnodes <- list (newnodes)
   }
+  allstubs <- list()
   for (i in 1:length(newnodes)) {
     node <- newnodes[[i]]
     stubs <- sapply(NodeParents(node),NodeKind) == "Stub"
     if (any(stubs)) {
+      allstubs <- c(NodeParents(node)[stubs],allstubs)
       NodeParents(node)[stubs] <- smnodes[NodeInputNames(node)[stubs]]
       if (any(sapply(NodeParents(node),NodeKind) == "Stub")) {
         warning("Node ",as.character(node)," has unresolved stub parents.")
@@ -1022,6 +1095,14 @@ AdjoinNetwork <- function (sm, em, setname=character()) {
     ## Node may have been renamed.
     enode <- emnodes[[i]]
     NodeSets(node) <- c(setname,NodeSets(enode))
+  }
+  ## Remove stubs
+  for (stub in allstubs) {
+    if (is(stub,"NeticaNode")) {
+      ##cat("Removing stub ",stub$Name,"\n")
+      stub$deactivate()
+      rm(list=stub$Name,envir=sm$nodes)
+    }
   }
   names(newnodes) <- sapply(newnodes,NodeName)
   newnodes

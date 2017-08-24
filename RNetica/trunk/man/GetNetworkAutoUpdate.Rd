@@ -6,10 +6,12 @@
   Turns Netica automatic updating on or off for a network.
 }
 \description{
+
   Netica networks can either propagate the effects of new findings
   immediately, or they can delay propagation until the user queries the
   network. These functions toggle the switch that controls the
   autoupdate mechanism
+
 }
 \usage{
 GetNetworkAutoUpdate(net)
@@ -19,7 +21,7 @@ WithoutAutoUpdate(net,expr)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
-    A \code{\link{NeticaBN}} object to be  queried or changed.
+    A \code{\linkS4class{NeticaBN}} object to be  queried or changed.
   }
   \item{newautoupdate}{
     A logical values, \code{TRUE} to turn automatic updating on.
@@ -31,6 +33,7 @@ WithoutAutoUpdate(net,expr)
   
 }
 \details{
+
   Automatic updating means that queries operate very quickly, however,
   if a large number of finding are to be entered before the next query,
   they can slow the network down.  These functions provide a mechanism
@@ -41,6 +44,7 @@ WithoutAutoUpdate(net,expr)
   returns its current value (to make it easier to restore).  The
   function \code{WithoutAutoUpdate} provides a mechanism for turning
   updating off while performing a series of operations.
+
 }
 \value{
   \code{GetNetworkAutoUpdate()} and \code{SetNetworkAutoUpdate} both
@@ -49,6 +53,7 @@ WithoutAutoUpdate(net,expr)
   \code{WithoutAutoUpdate()} returns the value of executing \code{expr},
   unless executing \code{expr} results in an error in which case it
   returns a \code{try-error}.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -59,18 +64,22 @@ WithoutAutoUpdate(net,expr)
   Russell Almond
 }
 \note{
+
   Automatic updating makes a lot of sense when Netica is running under
   the GUI, but not so much when it is running as an API.  It is probably
   easiest to just set this to false all the time.
+
 }
 
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{NodeFinding}()} 
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-autoNet <- CreateNetwork("AutomaticTest")
+autoNet <- CreateNetwork("AutomaticTest", session=sess)
 
 GetNetworkAutoUpdate(autoNet)
 
@@ -84,9 +93,10 @@ WithoutAutoUpdate(autoNet, result <<-GetNetworkAutoUpdate(autoNet))
 stopifnot(!result)
 
 DeleteNetwork(autoNet)
+stopSession(sess)
 
 }
 \keyword{ interface }
 \keyword{ programming }
 \keyword{ attribute }
-\keyword{ utilities }% __ONLY ONE__ keyword per line
+\keyword{ utilities }

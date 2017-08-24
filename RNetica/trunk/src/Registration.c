@@ -18,18 +18,27 @@
 /**
  * Common Symbols so we don't need to keep redefining them.
  */
-const char* NeticaClass = "NeticaBN";
+const char* RNETICAPACKNAME = "RNetica";
+const char* NeticaClass = "NeticaSession";
+const char* SESSIONATT = "NeticaHandle";
+const char* NAMENAME = "Name";
+const char* NETSFIELD = "nets";
+const char* NETFIELD = "Net";
+const char* NetworkClass = "NeticaBN";
 const char* BNATT = "Netica_bn";
+const char* PATHNAMENAME = "Pathname";
+const char* NODESFIELD = "nodes";
+const char* SESSIONFIELD = "Session";
 const char* NodeClass = "NeticaNode";
 const char* NODEATT = "Netica_Node";
 const char* SDATT = "std_dev";
-const char* DISCRETEATT = "node_discrete";
+const char* DISCRETEATT = "discrete";
 const char* CliqueNodeClass = "CliqueNode";
 const char* CLIQUEATT = "clique";
 const char* EmptyString = "";
-const char* CaseStreamClass = "NeticaCaseStream";
+const char* CaseStreamClass = "CaseStream";
 const char* MemoryStreamClass = "MemoryCaseStream";
-const char* CaseFileStreamClass = "CaseFileStream";
+const char* CaseFileStreamClass = "FileCaseStream";
 const char* CASESTREAMATT = "Netica_Case_Stream";
 const char* CASESTREAMPOSATT = "Case_Stream_Position";
 const char* CASESTREAMPATHATT = "Case_Stream_Path";
@@ -37,14 +46,28 @@ const char* CASESTREAMLASTIDATT = "Case_Stream_Lastid";
 const char* CASESTREAMLASTFREQATT = "Case_Stream_Lastfreq";
 const char* CASESTREAMDFATT = "Case_Stream_DataFrame";
 const char* CASESTREAMDFNAMEATT = "Case_Stream_DataFrameName";
+const char* CASESTREAMDFBUFF = "Case_Stream_Buffer";
 const char* RNGClass = "NeticaRNG";
 const char* RNGATT = "Netica_RNG";
 
 
 
+SEXP RNeticaPackageName=NULL;
+SEXP sessionclass=NULL;
+SEXP sessionconstructor=NULL;
+SEXP sessionatt=NULL;
+SEXP namefield=NULL;
+SEXP netsfield=NULL;
+SEXP netfield=NULL;
 SEXP bnclass=NULL;
+SEXP bnconstructor=NULL;
+SEXP pathfield=NULL;
+SEXP sessionfield=NULL;
+SEXP nodesfield=NULL;
 SEXP nodeclass=NULL;
+SEXP nodeconstructor=NULL;
 SEXP cliquenodeclass=NULL;
+SEXP cliquenodeconstructor=NULL;
 SEXP bnatt=NULL;
 SEXP nodeatt=NULL;
 SEXP sdatt=NULL;
@@ -70,18 +93,43 @@ SEXP rngclass = NULL;
 SEXP rngatt = NULL;
 SEXP RngList = NULL;
 
-
 static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
   //printf("RN_Defining_Symbols: %d.\n",symbolRegCount);
+  if (RNeticaPackageName==NULL) {
+    R_PreserveObject(RNeticaPackageName=allocVector(STRSXP,1));
+    SET_STRING_ELT(RNeticaPackageName,0,mkChar(RNETICAPACKNAME));
+  }
+  if (sessionclass==NULL) {
+    R_PreserveObject(sessionclass = MAKE_CLASS(NeticaClass));
+  }
+  if (sessionatt==NULL) {
+    R_PreserveObject(sessionatt = install(SESSIONATT));
+  }
+  if (netsfield==NULL) {
+    R_PreserveObject(netsfield = install(NETSFIELD));
+  }
   if (bnclass==NULL) {
-    bnclass = allocVector(STRSXP,1);
-    R_PreserveObject(bnclass);
-    SET_STRING_ELT(bnclass,0,mkChar(NeticaClass));
+    R_PreserveObject(bnclass = MAKE_CLASS(NetworkClass));
   }
   if (bnatt==NULL) { 
     R_PreserveObject(bnatt = install(BNATT));  
+  } 
+  if (namefield==NULL) { 
+    R_PreserveObject(namefield = install(NAMENAME));  
+  } 
+  if (pathfield==NULL) { 
+    R_PreserveObject(pathfield = install(PATHNAMENAME));  
+  } 
+  if (sessionfield==NULL) { 
+    R_PreserveObject(sessionfield = install(SESSIONFIELD));  
+  } 
+  if (netfield==NULL) {
+    R_PreserveObject(netfield = install(NETFIELD));
+  }
+  if (nodesfield==NULL) { 
+    R_PreserveObject(nodesfield = install(NODESFIELD));  
   } 
   if (nodeclass==NULL) {
     R_PreserveObject(nodeclass = allocVector(STRSXP,1));
@@ -122,8 +170,7 @@ void RN_Define_Symbols() {
     SET_STRING_ELT(XYnames,1,mkChar("y"));
   }
   if (cliquenodeclass==NULL) {
-    R_PreserveObject(cliquenodeclass = allocVector(STRSXP,2));
-    SET_STRING_ELT(cliquenodeclass,1,mkChar(NodeClass));
+    R_PreserveObject(cliquenodeclass = allocVector(STRSXP,1));
     SET_STRING_ELT(cliquenodeclass,0,mkChar(CliqueNodeClass));
   }
   if (cliqueatt==NULL) { 
@@ -135,16 +182,14 @@ void RN_Define_Symbols() {
     SET_STRING_ELT(casestreamclass,0,mkChar(CaseStreamClass));
   }
   if (memorystreamclass==NULL) {
-    memorystreamclass = allocVector(STRSXP,2);
+    memorystreamclass = allocVector(STRSXP,1);
     R_PreserveObject(memorystreamclass);
     SET_STRING_ELT(memorystreamclass,0,mkChar(MemoryStreamClass));
-    SET_STRING_ELT(memorystreamclass,1,mkChar(CaseStreamClass));
   }
   if (casefilestreamclass==NULL) {
-    casefilestreamclass = allocVector(STRSXP,2);
+    casefilestreamclass = allocVector(STRSXP,1);
     R_PreserveObject(casefilestreamclass);
     SET_STRING_ELT(casefilestreamclass,0,mkChar(CaseFileStreamClass));
-    SET_STRING_ELT(casefilestreamclass,1,mkChar(CaseStreamClass));
   }
   if (casestreamatt==NULL) { 
     R_PreserveObject(casestreamatt = install(CASESTREAMATT));  
@@ -181,6 +226,37 @@ void RN_Define_Symbols() {
   if (RngList==NULL) { 
     R_PreserveObject(RngList = CONS(R_NilValue, R_NilValue));
   } 
+
+  SEXP getter, cname, callme;
+  PROTECT(cname = allocVector(STRSXP,1));
+  PROTECT(getter=install("getFromNamespace"));
+
+  if (sessionconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NeticaClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(sessionconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (bnconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NetworkClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(bnconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (nodeconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(NodeClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(nodeconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+  if (cliquenodeconstructor==NULL) {
+    SET_STRING_ELT(cname,0,mkChar(CliqueNodeClass));
+    PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
+    R_PreserveObject(cliquenodeconstructor=eval(callme,R_GlobalEnv));
+    UNPROTECT(1);
+  }
+
+  UNPROTECT(2);
   //printf("RN_Defining_Symbols: done.\n");
   symbolRegCount++;
 }
@@ -203,6 +279,22 @@ void RN_Free_Symbols() {
     if (bnatt != NULL) { 
       R_ReleaseObject(bnatt); 
       bnatt = NULL; 
+    } 
+    if (namefield != NULL) { 
+      R_ReleaseObject(namefield); 
+      namefield = NULL; 
+    } 
+    if (pathfield != NULL) { 
+      R_ReleaseObject(pathfield); 
+      pathfield = NULL; 
+    } 
+    if (sessionfield != NULL) { 
+      R_ReleaseObject(sessionfield); 
+      sessionfield = NULL; 
+    } 
+    if (nodesfield != NULL) { 
+      R_ReleaseObject(nodesfield); 
+      nodesfield = NULL; 
     } 
     if (nodeclass != NULL) {
       R_ReleaseObject(nodeclass);
@@ -286,6 +378,42 @@ void RN_Free_Symbols() {
       R_ReleaseObject(rngatt); 
       rngatt = NULL; 
     } 
+    if (sessionclass!=NULL) {
+      R_ReleaseObject(sessionclass);
+      sessionclass = NULL;
+    }
+    if (sessionatt!=NULL) {
+      R_ReleaseObject(sessionatt);
+      sessionatt = NULL;
+    }
+    if (netsfield!=NULL) {
+      R_ReleaseObject(netsfield);
+      netsfield = NULL;
+    }
+    if (netfield!=NULL) {
+      R_ReleaseObject(netfield);
+      netfield = NULL;
+    }
+    if (RNeticaPackageName!=NULL) {
+      R_ReleaseObject(RNeticaPackageName);
+      RNeticaPackageName = NULL;
+    }
+    if (sessionconstructor!=NULL) {
+      R_ReleaseObject(sessionconstructor);
+      sessionconstructor = NULL;
+    }
+    if (bnconstructor!=NULL) {
+      R_ReleaseObject(bnconstructor);
+      bnconstructor = NULL;
+    }
+    if (nodeconstructor!=NULL) {
+      R_ReleaseObject(nodeconstructor);
+      nodeconstructor = NULL;
+    }
+    if (cliquenodeconstructor!=NULL) {
+      R_ReleaseObject(cliquenodeconstructor);
+      cliquenodeconstructor = NULL;
+    }
   }
 }
 
@@ -298,7 +426,7 @@ void RN_Free_Symbols() {
  * This is a global pointer to the Netica environment.
  * It is created once during a session.
  */
-environ_ns* RN_netica_env = NULL;
+//environ_ns* RN_netica_env = NULL;
 
 
 /**
@@ -309,123 +437,122 @@ environ_ns* RN_netica_env = NULL;
  *  -- maxmem:  Mamximum size for Netica memory.  0 uses Netica
  * defaults.
  */
-void RN_start_Netica(char** license, char** checking, double* maxmem) {
+/* void RN_start_Netica(char** license, char** checking, double* maxmem) { */
 
-  char mesg[MESG_LEN_ns];
-  int res;
+/*   char mesg[MESG_LEN_ns]; */
+/*   int res; */
 
-  //Now called on library init.
-  RN_Define_Symbols();
+/*   //Now called on library init. */
+/*   RN_Define_Symbols(); */
 
-  if (RN_netica_env != NULL) {
-    warning("Netica already running, use stopNetica before restarting Netica with new parameters.");
-    return;
-  }
-  char* lic = NULL;
-  if (license != NULL) {
-    lic = license[0];
-  }
-  RN_netica_env = NewNeticaEnviron_ns(lic,NULL,NULL);
+/*   if (RN_netica_env != NULL) { */
+/*     warning("Netica already running, use stopNetica before restarting Netica with new parameters."); */
+/*     return; */
+/*   } */
+/*   char* lic = NULL; */
+/*   if (license != NULL) { */
+/*     lic = license[0]; */
+/*   } */
+/*   RN_netica_env = NewNeticaEnviron_ns(lic,NULL,NULL); */
 
-  if(!RN_netica_env) {
-    error("Netica License Key not accepted. \n Make sure key starts with a + and ends with five digit security code.");
-  }
+/*   if(!RN_netica_env) { */
+/*     error("Netica License Key not accepted. \n Make sure key starts with a + and ends with five digit security code."); */
+/*   } */
 
-  res = InitNetica2_bn(RN_netica_env,mesg);
-  if (res < 0) {
-    error("%s",mesg);
-    return;
-  }
-  Rprintf("%s\n",mesg);
+/*   res = InitNetica2_bn(RN_netica_env,mesg); */
+/*   if (res < 0) { */
+/*     error("%s",mesg); */
+/*     return; */
+/*   } */
+/*   Rprintf("%s\n",mesg); */
 
-  if (checking != NULL) {
-    checking_ns do_check = REGULAR_CHECK;
-    if (strcmp(checking[0],"NO_CHECK")==0) {
-      do_check = NO_CHECK;
-    } else  if (strcmp(checking[0],"QUICK_CHECK")==0) {
-      do_check = QUICK_CHECK;
-    } else  if (strcmp(checking[0],"REGULAR_CHECK")==0) {
-      do_check = REGULAR_CHECK;
-    } else  if (strcmp(checking[0],"COMPLETE_CHECK")==0) {
-      do_check = COMPLETE_CHECK;
-    } else {
-      warning("Unknown argument checking type %s",checking[0]);
-    }
-    ArgumentChecking_ns(do_check,RN_netica_env);
-  }
+/*   if (checking != NULL) { */
+/*     checking_ns do_check = REGULAR_CHECK; */
+/*     if (strcmp(checking[0],"NO_CHECK")==0) { */
+/*       do_check = NO_CHECK; */
+/*     } else  if (strcmp(checking[0],"QUICK_CHECK")==0) { */
+/*       do_check = QUICK_CHECK; */
+/*     } else  if (strcmp(checking[0],"REGULAR_CHECK")==0) { */
+/*       do_check = REGULAR_CHECK; */
+/*     } else  if (strcmp(checking[0],"COMPLETE_CHECK")==0) { */
+/*       do_check = COMPLETE_CHECK; */
+/*     } else { */
+/*       warning("Unknown argument checking type %s",checking[0]); */
+/*     } */
+/*     ArgumentChecking_ns(do_check,RN_netica_env); */
+/*   } */
 
-  //It appears that even though I am passing NULL, it is showing up as
-  //an array with a very low value.  I've just added a minimum
-  //check
-  if (maxmem != NULL && maxmem[0]>200000) {
+/*   //It appears that even though I am passing NULL, it is showing up as */
+/*   //an array with a very low value.  I've just added a minimum */
+/*   //check */
+/*   if (maxmem != NULL && maxmem[0]>200000) { */
     
-    //[DEBUG] printf("Maximizing Memory, %e.\n",maxmem[0]);
-    LimitMemoryUsage_ns(maxmem[0],RN_netica_env);
-  }
+/*     //[DEBUG] printf("Maximizing Memory, %e.\n",maxmem[0]); */
+/*     LimitMemoryUsage_ns(maxmem[0],RN_netica_env); */
+/*   } */
 
-  return;
-}
+/*   return; */
+/* } */
 
 /**
  * This function closes Netica cleanly.
  */
-void RN_stop_Netica() {
+/* void RN_stop_Netica() { */
 
-  char mesg[MESG_LEN_ns];
-  int res;
-
-
-  if (RN_netica_env == NULL) {
-    warning("Netica not running, nothing to do.");
-    return;
-  }
+/*   char mesg[MESG_LEN_ns]; */
+/*   int res; */
 
 
-  Rprintf("Shut down any remaining nets.\n");
-  int nth = 0;
-  net_bn* net;
-  SEXP bn, bnPointer;
-  while (TRUE) {
-    net = GetNthNet_bn (nth++, RN_netica_env);
-    if (!net) break;
-    RN_Free_Nodes(GetNetNodes_bn(net));
-    PROTECT(bn = (SEXP) GetNetUserData_bn(net,0));
-    PROTECT(bnPointer = getAttrib(bn,bnatt));
-    R_ClearExternalPtr(bnatt);
-    UNPROTECT(2);
-  } 
+/*   if (RN_netica_env == NULL) { */
+/*     warning("Netica not running, nothing to do."); */
+/*     return; */
+/*   } */
 
-  res = CloseNetica_bn(RN_netica_env,mesg);
-  RN_netica_env = NULL; //Set to null no matter what.
-  if (res < 0) {
-    error("%s",mesg);
-  }
-  RN_Free_Symbols();
-  return;
-}
+/*   Rprintf("Shut down any remaining nets.\n");  int nth = 0; */
+/*   net_bn* net; */
+/*   SEXP bn, bnPointer; */
+/*   while (TRUE) { */
+/*     net = GetNthNet_bn (nth++, RN_netica_env); */
+/*     if (!net) break; */
+/*     RN_Free_Nodes(GetNetNodes_bn(net),net); */
+/*     PROTECT(bn = (SEXP) GetNetUserData_bn(net,0)); */
+/*     PROTECT(bnPointer = getAttrib(bn,bnatt)); */
+/*     R_ClearExternalPtr(bnatt); */
+/*     UNPROTECT(2); */
+/*   }  */
+
+/*   res = CloseNetica_bn(RN_netica_env,mesg); */
+/*   RN_netica_env = NULL; //Set to null no matter what. */
+/*   if (res < 0) { */
+/*     error("%s",mesg); */
+/*   } */
+/*   RN_Free_Symbols(); */
+/*   return; */
+/* } */
 
 
-SEXP RN_Netica_Version() {
-  SEXP result, vnum, vstring, names;
-  const char *vs;
-  PROTECT(result = allocVector(VECSXP,2));
-  PROTECT(vnum = allocVector(INTSXP,1));
-  PROTECT(names = allocVector(STRSXP,2));
 
-  INTEGER(vnum)[0]= GetNeticaVersion_bn(RN_netica_env,&vs);
-  PROTECT(vstring = allocVector(STRSXP,1));
-  SET_STRING_ELT(vstring,0,mkChar(vs));
+/* SEXP RN_Netica_Version() { */
+/*   SEXP result, vnum, vstring, names; */
+/*   const char *vs; */
+/*   PROTECT(result = allocVector(VECSXP,2)); */
+/*   PROTECT(vnum = allocVector(INTSXP,1)); */
+/*   PROTECT(names = allocVector(STRSXP,2)); */
 
-  SET_VECTOR_ELT(result,0,vnum);
-  SET_STRING_ELT(names, 0,mkChar("number"));
-  SET_VECTOR_ELT(result,1, vstring);
-  SET_STRING_ELT(names, 1,mkChar("message"));
-  setAttrib(result, R_NamesSymbol, names);
+/*   INTEGER(vnum)[0]= GetNeticaVersion_bn(RN_netica_env,&vs); */
+/*   PROTECT(vstring = allocVector(STRSXP,1)); */
+/*   SET_STRING_ELT(vstring,0,mkChar(vs)); */
 
-  UNPROTECT(4);
-  return result;
+/*   SET_VECTOR_ELT(result,0,vnum); */
+/*   SET_STRING_ELT(names, 0,mkChar("number")); */
+/*   SET_VECTOR_ELT(result,1, vstring); */
+/*   SET_STRING_ELT(names, 1,mkChar("message")); */
+/*   setAttrib(result, R_NamesSymbol, names); */
 
-}
+/*   UNPROTECT(4); */
+/*   return result; */
+
+/* } */
 
 /*****************************************************************************
  * Error Reporting
@@ -445,57 +572,57 @@ SEXP RN_Netica_Version() {
  * counts -- should be a vector of length 4, giving the number of
  * errors, warnings, notices and reports.
  */
-void RN_report_errors(int* maxreport, int* clear, int* counts) {
-  int maxerr = *maxreport;
-  int clearit = *clear;
+/* void RN_report_errors(int* maxreport, int* clear, int* counts) { */
+/*   int maxerr = *maxreport; */
+/*   int clearit = *clear; */
 
-  report_ns* err = NULL;
-  int ecount = 0;
+/*   report_ns* err = NULL; */
+/*   int ecount = 0; */
 
-  counts[0] = 0;
-  while ((err = GetError_ns(RN_netica_env, XXX_ERR, err))!=NULL) {
-    Rprintf("Fatal Netica error: %s\n",ErrorMessage_ns(err));
-    ecount++;
-    counts[0]++;
-    if (clearit) ClearError_ns(err);
-  }
-  if (ecount >0) {
-    error("Fatal errors encountered, recommend restarting Netica");
-  }
+/*   counts[0] = 0; */
+/*   while ((err = GetError_ns(RN_netica_env, XXX_ERR, err))!=NULL) { */
+/*     Rprintf("Fatal Netica error: %s\n",ErrorMessage_ns(err)); */
+/*     ecount++; */
+/*     counts[0]++; */
+/*     if (clearit) ClearError_ns(err); */
+/*   } */
+/*   if (ecount >0) { */
+/*     error("Fatal errors encountered, recommend restarting Netica"); */
+/*   } */
 
-  while ((err = GetError_ns(RN_netica_env, ERROR_ERR, err))!=NULL) {
-    Rprintf("Netica error: %s\n",ErrorMessage_ns(err));
-    counts[0]++;
-    if (ecount++ > maxerr) return;
-    if (clearit) ClearError_ns(err);
-  }
+/*   while ((err = GetError_ns(RN_netica_env, ERROR_ERR, err))!=NULL) { */
+/*     Rprintf("Netica error: %s\n",ErrorMessage_ns(err)); */
+/*     counts[0]++; */
+/*     if (ecount++ > maxerr) return; */
+/*     if (clearit) ClearError_ns(err); */
+/*   } */
   
-  counts[1]=0;
-  while ((err = GetError_ns(RN_netica_env, WARNING_ERR, err))!=NULL) {
-    Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
-    counts[1]++;
-    if (ecount++ > maxerr) return;
-    if (clearit) ClearError_ns(err);
-  }
+/*   counts[1]=0; */
+/*   while ((err = GetError_ns(RN_netica_env, WARNING_ERR, err))!=NULL) { */
+/*     Rprintf("Netica warning: %s\n",ErrorMessage_ns(err)); */
+/*     counts[1]++; */
+/*     if (ecount++ > maxerr) return; */
+/*     if (clearit) ClearError_ns(err); */
+/*   } */
 
-  counts[2]=0;
-  while ((err = GetError_ns(RN_netica_env, NOTICE_ERR, err))!=NULL) {
-    Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
-    counts[2]++;
-    if (ecount++ > maxerr) return;
-    if (clearit) ClearError_ns(err);
-  }
+/*   counts[2]=0; */
+/*   while ((err = GetError_ns(RN_netica_env, NOTICE_ERR, err))!=NULL) { */
+/*     Rprintf("Netica warning: %s\n",ErrorMessage_ns(err)); */
+/*     counts[2]++; */
+/*     if (ecount++ > maxerr) return; */
+/*     if (clearit) ClearError_ns(err); */
+/*   } */
 
-  counts[3] = 0;
-  while ((err = GetError_ns(RN_netica_env, NOTICE_ERR, err))!=NULL) {
-    Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
-    counts[3]++;
-    if (ecount++ > maxerr) return;
-    if (clearit) ClearError_ns(err);
-  }
+/*   counts[3] = 0; */
+/*   while ((err = GetError_ns(RN_netica_env, NOTICE_ERR, err))!=NULL) { */
+/*     Rprintf("Netica warning: %s\n",ErrorMessage_ns(err)); */
+/*     counts[3]++; */
+/*     if (ecount++ > maxerr) return; */
+/*     if (clearit) ClearError_ns(err); */
+/*   } */
 
-  return;
-}
+/*   return; */
+/* } */
 
 
 /**
@@ -504,30 +631,30 @@ void RN_report_errors(int* maxreport, int* clear, int* counts) {
  * string, one of "NOTHING_ERR", "REPORT_ERR", "NOTICE_ERR", 
  * "WARNING_ERR", "ERROR_ERR", or "XXX_ERR"
  */
-void RN_ClearAllErrors(char** sev) {
-  errseverity_ns etype = XXX_ERR;
+/* void RN_ClearAllErrors(char** sev) { */
+/*   errseverity_ns etype = XXX_ERR; */
 
-  if (sev != NULL) {
-    if (strcmp(sev[0],"NOTHING_ERR")==0) {
-      etype = NOTHING_ERR;
-    } else  if (strcmp(sev[0],"REPORT_ERR")==0) {
-      etype = REPORT_ERR;
-    } else  if (strcmp(sev[0],"NOTICE_ERR")==0) {
-      etype = NOTICE_ERR;
-    } else  if (strcmp(sev[0],"WARNING_ERR")==0) {
-      etype = WARNING_ERR;
-    } else  if (strcmp(sev[0],"ERROR_ERR")==0) {
-      etype = ERROR_ERR;
-    } else  if (strcmp(sev[0],"XXX_ERR")==0) {
-      etype = XXX_ERR;
-    } else {
-      warning("Unknown error type %s, no errors cleared",sev[0]);
-      etype = NOTHING_ERR;
-    }
-  }
-  ClearErrors_ns(RN_netica_env,etype);
+/*   if (sev != NULL) { */
+/*     if (strcmp(sev[0],"NOTHING_ERR")==0) { */
+/*       etype = NOTHING_ERR; */
+/*     } else  if (strcmp(sev[0],"REPORT_ERR")==0) { */
+/*       etype = REPORT_ERR; */
+/*     } else  if (strcmp(sev[0],"NOTICE_ERR")==0) { */
+/*       etype = NOTICE_ERR; */
+/*     } else  if (strcmp(sev[0],"WARNING_ERR")==0) { */
+/*       etype = WARNING_ERR; */
+/*     } else  if (strcmp(sev[0],"ERROR_ERR")==0) { */
+/*       etype = ERROR_ERR; */
+/*     } else  if (strcmp(sev[0],"XXX_ERR")==0) { */
+/*       etype = XXX_ERR; */
+/*     } else { */
+/*       warning("Unknown error type %s, no errors cleared",sev[0]); */
+/*       etype = NOTHING_ERR; */
+/*     } */
+/*   } */
+/*   ClearErrors_ns(RN_netica_env,etype); */
 
-}
+/* } */
 
 /////////////////////////////////////////////////////////////////
 // Translation Utilities
@@ -597,18 +724,30 @@ double RN_NnumToRnum (level_bn x) {
 /////////////////////////////////////////////////////////////////////
 // .Call Methods
 ////////////////////////////////////////////////////////////////
+// File = Session.c
+extern SEXP RX_make_exptr(SEXP foo);
+extern SEXP RX_is_null_ptr(SEXP ptr);
+extern SEXP RN_isSessionActive(SEXP sess);
+extern SEXP RN_start_Session(SEXP sessobj);
+extern SEXP RN_stop_Session(SEXP sessobj);
+extern SEXP RN_Session_Version(SEXP sessobj);
+extern SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag);
+extern SEXP RN_ClearSessionErrors(SEXP sessobj, SEXP severity);
+extern SEXP RN_DeactivateSession(SEXP sessobj);
+
 // File = Networks.c
+extern SEXP RN_DeactivateBN(SEXP net);
 extern SEXP RN_isBNActive(SEXP net);
-extern SEXP RN_New_Nets(SEXP namelist);
-extern SEXP RN_Delete_Nets(SEXP netlist);
-extern SEXP RN_Named_Nets(SEXP namelist);
-extern SEXP RN_GetNth_Nets(SEXP nlist);
-extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options);
-extern SEXP RN_Read_Nets(SEXP filelist);
+extern SEXP RN_New_Nets(SEXP namelist,SEXP session);
+extern SEXP RN_Delete_Nets(SEXP netlist, SEXP session);
+extern SEXP RN_Named_Nets(SEXP namelist, SEXP session);
+extern SEXP RN_GetNth_Nets(SEXP nlist, SEXP session);
+extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options, SEXP session);
+extern SEXP RN_Read_Nets(SEXP filelist, SEXP session);
 extern SEXP RN_Write_Nets(SEXP nets, SEXP filelist);
 extern SEXP RN_GetNetFilename(SEXP bn);
 extern SEXP RN_GetNetName(SEXP bn);
-extern SEXP RN_SetNetName(SEXP bn, SEXP newnames);
+extern SEXP RN_SetNetName(SEXP bn, SEXP newnames, SEXP session);
 extern SEXP RN_GetNetTitle(SEXP bn);
 extern SEXP RN_SetNetTitle(SEXP bn, SEXP newtitle);
 extern SEXP RN_GetNetComment(SEXP bn);
@@ -629,7 +768,7 @@ extern SEXP RN_Delete_Nodes(SEXP nodelist);
 extern SEXP RN_Find_Node(SEXP net, SEXP namesxp);
 extern SEXP RN_Network_AllNodes(SEXP nodeist);
 extern SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options);
-extern SEXP RN_NodeNet(SEXP node);
+extern SEXP RN_NodeNet(SEXP node, SEXP session);
 extern SEXP RN_GetNodeName(SEXP nd);
 extern SEXP RN_SetNodeName(SEXP nd, SEXP newnames);
 extern SEXP RN_GetNodeTitle(SEXP nd);
@@ -681,7 +820,7 @@ extern SEXP RN_SetNodeProbs(SEXP node, SEXP states, SEXP vals);
 extern SEXP RN_IsNodeDeterministic(SEXP n1);
 extern SEXP RN_HasNodeTable(SEXP n1);
 extern SEXP RN_DeleteNodeTable(SEXP n1);
-extern SEXP RN_MakeCliqueNode(SEXP nodelist);
+extern SEXP RN_MakeCliqueNode(SEXP nodelist, SEXP net);
 
 //Inference.c
 extern SEXP RN_CompileNet(SEXP net);
@@ -704,15 +843,15 @@ extern SEXP RN_GetEliminationOrder(SEXP net);
 extern SEXP RN_SizeCompiledNetwork(SEXP net);
 
 // Cases.c
-extern SEXP RN_CaseFileDelimiter(SEXP newchar);
-extern SEXP RN_MissingCode(SEXP newchar);
+extern SEXP RN_CaseFileDelimiter(SEXP newchar, SEXP session);
+extern SEXP RN_MissingCode(SEXP newchar, SEXP session);
 extern SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, 
-                             SEXP id, SEXP freq);
+                             SEXP id, SEXP freq, SEXP session);
 extern SEXP RN_ReadFindings(SEXP nodes, SEXP stream, 
                              SEXP pos, SEXP add);
 extern SEXP RN_isCaseStreamActive(SEXP stream);
-extern SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream);
-extern SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream);
+extern SEXP RN_OpenCaseFileStream (SEXP path, SEXP stream, SEXP session);
+extern SEXP RN_OpenCaseMemoryStream (SEXP label, SEXP stream, SEXP session);
 extern SEXP RN_CloseCaseStream(SEXP stream);
 extern SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents);
 extern SEXP RN_GetMemoryStreamContents(SEXP stream);
@@ -724,7 +863,8 @@ extern SEXP RN_FadeCPT(SEXP node, SEXP degree);
 extern SEXP RN_LearnFindings(SEXP nodelist, SEXP weight);
 extern SEXP RN_LearnCaseStream(SEXP stream, SEXP nodelist, SEXP weight);
 extern SEXP RN_LearnCPTs (SEXP caseStream, SEXP nodes, SEXP method, 
-                          SEXP maxIters, SEXP maxTol, SEXP weight);
+                          SEXP maxIters, SEXP maxTol, SEXP weight,
+                          SEXP session);
 
 // Continuous.c
 extern SEXP RN_GetNodeValue(SEXP node);
@@ -746,29 +886,40 @@ extern SEXP RN_EquationToTable(SEXP nd, SEXP numSamples,
 
 
 // Cases.c
-extern SEXP RN_NewRandomGenerator (SEXP seed);
+extern SEXP RN_NewRandomGenerator (SEXP seed, SEXP session);
 extern SEXP RN_FreeRNG (SEXP rng);
 extern SEXP RN_isRNGActive(SEXP rng);
-extern SEXP RN_SetNetRandomGen (SEXP net, SEXP seed);
+extern SEXP RN_SetNetRandomGen (SEXP net, SEXP seed, SEXP session);
 extern SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
-                                  SEXP timeout, SEXP seed) ;
+                                  SEXP timeout, SEXP seed, SEXP session) ;
 
 
 R_CallMethodDef callMethods[] = {
-  {"RN_Netica_Version", (DL_FUNC) &RN_Netica_Version, 0},
+  //Session.c
+  {"RX_is_null_ptr", (DL_FUNC) &RX_is_null_ptr,1},
+  {"RX_make_exptr", (DL_FUNC) &RX_make_exptr,1}, 
+  {"RN_isSessionActive", (DL_FUNC) &RN_isSessionActive,1}, 
+  {"RN_start_Session", (DL_FUNC) &RN_start_Session,1}, 
+  {"RN_stop_Session", (DL_FUNC) &RN_stop_Session,1}, 
+  {"RN_Session_Version", (DL_FUNC) &RN_Session_Version,1}, 
+  {"RN_Session_errors", (DL_FUNC) &RN_Session_errors,3}, 
+  {"RN_ClearSessionErrors", (DL_FUNC) &RN_ClearSessionErrors,2}, 
+  //Network.c
+  //{"RN_Netica_Version", (DL_FUNC) &RN_Netica_Version, 0},
+  {"RN_DeactivateBN", (DL_FUNC) &RN_DeactivateBN,1}, 
   {"RN_isBNActive", (DL_FUNC) &RN_isBNActive, 1},
-  {"RN_New_Nets", (DL_FUNC) &RN_New_Nets, 1},
-  {"RN_Delete_Nets", (DL_FUNC) &RN_Delete_Nets, 1},
-  {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 1},
-  {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 1},
-  {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 3},
-  {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 1},
+  {"RN_New_Nets", (DL_FUNC) &RN_New_Nets, 2},
+  {"RN_Delete_Nets", (DL_FUNC) &RN_Delete_Nets, 2},
+  {"RN_Named_Nets", (DL_FUNC) &RN_Named_Nets, 2},
+  {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 2},
+  {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 4},
+  {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 2},
   {"RN_WriteNets", (DL_FUNC) &RN_Write_Nets, 2},
   {"RN_GetNetFilename", (DL_FUNC) &RN_GetNetFilename, 1},
   {"RN_GetNetName", (DL_FUNC) &RN_GetNetName, 1},
   {"RN_GetNetTitle", (DL_FUNC) &RN_GetNetTitle, 1},
   {"RN_GetNetComment", (DL_FUNC) &RN_GetNetComment, 1},
-  {"RN_SetNetName", (DL_FUNC) &RN_SetNetName, 2},
+  {"RN_SetNetName", (DL_FUNC) &RN_SetNetName, 3},
   {"RN_SetNetTitle", (DL_FUNC) &RN_SetNetTitle, 2},
   {"RN_SetNetComment", (DL_FUNC) &RN_SetNetComment, 2},
   {"RN_GetNetAutoUpdate", (DL_FUNC) &RN_GetNetAutoUpdate, 1},
@@ -784,7 +935,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_Find_Node", (DL_FUNC) &RN_Find_Node, 2},
   {"RN_Network_AllNodes", (DL_FUNC) &RN_Network_AllNodes, 1},
   {"RN_Copy_Nodes", (DL_FUNC) &RN_Copy_Nodes, 3},
-  {"RN_NodeNet", (DL_FUNC) &RN_NodeNet, 1},
+  {"RN_NodeNet", (DL_FUNC) &RN_NodeNet, 2},
   {"RN_GetNodeName", (DL_FUNC) &RN_GetNodeName, 1},
   {"RN_SetNodeName", (DL_FUNC) &RN_SetNodeName, 2},
   {"RN_GetNodeTitle", (DL_FUNC) &RN_GetNodeTitle, 1},
@@ -834,7 +985,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_IsNodeDeterministic", (DL_FUNC) &RN_IsNodeDeterministic, 1},
   {"RN_HasNodeTable", (DL_FUNC) &RN_HasNodeTable, 1},
   {"RN_DeleteNodeTable", (DL_FUNC) &RN_DeleteNodeTable, 1},
-  {"RN_MakeCliqueNode", (DL_FUNC) &RN_MakeCliqueNode, 1},
+  {"RN_MakeCliqueNode", (DL_FUNC) &RN_MakeCliqueNode, 2},
   {"RN_CompileNet", (DL_FUNC) &RN_CompileNet, 1},
   {"RN_UncompileNet", (DL_FUNC) &RN_UncompileNet, 1},
   {"RN_RetractNetFindings", (DL_FUNC) &RN_RetractNetFindings, 1},
@@ -853,13 +1004,13 @@ R_CallMethodDef callMethods[] = {
   {"RN_SetEliminationOrder", (DL_FUNC) &RN_SetEliminationOrder, 2},
   {"RN_GetEliminationOrder", (DL_FUNC) &RN_GetEliminationOrder, 1},
   {"RN_SizeCompiledNetwork", (DL_FUNC) &RN_SizeCompiledNetwork, 1},
-  {"RN_CaseFileDelimiter", (DL_FUNC) &RN_CaseFileDelimiter, 1},
-  {"RN_MissingCode", (DL_FUNC) &RN_MissingCode, 1},
-  {"RN_WriteFindings", (DL_FUNC) &RN_WriteFindings, 4},
+  {"RN_CaseFileDelimiter", (DL_FUNC) &RN_CaseFileDelimiter, 2},
+  {"RN_MissingCode", (DL_FUNC) &RN_MissingCode, 2},
+  {"RN_WriteFindings", (DL_FUNC) &RN_WriteFindings, 5},
   {"RN_ReadFindings", (DL_FUNC) &RN_ReadFindings, 4},
   {"RN_isCaseStreamActive", (DL_FUNC) &RN_isCaseStreamActive, 1},
-  {"RN_OpenCaseFileStream", (DL_FUNC) &RN_OpenCaseFileStream, 2},
-  {"RN_OpenCaseMemoryStream", (DL_FUNC) &RN_OpenCaseMemoryStream, 2},
+  {"RN_OpenCaseFileStream", (DL_FUNC) &RN_OpenCaseFileStream, 3},
+  {"RN_OpenCaseMemoryStream", (DL_FUNC) &RN_OpenCaseMemoryStream, 3},
   {"RN_CloseCaseStream", (DL_FUNC) &RN_CloseCaseStream, 1},
   {"RN_SetMemoryStreamContents", (DL_FUNC) &RN_SetMemoryStreamContents, 2},
   {"RN_GetMemoryStreamContents", (DL_FUNC) &RN_GetMemoryStreamContents, 1},
@@ -868,7 +1019,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_FadeCPT", (DL_FUNC) &RN_FadeCPT, 2},
   {"RN_LearnFindings", (DL_FUNC) &RN_LearnFindings, 2},
   {"RN_LearnCaseStream", (DL_FUNC) &RN_LearnCaseStream, 3},
-  {"RN_LearnCPTs", (DL_FUNC) &RN_LearnCPTs, 6},
+  {"RN_LearnCPTs", (DL_FUNC) &RN_LearnCPTs, 7},
   {"RN_GetNodeValue", (DL_FUNC) &RN_GetNodeValue, 1},
   {"RN_SetNodeValue", (DL_FUNC) &RN_SetNodeValue, 2},
   {"RN_SetNodeInterval", (DL_FUNC) &RN_SetNodeValue, 4},
@@ -882,11 +1033,11 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNodeEquation", (DL_FUNC) &RN_GetNodeEquation, 1},
   {"RN_SetNodeEquation", (DL_FUNC) &RN_SetNodeEquation, 2},
   {"RN_EquationToTable", (DL_FUNC) &RN_EquationToTable, 4},
-  {"RN_NewRandomGenerator", (DL_FUNC) &RN_NewRandomGenerator, 1},
+  {"RN_NewRandomGenerator", (DL_FUNC) &RN_NewRandomGenerator, 2},
   {"RN_FreeRNG", (DL_FUNC) &RN_FreeRNG, 1},
   {"RN_isRNGActive", (DL_FUNC) &RN_isRNGActive,1},
-  {"RN_SetNetRandomGen", (DL_FUNC) &RN_SetNetRandomGen, 2},
-  {"RN_GenerateRandomCase", (DL_FUNC) &RN_GenerateRandomCase,4},
+  {"RN_SetNetRandomGen", (DL_FUNC) &RN_SetNetRandomGen, 3},
+  {"RN_GenerateRandomCase", (DL_FUNC) &RN_GenerateRandomCase,5},
   {NULL, NULL, 0},
 };
 
@@ -894,27 +1045,32 @@ R_CallMethodDef callMethods[] = {
 // .C Methods
 ////////////////////////////////////////////////////////////////
 // File = Networks.c
-extern void RN_start_Netica(char** license, char** checking, double* maxmem);
-extern void RN_stop_Netica();
-extern void RN_report_errors(int* maxreport, int* clear, int* counts);
-extern void RN_ClearAllErrors(char** sev);
+/* extern void RN_start_Netica(char** license, char** checking, double* maxmem); */
+/* extern void RN_stop_Netica(); */
+/* extern void RN_report_errors(int* maxreport, int* clear, int* counts); */
+/* extern void RN_ClearAllErrors(char** sev); */
 
-R_CMethodDef cMethods[] = {
-  {"RN_start_Netica", (DL_FUNC) &RN_start_Netica, 3, 
-   (R_NativePrimitiveArgType[3]) {STRSXP, STRSXP, REALSXP}},
-  {"RN_stop_Netica", (DL_FUNC) &RN_stop_Netica, 0},
-  {"RN_report_errors",(DL_FUNC) &RN_report_errors, 3, 
-   (R_NativePrimitiveArgType[3]) {INTSXP, INTSXP, INTSXP}},
-  {"RN_ClearAllErrors",(DL_FUNC) &RN_ClearAllErrors, 1, 
-   (R_NativePrimitiveArgType[1]) {STRSXP}},
-  {NULL, NULL, 0}
-};
+ R_CMethodDef cMethods[] = { 
+/*   {"RN_start_Netica", (DL_FUNC) &RN_start_Netica, 3,  */
+/*    (R_NativePrimitiveArgType[3]) {STRSXP, STRSXP, REALSXP}}, */
+/*   {"RN_stop_Netica", (DL_FUNC) &RN_stop_Netica, 0}, */
+   {"RN_Define_Symbols", (DL_FUNC) &RN_Define_Symbols, 0}, 
+   {"RN_Free_Symbols", (DL_FUNC) &RN_Free_Symbols, 0},
+/*   {"RN_report_errors",(DL_FUNC) &RN_report_errors, 3,  */
+/*    (R_NativePrimitiveArgType[3]) {INTSXP, INTSXP, INTSXP}}, */
+/*   {"RN_ClearAllErrors",(DL_FUNC) &RN_ClearAllErrors, 1,  */
+/*    (R_NativePrimitiveArgType[1]) {STRSXP}}, */
+   {NULL, NULL, 0} 
+ }; 
 
 
 void R_init_RNetica(DllInfo *info) {
   R_registerRoutines(info, cMethods, callMethods, NULL, NULL);
-  RN_Define_Symbols();
+  //RN_Define_Symbols();
 }
+
+/* Define_Symbols calls getClass, so we need to wait until classes
+   have been loaded. */
 
 void R_unload_RNetica(DllInfo *info) {
   RN_Free_Symbols();

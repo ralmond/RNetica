@@ -8,9 +8,36 @@
 #include <Rdefines.h>
 #include <RNetica.h>
 
+//#define DEBUGNODES
+
 /***************************************************************************
  * Low Level Node Utilities
  ***************************************************************************/
+node_bn* GetNodePtr (SEXP nodeobj) {
+  node_bn* node_ptr = NULL;
+  SEXP exPTR;
+  PROTECT(exPTR=GET_FIELD(nodeobj,nodeatt));
+  if (exPTR) {
+    node_ptr = (node_bn*) R_ExternalPtrAddr(exPTR);
+  }
+  UNPROTECT(1);
+  return node_ptr;
+}
+
+
+void SetNodePtr (SEXP nodeobj, node_bn* node_ptr) {
+  SEXP exPTR;
+  PROTECT(exPTR=GET_FIELD(nodeobj,nodeatt));
+  if (exPTR) {
+    R_SetExternalPtrAddr(exPTR,node_ptr);
+  } else {
+    UNPROTECT(1);
+    PROTECT(exPTR = R_MakeExternalPtr(node_ptr,nodeatt,R_NilValue));
+  }
+  SET_FIELD(nodeobj,nodeatt,exPTR);
+  UNPROTECT(1);
+  return;
+}
 
 /**
  * This is a small utility function meant to be used from within
@@ -20,7 +47,7 @@ SEXP RN_isNodeActive(SEXP node) {
   SEXP nodePtr, result;
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
-  PROTECT(nodePtr = getAttrib(node,nodeatt));
+  PROTECT(nodePtr = GET_FIELD(node,nodeatt));
   if (nodePtr && nodePtr != R_NilValue && R_ExternalPtrAddr(nodePtr)) {
     LOGICAL(result)[0] = TRUE;
   }
@@ -28,93 +55,133 @@ SEXP RN_isNodeActive(SEXP node) {
   return result;
 }
 
+
+extern SEXP RN_DeactivateNode(SEXP node) {
+  SEXP exPTR;
+  PROTECT(exPTR=GET_FIELD(node,nodeatt));
+  if (exPTR) {
+    R_ClearExternalPtr(exPTR);
+  }
+  SET_FIELD(node,nodeatt,exPTR);
+  UNPROTECT(1);
+  return node;
+}
+
+
 /**
  * Tests whether or not an object is a Netica Node.
  */
 int isNeticaNode(SEXP obj) {
-  SEXP klass;
-  int result = FALSE;
-  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
-  R_len_t k, kk=length(klass);
-  for (k=0; k<kk; k++) {
-    if(strcmp(NodeClass,CHAR(STRING_ELT(klass,k))) == 0) {
-      result =TRUE;
-      break;
-    } else {
-    }
-  }
-  UNPROTECT(1);
-  return result;
+  return inherits(obj,NodeClass);
 }
 
+SEXP MakeNode(node_bn* node, SEXP bn) { 
+  SEXP sname, callme, isDiscrete, nd; 
+  PROTECT(sname= allocVector(STRSXP,1));
+  SET_STRING_ELT(sname,0,mkChar(GetNodeName_bn(node)));
+  if (GetNodeType_bn(node) == DISCRETE_TYPE) {
+    isDiscrete=TRUEV;
+  } else {
+    isDiscrete=FALSEV;
+  }
+  PROTECT(callme=lang4(nodeconstructor,sname,bn,isDiscrete));
+  SET_TAG(CDR(callme),namefield);
+  SET_TAG(CDDR(callme),netfield);
+  SET_TAG(CDDDR(callme),nodediscatt);
+
+  PROTECT(nd=eval(callme,R_GlobalEnv));
+  SetNodePtr(nd,node);
+  RN_RegisterNode(bn,GetNodeName_bn(node),nd);
+  UNPROTECT(3);
+  return nd;
+}
 
 
 /**
  * This function allocates a back pointer R object
- * for a newly created net.
+ * for a newly created node.
  */
-SEXP MakeNode_RRef(node_bn* node, const char* name, int isDiscrete) {
+SEXP MakeNode_RRef(node_bn* node, const char* name, SEXP netobj) {
+  node_bn* old_ptr;
   SEXP nd, ndhandle;
-  
-  nd = allocVector(STRSXP,1);
-  R_PreserveObject(nd);
-  /* Return the network name */
-  SET_STRING_ELT(nd,0,mkChar(name));
-  /* Set the handle as an attribute. */
-  PROTECT(ndhandle = R_MakeExternalPtr(node,nodeatt, R_NilValue));
-  setAttrib(nd,nodeatt,ndhandle);
-  setAttrib(nd,nodediscatt,isDiscrete ? TRUEV : FALSEV);
-  SET_CLASS(nd,nodeclass);
-  
-  /* Set a back pointer to the R object in the Netica Object */
-  SetNode_RRef(node,nd);
+
+#ifdef DEBUGNODES
+  Rprintf("Searching R net for node named %s.\n",name);
+#endif
+  PROTECT(nd=RN_FindNodeStr(netobj,name));
+
+  if (isNull(nd) || RX_isUnbound(nd)) {
+    /* Didn't find one, need to make a new one. */
+#ifdef DEBUGNODES
+    Rprintf("Making a new node named %s.\n",name);
+#endif
+    UNPROTECT(1);
+    PROTECT(nd=MakeNode(node,netobj));
+  } 
+  old_ptr = GetNodePtr(nd);
+  if (old_ptr && old_ptr != node) {
+    /* Pointer is not null and not equal to the current node:
+       something is wrong. */
+    error("RNetica Internal error:  pointer mismatch for node %s\n",name);
+  }
+  // I think this might be redundant, but too lazy to prove it.
+#ifdef DEBUGNODES
+  Rprintf("Setting fields for node named %s.\n",name);
+#endif
+  SetNodePtr(nd,node);
+  SET_FIELD(nd,netfield,netobj);
+  RN_RegisterNode(netobj,name,nd);
+  if (GetNodeType_bn(node) == DISCRETE_TYPE) {
+    SET_FIELD(nd,nodediscatt,TRUEV);
+  } else {
+    SET_FIELD(nd,nodediscatt,FALSEV);
+  }    
   UNPROTECT(1);
   return nd;
 }
+
 
 /**
  * This function allows for the lazy creation of node objects
  * associated with a network.
  */
-SEXP GetNode_RRef(node_bn *node) {
-  SEXP nd = FastGetNode_RRef(node);
-  if (nd && isNeticaNode(nd)==TRUE) return nd;            // Already got one
+SEXP GetNode_RRef(node_bn *node, SEXP netobj) {
   const char *name = GetNodeName_bn(node);
-  int isDiscrete = (int) (GetNodeType_bn(node) == DISCRETE_TYPE);
-  return MakeNode_RRef(node,name,isDiscrete);
+  return MakeNode_RRef(node,name,netobj);
 }
-
+ 
 /**
  * This function removes the R handles from a node so it can be safely
  * deleted. 
  */
-void RN_Free_Node(node_bn* node_handle) {
-  SEXP node, nodehandle;
-  if (!node_handle) return; //Void pointer, nothing to do.
-  node = GetNodeUserData_bn(node_handle,0);
-  if (!node) return; //No R object, created nothing to do.
-  PROTECT(node);
-  PROTECT(nodehandle = getAttrib(node,nodeatt));
+/* No longer needed */
+/* void RN_Free_Node(node_bn* node_handle, SEXP bn) { */
+/*   SEXP node, nodehandle; */
+/*   if (!node_handle) return; //Void pointer, nothing to do. */
+/*   node = GetNodeUserData_bn(node_handle,0); */
+/*   if (!node) return; //No R object, created nothing to do. */
+/*   PROTECT(node); */
+/*   PROTECT(nodehandle = getAttrib(node,nodeatt)); */
 
-  /* Clear the handle */
-  if (nodehandle && nodehandle != R_NilValue) {
-    R_ClearExternalPtr(nodehandle);
-  }
-  setAttrib(node,nodeatt,R_NilValue); //Probably not needed.
-  R_ReleaseObject(node); //Let R garbage collect it when all
-  //references are gone.
-  SetNode_RRef(node_handle,NULL);
-  UNPROTECT(2);
-  return;
-}
-
-void RN_Free_Nodes(const nodelist_bn* nodelist) {
-  int k, kk=LengthNodeList_bn(nodelist);
-  for (k=0; k<kk; k++) {
-    RN_Free_Node(NthNode_bn(nodelist,k));
-  }
-}
-
+/*   /\* Clear the handle *\/ */
+/*   if (nodehandle && nodehandle != R_NilValue) { */
+/*     R_ClearExternalPtr(nodehandle); */
+/*   } */
+/*   setAttrib(node,nodeatt,R_NilValue); //Probably not needed. */
+/*   R_ReleaseObject(node); //Let R garbage collect it when all */
+/*   //references are gone. */
+/*   SetNode_RRef(node_handle,NULL); */
+/*   UNPROTECT(2); */
+/*   return; */
+/* } */
+ 
+/* void RN_Free_Nodes(const nodelist_bn* nodelist, SEXP net) { */
+/*   int k, kk=LengthNodeList_bn(nodelist); */
+/*   for (k=0; k<kk; k++) { */
+/*     RN_Free_Node(NthNode_bn(nodelist,k),net); */
+/*   } */
+/* } */
+ 
 /*******************************
  * Node Lists
  *
@@ -124,17 +191,18 @@ void RN_Free_Nodes(const nodelist_bn* nodelist) {
  * Note that when converting to R vectors, we force the creation of 
  * NeticaNode objects if necessary.
  */
-
+ 
 /**
  * Calling function should probably portect result.
  */
-SEXP RN_AS_RLIST(const nodelist_bn* nodelist) {
+SEXP RN_AS_RLIST(const nodelist_bn* nodelist, SEXP bn) {
   int k, kk=LengthNodeList_bn(nodelist);
   SEXP result;
 
   PROTECT(result = allocVector(VECSXP, (R_len_t) kk));
   for (k=0; k<kk; k++) {
-    SET_VECTOR_ELT(result,(R_len_t) k,GetNode_RRef(NthNode_bn(nodelist,k)));
+    SET_VECTOR_ELT(result,(R_len_t) k,
+                   GetNode_RRef(NthNode_bn(nodelist,k),bn));
   }
   UNPROTECT(1);
   return result;
@@ -176,26 +244,29 @@ nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net_handle) {
   return result;
 }
 
-// Frees pointers from R-objects, assumes nodes have been deleted elsewhere.
-void RN_Free_Nodelist(SEXP nodes) {
-  R_len_t n, nn = length(nodes);
-  SEXP node, nodehandle;
+
+/* No longer needed, handled on R side. */
+
+/* // Frees pointers from R-objects, assumes nodes have been deleted elsewhere. */
+/* void RN_Free_Nodelist(SEXP nodes, SEXP net) { */
+/*   R_len_t n, nn = length(nodes); */
+/*   SEXP node, nodehandle; */
   
-  for (n=0; n<nn; n++) {
-    PROTECT(node = VECTOR_ELT(nodes,n));
-    if (!isNull(node)) {
-      PROTECT(nodehandle = getAttrib(node,nodeatt));
-      /* Clear the handle */
-      if (nodehandle && nodehandle != R_NilValue) {
-        R_ClearExternalPtr(nodehandle);
-      }
-      setAttrib(node,nodeatt,R_NilValue); //Probably not needed.
-      R_ReleaseObject(node); //Let R garbage collect it when all
-      UNPROTECT(1);
-    }
-    UNPROTECT(1);
-  }
-}
+/*   for (n=0; n<nn; n++) { */
+/*     PROTECT(node = VECTOR_ELT(nodes,n)); */
+/*     if (!isNull(node)) { */
+/*       PROTECT(nodehandle = getAttrib(node,nodeatt)); */
+/*       /\* Clear the handle *\/ */
+/*       if (nodehandle && nodehandle != R_NilValue) { */
+/*         R_ClearExternalPtr(nodehandle); */
+/*       } */
+/*       setAttrib(node,nodeatt,R_NilValue); //Probably not needed. */
+/*       R_ReleaseObject(node); //Let R garbage collect it when all */
+/*       UNPROTECT(1); */
+/*     } */
+/*     UNPROTECT(1); */
+/*   } */
+/* } */
 
 
 
@@ -211,7 +282,7 @@ SEXP RN_NewDiscreteNodes(SEXP net, SEXP namelist, SEXP nslist, SEXP statelist) {
   int nstates;
   net_bn* net_handle;
   node_bn* node_handle;
-  SEXP result, node;
+  SEXP result;
 
   net_handle = GetNeticaHandle(net);
   if (!net_handle) {
@@ -227,14 +298,13 @@ SEXP RN_NewDiscreteNodes(SEXP net, SEXP namelist, SEXP nslist, SEXP statelist) {
     if (node_handle) {
       warning("Node named %s already exists.",name);
       // Return existing node without changes
-      SET_VECTOR_ELT(result,n,GetNode_RRef(node_handle));
+      SET_VECTOR_ELT(result,n,GetNode_RRef(node_handle,net));
     } else {
       node_handle = NewNode_bn(name,nstates,net_handle);
       /* Autoset the states at creation time */
       SetNodeStateNames_bn(node_handle,states);
-      node = MakeNode_RRef(node_handle,name,TRUE);
       /* Finally, stick it in array */
-      SET_VECTOR_ELT(result,n,node);
+      SET_VECTOR_ELT(result,n,MakeNode_RRef(node_handle,name,net));
     }
   }
   UNPROTECT(1);
@@ -247,13 +317,13 @@ SEXP RN_NewContinuousNodes(SEXP net, SEXP namelist) {
   const char *name;
   net_bn* net_handle;
   node_bn* node_handle;
-  SEXP result, node;
+  SEXP result;
 
   net_handle = GetNeticaHandle(net);
   if (!net_handle) {
     error("Network %s is not valid",BN_NAME(net));
   }
-  
+
   PROTECT(result = allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
@@ -261,11 +331,10 @@ SEXP RN_NewContinuousNodes(SEXP net, SEXP namelist) {
     if (node_handle) {
       warning("Node named %s already exists.",name);
       // Return existing node without changes
-      SET_VECTOR_ELT(result,n,GetNode_RRef(node_handle));
+      SET_VECTOR_ELT(result,n,GetNode_RRef(node_handle,net));
     } else {
       node_handle = NewNode_bn(name,0,net_handle);
-      node = MakeNode_RRef(node_handle,name,FALSE);
-      SET_VECTOR_ELT(result,n,node);
+      SET_VECTOR_ELT(result,n,MakeNode_RRef(node_handle,name,net));
     }
   }
 
@@ -277,7 +346,7 @@ SEXP RN_Delete_Nodes(SEXP nodelist) {
 
   R_len_t n, nn = length(nodelist);
   node_bn* node_handle;
-  SEXP node, result;
+  SEXP node, result, bn;
 
   PROTECT(result = allocVector(VECSXP,nn));
 
@@ -285,8 +354,11 @@ SEXP RN_Delete_Nodes(SEXP nodelist) {
     PROTECT(node = VECTOR_ELT(nodelist,n));
     node_handle = GetNodeHandle(node);
     if (node_handle) {
-      RN_Free_Node(node_handle);
       DeleteNode_bn(node_handle);
+      RN_DeactivateNode(node);
+      PROTECT(bn = NODE_NET(node));
+      RN_UnregisterNode(bn,NODE_NAME(node));
+      UNPROTECT(1);
       SET_VECTOR_ELT(result,n,node);
     } else {
       SET_VECTOR_ELT(result,n,R_NilValue);
@@ -299,6 +371,7 @@ SEXP RN_Delete_Nodes(SEXP nodelist) {
 }
 
 
+/* This is OK.  */
 SEXP RN_Find_Node(SEXP net, SEXP namesxp) {
   const char* name;
   net_bn* net_handle;
@@ -310,7 +383,7 @@ SEXP RN_Find_Node(SEXP net, SEXP namesxp) {
     node_handle = GetNodeNamed_bn(name,net_handle);
     if (node_handle) { /* Found */
       /* Return the node object. */
-      return GetNode_RRef(node_handle);
+      return GetNode_RRef(node_handle,net);
     } else {       /* Not found */
       return R_NilValue;
     }
@@ -329,7 +402,7 @@ SEXP RN_Network_AllNodes(SEXP net) {
     foundNodes = GetNetNodes_bn(net_handle);
     if (foundNodes) { /* Found */
       /* Return the node object. */
-      return RN_AS_RLIST(foundNodes);
+      return RN_AS_RLIST(foundNodes,net);
     } else {       /* Null Nodelist, I don't think this should happen */
       warning("All nodes return NULL value for net %s",BN_NAME(net));
       return R_NilValue;
@@ -360,11 +433,7 @@ SEXP RN_Copy_Nodes(SEXP destNet, SEXP nodelist, SEXP options) {
   new_nodes = CopyNodes_bn(old_nodes, new_net, opt);
   DeleteNodeList_bn(old_nodes);
 
-  return RN_AS_RLIST(new_nodes);
-}
-
-SEXP RN_NodeNet(SEXP node) {
-  return GetNet_RRef(GetNodeNet_bn(GetNodeHandle(node)));
+  return RN_AS_RLIST(new_nodes,destNet);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -399,19 +468,12 @@ SEXP RN_SetNodeName(SEXP nd, SEXP newnames) {
   if (node_handle) {
     newname = CHAR(STRING_ELT(newnames,0)); 
     other_node = GetNodeNamed_bn(newname, GetNodeNet_bn(node_handle));
-    if ( other_node ) {
-      if (other_node != node_handle) {
-        warning("There is already a node named %s.",newname);
-      } else {
-        //We are renaming this node to itself, probably to fix
-        //a bad cached name.  Return the correct R object.
-        nd = GetNode_RRef(other_node);
-      }
+    if ( other_node && other_node != node_handle) {
+        error("There is already a node named %s.",newname);
     } else {
       SetNodeName_bn(node_handle,newname);
       // We need to change the nd object to reflect the new name.
-      SET_STRING_ELT(nd,0,mkChar(newname));
-      SetNode_RRef(node_handle,nd);
+      //This is done in the R code.
     }
   } else {
     warning("Could not find node %s.",NODE_NAME(nd));
@@ -1035,7 +1097,7 @@ SEXP RN_NetworkNodesInSet(SEXP net, SEXP set) {
     node_bn *nd = NthNode_bn(allNodes,i);
     if (IsNodeInNodeset_bn(nd,setname)) {
       PROTECT(result);
-      result = CONS(GetNode_RRef(nd),result);
+      result = CONS(GetNode_RRef(nd,net),result);
       UNPROTECT(1);
     }
   }

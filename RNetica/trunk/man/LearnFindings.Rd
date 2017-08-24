@@ -2,17 +2,19 @@
 \alias{LearnFindings}
 \title{Learn Netica conditional probabilities from findings.}
 \description{
+
   This function updates the conditional probabilities associated with
   the given list of nodes based on the findings associated with that
   node and its parents.  Before calling this function the findings to be
   learned should be set using \code{\link{NodeFinding}}.
+
 }
 \usage{
 LearnFindings(nodes, weight = 1)
 }
 \arguments{
   \item{nodes}{
-    A list of active \code{\link{NeticaNode}} objects that reference the
+    A list of active \code{\linkS4class{NeticaNode}} objects that reference the
     conditional probability tables to be updated.
   }
   \item{weight}{The weight of the current observation in terms of number
@@ -52,6 +54,7 @@ LearnFindings(nodes, weight = 1)
 }
 \author{Russell G. Almond}
 \note{
+
   Do not confuse this function with \code{\link{NodeFinding}}.
   \code{NodeFinding} instantiates a node and updates all of the other
   beliefs associated with a node to reflect the new evidence.
@@ -71,8 +74,10 @@ LearnFindings(nodes, weight = 1)
   \code{\link{LearnCPTs}} 
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -142,7 +147,8 @@ stopifnot(
 )
 
 DeleteNetwork(abb)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ model }

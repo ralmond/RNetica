@@ -36,7 +36,7 @@ SEXP RNGFree (SEXP rngptr) {
       }
     }
   }
-  return R_NilValue;
+  return rngptr;
 }
 
 void AddRNGRef(SEXP ref) {
@@ -65,9 +65,9 @@ void FreeRNGs () {
     SEXP rng = R_WeakRefValue(rr);
     next = CDR(r);
     if (key != R_NilValue) {
-      RNGFree(key);
+      key = RNGFree(key);
       if (rng && rng != R_NilValue) {
-        setAttrib(rng,rngatt,R_NilValue);
+        SET_FIELD(rng,rngatt,key);
       }
     }
   }
@@ -78,7 +78,7 @@ SEXP RN_isRNGActive(SEXP rng) {
   SEXP rngPtr, result;
   PROTECT(result=allocVector(LGLSXP,1));
   LOGICAL(result)[0]=FALSE;
-  PROTECT(rngPtr = getAttrib(rng,rngatt));
+  PROTECT(rngPtr = GET_FIELD(rng,rngatt));
   if (!isNull(rngPtr) && R_ExternalPtrAddr(rngPtr)) {
     LOGICAL(result)[0] = TRUE;
   }
@@ -86,24 +86,23 @@ SEXP RN_isRNGActive(SEXP rng) {
   return result;
 }
 
-SEXP RN_NewRandomGenerator (SEXP seed) {
+SEXP RN_NewRandomGenerator (SEXP seed, SEXP rngsexp) {
+  SEXP session = GET_FIELD(rngsexp,sessionfield);
+  environ_ns* netica_env = GetSessionPtr(session);
   const char* seedstring=CHAR(STRING_ELT(seed,0));
-  randgen_ns* rng =  NewRandomGenerator_ns (seedstring,RN_netica_env, NULL);
+  randgen_ns* rng =  NewRandomGenerator_ns (seedstring,netica_env, NULL);
   if (rng == NULL ) 
     return R_NilValue;
   else {
-    SEXP rngsexp, rngPtr, ref;
+    SEXP rngPtr, ref;
     //Allocate new rng object
-    PROTECT(rngsexp = allocVector(STRSXP,1));
-    SET_STRING_ELT(rngsexp,0,mkChar(seedstring));
-    SET_CLASS(rngsexp,rngclass);
     PROTECT(rngPtr = R_MakeExternalPtr(rng,rngatt, R_NilValue));
-    setAttrib(rngsexp,rngatt,rngPtr);
+    SET_FIELD(rngsexp,rngatt,rngPtr);
     PROTECT(ref = R_MakeWeakRefC(rngPtr,rngsexp,
                                  (R_CFinalizer_t) &RNGFree, 
                                  TRUE));
     AddRNGRef(ref);
-    UNPROTECT(3);
+    UNPROTECT(2);
     return rngsexp;
   }
 
@@ -112,35 +111,22 @@ SEXP RN_NewRandomGenerator (SEXP seed) {
 /**
  * Tests whether or not an object is a Netica RNG.
  */
-int isNeticaRNG(SEXP obj) {
-  SEXP klass;
-  int result = FALSE;
-  PROTECT(klass = getAttrib(obj,R_ClassSymbol));
-  R_len_t k, kk=length(klass);
-  for (k=0; k<kk; k++) {
-    if(strcmp(RNGClass,CHAR(STRING_ELT(klass,k))) == 0) {
-      result =TRUE;
-      break;
-    } else {
-    }
-  }
-  UNPROTECT(1);
-  return result;
+Rboolean isNeticaRNG(SEXP obj) {
+  return inherits(obj,RNGClass);
 }
 
 SEXP RN_FreeRNG (SEXP rng) {
-
-  if (!isNeticaRNG(rng)) {
-    warning("Trying to free a non-RNG object.");
-  }
-  RNGFree(getAttrib(rng,rngatt));
-  setAttrib(rng,rngatt,R_NilValue);
+  
+  SEXP ptr;
+  PROTECT(ptr = RNGFree(GET_FIELD(rng,rngatt)));
+  SET_FIELD(rng,rngatt,ptr);
   return(rng);
 }
 
 
 
-SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
+SEXP RN_SetNetRandomGen(SEXP net, SEXP seed, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
   net_bn* netica_handle = GetNeticaHandle(net);
   const char* seedstring=NULL;
   randgen_ns* rng = NULL; 
@@ -151,7 +137,7 @@ SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
     }
   } else if (!isNull(seed)) {
     seedstring = CHAR(STRING_ELT(seed,0)); 
-    rng = NewRandomGenerator_ns(seedstring,RN_netica_env,NULL);
+    rng = NewRandomGenerator_ns(seedstring,netica_env,NULL);
     if (!rng) {
       error("Could not create Random Number Generator.");
     }
@@ -165,8 +151,9 @@ SEXP RN_SetNetRandomGen(SEXP net, SEXP seed) {
 }
 
 SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
-                           SEXP timeout, SEXP seed) {
-  const nodelist_bn* nodes = RN_AS_NODELIST(nodelist,NULL);
+                           SEXP timeout, SEXP seed, SEXP session) {
+  environ_ns* netica_env = GetSessionPtr(session);
+  nodelist_bn* nodes = RN_AS_NODELIST(nodelist,NULL);
   sampling_bn meth = DEFAULT_SAMPLING;
   const char* methstring=CHAR(STRING_ELT(method,0));
   if (methstring[0]=='J') meth=JOIN_TREE_SAMPLING;
@@ -185,7 +172,7 @@ SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method,
     }
   } else if (!isNull(seed)) {
     seedstring = CHAR(STRING_ELT(seed,0)); 
-    rng = NewRandomGenerator_ns(seedstring,RN_netica_env,NULL);
+    rng = NewRandomGenerator_ns(seedstring,netica_env,NULL);
     newrng = TRUE;
     if (!rng) {
       error("Could not create Random Number Generator.");

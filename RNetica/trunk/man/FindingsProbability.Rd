@@ -14,7 +14,8 @@ FindingsProbability(net)
 }
 \arguments{
   \item{net}{
-    An active and compiled Bayesian Network.
+    An active and compiled Bayesian Network (class
+    \code{\linkS4class{NeticaBN}}). 
   }
 }
 \details{
@@ -54,15 +55,17 @@ FindingsProbability(net)
   the value is perhaps better though of as a normalization constant.
 }
 \seealso{
-  \code{\link{NeticaNode}},\code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaNode}},\code{\linkS4class{NeticaBN}},
+  \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-EMSMMotif <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne",
-                           sep=.Platform$file.sep))
+EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMSMMotif.dne"), session=sess)
 
 CompileNetwork(EMSMMotif)
 norm1 <- FindingsProbability(EMSMMotif)
@@ -84,7 +87,8 @@ prob75 <- FindingsProbability(EMSMMotif)
 stopifnot( abs(prob75-.75) < .0001)
 
 DeleteNetwork(EMSMMotif)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

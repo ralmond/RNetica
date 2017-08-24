@@ -1,26 +1,38 @@
 \name{StartNetica}
 \alias{StartNetica}
 \alias{StopNetica}
+\alias{startSession}
+\alias{stopSession}
+\alias{restartSession}
 \alias{LicenseKey}
 \title{
   Starting and stopping the Netica shared library.
 }
 \description{
+
   This function creates (or destroys) a Netica environment.  The
   \code{StartNetica} function also allows you to set various parameters
   associated with the Netica environment.
+
 }
 \usage{
-StartNetica(license = LicenseKey, checking = NULL, maxmem = NULL)
-StopNetica()
+startSession(session)
+stopSession(session)
+restartSession(session)
+StartNetica(license = LicenseKey, checking = NULL, maxmem = NULL,
+           session=NeticaSession(LicenseKey=license, checking=checking,
+                                 maxmem=maxmem))
+StopNetica(session=getDefaultSession())
 }
 \arguments{
+  \item{session}{An object of class \code{\linkS4class{NeticaSession}}
+    which encapsulates the connection to Netica.}
   \item{license}{A string containing a license key from Norsys.  If this
     is \code{NULL} the limited student/demonstration
     version of Netica is used rather than the full version.  If the
     variable \code{NeticaLicenseKey} is set before \code{RNetica} is
     loaded, then the value of that variable at the time the package is
-    loaded will become the default for \code{license}.
+    loaded will become the default for \var{license}.
 }
   \item{checking}{A character string containing one of the keywords:
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
@@ -35,10 +47,23 @@ StopNetica()
 }
 \details{
 
-  The function \code{StartNetica()} calls the Netica functions
-  \code{NewNeticaEnviron_ns()} and \code{InitNetica2_bn()} to create and
-  set up a Netica environment.
+  The generic functions \code{startSession} and \code{stopSession} start
+  and stop the connection to Netica.  Note that the session is active
+  (\code{\link{is.active}}) if the session has been started, and
+  inactive if it was stopped (or not yet started).  The generic function
+  \code{restartSession} stops the session and starts it again.
 
+  The functions \code{StartNetica} and \code{StopNetica} are depricated,
+  but still included for backwards compatability.  The function
+  \code{StartNetica} will now create a new object of class
+  \code{\linkS4class{NeticaSession}} passing its arguments to the
+  constructor.  It will also set a variable \code{DefaultNeticaSession}
+  in the global environment to the new session.  As this is the value
+  returned by \code{\link{getDefaultSession}()} this will cause RNetica
+  to behave like the previous versions where the session pointer was
+  stored internally to the C code.  The function \code{StopNetica}
+  operates on the default session if no explicit argument is given.
+  
   Netica is commercial software.  The RNetica package downloads and
   installs the demonstration version of Netica which is limited in its
   functionality (particularly in the size of the networks it handles).
@@ -50,12 +75,18 @@ StopNetica()
   \code{NULL} then the demonstration version is used instead of the
   licensed version (could be useful for testing).
 
-  If you set the value of a variable \code{NeticaLicenseKey}, then when
-  \code{RNetica} is loaded, then its value at the time the
-  package is loaded is used as the default value for \code{license}. 
-  If no value for as \code{NeticaLicenseKey}, the default value for
+  Prior to RNetica version 0.5, RNetica looked for a variable
+  called \code{NeticaLicenseKey} in the global workspace when 
+  \code{RNetica} is loaded.  This then becomes the default value for
+  both \code{StartNetica} and \code{\link{getDefaultSession}()}.  
+  If no value is set for \code{NeticaLicenseKey}, the default value for
   \code{license} is set to \code{NULL}, which loads the demo version of
-  \code{Netica}. 
+  \code{Netica}.
+
+  In version 0.5 and later of RNetica, the recommended way to store the
+  license is to create a default session and store it in the variable
+  \code{DefaultNeticaSession} in the global environment.  This session
+  object then contains the license key.
 
   The \code{checking} argument, if supplied, is used to call the Netica
   function \code{ArgumentChecking_ns()}.  See the documentation of that
@@ -72,16 +103,20 @@ StopNetica()
   \code{CloseNetica_bn()}.  It is mainly used when one wants to stop
   Netica and restart it with other parameters.
 
-  The function \code{StartNetica} is called when the package is attached
-  (in the \code{.onAttach()} function.  The function \code{StopNetica()}
-  is called by \code{.Last.lib()}, Normally, users should not need to
-  call these functions, but they may wish to do so if they need to
-  restart Netica with different arguments.
+  As of RNetica 0.5, the function \code{StartNetica} is no longer called
+  when the package is attached (in the \code{.onAttach()} function).
+  Instead, users should start Netica scripts with
+  \code{startSession(DefaultNeticaSession)}.  Note that the pathnames of
+  recently loaded networks are stored in the session object, so that
+  networks can be quickly re-read from a saved session.
 
 }
 \value{
-  These functions are called for side effects and do not return
-  meaningful values.
+
+  These functions now all return an object of class
+  \code{\linkS4class{NeticaSession}}.  Note that \code{StartNetica} sets
+  the value of \code{DefaultNeticaSession} in the global environment to
+  the value of the \code{session} argument.
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -108,32 +143,50 @@ StopNetica()
   and bug fixes are welcome.
 }
 \section{Implementation Notes}{
-  I'm looking into a way to bury the license key into RNetica during
-  the installation process.  Probably will happen in a future version.
-  Until then, best bet is to save a value for \code{NeticaLicenseKey} in
-  the workspace.
 
-  The Netica environment pointer, which is used by the Netica shared
-  library is defined inside of the RNetica shared library, and not
-  visible at the R level.
+  Starting with RNetica 0.5, the Netica environment pointer, which is
+  used by the Netica shared library is stored inside of the
+  \code{NeticaSession} object instead of as a global object in the C
+  code.  The function \code{\link{is.active}()} checks to see whether
+  that pointer is set (active) or null (inactive).  Note that when a
+  session object is saved, the session pointer is not saved and should
+  be set to null.
+
+  The pre verison 0.5 method used a variable \code{NeticaLicenseKey} in
+  the global environment to store the license key.  The post 0.5 method
+  uses a variable \code{DefaultNeticaSession} to store a session object
+  instead, but for backwards compatability, it will try to create a
+  session using the value of \code{NeticaLicenseKey} if no default
+  session exists.
+
+
 }
 \seealso{
+  \code{\linkS4class{NeticaSession}}, \code{\link{NeticaSession}()},
   \code{\link{NeticaVersion}()}, \code{\link{CreateNetwork}()}
 }
 \examples{
 \dontrun{
-## Restart licensed version
-StopNetica()
+## Recommended way of doing things
+DefaultNeticaSession <- NeticaSession(LicenseKey="Code from Norsys")
+startSession(DefaultNeticaSession)
+
+## If DefaultNeticaSession was created in a previous R session
+## Re-read the networks.
+for (netname in DefaultNeticaSession$listNets()) {
+  net <- DefaultNeticaSession$findNet(netname)
+  ReadNetworks(GetNetworkFileName(net),DefaultNeticaSession)
+}
+
+restartSession(DefaultNeticaSession)
+stopSession(DefaultNeticaSession)
+
+## Depricated methods
 StartNetica("License key from Norsys")                  
+StopNetica()
 ## Get the version of Netica.
-print(NeticaVersion())
-
-## Commonly done next step is to create a network.
-net1 <- CreateNetwork("myNet")
 
 }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interfaces }
-\keyword{ environment }% __ONLY ONE__ keyword per line
+\keyword{ environment }

@@ -11,11 +11,11 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
 }
 \arguments{
   \item{nodes}{
-    The a list of active \code{\link{NeticaNode}} objects to be read.
+    The a list of active \code{\linkS4class{NeticaNode}} objects to be read.
     The findings of these nodes will be modified by this call.
   }
   \item{stream}{
-    A \code{\link{NeticaCaseStream}} object which references the file or
+    A \code{\linkS4class{CaseStream}} object which references the file or
     string object to be read from.
   }
   \item{pos}{A character or integer scalar.  This should almost
@@ -31,6 +31,7 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
   }
 }
 \details{
+
   A case file is a table where the rows represent cases, and the columns
   represent variables.  \code{ReadFindings} reads a row out the
   table and instantiates (\code{\link{NodeFinding}}) the nodes in
@@ -63,20 +64,23 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
   column if it is present in the case stream, otherwise it will be set
   to \code{-1}. The value of the column
   \dQuote{NumCases} contains a weight to give to the current row.  The
-  value of \code{\link{getCaseStreamLastFreq}(stream)} is set to this
+  value of \code{\link{getCaseStreamLastFreq}(\var{stream})} is set to this
   value, if it is present.  The returned stream object will have these
   updated properties, otherwise it will be set
   to \code{-1}.
   
 }
 \value{
-  Returns the \code{caseOrStream} argument invisibly.  Note that the
-  values of \code{\link{getCaseStreamPos}(stream)} will return the
+
+  Returns the \var{caseOrStream} argument invisibly.  Note that the
+  values of \code{\link{getCaseStreamPos}(\var{stream})} will return the
   position of the next record or \code{NA} if there are no records left
-  in the stream.  The values of \code{\link{getCaseStreamLastId}(stream)}, and
-  \code{\link{getCaseStreamLastFreq}(stream)} will be updated to reflect
+  in the stream.  The values of
+  \code{\link{getCaseStreamLastId}(\var{stream})}, and
+  \code{\link{getCaseStreamLastFreq}(\var{stream})} will be updated to reflect
   the values from the last read record, or will be \code{-1} if these
   values are not provided in the stream.
+
 }
 \references{
   \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -85,6 +89,7 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
 }
 \author{Russell G. Almond}
 \note{
+
   The first time that \code{ReadFindings} is called on a stream it must
   be called with \code{pos="FIRST"}.  Failing to do so produces a fatal
   error in Netica.  
@@ -107,12 +112,14 @@ ReadFindings(nodes, stream, pos = "NEXT", add = FALSE)
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{NodeFinding}}, \code{\link{RetractNetFindings}}
-  \code{\link{ReadFindings}}, \code{\link{NeticaCaseStream}},
+  \code{\link{ReadFindings}}, \code{\linkS4class{CaseStream}},
   \code{\link{WithOpenCaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -124,10 +131,9 @@ AddLink(B,C)
 ## Input filename
 ## Note, this is a cached copy of the file written in the WriteFindings
 ## documentation. 
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
-filestream <- CaseFileStream(casefile)
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
+filestream <- CaseFileStream(casefile, session=sess)
 ## Case 1
 filestream <- ReadFindings(list(A,B,C),filestream,"FIRST")
 stopifnot( NodeFinding(A) == "A1",
@@ -169,8 +175,8 @@ stopifnot( NodeFinding(A) == "A1",
            pos1 == getCaseStreamPos(filestream))
 
 ## Test with memory stream
-cases <- read.CaseFile(casefile)
-abcstream <- MemoryCaseStream(cases)
+cases <- read.CaseFile(casefile, session=sess)
+abcstream <- CaseMemoryStream(cases, session=sess)
 MemoryStreamContents(abcstream)
 
 
@@ -186,6 +192,7 @@ stopifnot( NodeFinding(A) == "A1",
 CloseCaseStream(filestream)
 CloseCaseStream(abcstream)
 DeleteNetwork(abc)
+stopSession(sess)
 
 }
 \keyword{ interface }

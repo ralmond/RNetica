@@ -2,29 +2,32 @@
 \alias{LearnCPTs}
 \title{Learn Conditional Probability Tables with Missing Data.}
 \description{
+
   This function updates the conditional probabilities associated with
   the given list of nodes based on the findings associated with that
   node and its parents found in the \code{caseStream} argument, which
-  should be a \code{\link{NeticaCaseStream}} object.  Unlike
+  should be a \code{\linkS4class{CaseStream}} object.  Unlike
   \code{\link{LearnCases}}, these algorithms can support cases with
   missing or latent variables.
+
 }
 \usage{
 LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 1e-06, weight = 1)
 }
 \arguments{
-  \item{caseStream}{This should be a \code{\link{NeticaCaseStream}}
+
+  \item{caseStream}{This should be a \code{\linkS4class{CaseStream}}
     object, or else an object which can be made into a case stream:
     either a pathname for a case file, or a data frame of the format
-    described in \code{\link{MemoryCaseStream}}.  The case stream can be
-    either opened or closed.  If closed it is reopened before updating.
-    In either case, it is closed at the end of the function.
+    described in \code{\linkS4class{MemoryCaseStream}}.  The case stream
+    can be either opened or closed.  If closed it is reopened before
+    updating.  In either case, it is closed at the end of the function.
     \bold{Warning}, due to a bug in Netica, memory streams are not
     working and should not be used with Netica API 5.04 or earlier.  See
-    below. 
+    below.
   }
   \item{nodelist}{
-    A list of active \code{\link{NeticaNode}} objects that reference the
+    A list of active \code{\linkS4class{NeticaNode}} objects that reference the
     conditional probability tables to be updated.
   }
   \item{method}{A character scalar giving the name of the method to be
@@ -94,8 +97,10 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
   
 }
 \value{
+
   Currently, \code{NULL} is returned.  In the future, an object
   containing details about the convergence will be returned.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -105,10 +110,12 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
 }
 \author{Russell G. Almond}
 \note{
+
   The \code{LearnCPTs} function will not update the conditional
   probability table of a node unless \code{\link{NodeExperience}} has
   been set for that node.  Instead it will issue a warning and update
   the other nodes.
+
 }
 \section{Netica Bugs}{
 
@@ -134,7 +141,10 @@ LearnCPTs(caseStream, nodelist, method = "COUNTING", maxIters = 1000L, maxTol = 
   \code{\link{LearnCases}}
 }
 \examples{
-abb <- CreateNetwork("ABB")
+sess <- NeticaSession()
+startSession(sess)
+
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -161,7 +171,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1))
 
 ## Probs for A & B1 modified, but B2 left alone
@@ -185,7 +195,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2))
 
 stopifnot(
@@ -204,7 +214,7 @@ DeleteNetwork(abb)
 ####################################
 ## Start again with EM learning.
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -231,7 +241,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1),method="EM")
 
 ## Complete data, this should look identical to the counting case.
@@ -256,7 +266,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="EM")
 
 stopifnot(
@@ -271,7 +281,7 @@ casesabb2 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile2 <- tempfile("casesabb2",fileext=".cas")
-write.CaseFile(casesabb1,outfile2)
+write.CaseFile(casesabb1,outfile2, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="EM")
 
 stopifnot(
@@ -286,7 +296,7 @@ DeleteNetwork(abb)
 ####################################
 ## One more time with Gradient Decent learning.
 
-abb <- CreateNetwork("ABB")
+abb <- CreateNetwork("ABB", session=sess)
 A <- NewDiscreteNode(abb,"A",c("A1","A2"))
 B1 <- NewDiscreteNode(abb,"B1",c("B1","B2"))
 B2 <- NewDiscreteNode(abb,"B2",c("B1","B2"))
@@ -313,7 +323,7 @@ casesabb <-
 ## instead.
 
 outfile <- tempfile("casesabb",fileext=".cas")
-write.CaseFile(casesabb,outfile)
+write.CaseFile(casesabb,outfile, session=sess)
 LearnCPTs(outfile,list(A,B1),method="GRADIENT")
 
 ## Complete data, this should look identical to the counting case.
@@ -342,7 +352,7 @@ casesabb1 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile1 <- tempfile("casesabb1",fileext=".cas")
-write.CaseFile(casesabb1,outfile1)
+write.CaseFile(casesabb1,outfile1, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="GRADIENT")
 
 ## Gradient algorithm sets experience to -infinity, so need to reset.
@@ -356,12 +366,12 @@ casesabb2 <-
              B2=c("B1","B1","B1","NA","B2","B2","B2","B2","B2","B1"))
 
 outfile2 <- tempfile("casesabb2",fileext=".cas")
-write.CaseFile(casesabb1,outfile2)
+write.CaseFile(casesabb1,outfile2, session=sess)
 LearnCPTs(outfile1,list(A,B1,B2),method="GRADIENT")
 
 DeleteNetwork(abb)
-
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ model }

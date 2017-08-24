@@ -12,7 +12,7 @@ DeleteNodeTable(node)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose conditional probability
+    An active \code{\linkS4class{NeticaNode}} whose conditional probability
     table is to be tested.
   }
 }
@@ -28,11 +28,14 @@ DeleteNodeTable(node)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{HasNodeTable}()}
 }
 \examples{
-a1 <- CreateNetwork("AB1")
+sess <- NeticaSession()
+startSession(sess)
+
+a1 <- CreateNetwork("AB1", session=sess)
 A <- NewDiscreteNode(a1,"A",c("A1","A2"))
 
 NodeProbs(A) <- c(0,1)
@@ -46,6 +49,7 @@ stopifnot(
 )
 
 DeleteNetwork(a1)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ manip }

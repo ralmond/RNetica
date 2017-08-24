@@ -13,7 +13,7 @@
 GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
 }
 \arguments{
-  \item{nodelist}{A list of active \code{\link{NeticaNode}} objects, all
+  \item{nodelist}{A list of active \code{\linkS4class{NeticaNode}} objects, all
   of which belong to the same network.}
   \item{method}{A character scalar used to describe the method used
   select the random numbers.  This should have one of the values
@@ -25,7 +25,7 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
   computations under the forward sampling method.  It is ignored under
   the join tree sampling method or when the default sampling method
   turns out to be join tree.}
-  \item{rng}{This either be an existing \code{\link{NeticaRNG}} object
+  \item{rng}{This either be an existing \code{\linkS4class{NeticaRNG}} object
   or \code{NULL} in which case the default random number generator for
   the net is used.}
 }
@@ -36,8 +36,8 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
   This takes into account any findings previously entered into the
   graph   (including the previously sampled nodes in the list).   In
   particular, to generate multiple cases, the findings need to be
-  retracted (using \code{\link{RetractNodeFinding}(node)} or
-  \code{\link{RetractNetFindings}(net)} between each generation.
+  retracted (using \code{\link{RetractNodeFinding}(\var{node})} or
+  \code{\link{RetractNetFindings}(\var{net})} between each generation.
 
   Netica supports three methods for doing the sampling:
   \describe{
@@ -62,7 +62,7 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
   }
 
   The \code{rng} argument can be used to associate a random number
-  generator with the generation (see \code{\link{NeticaRNG}}).  If the
+  generator with the generation (see \code{\linkS4class{NeticaRNG}}).  If the
   \code{rng} argument is \code{NULL}, then the default random number
   generator for the network is used.  This is either a random number
   generator associated with the network using
@@ -81,15 +81,16 @@ GenerateRandomCase(nodelist, method = "Default", timeout = 100, rng = NULL)
 }
 \author{Russell Almond}
 \seealso{
-  \code{\link{NetworkSetRNG}()}, \code{\link{NeticaRNG}()},
+  \code{\link{NetworkSetRNG}()}, \code{\linkS4class{NeticaRNG}()},
   \code{\link{NodeFinding}}, \code{\link{RetractNetFindings}}
-  \code{\link{ReadFindings}}, \code{\link{NeticaCaseStream}}
+  \code{\link{ReadFindings}}, \code{\linkS4class{CaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
@@ -104,17 +105,13 @@ RetractNetFindings(irt5)
 GenerateRandomCase(irt5.x)
 sapply(irt5.x,NodeFinding)
 
-casefile <- tempfile("testcase",fileext=".cas")
-
-filestream <- CaseFileStream(casefile)
-
 ## This generates a fixed series of random cases and saves them to a
 ## file. 
 N <- 10L
 rnodes <- c(list(irt5.theta),irt5.x)
 casefile <- tempfile("irt5testcase",fileext=".cas")
-filestream <- CaseFileStream(casefile)
-rng <- NewNeticaRNG(123456779)
+filestream <- CaseFileStream(casefile, session=sess)
+rng <- NewNeticaRNG(123456779, session=sess)
 WithOpenCaseStream(filestream,
   WithRNG(rng,
     for (n in 1L:N) {
@@ -129,6 +126,7 @@ stopifnot(!isNeticaRNGActive(rng),
           !isCaseStreamOpen(filestream))
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }

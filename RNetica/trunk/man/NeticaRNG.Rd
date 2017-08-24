@@ -1,35 +1,31 @@
 \name{NeticaRNG}
-\alias{NeticaRNG}
 \alias{NewNeticaRNG}
 \alias{FreeNeticaRNG}
 \alias{WithRNG}
-\alias{is.NeticaRNG}
 \alias{isNeticaRNGActive}
-\alias{toString.NeticaRNG}
-\alias{print.NeticaRNG}
+\alias{is.NeticaRNG}
 \title{Creates a Netica Random Number Generator}
 \description{
   These functions create and manipulate Netica Random Number
-  Generators. Note that the storage for NeticaRNG objects should be
-  freed when you are done with them by calling \code{FreeNeticaRNG(rng)}.
+  Generators (\code{\linkS4class{NeticaRNG}}. Note that the storage for
+  NeticaRNG objects should be  freed when you are done with them by
+  calling \code{FreeNeticaRNG(rng)}. 
 }
 \usage{
-NewNeticaRNG(seed = runif(1, 0, 1e+09))
+NewNeticaRNG(seed = sample.int(.Machine$integer.max,1L), session=getDefaultSession())
 FreeNeticaRNG(rng)
 WithRNG(rng,expr)
 is.NeticaRNG(x)
 isNeticaRNGActive(rng)
-\method{toString}{NeticaRNG}(x,...)
-\method{print}{NeticaRNG}(x,...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{seed}{An unsigned integer to use as a seed for the random number
     generator. }
+  \item{session}{An object of type \code{\linkS4class{NeticaSession}}
+    which defines the reference to the Netica workspace.}
   \item{rng}{A NeticaRNG object}
   \item{x}{An arbitrary object}
   \item{expr}{An expression to be executed.}
-  \item{...}{Other arguments to \code{toString}.  These are ignored.}
 }
 \details{
 
@@ -42,24 +38,25 @@ isNeticaRNGActive(rng)
   primary use for creating a NeticaRNG is to produce a reproducable
   sequence of random cases.
 
-  Creating a random number generator with \code{rng <-
-  NewNeticaRNG(seed)} generates an object in Netica space.  The memory
+  Creating a random number generator with \code{\var{rng} <-
+  NewNeticaRNG(\var{seed})} generates an object in Netica space.  The memory
   for that object should be freed when that is complete.  The expression
-  \code{FreeNeticaRNG(rng)} frees this object.  The function
+  \code{FreeNeticaRNG(\var{rng})} frees this object.  The function
   \code{WithRNG} can be used to execute code in a context where the RNG
   will be freed after after completion or in the case of early
   termination due to an error.  
 
   When the random number generator is freed, or if the R session or
   Netica session is terminated, the NeticaRNG object will become
-  inactive.   The function \code{isNeticaRNGActive(rng)} tests to see if
-  the random number generator is active (the Netica version still
-  exists).  
+  inactive.  The function \code{isNeticaRNGActive(\var{rng})} tests to
+  see if the random number generator is active (the Netica version still
+  exists).
   
 }
 \value{
 
-  The value of \code{NewNetiaRNG(seed)} is an active NeticaRNG object.
+  The value of \code{NewNetiaRNG(seed)} is an active
+  \code{\linkS4class{NeticaRNG}} object. 
 
   The value of \code{FreeRNG(rng)} is its argument which is now
   inactive.
@@ -79,6 +76,7 @@ isNeticaRNGActive(rng)
 }
 \author{Russell Almond}
 \note{
+
   There are two other uses of newly created Netica RNG objects in the
   Netica Manual which are not currently supported by RNetica.  One is to
   simply generate uniform random numbers which seems superfluous given
@@ -96,19 +94,28 @@ isNeticaRNGActive(rng)
   The weak reference system is somewhat experimental, so well designed
   code should manually close the RNG when the program is through
   with it.
+
 }
 \seealso{
+  An object of \code{\linkS4class{NeticaRNG}} which is what is produced
+  by a call to \code{NewNeticaRNG}.
+
   \code{\link{NetworkSetRNG}()}, \code{\link{GenerateRandomCase}()}
 }
 \examples{
 
-rng <- NewNeticaRNG(123456789)
+sess <- NeticaSession()
+startSession(sess)
+
+rng <- NewNeticaRNG(123456789,sess)
 
 stopifnot(is.NeticaRNG(rng),
           isNeticaRNGActive(rng))
 
 FreeNeticaRNG(rng)
 stopifnot(!isNeticaRNGActive(rng))
+
+stopSession(sess)
 
 
 }

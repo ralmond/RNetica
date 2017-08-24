@@ -7,9 +7,11 @@
   Gets the title or comments associated with a Netica network.
 }
 \description{
+
   The title is a longer name for a network which is not subject to the
   Netica \code{\link{IDname}} restrictions.  The comment is a free form
   text associated with a network.
+
 }
 \usage{
 NetworkTitle(net)
@@ -17,26 +19,28 @@ NetworkTitle(net) <- value
 NetworkComment(net)
 NetworkComment(net) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{net}{
-    A \code{\link{NeticaBN}} object.
+    A \code{\linkS4class{NeticaBN}} object.
   }
   \item{value}{
     A character object giving the new title or comment.
   }
 }
 \details{
+
   The title is meant to be a human readable alternative to the name,
   which is not limited to the \code{\link{IDname}} restrictions.  The
   title also affects how the network is displayed in the Netica GUI.
 
   The comment is any text the user chooses to attach to the network.  If
-  \code{value} has length greater than 1, the vector is collapsed into a
+  \var{value} has length greater than 1, the vector is collapsed into a
   long string with newlines separating the components.
 }
 \value{
+
   A character vector of length 1 providing the title or comment.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -48,11 +52,13 @@ NetworkComment(net) <- value
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NetworkName}()} 
+  \code{\linkS4class{NeticaBN}}, \code{\link{NetworkName}()} 
 
 }
 \examples{
-firstNet <- CreateNetwork("firstNet")
+sess <- NeticaSession()
+startSession(sess)
+firstNet <- CreateNetwork("firstNet", session=sess)
 
 NetworkTitle(firstNet) <- "My First Bayesian Network"
 stopifnot(NetworkTitle(firstNet)=="My First Bayesian Network")
@@ -66,6 +72,7 @@ stopifnot(NetworkComment(firstNet) ==
 
 
 DeleteNetwork(firstNet)
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

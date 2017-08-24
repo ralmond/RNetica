@@ -12,15 +12,15 @@ EnterFindings(net, findings)
 }
 \arguments{
   \item{net}{
-    An active and compiled \code{\link{NeticaBN}}.
+    An active and compiled \code{\linkS4class{NeticaBN}}.
   }
   \item{findings}{
     An integer or character vector giving the findings.  The
-    \code{names(findings)} should be names of nodes in \code{net}.  The
+    \code{names(\var{findings})} should be names of nodes in \code{net}.  The
     values of \code{findings} should be corresponding states either
     expressed as a character string or as an integer index into the
     list of states for that node.  (See
-    \code{\link{NodeFinding}(node)}.  
+    \code{\link{NodeFinding}(\var{node})}.  
   }
 }
 \details{
@@ -41,7 +41,7 @@ EnterFindings(net, findings)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()}, \code{\link{NodeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()},
   \code{\link{EnterGaussianFinding}()}, \code{\link{EnterIntervalFinding}()},
@@ -50,10 +50,11 @@ EnterFindings(net, findings)
   \code{\link{FindingsProbability}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-Motif <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne",
-                           sep=.Platform$file.sep))
+Motif <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMSMMotif.dne"), session=sess)
 
 CompileNetwork(Motif)
 obs <- c(Obs1a1="Right",Obs1a2="Wrong",
@@ -64,8 +65,7 @@ EnterFindings(Motif,obs)
 JointProbability(NetworkNodesInSet(Motif,"Proficiency"))
 
 DeleteNetwork(Motif)
+stopSession(sess)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

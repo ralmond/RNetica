@@ -8,10 +8,12 @@
   Gets user definable fields associated with a Netica network.
 }
 \description{
+
   Netica provides a mechanism for associating user defined values with a
   network as a series of key/value pairs.  The key must be a
   \code{\link{IDname}} and the value can be an arbitrary string
   (\code{NetworkUserField}) or arbitrary object (\code{NetworkUserObj}).
+
 }
 \usage{
 NetworkUserField(net, fieldname)
@@ -22,7 +24,7 @@ NetworkAllUserFields(net)
 }
 \arguments{
   \item{net}{
-    A \code{\link{NeticaBN}} object indicating the network.
+    A \code{\linkS4class{NeticaBN}} object indicating the network.
 }
   \item{fieldname}{
     A character scalar conforming to the \code{\link{IDname}} rules.
@@ -47,6 +49,7 @@ NetworkAllUserFields(net)
   objects.  
 }
 \value{
+
   The function \code{NetworkUserField} returns a character scalar with
   the value stored in the field \code{fieldname}, or \code{NA} if no
   such field exists.
@@ -74,11 +77,22 @@ NetworkAllUserFields(net)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NetworkComment}()}
+  \code{\linkS4class{NeticaBN}}, \code{\link{NetworkComment}()}
   \code{\link{NodeUserField}}, \code{\link{dputToString}()}
 }
+\note{
+
+  In his book \emph{Extending R} John Chambers suggest serializing R
+  objects through XML or JSON mechanisms rather than the older dump
+  protocol.  I may move to that later, although it will likely cause
+  backwards compatability issues.
+
+}
 \examples{
-userNet <- CreateNetwork("UserNet")
+sess <- NeticaSession()
+startSession(sess)
+
+userNet <- CreateNetwork("UserNet", session=sess)
 NetworkUserField(userNet,"Author") <- "Russell Almond"
 NetworkUserField(userNet,"Status") <- "In Progress"
 
@@ -99,6 +113,7 @@ x1 <- NetworkUserObj(userNet,"x")
 stopifnot(all(x==x1))
 
 DeleteNetwork(userNet)
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

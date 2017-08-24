@@ -38,12 +38,14 @@ AbsorbNodes(nodes)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeChildren}()}, \code{\link{NodeParents}()},
   \code{\link{ReverseLink}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
-anet <- CreateNetwork("Absorbent")
+sess <- NeticaSession()
+startSession(sess)
+anet <- CreateNetwork("Absorbent",sess)
 
 xnodes <- NewDiscreteNode(anet,paste("X",1:5,sep="_"))
 AddLink(xnodes[[1]],xnodes[[2]])
@@ -62,6 +64,7 @@ AbsorbNodes(xnodes[4:5])
 stopifnot(
   ## Nodes 4 and 5 are now deleted
   all(!is.active(xnodes[4:5])),
+  all(anet$listNodes() == c("X_1","X_2","X_3")),
   length(NodeChildren(xnodes[[3]]))==0,
   is.NodeRelated(xnodes[[2]],xnodes[[3]],"parent"),
   is.NodeRelated(xnodes[[2]],xnodes[[1]],"child")
@@ -78,8 +81,9 @@ stopifnot(
 )
 
 DeleteNetwork(anet)
+stopSession(sess)
 
 }
 \keyword{ interface }
 \keyword{ graphs }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }
