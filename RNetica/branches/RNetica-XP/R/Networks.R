@@ -302,8 +302,7 @@ WriteNetworks <- function (nets, paths) {
   }
   ## Save filenames for later recovery of network.
   for (i in 1:length(handles)) {
-    if (!is.null(handles[[i]]))
-      attr(handles[[i]],"Filename") <- paths[i]
+    handles[[i]]$PathnameName <- paths[i]
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
@@ -312,11 +311,17 @@ WriteNetworks <- function (nets, paths) {
 
 ReadNetworks <- function (paths,session=getDefaultSession()) {
   ##If they pass a network object, try to extract a path attribute.
-  if (is.NeticaBN(paths) && !is.null(attr(paths,"Filename"))) {
-    return(ReadNetworks(attr(paths,"Filename")))
+  if (is.NeticaBN(paths)) {
+    if (length(paths$PathnameName) == 0) {
+      stop("No filename available for ",paths)
+    }
+    if (missing(session)) {
+      session <- paths$Session
+    }
+    return(ReadNetworks(paths$PathnameName,session))
   }
   if (is.list(paths) && length(paths) >0 && is.NeticaBN(paths[[1]])) {
-    return(lapply(paths,ReadNetworks))
+    return(lapply(paths,function(path) ReadNetworks(path,session)))
   }
   paths <- as.character(paths)
   if (any(is.na(paths))) {
@@ -328,6 +333,9 @@ ReadNetworks <- function (paths,session=getDefaultSession()) {
   ## Save filenames for later recovery of network.
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
+  }
+  for (i in 1:length(handles)) {
+    handles[[i]]$PathnameName <- paths[i]
   }
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
