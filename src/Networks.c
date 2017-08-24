@@ -157,7 +157,7 @@ SEXP MakeNet_RRef(net_bn* net, const char* name, SEXP sessobj) {
   if (bn_ptr && bn_ptr != net) {
     /* Pointer is not null and not equal to the current net:
        something is wrong. */
-    error("RNetica Internal error:  pointer mismatch for net %s\n",name);
+    error("RNetica Internal error:  pointer mismatch for net %s.  Duplicate name?\n",name);
   }
   SetNetworkPtr(bn,net);
   PROTECT(sname= allocVector(STRSXP,1));
@@ -339,6 +339,7 @@ SEXP RN_Read_Nets(SEXP filelist, SEXP session) {
     if (netica_handle) {
       name = GetNetName_bn(netica_handle);
       PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
+      SET_FIELD(bn,pathfield,STRING_ELT(filelist,n));
       SET_VECTOR_ELT(result,n,bn);
       UNPROTECT(1);
     } else {

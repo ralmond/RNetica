@@ -15,6 +15,9 @@ so this is straightforward).  The function is.active() tests for a null
 pointer, which indicates that the corresponding Netica object is not
 present.
 
+UPDATE (This text refers to version of RNetica prior to 0.5, tagged as
+RNeticaS3 in svn):
+
 NeticaNode and NeticaBN objects are preserved (R_PreserveObject) when
 created and released (R_ReleaseObject) when the corresponding Netica
 object is deleted.  Generally speaking these objects don't need to be
@@ -40,10 +43,141 @@ NodeName(node) <- NodeName(node) (and similar for networks).
 Note tht when Netica is unloaded (or R is shut down) all pointers will
 become Null and need to be reestablished.
 
+UPDATE (RNetica 0.5 and beyond):
+Starting with Version 0.5 Netica objects are now associated with R6
+reference classes.  Each has an external pointer field and other
+appropriate fields.  For the most part the fields of these objects are
+self-explanatory.  The constructor for these (particularly, the node
+and network objects) are called from within the C code as needed.
+
+[Note that this required some hacks on my part to access fields and
+constructors for R6 objects from C code as well as the fields.  The
+functions RX... access the fields.
+Hopefully, these will be stable across R versions.
+
+extern SEXP RX_do_RC_field(SEXP obj, SEXP name);
+extern SEXP RX_do_RC_field_assign(SEXP obj, SEXP name, SEXP value);
+extern int RX_has_RC_field(SEXP obj, SEXP name);
+#define GET_FIELD(x, what)       RX_do_RC_field(x, what)
+#define SET_FIELD(x, what, value)  RX_do_RC_field_assign(x, what, value)
+#define HAS_FIELD(x, what)       RX_has_RC_field(x, what)
+]
+
+This should cure a problem that was seen with version 0.4, where
+various R functions (particularly, c()) stripped the attributes from
+the strings resulting in a string where we expected a node or a
+network.
+
+Another difference is that I am no longer relying on the Netica user
+data to store the back pointers to the R objects.  There seemed to be
+a problem where the back pointers where pointing to the wrong symbol
+in the R workspace.  So I've gone to a different rule which should
+work better.  Netica Nets are now registered as symbols (corresponding
+to the Netica name) in the Netica Session object in a special
+environment stored in the field $nets.  Netica Nodes are now
+registered as symbols (corresponding to the node name) in a special
+environment stored in the field $nodes.  When a Netica function
+returns a pointer to a Netica object (particularly, a network or a
+node) then RNetica first searches for the network or node by name in
+the enclosing environment (Net or Session).  If found, then the
+pointers are checked to make sure they are the same and that object is
+returned.  If it is not found, a new R object of the appropriate type
+is created.
+
+This means that Nodes need to contain pointers to the enclossing
+session and nets have pointers to the enclosing session.  (Thus, if
+necessary, one can get to node$Net$Session.  Case Streams and RNGs
+also have pointers to the session object.)  The biggest issue is
+probably when trying to look at the NodeNet() function.  Here it needs
+to use the link node$Net$Session to find the Netica identified network
+in the session, which could potentially be a problem if there is
+pointer corruption.  The function NodeNet() if given the option
+internal=TRUE should check the pointer against each other.
+
+Similiarly, the names of the objects are stored in both the R6 object
+and internally to the Netica object.  Using the internal=TRUE option
+to the NodeName or NetworkName function, checks for this kind of
+corruption.
+
+It is still true that when Netica is unloaded (stopSession()) or R is
+shut down all pointers will become Null and need to be reestablished. 
+
+1a. Session
+
+When the Netica shared object is launched it returns a pointer of type
+environ_ns which is the link to the Netica session.  Prior to RNetica
+version 0.5, this was stored in a global C variable.  Starting with
+RNetica version 0.5, it is now stored in an object of type
+NeticaSession.  The pointer is a feild of this object.  In C code it
+can be accessed with:
+
+extern environ_ns* GetSessionPtr(SEXP sessobj);
+
+Note that the Session is active precisely when this pointer is not
+null.
+
+The functions startSession() and stopSession() start and stop the
+session.  Note that when a session is stopped, all network, node, case
+stream and RNG objects are also deactivated.
+
+The NeticaSession object now stores the LicenseKey.  If this is
+present, it is used when starting the session.  This determines
+whether the session is licence (key is valid) or unlicensed (key
+missing or not valid).
+
+A collection of all networks which are currently open is
+stored in the $nets field of the session object.  This automatically
+happens when a new network is created through CreateNetwork() or
+ReadNetworks().
+The functions:
+void RN_RegisterNetwork(SEXP sessobj, const char* netname, SEXP
+netobj)
+void RN_UnregisterNetwork(SEXP sessobj, const char* netname)
+SEXP RN_FindNetworkStr(SEXP sessobj, const char* netname) 
+are used to handle this in the C code.  Note that removing a network
+must be done by calling "rm" on the $nets field inside of R code.
+
+The function NeticaSession() creates new Netica Session object.
+
+Prior to Netica version 0.5, the Netica sesion was created by the
+function StartNetica(), which opened the session and stored the
+pointer in the internal C object.  This was called when the package
+was loaded, so the user did not need to worry about that.
+
+This functionality has been replaced with the function
+getDefaultSession(), which is the default for any function which
+requires a sesison argument.
+This function performs the following steps:
+1) It looks for a binding of the variable DefaultNeticaSession in the
+.GlobalEnv.
+2) If that is not found, it prompt the users to create one (note this
+will fail unless R is running in interactive mode).
+3) If it is creating a sesison, it will look for a binding of the
+variable NeticaLicenseKey in the .GlobalEnv.  If this is found, it
+will be used as the license key.
+4) If the DefaultNeticaSession is not open, it will call
+StartSession() on it.
+
+Session objects are also responsible for error reporting.  In
+particular, the methods $reportErrors() and $clearErrors() should be
+applied to the session object.  For any function that interacts with
+the Netica API, there is an argument which is a Session, Network,
+Node, CaseStream or RNG.  Each of these has a $Session field (or in the
+case of the node a $Net$Session field) which points back to the
+session and can be used for error reporting.
+
+When a session is closed (deactivated, stopped) it does the following
+housekeeping:
+1) All contained networks (in its cache) are deactivated, and they
+recursively deactivate any cached nodes. 
+2) Any open RNG or CaseStream objects stored in a weak reference array
+are closed (deactivated).
+
 1a.  Networks
 
-In addition to the other attributes, NeticaBN objects have a
-"Filename" attribute, which stores the pathname of the file most
+In addition to the other field, NeticaBN objects have a
+"PathanameName" field (or "Filename" attribute in RNetica 0.4 and
+lower), which stores the pathname of the file most 
 recently used to read/write the network.  This exists in the R object
 and is maintained separately from the pathname stored in the Netica
 object.  The purpose is to facilitate restoring the handle to the
@@ -53,11 +187,25 @@ instance of it).
 
 The following macros are useful manipulating the relationship between
 NeticaBN and net_bn objects.
-SetNet_RRef(n,r)	Sets NeticaBN SEXP for net_bn* 
-GetNet_RRef(n)		Returns NeticaBN SEXP for net_bn* 
-GetNeticaHandle(b)      Returns net_bn* for NeticaBN SEXP
+GetSessionPtr(b)        Returns net_bn* for NeticaBN SEXP
+GetNeticaHandle(b)      Returns net_bn* for NeticaBN SEXP (for
+                        backward compatability)
 BN_NAME(b)              Returns cached name of NeticaBN object
                         (primarily used in reporting errors).
+
+Networks also maintain a cache of nodes in the environment $nodes.
+Note that nodes are not automatically added to this environment, they
+are only added as they are referenced by user calls.  This primarily
+affects networks which have been read in from a file.  The function
+NetworkAllNodes() forces all nodes into the cache.
+
+The functions:
+
+void RN_RegisterNode(SEXP netobj, const char* nodename, SEXP nodeobj)
+void RN_UnregisterNode(SEXP netobj, const char* nodename)
+SEXP RN_FindNodeStr(SEXP netobj, const char* nodename) {
+
+maintain the node cache from the C side.
 
 1b. Netica Nodes
 
@@ -74,27 +222,24 @@ from a file, RNetica does not create NeticaNode objects until a link
 to that node is created, say via a call to NetworkFindNode() or
 NetworkAllNodes().  The function MakeNode_RRef() does the actual
 work of creating the object and the function GetNode_RRef() creates
-the NeticaNode object if necessary.  The function RN_FreeNode() and
+the NeticaNode object if necessary.
+
+
+OBSOLETE (Version 0.4 and prior) The function RN_FreeNode() and
 RN_FreeNodes() are used to clear the NeticaNode object associated with
 a node_bn*.  The latter function is called by RN_DeleteNetworks() to
 free the NeticaNodes associated with the network.
 
+UPDATE:  The function RN_DeactivateBN is now called. When closing the
+network.  The iteration is done in the R code for the various objects.
+
 The following macros are useful manipulating the relationship between
-NeticaBN and net_bn objects.
-SetNode_RRef(n,r)	Sets NeticaNode SEXP for node_bn* 
-GetNode_RRef(n)		Returns NeticaNode SEXP for node_bn* 
-FastGetNode_RRef(n)	Returns NeticaNode SEXP for node_bn*, or NULL
-                        if it has not been created.
-GetNodeHandle(b)        Returns node_bn* for NeticaBN SEXP
+NeticaNode and node_bn objects.
+GetNodePtr(b)           Returns node_bn* for NeticaNode SEXP
+GetNodeHandle(b)        Returns node_bn* for NeticaBode SEXP
 NODE_NAME(b)            Returns cached name of NeticaNODE object
                         (primarily used in reporting errors).
 
-2. The Netica Environment
-
-RNetica creates a global variable RN_netica_env which stashes the
-global environment.  This variable is set by StartNetica() and cleared
-by StopNetica().  I don't see vary many use cases where you need more
-than one (and many of those can be handled with multiple R sessions).
 
 3. API references and License Keys
 
@@ -108,10 +253,16 @@ Brent Borlange to set up a special link so I can always get the most
 recent API, without needing to update the package every time Norsys
 releases a new version.
 
-License keys are obtained from Norsys.  Currently, they are passed as
-an argument into StartNetica(), and there is some untested code for
-getting them from a special variable in the R workspace.  An
-alternative approach would be to install the key at compile time.
+License keys are obtained from Norsys.  In Version 0.4 and prior they were
+passed as an argument into StartNetica.  StartNetica() would be called
+when RNetica was attached and it would look for a special variable
+"NeticaLicenseKey" is set in the global environment. 
+
+Currently, they are set as a field of the session object.  To simulate
+the prior behavior, the function getDefaultSession() looks for a
+symbol "DefaultNeticaSession" in the global environment.  If that does not
+exist, it tries to create it using the value of "NeticaLicenseKey" if
+that exists.
 
 TODO:  Look at the R license mechanism to make sure everybody is clear
 on the RNetica vs Netica license as we are on the properitary/open
@@ -120,8 +271,10 @@ source line.
 4. Error Handling
 
 The most obvious way to handle errors seems to be to simply report all
-the errors and then clear them.  I've created two simple functions
-ReportErrors() and ClearAllErrors() which do that.  Actually, the
+the errors and then clear them.  Version 0.4 and below used the
+function ReportErrors() and ClearAllErrors() to handle the errors.
+These are now methods of the NeticaSession class (the functions still
+exist and call the method on the DefaultNeticaSession.  The
 reporting function clears the errors, so there is no need to do
 anything else. 
 
@@ -129,7 +282,12 @@ In the current design, the error handling does not take place in the
 main .Call(), but rather the calling R function calls ReportErrors()
 and tests its return values to see if there were serious errors or
 not.  It is possible that more sophisticated error mechanisms are
-possible, but I haven't seen the need.
+possible, but I haven't seen the need.  Update.  In version 0.5 and
+beyond, all functions which interface with the Netica API take an
+argument which is a session, a network or a node (with a couple of
+execptions which take CaseStream or NeticaRNG arguments).  In these
+cases the $Session field is used for nets, streams and rngs and
+$Net$Session for nodes.
 
 5. Node Lists and Node Sets
 
@@ -141,21 +299,18 @@ error deep inside the RNetica C code.
 
 The following C functions may be useful:
 
-extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist);
+extern SEXP RN_AS_RLIST(const nodelist_bn* nodelist, SEXP bn);
        Converts a nodelist_bn* to a R vector
 extern nodelist_bn* RN_AS_NODELIST(SEXP nodes, net_bn* net);
        Converts a R vector to a nodelist_bn*.  It is an error if not
        all nodes are associated with net.
 
-Netica also defines Node Sets, which are distinct from Node lists, but
-the only function that uses them is SetNodeSetColor_bn().  I'm not
-implementing them at this time.
+UPDATE Version 0.5: the SEXP bn argument was added to RN_AS_RLIST.
+
 
 6. Registration
 
 The Registration of C functions is done in the file Registration.c
-
-7. Cached Symbols
 
 The functions RN_Define_Symbols() and RN_FreeSymbols() are used to
 define a certain number of R constants that can be used over and over
@@ -165,7 +320,29 @@ preserved using R_PreserveObject() and R_ReleaseObject(), so don't
 need to be protected.  These functions are called by StartNetica() and
 StopNetica() respectively.
 
+With both C code and R6 objects the interactions between what happens
+when the namespace is loaded and attached is a bit of tricky timing.
+In particular, the C code for creating external pointers of the proper
+type is not loaded when the prototype for the R6 classes is loaded.
+On the other hand, the function externalptr() does not seem to
+reliably produce a null pointer, so C code is needed in the
+$initialize() function to get around that.  The work around is to set
+a variable CCcodeLoaded which switches between using externalptr()
+(CCcodeLoaded=FALSE) and using the C code (CCcodeLoaded=TRUE)
+
+The following are what happens during the load cycle:
+
+onload:  Set CCodeLoaded to FALSE to avoid race conditions when
+         generating prototype objects.
+onAttach: Call RN_Define_Symbols to make sure reused symbols are defined.
+         Set CCocdLoaded to TRUE (use C code to avoid null
+         pointers).
+         Set EV_STATE from the results of RN_GetEveryState to get the
+         Netica value for this constant.
+onDetach:  Currently nothing
+onUnload:  Unload the dynamic library.
+
 
 Further questions:  Email telling me how clever I am can be sent to
-almond@acm.org.  Questions can be sent to the same place, but not
+almond@acm.org.  Questions can be sent to the same place, but no
 guarentees on the response time.  Complaints can be sent to /dev/null.
