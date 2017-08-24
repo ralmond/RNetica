@@ -69,7 +69,9 @@ as.IDname(x,prefix="y",maxlen=25)
   recommended value for \code{maxlen} is set to 25.
 }
 \value{
+
   A logical vector of the same length of \code{x}.
+
 }
 \references{
   \url{http://norsys.com/onLineAPIManual/index.html}
@@ -98,4 +100,4 @@ as.IDname(c("aFish","Wanda1","feed me","fish_food","1more","US$",
 )
 }
 \keyword{ interface }
-\keyword{ utilities }% __ONLY ONE__ keyword per line
+\keyword{ utilities }

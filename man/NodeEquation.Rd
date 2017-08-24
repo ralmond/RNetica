@@ -10,6 +10,7 @@
   table for a node from an equation.  \code{NodeEquation()} gets or sets
   the equation.  \code{EquationToTable()} recalculates the conditional
   probability table associated with the node.
+
 }
 \usage{
 NodeEquation(node)
@@ -18,7 +19,7 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object that references the node
+    An active \code{\linkS4class{NeticaNode}} object that references the node
     whose equation is to manipulated.
   }
   \item{autoconvert}{
@@ -61,7 +62,7 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 
   There are two differences between the RNetica implementation and the
   default Netica behavior.  First, equations can be fairly complex.  If
-  \code{value} is a character vector, RNetica will concatenate it into a
+  \var{value} is a character vector, RNetica will concatenate it into a
   single string before passing it to Netica.  Second, by default RNetica
   automatically recalculates the table when the equation is set.  This
   is usually the desired behavior, but can be suppressed by setting
@@ -74,9 +75,11 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
 
 }
 \value{
-  The function \code{NodeValue} returns the equation as a character
+
+  The function \code{NodeEquation} returns the equation as a character
   scalar.  The function \code{EquationToTable} returns the \code{node}
   argument invisibly.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -90,11 +93,14 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
   Russell Almond
 }
 \note{
+
   I personally find the Netica equation syntax to be verbose and
   unwieldy.  I have found it easier to calculate the CPTs directly in R
-  (using functions from the CPTtools package) and then entering those
+  (using functions from the CPTtools package,
+  \link[CPTtools]{CPTtools-package})  and then entering those 
   CPTs into Netica.  The functions are provided here mainly for
   completeness.
+
 }
 
 \seealso{
@@ -102,8 +108,10 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
   \code{\link{NodeProbs}()}, \code{\link{Extract.NeticaNode}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-grn <- CreateNetwork("GradedResponseTest")
+grn <- CreateNetwork("GradedResponseTest", session=sess)
 
 ## Set up the variables in our network
 skill <- NewDiscreteNode(grn,"Skill",c("High","Medium","Low"))
@@ -163,7 +171,8 @@ score1[]  ## Now it changes
 
 
 DeleteNetwork(grn)
+stopSession(sess)
 
 }
 \keyword{ Interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

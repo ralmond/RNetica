@@ -16,6 +16,10 @@ fixed the problem.
 UPDATE:  I've made some changes that may fix this.  I've also now run
 a couple of times using CHECK --gc-torture and not found the problem.
 It may be fixed.
+UPDATE 2:  This is probably now irrelevant after going from S3 to R6
+classes for Nodes and Nets.  Will watch for it.
+
+
 
 R stack error in BN_SetNodeProbs when passed a matrix of NA's as
 probability table.
@@ -30,7 +34,6 @@ error seems to persist after it was first encountered.
 
 Seg fault if CreateNetwork_bn() is called with a null environment.
 (Thanks to Elise Bethany Gould for spotting this).
-
 
 
 Functions for

@@ -19,11 +19,11 @@ NodeStateComments(node) <- value
 }
 \arguments{
   \item{node}{
-    An active \code{NeticaNode} object whose state titles or comments will be
-    accessed. 
+    An active \code{\linkS4class{NeticaNode}} object whose state titles
+    or comments will be accessed. 
   }
   \item{value}{
-    A character vector of length \code{\link{NodeNumStates}(node)} which
+    A character vector of length \code{\link{NodeNumStates}(\var{node})} which
     provides the new state titles or names.
   }
 }
@@ -40,11 +40,12 @@ NodeStateComments(node) <- value
 }
 \value{
   Both \code{NodeStateTitles()} and \code{NodeStateComments()} return a
-  character vector of length \code{NodeNumStates(node)} giving the
+  character vector of length \code{NodeNumStates(\var{node})} giving the
   titles or comments respectively.  The names of this vector are
-  \code{NodeStates(node)}.
+  \code{NodeStates(\var{node})}.
 
-  The setter methods return the modified \code{NeticaNode} object invisibly.
+  The setter methods return the modified \code{\linkS4class{NeticaNode}}
+  object invisibly. 
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -56,11 +57,13 @@ NodeStateComments(node) <- value
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeStates}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeStates}()},
   \code{\link{NodeLevels}()}
 }
 \examples{
-cnet <- CreateNetwork("CreativeNet")
+sess <- NeticaSession()
+startSession(sess)
+cnet <- CreateNetwork("CreativeNet", session=sess)
 
 orig <- NewDiscreteNode(cnet,"Originality", c("H","M","L"))
 NodeStateTitles(orig) <- c("High","Medium","Low")
@@ -88,7 +91,7 @@ stopifnot(
   )
 
 DeleteNetwork(cnet)
-
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

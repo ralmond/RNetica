@@ -5,31 +5,32 @@
   Accesses the levels associated with a Netica node.
 }
 \description{
+
   The levels associate a numeric value with the levels of a discrete
-  \code{\link{NeticaNode}}, or cut a discrete node into a number
+  \code{\linkS4class{NeticaNode}}, or cut a discrete node into a number
   ordered categories.  This function fetches or retrieves the levels
-  for \code{node}.  See description for more details.
+  for \var{node}.  See description for more details.
+
 }
 \usage{
 NodeLevels(node)
 NodeLevels(node) <- value
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
-    A \code{NeticaNode} whose levels are to be accessed.
+    A \code{\linkS4class{NeticaNode}} whose levels are to be accessed.
   }
   \item{value}{
-    A numeric vector of values.  For discrete nodes, \code{values}
-    should have length \code{\link{NodeNumStates}(node)}.  For
+    A numeric vector of values.  For discrete nodes, \var{values}
+    should have length \code{\link{NodeNumStates}(\var{node})}.  For
     continuous nodes, it can be of any length (except 1) should be in
     either increasing or decreasing order.
   }
 }
 \details{
   The behavior of the levels depends on whether the node is discrete
-  (\code{\link{is.discrete}(node)==TRUE}) or continuous
-  (\code{\link{is.discrete}(node)==TRUE}).
+  (\code{\link{is.discrete}(\var{node})==TRUE}) or continuous
+  (\code{\link{is.discrete}(\var{node})==TRUE}).
 
   \bold{Discrete.}  For discrete nodes, the levels are associated with
   the states and provide a numeric summary of the states.  In
@@ -38,7 +39,7 @@ NodeLevels(node) <- value
   \code{NodeLevels()} is named with the names of the states, making
   the association clear.  When setting the \code{NodeLevels}, it
   should have length equal to the number of states
-  (\code{NodeNumStates(node)}).
+  (\code{NodeNumStates(\var{node})}).
 
   Note that the first time the \code{NodeLevels()} are set, the entire
   vector must be set.  After that point individual values may be
@@ -56,7 +57,7 @@ NodeLevels(node) <- value
   is not meaningful to try to set \code{NodeStates()},
   \code{\link{NodeStateTitles}()} or \code{\link{NodeStateComments}()}.
 
-  Setting \code{NodeLevels(node)<-NULL} for a continuous node will clear
+  Setting \code{NodeLevels(\var{node})<-NULL} for a continuous node will clear
   the levels and the states.
   
 }
@@ -84,13 +85,15 @@ NodeLevels(node) <- value
   compatibility. 
 }
 \seealso{
-  \code{\link{NewDiscreteNode}()}, \code{\link{NeticaNode}},
+  \code{\link{NewDiscreteNode}()}, \code{\linkS4class{NeticaNode}},
   \code{\link{NodeName}()}, \code{\link{is.discrete}()},
   \code{\link{is.active}()}, \code{\link{NodeStateTitles}()},
   \code{\link{NodeStates}()}, \code{\link{NodeStateComments}()},
 }
 \examples{
-lnet <- CreateNetwork("LeveledNet")
+sess <- NeticaSession()
+startSession(sess)
+lnet <- CreateNetwork("LeveledNet", session=sess)
 
 ## Discrete Node
 vnode <- NewDiscreteNode(lnet,"volt_switch",c("Off","Reverse","Forwards"))
@@ -147,8 +150,7 @@ stopifnot(
 )
 
 DeleteNetwork(lnet)
+stopSession(sess)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ attribute }% __ONLY ONE__ keyword per line
+\keyword{ attribute }

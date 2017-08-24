@@ -5,9 +5,11 @@
   Undoes (redoes) a Netica operation on a network.
 }
 \description{
+
   Netica maintains an internal queue of reversible operations on a
   network.  The \code{NetworkUndo()} rolls them back off the stack.
   The \code{NetworkRedo()}.
+
 }
 \usage{
 NetworkUndo(net)
@@ -15,18 +17,22 @@ NetworkRedo(net)
 }
 \arguments{
   \item{net}{
-    A \code{\link{NeticaBN}} object on which an action took place.
+    A \code{\linkS4class{NeticaBN}} object on which an action took place.
 }
 }
 \details{
+
   The details of which operations are undoable is not clearly
   documented in Netica.  Some obvious things, like adding nodes, do not
   appear to work.
+
 }
 \value{
+
   Returns an invisible integer which is the return code from the
   underlying network function.  Its value is not documented, other than
   it will be negative if the undo/redo stack is empty.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -37,11 +43,14 @@ NetworkRedo(net)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{CreateNetwork}}
+  \code{\linkS4class{NeticaBN}}, \code{\link{CreateNetwork}}
 }
 \examples{
 \dontrun{
-activeNet <- CreateNetwork("undoRedoTest")
+sess <- NeticaSession()
+startSession(sess)
+
+activeNet <- CreateNetwork("undoRedoTest", session=sess)
 
 NewContinuousNode(activeNet,"Node1")
 NewContinuousNode(activeNet,"Node2")
@@ -59,7 +68,8 @@ print(NetworkRedo(activeNet))
 stopifnot(length(NetworkAllNodes(activeNet))==2)
 
 DeleteNetwork(activeNet)
+stopSession(sess)
 }
 }
 \keyword{ interface }
-\keyword{ utilities }% __ONLY ONE__ keyword per line
+\keyword{ utilities }

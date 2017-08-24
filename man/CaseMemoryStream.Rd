@@ -1,11 +1,11 @@
-\name{MemoryCaseStream}
-\alias{MemoryCaseStream}
+\name{CaseMemorytream}
+\alias{CaseMemoryStream}
 \alias{is.MemoryCaseStream}
 \alias{getCaseStreamDataFrameName}
 \title{A stream of cases for reading/writing Netica from memory}
 \description{
 
-  This object is subclass of \code{\link{NeticaCaseStream}} so it is a
+  This object is subclass of \code{\linkS4class{CaseStream}} so it is a
   wrapper around a Netica stream which is used to read/write cases.  In
   this subclass, the case stream is associated with a memory buffer that
   corresponds to an R \code{\link[base]{data.frame}} object.
@@ -14,7 +14,7 @@
 
 }
 \usage{
-MemoryCaseStream(data.frame,label=deparse(substitute(data.frame)))
+CaseMemoryStream(data.frame, label=deparse(substitute(data.frame)), session=getDefaultSession())
 is.MemoryCaseStream(x)
 getCaseStreamDataFrameName(stream)
 }
@@ -23,7 +23,9 @@ getCaseStreamDataFrameName(stream)
     nodes, and rows correspond to cases.  See details.
   }
   \item{label}{A name for the stream object.}
-  \item{stream}{A \code{NeticaCaseStream} object.}
+  \item{session}{An object of type \code{\linkS4class{NeticaSession}}
+    which defines the reference to the Netica workspace.}
+  \item{stream}{A \code{\linkS4class{CaseStream}} object.}
   \item{x}{A object whose type is to be determined.}
 }
 \details{
@@ -52,7 +54,7 @@ getCaseStreamDataFrameName(stream)
   \code{MemoryCaseStream} shortcuts that process by writing the data
   frame to a memory buffer and then creating a stream around the memory
   buffer. Like the \code{CaseFileStream}, the \code{MemoryCaseStream} is
-  a subclass of \code{\link{NeticaCaseStream}} and follows the same
+  a subclass of \code{\linkS4class{CaseStream}} and follows the same
   conventions.  
 
   The function \code{MemoryCaseStream} opens a new memory stream using
@@ -97,6 +99,13 @@ getCaseStreamDataFrameName(stream)
 \author{Russell Almond}
 \note{
 
+  In version 0.5 of RNetica, this class was renamed.  It is now called
+  \code{MemoryCaseStream} and the constructor is called
+  \code{\link{CaseMemoryStream}} (while previously the class and the
+  filename had the same name).  This matches the usage of
+  \code{\linkS4class{FileCaseStream}} and its constructor
+  \code{\link{CaseFileStream}}. 
+
   \code{MemoryCaseStreams} are most useful for small to medium size data
   frames.  Larger data frames are probably better handled through case
   files.
@@ -126,11 +135,13 @@ getCaseStreamDataFrameName(stream)
 \seealso{
   \code{\link{CaseFileDelimiter}}, \code{\link{CaseFileMissingCode}},
   \code{\link{WriteFindings}}, \code{\link{ReadFindings}},
-  \code{\link{MemoryStreamContents}},\code{\link{NeticaCaseStream}}
+  \code{\link{MemoryStreamContents}},\code{\linkS4class{CaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -140,14 +151,13 @@ AddLink(A,C)
 AddLink(B,C)
 
 ## This is the file written in CaseFileStream help.
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
-CaseFileDelimiter("\t")
-CaseFileMissingCode("*")
-cases <- read.CaseFile(casefile)
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
+CaseFileDelimiter("\t", session=sess)
+CaseFileMissingCode("*", session=sess)
+cases <- read.CaseFile(casefile, session=sess)
 
-memstream <- MemoryCaseStream(cases)
+memstream <- CaseMemoryStream(cases, session=sess)
 
 
 ##Case 1
@@ -182,7 +192,8 @@ stopifnot (is.na(getCaseStreamPos(memstream)))
 ##Clean Up
 CloseCaseStream(memstream)
 DeleteNetwork(abc)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ IO }% __ONLY ONE__ keyword per line
+\keyword{ IO }

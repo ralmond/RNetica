@@ -5,10 +5,12 @@
   Returns of sets the observed value associated with a Netica node.
 }
 \description{
+
   A finding is an observed variable in a Bayesian network.  The
-  expression \code{NodeFinding(node) <- value} indicates that the
-  observed value of \code{node} should be set to \code{value}.  The
-  function \code{NodeFinding(node)} returns the current value.
+  expression \code{NodeFinding(\var{node}) <- \var{value}} indicates that the
+  observed value of \var{node} should be set to \var{value}.  The
+  function \code{NodeFinding(\var{node})} returns the current value.
+
 }
 \usage{
 NodeFinding(node)
@@ -16,31 +18,32 @@ NodeFinding(node) <- value
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose value was observed or
+    An active \code{\linkS4class{NeticaNode}} whose value was observed or
     hypothesized. 
   }
   \item{value}{
     A character or integer scalar indicating the value which was
     observed or hypothesized.  If a character, it should be one of the
-    values in \code{\link{NodeStates}(node)}.  If an integer it should
-    be a value between 1 and \code{\link{NodeNumStates}(node)}
+    values in \code{\link{NodeStates}(\var{node})}.  If an integer it should
+    be a value between 1 and \code{\link{NodeNumStates}(\var{node})}
     inclusive. 
   }
 }
 \details{
-  Setting \code{NodeFinding(node) <- value} essentially asserts that
+
+  Setting \code{NodeFinding(\var{node}) <- \var{value}} essentially asserts that
   \eqn{Pr(node=value) = 1}.  The value may be either expressed as a
   character name of one of the states, or an integer giving the index
   into the state table.
 
-  Note that setting \code{NodeFinding(node) <- value} clears any previous
-  findings (including virtual findings set through
+  Note that setting \code{NodeFinding(\var{node}) <- \var{value}} clears
+  any previous findings (including virtual findings set through
   \code{\link{NodeLikelihood}()} or
   \code{\link{EnterNegativeFinding}()}), that may have been set.  The
-  function \code{\link{RetractNodeFinding}(node)} will clear the current
+  function \code{\link{RetractNodeFinding}(\var{node})} will clear the current
   finding without setting it to a new value.
   
-  The function \code{NodeFinding(node)} returns the currently set
+  The function \code{NodeFinding(\var{node})} returns the currently set
   finding, if there is one.  It can also return one of the three special
   values:
   \enumerate{
@@ -55,12 +58,14 @@ NodeFinding(node) <- value
 
 }
 \value{
-  The expression \code{NodeFinding(node)<-value} returns the modified
-  node invisibly.
+  The expression \code{NodeFinding(\var{node})<-\var{value}} returns the
+  modified node invisibly.
 
-  The function \code{NodeFinding(node)} returns a string which is either
-  the currently set finding or one of the special values \code{"@NO
-  FINDING"}, \code{"@LIKELIHOOD"}, or \code{"@NEGATIVE FINDINGS"}.
+  The function \code{NodeFinding(\var{node})} returns a string which is
+  either the currently set finding or one of the special values
+  \code{"@NO FINDING"}, \code{"@LIKELIHOOD"}, or
+  \code{"@NEGATIVE FINDINGS"}.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -71,17 +76,18 @@ NodeFinding(node) <- value
   Russell Almond
 }
 \note{
+
   If \code{\link{SetNetworkAutoUpdate}()} has been set to \code{TRUE},
   then this function could take some time as each finding is
   individually propagated.  Consider wrapping multiple calls setting
-  \code{NodeFinding()} in \code{WithoutAutoUpdate(net, ...)}.
+  \code{NodeFinding()} in \code{WithoutAutoUpdate(\var{net}, ...)}.
 
   Unlike the Netica function \code{EnterFinding_bn()} the function
   \code{"NodFinding<-"} internally calls \code{RetractFindings}.  So
   there is no need to do this manually.
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()}, \code{\link{EnterFindings}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeLikelihood}()},
   \code{\link{EnterGaussianFinding}()}, \code{\link{EnterIntervalFinding}()},
@@ -90,9 +96,10 @@ NodeFinding(node) <- value
   \code{\link{FindingsProbability}()}
 }
 \examples{
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+sess <- NeticaSession()
+startSession(sess)
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
@@ -149,7 +156,8 @@ stopifnot(
 )
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

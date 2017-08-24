@@ -1,7 +1,9 @@
 \name{IsNodeDeterministic}
 \alias{IsNodeDeterministic}
 \title{
+
   Determines if a node in a Netica Network is deterministic or not.
+
 }
 \description{
 
@@ -15,7 +17,7 @@ IsNodeDeterministic(node)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose conditional probability
+    An active \code{\linkS4class{NeticaNode}} whose conditional probability
     table is to be tested.
   }
 }
@@ -37,11 +39,14 @@ IsNodeDeterministic(node)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()}
 }
 \examples{
-ab <- CreateNetwork("AB")
+sess <- NeticaSession()
+startSession(sess)
+
+ab <- CreateNetwork("AB", session=sess)
 A <- NewDiscreteNode(ab,"A",c("A1","A2","A3"))
 B <- NewDiscreteNode(ab,"B",c("B1","B2"))
 AddLink(A,B)
@@ -59,8 +64,8 @@ NodeProbs(B) <- rbind(c(0,1), c(0,1), c(1,0))
 stopifnot(IsNodeDeterministic(B))
 
 DeleteNetwork(ab)
+stopSession(sess)
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ logic }% __ONLY ONE__ keyword per line
+\keyword{ logic }

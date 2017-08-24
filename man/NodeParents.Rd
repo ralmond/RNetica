@@ -5,9 +5,10 @@
   Gets or sets the parents of a node in a Netica network.
 }
 \description{
-  A parent of a \code{\link{NeticaNode}} is another node which has a
+
+  A parent of a \code{\linkS4class{NeticaNode}} is another node which has a
   link (created through \code{\link{AddLink}()} from that node to
-  \code{child}.  This function returns the list of parents.  It also
+  \var{child}.  This function returns the list of parents.  It also
   allows the list of parents for the node to be set, altering the
   topology of the network (see details).
 }
@@ -17,11 +18,12 @@ NodeParents(child) <- value
 }
 \arguments{
   \item{child}{
-    An active  \code{NeticaNode} object whose parents are of interest.
+    An active  \code{\linkS4class{NeticaNode}} object whose parents are of interest.
   }
   \item{value}{
-    A list of \code{NeticaNode} objects (or \code{NULL}s) which will
-    become the new parents.  Order of the nodes is important.  See details.
+    A list of \code{\linkS4class{NeticaNode}} objects (or \code{NULL}s)
+  which will become the new parents.  Order of the nodes is important.
+  See details. 
   }
 }
 \details{
@@ -33,14 +35,15 @@ NodeParents(child) <- value
   order of the dimensions in the conditional probability table
   (\code{\link{NodeProbs}()}).
 
-  The parent list can be set.  This can accomplishes a number of different
-  goals: it can replace a parent variable, it can add additional
-  parents, it can remove extra parents, and it can reorder parents.
-  Changing the parents alters the topology of the network.  Note that
-  Netica networks must always be acyclic directed graphs.  In
-  particular, if \code{\link{is.NodeRelated}(child,"decendent",parent)}
-  returns true for any prospective parent, Netica will generate an
-  error (new parents must node be descendants of the child as that would
+  The parent list can be set.  This can accomplishes a number of
+  different goals: it can replace a parent variable, it can add
+  additional parents, it can remove extra parents, and it can reorder
+  parents.  Changing the parents alters the topology of the network.
+  Note that Netica networks must always be acyclic directed graphs.  In
+  particular, if
+  \code{\link{is.NodeRelated}(\var{child},"decendent",\var{parent})}
+  returns true for any prospective parent, Netica will generate an error
+  (new parents must node be descendants of the child as that would
   produce a cycle).
 
   Setting an element of the parent list to \code{list(NULL)} has special
@@ -50,7 +53,7 @@ NodeParents(child) <- value
   another Bayesian network (using \code{SetParents()} with the new
   parent.
 
-  The function \code{\link{NodeInputNames}(child)}, returns a list of
+  The function \code{\link{NodeInputNames}(\var{child})}, returns a list of
   names for the parent variables.  Naming the parent variables
   facilitates disconnecting the node and reconnecting it.  Whenever a
   node is disconnected, the corresponding input is named after the
@@ -58,12 +61,15 @@ NodeParents(child) <- value
 
 }
 \value{
-  A list of \code{NeticaNode} objects representing the parents in the
-  order that they will be used to establish dimensions for the
-  conditional probability table.  If \code{NodeInputNames(child)} has
-  been set, the names of the result will be the input names.
 
-  The setting variant returns the modified \code{child} object.
+  A list of \code{\linkS4class{NeticaNode}} objects representing the
+  parents in the order that they will be used to establish dimensions
+  for the conditional probability table.  If
+  \code{NodeInputNames(\var{child})} has been set, the names of the result
+  will be the input names.
+
+  The setting variant returns the modified \var{child} object.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -74,13 +80,14 @@ NodeParents(child) <- value
   Russell Almond
 }
 \note{
+
   Much of the checking for this function is done internally in the
   Netica API, and not in the RNetica interface layer.  In particular,
   creating directed cycles will produce errors in Netica and not in
   RNetica.
 
   This is actually an attempt to make the RNetica interface more R-like,
-  covering the common cases of \code{NodeParents(child) <- value}.
+  covering the common cases of \code{NodeParents(\var{child}) <- \var{value}}.
   Under the hood it is using the Netica function
   \code{SwitchNodeParent_bn()} to produce the expected behavior.
 
@@ -89,19 +96,22 @@ NodeParents(child) <- value
   design flaw in R.  However, it is documented in the FAQ and it is
   unlikely to change, so we need to workaround it.  We do this by
   setting the element we want to delete to \code{list(NULL)}.
-  Nominally, we would do this through \code{x[2]<-list(NULL)}, which
-  is the official workaround for the design flaw.  \code{NodeParents<-}
+  Nominally, we would do this through \code{x[2]<-list(NULL)}, which is
+  the official workaround for the design flaw.  \code{NodeParents<-}
   will accept \code{list(NULL)} in place of \code{NULL} because nobody
   who isn't part of the R Core Development Team will ever remember which
   form they are suppose to use here.
+
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{AddLink}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeChildren}()}, \code{\link{NodeKind}()},
   \code{\link{NodeInputNames}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
-abnet <- CreateNetwork("AB")
+sess <- NeticaSession()
+startSession(sess)
+abnet <- CreateNetwork("AB", session=sess)
 
 anodes <- NewDiscreteNode(abnet, paste("A",1:3,sep=""))
 B <- NewDiscreteNode(abnet,"B")
@@ -159,6 +169,7 @@ stopifnot(
 )
 
 DeleteNetwork(abnet)
+stopSession(sess)
 }
 \keyword{ interface }
 \keyword{ graphs }

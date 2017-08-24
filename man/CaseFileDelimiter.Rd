@@ -10,13 +10,15 @@
   with a null argument, then the current value is returned.
 }
 \usage{
-CaseFileDelimiter(newdelimiter = NULL)
-CaseFileMissingCode(newcode = NULL)
+CaseFileDelimiter(newdelimiter = NULL, session=getDefaultSession())
+CaseFileMissingCode(newcode = NULL, session=getDefaultSession())
 }
 \arguments{
   \item{newdelimiter}{A character scalar containing the new delimiter.  It must
     be either a comma, a space, or a tab.
   }
+  \item{session}{An object of type \code{\linkS4class{NeticaSession}}
+    which defines the reference to the Netica workspace.}
   \item{newcode}{The character to be used as a delimiter.  It must
     be either an asterisk ("*"), a question mark ("?"), a space, (" ")
     or the empty string ("").
@@ -50,41 +52,45 @@ CaseFileMissingCode(newcode = NULL)
 }
 \seealso{
   \code{\link{WriteFindings}}, \code{\link{WriteFindings}},
-  \code{\link{read.CaseFile}}
+  \code{\link{read.CaseFile}}, \code{\linkS4class{CaseStream}}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-defaultDelim <- CaseFileDelimiter() # Get default
-d1 <- CaseFileDelimiter("\t")
-d2 <- CaseFileDelimiter(" ")
-d3 <- CaseFileDelimiter(",")
+defaultDelim <- CaseFileDelimiter(session=sess) # Get default
+d1 <- CaseFileDelimiter("\t", session=sess)
+d2 <- CaseFileDelimiter(" ", session=sess)
+d3 <- CaseFileDelimiter(",", session=sess)
 
-defaultMiss <- CaseFileMissingCode() # Get default
-m1 <- CaseFileMissingCode("*")
-m2 <- CaseFileMissingCode("?")
-m3 <- CaseFileMissingCode(" ")
-m4 <- CaseFileMissingCode("")
+defaultMiss <- CaseFileMissingCode(session=sess) # Get default
+m1 <- CaseFileMissingCode("*", session=sess)
+m2 <- CaseFileMissingCode("?", session=sess)
+m3 <- CaseFileMissingCode(" ", session=sess)
+m4 <- CaseFileMissingCode("", session=sess)
 \dontrun{
  ## This should throw an error.
- CaseFileDelimiter(" ")
+ CaseFileDelimiter(" ", session=sess)
 }
 
-m5 <- CaseFileMissingCode("?")
+m5 <- CaseFileMissingCode("?", session=sess)
 
-d4<- CaseFileDelimiter(" ")
+d4<- CaseFileDelimiter(" ", session=sess)
 \dontrun{
   ## This should throw an error
-  CaseFileMissingCode(" ")
+  CaseFileMissingCode(" ", session=sess)
 }
 ## But this is okay
-CaseFileMissingCode("*")
+CaseFileMissingCode("*", session=sess)
 
 stopifnot(d1==defaultDelim, d2=="\t", d3==" ", d4==",")
 stopifnot(m1==defaultMiss, m2=="*", m3=="?", m4==" ", m5=="")
 
 ## restore defaults
-CaseFileDelimiter(defaultDelim)
-CaseFileMissingCode(defaultMiss)
+CaseFileDelimiter(defaultDelim, session=sess)
+CaseFileMissingCode(defaultMiss, session=sess)
+
+stopSession(sess)
   
 }
 \keyword{ interface }

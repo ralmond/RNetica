@@ -3,26 +3,29 @@
 \title{Calculates expected value for a numeric node
 }
 \description{
-  Calculates the expected value for \code{node} based on the current
-  beliefs about the nodes states.  The \code{node} should either be
+
+  Calculates the expected value for \var{node} based on the current
+  beliefs about the nodes states.  The \var{node} should either be
   continuous or a discrete node with levels assigned to the values.  The
   standard deviation is supplied as an attribute.
+
 }
 \usage{
 NodeExpectedValue(node)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object that references the node.
+    An active \code{\linkS4class{NeticaNode}} object that references the node.
     The node should be continuous or have a numeric value associated
     with each level (see \code{\link{NodeLevels}}).
   }
 }
 \value{
-  Returns a scalar real giving the expected value for \code{node}.  It
+
+  Returns a scalar real giving the expected value for \var{node}.  It
   has an attribute called \code{"std_dev"} which contains the standard
   deviation. 
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -39,10 +42,11 @@ NodeExpectedValue(node)
 
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))
@@ -58,7 +62,8 @@ NodeFinding(irt5.x[[1]]) <- "Right"
 stopifnot(NodeExpectedValue(irt5.theta)>0)
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

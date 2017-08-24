@@ -1,39 +1,30 @@
 \name{NeticaNode}
 \alias{NeticaNode}
 \alias{is.NeticaNode}
-\alias{toString.NeticaNode}
-\alias{print.NeticaNode}
-\alias{Ops.NeticaNode}
 \title{
   An object referencing a node in a Netica Bayesian network.
 }
 \description{
+  OBSOLETE:  See \code{\linkS4class{NeticaNode}} (class) for current
+  (RNetica 0.5 and beyond) implementation.
+
   This object is returned by various RNetica functions which create or
   find nodes in a \code{\link{NeticaBN}} network.  A \code{NeticaNode}
   object represents a node object inside of Netica's memory.  The
-  function \code{is.active()} tests whether the node is still a valid
+  function \code{\link{is.active}()} tests whether the node is still a valid
   reference. 
 }
 \usage{
 is.NeticaNode(x)
-\method{toString}{NeticaNode}(x, ...)
-\method{print}{NeticaNode}(x, ...)
-\method{Ops}{NeticaNode}(e1, e2)
-e1 == e2
-e1 != e2
 }
 \arguments{
   \item{x}{The object to print or test
   }
-  \item{\dots}{Other arguments to \code{\link[base]{print}()} or
-    \code{\link[base]{toString}()}
-  }
-  \item{e1}{A \code{NeticaNode} object to test.
-  }
-  \item{e2}{A \code{NeticaNode} object to test, or a list of such objects.
-  }
 }
 \details{
+  This information is current only for Version 0.4 and earlier of
+  RNetica. 
+
   This is an object of class \code{NeticaNode}.  It consists of a name,
   and an invisible handle to a Netica node.  The function
   \code{\link{is.active}()} tests the state of that handle and returns
@@ -62,11 +53,6 @@ e1 != e2
   The function \code{is.NeticaNode()} returns a logical scalar depending
   on whether or not its argument is a \code{NeticaBN}.
 
-  The function \code{Ops.NeticaNode()} returns a logical value depending on
-  whether the objects are equal.  If the second argument is a list of
-  \code{NeticaNode} objects, then a logical vector is returned, testing
-  \code{e1} against every element of \code{e2}.
-
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -80,6 +66,8 @@ e1 != e2
   Russell Almond
 }
 \note{
+  The first two paragraphs are obsolete as of Version 0.5.
+
   Internally, the \code{NeticaNode} objects are
   character strings with extra attributes.  So \code{as.character(node)}
   will return the name of the node.  Because of this, the default
@@ -117,7 +105,7 @@ e1 != e2
 
 }
 \examples{
-
+\dontrun{
 nety <- CreateNetwork("yNode")
 
 node1 <- NewContinuousNode(nety,"aNode")
@@ -143,6 +131,8 @@ stopifnot(noded == node1)
 node1 != node2
 
 DeleteNetwork(nety)
+
+}
 }
 \keyword{ classes }
 \keyword{ graphs }

@@ -114,6 +114,7 @@ SEXP RN_CalcNodeState(SEXP node) {
   if (!node_handle) {
     error("Could not find node %s.",NODE_NAME(node));
   } else {
+    //Rprintf("Getting value for node ",GetNodeName_bn(node_handle),"\n");
     result = CalcNodeState_bn(node_handle);
     if (result == UNDEF_STATE) return ScalarInteger(R_NaInt);
     if (result >=0) return ScalarInteger(result);

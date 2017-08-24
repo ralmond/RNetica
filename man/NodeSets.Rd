@@ -7,9 +7,11 @@
   Lists or changes the node sets associated with a Netica node.
 }
 \description{
+
   A node set is a character label associated with a node which provides
   information about its role in the models.  This function returns or
   sets the labels associated with a node.
+
 }
 \usage{
 NodeSets(node, incSystem = FALSE)
@@ -19,7 +21,7 @@ RemoveNodeFromSets(node,sets)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object.
+    An active \code{\linkS4class{NeticaNode}} object.
   }
   \item{incSystem}{
     A logical flag.  If \code{TRUE} then built-in Netica node sets are
@@ -27,16 +29,17 @@ RemoveNodeFromSets(node,sets)
   }
   \item{value}{
     A character vector containing the names of the node sets that
-    \code{node} should be associated with.  These names must follow the
+    \var{node} should be associated with.  These names must follow the
     \code{\link{is.IDname}()} rules.
   }
   \item{sets}{
     A character vector containing the names of the node sets that
-    \code{node} should (or should not) be associated with.  These names
+    \var{node} should (or should not) be associated with.  These names
     must follow the \code{\link{is.IDname}()} rules.
   }
 }
 \details{
+
   Netica node sets are a collection of string labels that can be
   associated with various nodes in a network.  Node sets do not have any
   meaning to Netica:  node set membership only affect the way the node
@@ -45,14 +48,14 @@ RemoveNodeFromSets(node,sets)
   role in the model.  For example, \code{"ReportingVariable"} or
   \code{"Observable"}.
 
-  The expression \code{NodeSet(node)} returns the node sets currently
-  associated with \code{node}.  If \code{incSystem=TRUE}, then the
+  The expression \code{NodeSet(\var{node})} returns the node sets currently
+  associated with \var{node}.  If \code{incSystem=TRUE}, then the
   internal Netica system node sets will be included as well.  These
   begin with a colon (\sQuote{:}).
 
-  The expression \code{NodeSet(node)<-value} removes any node sets
-  previously associated with \code{node} and adds node to the node sets
-  named in \code{value}.  The elements of \code{value} need not 
+  The expression \code{NodeSet(\var{node})<-\var{value}} removes any node sets
+  previously associated with \var{node} and adds node to the node sets
+  named in \var{value}.  The elements of \var{value} need not 
   correspond to existing node sets, new node sets will be created for
   new values.  (Warning:  this implies that if the name of the node set
   is spelled incorrectly in one of the calls, this will create a new
@@ -66,9 +69,11 @@ RemoveNodeFromSets(node,sets)
   
 }
 \value{
-  A character vector giving the names of the node sets \code{node} is
+
+  A character vector giving the names of the node sets \var{node} is
   associated with.  The setter form, \code{AddNodeToSets} and
-  \code{RemoveNodeFromSets} return \code{node}.
+  \code{RemoveNodeFromSets} return \var{node}.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -80,14 +85,16 @@ RemoveNodeFromSets(node,sets)
   Russell Almond
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeKind}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeKind}()},
   \code{\link{NetworkNodeSets}()}, \code{\link{NetworkSetPriority}()}, 
   \code{\link{NetworkNodesInSet}()}, \code{\link{NetworkNodeSetColor}()}, 
   \code{\link{is.IDname}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-nsnet <- CreateNetwork("NodeSetExample")
+nsnet <- CreateNetwork("NodeSetExample", session=sess)
 
 Ability <- NewContinuousNode(nsnet,"Ability")
 
@@ -142,7 +149,7 @@ stopifnot(
 
 
 DeleteNetwork(nsnet)
-
+stopSession(sess)
 }
 \keyword{ interface }
-\keyword{ attributes }% __ONLY ONE__ keyword per line
+\keyword{ attributes }

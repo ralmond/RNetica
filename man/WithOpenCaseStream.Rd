@@ -2,9 +2,9 @@
 \alias{WithOpenCaseStream}
 \title{Evaluate an expression and then close the Netica Case Stream.}
 \description{
-  This function evaluates \code{expr} in a context where the
-  \code{\link{NeticaCaseStream}} is open.  The stream is closed when the
-  evaluation is complete.  The evaluation of \code{expr} is surrounded
+  This function evaluates \var{expr} in a context where the
+  \code{\linkS4class{CaseStream}} is open.  The stream is closed when the
+  evaluation is complete.  The evaluation of \var{expr} is surrounded
   with a \code{\link[base]{tryCatch}} so that the stream is closed
   whether or not the expression is successfully executed.
 }
@@ -12,19 +12,20 @@
 WithOpenCaseStream(stream, expr)
 }
 \arguments{
-  \item{stream}{A \code{\link{NeticaCaseStream}} object.  This can be
+  \item{stream}{A \code{\linkS4class{CaseStream}} object.  This can be
     open or closed.  If closed it is reopened.}
   \item{expr}{
     An arbitrary R expression to be executed.
 }
 }
-\value{Either the result of evaluating \code{expr} unless executing
-  \code{expr} results in an error in which case it 
+\value{
+  Either the result of evaluating \var{expr} unless executing
+  \var{expr} results in an error in which case it 
   returns a \code{try-error}.
 }
 \author{Russell Almond}
 \seealso{
-  \code{\link{NeticaCaseStream}},\code{\link{ReadFindings}}
+  \code{\linkS4class{CaseStream}},\code{\link{ReadFindings}}
 }
 \examples{
 
@@ -44,8 +45,12 @@ ReadCase <- function (stream,nodes,caseID) {
    })
 }
 
+sess <- NeticaSession()
+startSession(sess)
+
+
 ## Test it.
-abc <- CreateNetwork("ABC")
+abc <- CreateNetwork("ABC", session=sess)
 A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
 B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
 C <- NewDiscreteNode(abc,"C",c("C1","C2"))
@@ -57,12 +62,11 @@ AddLink(B,C)
 ## Input filename
 ## Note, this is a cached copy of the file written in the WriteFindings
 ## documentation. 
-casefile <- paste(library(help="RNetica")$path,
-                           "testData","abctestcases.cas",
-                           sep=.Platform$file.sep)
+casefile <- file.path(library(help="RNetica")$path,
+                           "testData","abctestcases.cas")
 
 
-filestream <- ReadCase(CaseFileStream(casefile),list(A,B,C),1002)
+filestream <- ReadCase(CaseFileStream(casefile, session=sess),list(A,B,C),1002)
 stopifnot( !isCaseStreamOpen(filestream),
            NodeFinding(A) == "A2",
            NodeFinding(B) == "B2",
@@ -72,7 +76,7 @@ stopifnot( !isCaseStreamOpen(filestream),
 
 ##Clean Up
 DeleteNetwork(abc)
-
+stopSession(sess)
 
 }
 \keyword{ interface }

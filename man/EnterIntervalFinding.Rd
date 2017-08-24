@@ -10,7 +10,7 @@ EnterIntervalFinding(node, low, high, retractFirst = TRUE)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} object that references the node.
+    An active \code{\linkS4class{NeticaNode}} object that references the node.
 }
   \item{low}{
     Lower bound of interval.
@@ -25,7 +25,7 @@ EnterIntervalFinding(node, low, high, retractFirst = TRUE)
 }
 \details{
   The \code{node} must a continuous node that has
-  been discretized using \code{\link{NodeLevels}(node)}.  The
+  been discretized using \code{\link{NodeLevels}(\var{node})}.  The
   probabilities for each state are calculated based on a uniform
   distribution with the given \code{low} and \code{high} endpoints.
 
@@ -60,7 +60,10 @@ EnterIntervalFinding(node, low, high, retractFirst = TRUE)
   \code{\link{NodeValue}()}
 }
 \examples{
-cirt5 <- CreateNetwork("ContinuousIRT5")
+sess <- NeticaSession()
+startSession(sess)
+
+cirt5 <- CreateNetwork("ContinuousIRT5", session=sess)
 
 theta <- NewContinuousNode(cirt5,"Theta")
 NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
@@ -75,9 +78,8 @@ NodeBeliefs(theta)
 ## what I get!
 
 DeleteNetwork(cirt5)
+stopSession(sess)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

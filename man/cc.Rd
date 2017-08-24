@@ -5,6 +5,10 @@
 \title{Concatenates lists without stripping attributes}
 \description{
 
+  OBSOLETE:  This function was removed starting with RNetica 0.5 (it
+  existed briefly as a workaround for a solution that change the object
+  representation was the correct solution for.)
+
   The base R function \code{\link[base]{c}()} strips the attributes off
   of objects (particularly \code{\link{NeticaNode}} and
   \code{\link{NeticaBN}} objects).  The function \code{cc} is a
@@ -58,7 +62,7 @@ cc(...)
   \code{\link{NeticaNode}},\code{\link{NeticaBN}}
 }
 \examples{
-
+\dontrun{
 anet <- CreateNetwork("anet")
 
 nodeList <- NewDiscreteNode(anet,paste("oldNode",1:3,sep=""))
@@ -84,7 +88,7 @@ stopifnot(is.list(l4),length(l4)==3L,sapply(l4,is.NeticaNode))
 
 l5 <- c(newNode,nodeList[2:3],nodeList[[1]])                        
 stopifnot(is.list(l5),length(l5)==4L,sapply(l5,is.NeticaNode))
-
+}
 
 }
 \keyword{ manip }

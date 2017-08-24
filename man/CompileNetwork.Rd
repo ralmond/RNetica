@@ -80,7 +80,7 @@ is.NetworkCompiled(net)
   
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{HasNodeTable}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{HasNodeTable}()},
   \code{\link{NodeFinding}()}, \code{\link{NodeBeliefs}()},
   \code{\link{EliminationOrder}()}, \code{\link{JunctionTreeReport}()},
   \code{\link{JointProbability}()},
@@ -88,10 +88,11 @@ is.NetworkCompiled(net)
   \code{\link{FindingsProbability}()}}
 
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-irt5 <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne",
-                           sep=.Platform$file.sep))
+irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","IRT5.dne"), session=sess)
 stopifnot (!is.NetworkCompiled(irt5))
 
 CompileNetwork(irt5) ## Ready to enter findings
@@ -101,7 +102,8 @@ UncompileNetwork(irt5) ## Ready to add more nodes
 stopifnot (!is.NetworkCompiled(irt5))
 
 DeleteNetwork(irt5)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ model }% __ONLY ONE__ keyword per line
+\keyword{ model }

@@ -4,17 +4,19 @@
   Tests to see if a Netica node has a conditional probability table.
 }
 \description{
+
   This function tests to see if a conditional probability table has been
   assigned to \code{node}.  The function returns two values, the first
   tests for existence of the table, the second tests for a complete
   table (no NAs).
+
 }
 \usage{
 HasNodeTable(node)
 }
 \arguments{
   \item{node}{
-    An active \code{\link{NeticaNode}} whose conditional probability
+    An active \code{\linkS4class{NeticaNode}} whose conditional probability
     table is to be tested.
   }
 }
@@ -26,7 +28,8 @@ HasNodeTable(node)
   complete, that is, does it have any \code{NA}s associated with it.
 
   In many cases, it is the second value that is of interest, so
-  \code{all(HasNodeTable(node))} is often a useful idiom.
+  \code{all(HasNodeTable(\var{node}))} is often a useful idiom.
+
 }
 \value{
   A logical vector with two elements.  The first states whether or not
@@ -51,7 +54,10 @@ HasNodeTable(node)
   \code{\link{NodeInputNames}()}, \code{\link{DeleteNodeTable}()}
 }
 \examples{
-ab1 <- CreateNetwork("AB1")
+sess <- NeticaSession()
+startSession(sess)
+
+ab1 <- CreateNetwork("AB1", session=sess)
 A <- NewDiscreteNode(ab1,"A",c("A1","A2","A3"))
 B <- NewDiscreteNode(ab1,"B",c("B1","B2"))
 AddLink(A,B)
@@ -68,12 +74,14 @@ stopifnot(
 
 for (node in NetworkAllNodes(ab1)) {
   if (!all(HasNodeTable(node))) {
-   cat("Node ", node, " still needs a conditional probability table.\n")
+   cat("Node ", toString(node),
+  " still needs a conditional probability table.\n") 
   }
 }
 
 DeleteNetwork(ab1)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ logic }% __ONLY ONE__ keyword per line
+\keyword{ logic }

@@ -1,19 +1,24 @@
 \name{NetworkNodeSets}
 \alias{NetworkNodeSets}
 \title{
+
   Returns a list of node sets associated with a Netica network.
+
 }
 \description{
+
   A node set is a character label associated with a node which provides
   information about its role in the models.  This function returns the
   complete list of node sets associated with any node in the network.
+
 }
 \usage{
 NetworkNodeSets(net, incSystem = FALSE)
 }
 \arguments{
+
   \item{net}{
-    An active \code{\link{NeticaBN}} object representing the network.
+    An active \code{\linkS4class{NeticaBN}} object representing the network.
   }
   \item{incSystem}{
     A logical flag.  If \code{TRUE} then built-in Netica node sets are
@@ -30,15 +35,18 @@ NetworkNodeSets(net, incSystem = FALSE)
   is to label a set of nodes that play a similar role in the model.  For
   example, \code{"ReportingVariable"} or \code{"Observable"}.
 
-  The expression \code{NetworkNodeSets(node)} returns the node sets that
-  are currently associated with any \code{node}.  If
+  The expression \code{NetworkNodeSets(\var{net})} returns the node
+  sets that are currently associated with any node in \var{net}.  If
   \code{incSystem=TRUE}, then the internal Netica system node sets will
   be included as well.  These begin with a colon (\sQuote{:}).  This
   value cannot be set directly, only indirectly through the use of
   \code{NodeSets}.
+
 }
 \value{
+
   A character vector giving the node sets used by the network.
+
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -53,12 +61,14 @@ NetworkNodeSets(net, incSystem = FALSE)
   effect. 
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeSets}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeSets}()},
   \code{\link{NetworkSetPriority}()}, 
   \code{\link{NetworkNodesInSet}()}, \code{\link{NetworkNodeSetColor}()}
 }
 \examples{
-nsnet <- CreateNetwork("NodeSetExample")
+sess <- NeticaSession()
+startSession(sess)
+nsnet <- CreateNetwork("NodeSetExample", session=sess)
 
 Ability <- NewContinuousNode(nsnet,"Ability")
 
@@ -97,6 +107,7 @@ stopifnot(
 )
 
 DeleteNetwork(nsnet)
+stopSession(sess)
 }
 \keyword{ attributes }
-\keyword{ interface }% __ONLY ONE__ keyword per line
+\keyword{ interface }

@@ -16,7 +16,6 @@
 AddLink(parent, child)
 DeleteLink(parent, child)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{parent}{
     A \code{\link{NeticaNode}} representing an independent variable to
@@ -68,31 +67,34 @@ DeleteLink(parent, child)
   index. 
 }
 \seealso{
-  \code{\link{NeticaNode}}, \code{\link{NodeParents}()},
+  \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeChildren}()}, \code{\link{is.NodeRelated}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-abnet <- CreateNetwork("AABB")
+abnet <- CreateNetwork("AABB", session=sess)
 A <- NewDiscreteNode(abnet, "A")
 B <- NewDiscreteNode(abnet, "B")
 
 AddLink(A,B)
 
 stopifnot(
-  match(A,NodeParents(B),nomatch=0)>0,
-  match(B,NodeChildren(A),nomatch=0)>0
+  is.element(list(A),NodeParents(B)),
+  is.element(list(B),NodeChildren(A))
 )
 
 DeleteLink(A,B)
 
 stopifnot(
-  match(A,NodeParents(B),nomatch=0)==0,
-  match(B,NodeChildren(A),nomatch=0)==0
+  !is.element(list(A),NodeParents(B)),
+  !is.element(list(B),NodeChildren(A))
 )
 
 DeleteNetwork(abnet)
+stopSession(sess)
 }
 \keyword{ interface}
 \keyword{ graphs }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }

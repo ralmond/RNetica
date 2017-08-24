@@ -16,7 +16,7 @@ MostProbableConfig(net,nth = 0)
 }
 \arguments{
   \item{net}{
-    An active and compiled \code{\link{NeticaBN}}.
+    An active and compiled \code{\linkS4class{NeticaBN}}.
   }
   \item{nth}{
     Leave this at its default value of zero, it is for future expansion.
@@ -45,7 +45,7 @@ MostProbableConfig(net,nth = 0)
 }
 \value{
   A character vector whose names are the names of the nodes in the
-  network (see \code{\link{NetworkAllNodes}(net)}) and whose values are
+  network (see \code{\link{NetworkAllNodes}(\var{net})}) and whose values are
   the names of the states that maximize the posterior probability given
   the findings.
 }
@@ -69,6 +69,7 @@ MostProbableConfig(net,nth = 0)
   Netica API, as it offers the \code{nth} argument to the function
   \nref{MostProbableConfig_bn}.  At this point in time, it is an error
   to set \code{nth} to anything but 0.
+
 }
 \section{Warning}{
 
@@ -79,17 +80,18 @@ MostProbableConfig(net,nth = 0)
 
 }
 \seealso{
-  \code{\link{NeticaBN}}, \code{\link{NodeBeliefs}()},
+  \code{\linkS4class{NeticaBN}}, \code{\link{NodeBeliefs}()},
   \code{\link{EnterNegativeFinding}()},
   \code{\link{RetractNodeFinding}()}, \code{\link{NodeFinding}()}
   \code{\link{JointProbability}()},
   \code{\link{FindingsProbability}()}
 }
 \examples{
+sess <- NeticaSession()
+startSession(sess)
 
-EMSMMotif <- ReadNetworks(paste(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne",
-                           sep=.Platform$file.sep))
+EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
+                           "sampleNets","EMSMMotif.dne"), session=sess)
 
 CompileNetwork(EMSMMotif)
 obs <- NetworkNodesInSet(EMSMMotif,"Observable")
@@ -114,7 +116,8 @@ stopifnot (
 mpe[names(prof)]
 
 DeleteNetwork(EMSMMotif)
+stopSession(sess)
 
 }
 \keyword{ interface }
-\keyword{ manip }% __ONLY ONE__ keyword per line
+\keyword{ manip }
