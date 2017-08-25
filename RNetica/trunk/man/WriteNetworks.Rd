@@ -135,6 +135,8 @@ almond <- CreateNetwork("almond", session=sess)
 NetworkTitle(almond) <- "The Almond Network"
 almondFile <- tempfile("almond",fileext=".neta")
 WriteNetworks(list(pecan,almond),c(pecanFile,almondFile))
+stopifnot(GetNetworkFileName(pecan)==pecanFile,
+          GetNetworkFileName(almond)==almondFile)
 
 DeleteNetwork(peanut)
 DeleteNetwork(pecan)
@@ -144,6 +146,7 @@ stopifnot(!is.active(almond))
 peanut <- ReadNetworks(peanutFile, session=sess)
 stopifnot(is.active(peanut))
 stopifnot(NetworkTitle(peanut)=="The Peanut Network")
+stopifnot(GetNetworkFileName(peanut)==peanutFile)
 
 nets <- ReadNetworks(c(pecanFile,almondFile), session=sess)
 stopifnot(length(nets)==2)
@@ -151,6 +154,8 @@ stopifnot(all(sapply(nets,is.active)))
 stopifnot(NetworkTitle(nets[[1]])=="The Pecan Network")
 almond <- GetNamedNetworks("almond", session=sess)
 stopifnot(is.NeticaBN(almond),is.active(almond))
+stopifnot(GetNetworkFileName(pecan)==pecanFile,
+          GetNetworkFileName(almond)==almondFile)
 
 DeleteNetwork(peanut)
 DeleteNetwork(nets[[1]])
