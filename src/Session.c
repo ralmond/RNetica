@@ -20,8 +20,9 @@
   contains an environment.  This might break if the R implementation
   changes */
 
-//#define DEBUGFIELDS
-//#define DEBUG_NETICA_ERRORS
+//#define DEBUGFIELDS 1
+//#define DEBUG_NETICA_ERRORS 1
+
 
 SEXP RX_do_RC_field(SEXP obj, SEXP name) {
   SEXP rho,result;                     
@@ -392,46 +393,78 @@ SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag) {
 
   counts[0] = 0;
   while ((err = GetError_ns(netica_env, XXX_ERR, err))!=NULL) {
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Netica fatal error  @%x.\n", (long) err);
+#endif
     Rprintf("Fatal Netica error: %s\n",ErrorMessage_ns(err));
     ecount++;
     counts[0]++;
-    if (clearit) ClearError_ns(err);
+    if (clearit) {
+      ClearError_ns(err);
+      err = NULL;
+    }
   }
   if (ecount >0) {
     error("Fatal errors encountered, recommend restarting Netica");
   }
 
   while ((err = GetError_ns(netica_env, ERROR_ERR, err))!=NULL) {
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Netica error  @%x.\n", (long) err);
+#endif
     Rprintf("Netica error: %s\n",ErrorMessage_ns(err));
     counts[0]++;
-    if (ecount++ > maxerr) return errorCounts;
-    if (clearit) ClearError_ns(err);
+    if (ecount++ > maxerr) goto backToR;
+    if (clearit) {
+      ClearError_ns(err);
+      err = NULL;
+    }
   }
   
   counts[1]=0;
   while ((err = GetError_ns(netica_env, WARNING_ERR, err))!=NULL) {
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Netica warning  @%x.\n", (long) err);
+#endif
     Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
     counts[1]++;
-    if (ecount++ > maxerr) return errorCounts;
-    if (clearit) ClearError_ns(err);
+    if (ecount++ > maxerr)
+      goto backToR;
+    if (clearit) {
+      ClearError_ns(err);
+      err = NULL;
+    }
   }
 
   counts[2]=0;
   while ((err = GetError_ns(netica_env, NOTICE_ERR, err))!=NULL) {
-    Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Netica notice  @%x.\n", (long) err);
+#endif
+    Rprintf("Netica notice: %s\n",ErrorMessage_ns(err));
     counts[2]++;
-    if (ecount++ > maxerr) return errorCounts;
-    if (clearit) ClearError_ns(err);
+    if (ecount++ > maxerr) goto backToR;
+    if (clearit) {
+      ClearError_ns(err);
+      err = NULL;
+    }
   }
 
   counts[3] = 0;
-  while ((err = GetError_ns(netica_env, NOTICE_ERR, err))!=NULL) {
-    Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
+  while ((err = GetError_ns(netica_env, REPORT_ERR, err))!=NULL) {
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Netica report  @%x.\n", (long) err);
+#endif
+    Rprintf("Netica report: %s\n",ErrorMessage_ns(err));
     counts[3]++;
-    if (ecount++ > maxerr) return errorCounts;
-    if (clearit) ClearError_ns(err);
+    if (ecount++ > maxerr) goto backToR;
+    if (clearit) {
+      ClearError_ns(err);
+      err = NULL;
+    }
   }
 
+backToR:
   UNPROTECT(1);
   return errorCounts;
 }

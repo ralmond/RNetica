@@ -57,6 +57,8 @@ NeticaSession <-
                     .Call("RN_Session_Version",.self,PACKAGE=RNetica)
                   },
                   reportErrors = function(maxreport=9,clear=TRUE) {
+                    if (!isActive())
+                      stop("Session is inactive.")
                     counts <-
                       .Call("RN_Session_errors",.self,as.integer(maxreport),
                             as.logical(clear),PACKAGE=RNetica)
@@ -105,11 +107,11 @@ setMethod("stopSession","NeticaSession", function (session) {
   netnames <- session$listNets()
   for (nn in netnames)
     session$findNet(nn)$deactivate()
-  .Call("RN_stop_Session",session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
+  .Call("RN_stop_Session",session,PACKAGE=RNetica)
   invisible(session)
   })
 
