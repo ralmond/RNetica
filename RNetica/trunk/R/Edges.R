@@ -146,9 +146,17 @@ NodeParents <- function (child) {
     oldnames <- names(oldpar)
     oldpar <- vector("list",length(oldpar))
     .Call("RN_SetNodeParents",child, oldpar,PACKAGE=RNetica)
+    ecount <- child$reportErrors()
+    if (ecount[1L]>0) {
+      stop("Netica Errors Encountered while clearing old parents, see console for details.") 
+    }
     ## This sets names to old parent names, which is probabily not
     ## what was wanted, so clear names.
     .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE=RNetica)
+    ecount <- child$reportErrors()
+    if (ecount[1L]>0) {
+      stop("Netica Errors Encountered while clearing names, see console for details.") 
+    }
   }
   handle <- .Call("RN_SetNodeParents",child, value,PACKAGE=RNetica)
   ecount <- child$reportErrors()

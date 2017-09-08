@@ -22,7 +22,7 @@ classes for Nodes and Nets.  Will watch for it.
 
 
 R stack error in BN_SetNodeProbs when passed a matrix of NA's as
-probability table.
+probability table.  This may be a problem with error reporting.
 
 Parse the junction tree report
 
@@ -31,6 +31,8 @@ under Windows, 32-bit.  The condition that seemed to trigger this was
 compiling a network with uninitialized CPTs (which generates a
 warning).  This works correctly under Linux and Windows-64 bit.  The
 error seems to persist after it was first encountered.
+UPDATE:  I think I've found the problem.  It has to do with passing a
+"cleared" error as the previous error.
 
 Seg fault if CreateNetwork_bn() is called with a null environment.
 (Thanks to Elise Bethany Gould for spotting this).
