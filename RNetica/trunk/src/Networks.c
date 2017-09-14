@@ -195,7 +195,7 @@ SEXP RN_Delete_Nets(SEXP netlist, SEXP session) {
   R_len_t n, nn = length(netlist);
   net_bn* netica_handle;
   SEXP bn, bnhandle;
-  environ_ns* netica_env = GetSessionPtr(session);
+  //environ_ns* netica_env = GetSessionPtr(session);
 
   for (n=0; n < nn; n++) {
     PROTECT(bn = VECTOR_ELT(netlist,n));

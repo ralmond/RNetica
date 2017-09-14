@@ -57,7 +57,7 @@ void AddRNGRef(SEXP ref) {
 }
 
 void FreeRNGs () {
-  SEXP r, rngs, next=NULL, last=NULL;
+  SEXP r, rngs, next=NULL;
   rngs = CDR(RngList);
   for (r = rngs; r != R_NilValue; r = next) {
     SEXP rr = CAR(r);

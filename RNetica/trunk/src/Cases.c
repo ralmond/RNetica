@@ -113,7 +113,7 @@ void AddStreamRef(SEXP ref) {
 }
 
 void CloseOpenCaseStreams () {
-  SEXP s, streams, next=NULL, last=NULL;
+  SEXP s, streams, next=NULL;
   streams = CDR(CaseStreamList);
   for (s = streams; s != R_NilValue; s = next) {
     SEXP r = CAR(s);
@@ -246,8 +246,8 @@ SEXP RN_SetMemoryStreamContents(SEXP stream, SEXP contents) {
   Rprintf("Length at creation time %ld\n",totlen);
 #endif
   SetStreamContents_ns(GetCaseStream_Handle(stream),buf,totlen,TRUE);
-  const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
 #ifdef DEBUG_MEMSTREAMS
+  const char *obuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
   Rprintf("Buffer contents now:\n%s\n",obuf);
 #endif
 
