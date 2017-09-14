@@ -103,7 +103,7 @@ SEXP MakeNode(node_bn* node, SEXP bn) {
  */
 SEXP MakeNode_RRef(node_bn* node, const char* name, SEXP netobj) {
   node_bn* old_ptr;
-  SEXP nd, ndhandle;
+  SEXP nd;
 
 #ifdef DEBUGNODES
   Rprintf("Searching R net for node named %s.\n",name);

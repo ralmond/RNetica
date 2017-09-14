@@ -10,6 +10,7 @@
 #include <RNetica.h>
 
 //#define DEBUG_SET_PARENTS 1
+//#define DEBUG_ABSORB 1
 
 SEXP RN_AddLink(SEXP parent, SEXP child) {
   node_bn* parent_handle = GetNodeHandle(parent);
@@ -193,17 +194,21 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
 //FIXME
 SEXP RN_AbsorbNodes(SEXP nodelist) {
   nodelist_bn* deleteme = RN_AS_NODELIST(nodelist,NULL);
+#ifdef DEBUG_ABSORB
   int kk=LengthNodeList_bn(deleteme);
-  //Rprintf("Absorbing %d nodes.\n",kk);
+  Rprintf("Absorbing %d nodes.\n",kk);
   node_bn* node0 = NthNode_bn(deleteme,0);
-  //Rprintf("First node address %x.\n",(long) node0);
+  Rprintf("First node address %x.\n",(long) node0);
   const char *nodename;
   nodename = GetNodeName_bn(node0);
-  //Rprintf("Its name is %s.\n",nodename);
+  Rprintf("Its name is %s.\n",nodename);
+#endif
 
   if (deleteme) {
     AbsorbNodes_bn(deleteme);
-    //Rprintf("Absorbed.\n");
+#ifdef DEBUG_ABSORB    
+    Rprintf("Absorbed.\n");
+#endif
     //RN_Free_Nodelist(nodelist);  //Free handles
   } else {
     error("AbsorbNodes: Could not find affected network.\n");
