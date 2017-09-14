@@ -9,7 +9,7 @@
 #include <Rdefines.h>
 #include <RNetica.h>
 
-#define DEBUG_SET_PARENTS 1
+//#define DEBUG_SET_PARENTS 1
 
 SEXP RN_AddLink(SEXP parent, SEXP child) {
   node_bn* parent_handle = GetNodeHandle(parent);

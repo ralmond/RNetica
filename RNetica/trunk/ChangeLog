@@ -1,3 +1,9 @@
+2017-09-10  Russell G. Almond  <ralmond@Limu>
+
+	* R/Edges.R ("NodeParents<-"):   match() forces everything to
+	char, but as.character() does not correctly use as.character() on
+	elements of a list. So force names. 
+
 2017-09-07  Almond  <ralmond@macox.com>
 
 	* src/Session.c (RN_stop_Session): Finally found bug which
