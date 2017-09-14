@@ -138,7 +138,11 @@ NodeParents <- function (child) {
   ## as to make a node a parent twice.  This next bit tests for that.
   oldpar <- NodeParents(child)
   newindex <- 1L:length(value)
-  oldindex <- match(value, oldpar)
+  oldparnames <- sapply(oldpar,NodeName)
+  newvalnames <- sapply(value,function(n) if(is.null(n)) "" else NodeName(n))
+  ## match() forces everything to char, but as.character() does not
+  ## correctly use as.character() on elements of a list. So force names.
+  oldindex <- match(newvalnames, oldparnames)
   if( any(newindex<oldindex,na.rm=TRUE)) {
     ##cat("Reorder nulling. \n")
     ##Okay, safest thing to do is to set to a vector of NULLs first,
@@ -148,14 +152,14 @@ NodeParents <- function (child) {
     .Call("RN_SetNodeParents",child, oldpar,PACKAGE=RNetica)
     ecount <- child$reportErrors()
     if (ecount[1L]>0) {
-      stop("Netica Errors Encountered while clearing old parents, see console for details.") 
+      stop("Netica Errors Encountered while clearing old parents, see console for details.")
     }
     ## This sets names to old parent names, which is probabily not
     ## what was wanted, so clear names.
     .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE=RNetica)
     ecount <- child$reportErrors()
     if (ecount[1L]>0) {
-      stop("Netica Errors Encountered while clearing names, see console for details.") 
+      stop("Netica Errors Encountered while clearing names, see console for details.")
     }
   }
   handle <- .Call("RN_SetNodeParents",child, value,PACKAGE=RNetica)
