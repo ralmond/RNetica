@@ -4,7 +4,7 @@
 <h1>About RNetica</h1>
 <p>
 RNetica is best thought of as a "glue" layer between the open source
-statistical programing language
+statistical programming language
 R <a href="http://www.r-project.org/">http://www.r-project.org/</a>
 and the proprietary Bayesian network engine
 Netica &reg; <a href="http://www.norsys.com">http://www.norsys.com/</a>.
@@ -42,41 +42,170 @@ as a way of getting started.
   script is here (<a href="irt5.R">irt5.R</a>).
 </ul>
 
-<h2>News</h2>
+<h2> User Registration Survey</h2>
 There is now an RNetica user survey.  I want to count my users so I
 can tell the funding agencies they should give me more money to work
 on
 it.  <a href="https://fsu.qualtrics.com/jfe/form/SV_7QVrVvd4NlwOYrb">Click
   here</a> to fill out the survey.
 
-
+<h2>News</h2>
+<i>The 0.5 release is a major rewrite of the fundamental Network and
+  Node objects.  This should improve stability, but may cause
+  problems.<i>  The changes in the 0.5 series include the following:
+<ol>
+  <li> Introduced a new <code>NeticaSession</code> object as a
+  container for the link to the Netica session.  This also serves as a
+  container for all of the networks included in a session and a
+    wrapper for the license key.
+  <li> <i>The license key mechanism is now handled differently.</i>
+  Now the Netica License Key string is passed to the NeticaSession
+  object when it is constructed.  If no session is specified for a
+  function that requires one, then the
+  variable <code>DefaultNeticaSession</codde> in the global
+  environment is referenced.
+  <li> Several functions now require a <code>NeticaSession</code> as
+  an argument.  These include the high level
+  functions  <code>CreateNetwork</code>, <code>GetNthNetwork</code>,  
+  <code>GetNamedNetworks</code>, and <code>ReadNetworks</code>.  A
+  session argument is also needed by some lower level functions which
+  create Netica objects: 
+  <code>CaseFileDelimiter</code>, <code>CaseFileMissingCode</code>,
+  <code>CaseFileStream</code>, <code>CaseMemoryStream</code>,
+  <code>OpenCaseStream</code> and <code>NewNeticaRNG</code>.
+  In all cases, if no session argument is supplied the value
+  of <code>DefaultNeticaSession</code> is used instead.
+  <li> Objects of type <code>NeticaSession</code>,
+    <code>NeticaBN</code>, <code>NeticaNode</code>,  <code>CaseStream</code>,
+    and <code>NeticaRNG</code> are now R reference classes (a special
+    case of S4 classes) instead of strings with with attributes
+    including an S3 class string.  This should prove more robust as
+    certain R functions (in particular, <code>c()</code>) which
+    stripped the attributes.  
+    <ol>
+      <li> The function <code>as.character</code> for networks and
+      nodes now returns a string of the
+      form <code>&lt;<i>Type</i>: <i>Name</i>&gt;</code> instead of
+      the name of the object.  Use the
+      expression <code><i>obj</i>$Name</code> to get the name of the
+      object. 
+      <li> The primitive R function <code>as.character</code> has
+      unexpected results when applied to a list of nodes (or
+      presumably nets).  In stead of recursively applying the
+      proper <code>as.character</code> method for the class, it
+      applies a default method which returns <code>&lt;S4 object of
+      type \"NeticaNode"&gt;</code>.
+      Use <code>sapply(<i>nodelist</i>,NodeName)</code> instead.
+      <li> One unintended consequence of this is that the
+      expression <code>match(<i>node</i>, <i>nodelist</i>)</code> no
+      longer works as expected.  This appears to be a bug in R
+      as <code>match</code> turns objects into strings before
+      matching, but the bug in <code>as.character</code> when applied
+      to a list produces unexpected results.
+      Use <code>match(<i>node</i>,
+      sapply(<i>nodelist</i>,NodeName))</code> instead.
+    </ol>
+  <li> The way that Netica to R back pointers work has been changed in
+  this release.  In version 0.4 and before back pointers to the R
+  objects were stored inside of the Netica Net and Node objects (using
+  a special field designed for that purpose).  However, there were
+  some occasions on which functions which needed to find an R object
+  for a Netica object (e.g., <code>NodeParent</code>) would sometimes
+  return a non-R object (e.g., <code>FALSE</code>).  In the new system
+  network objects are cached in the <code>NeticaSession</code> object
+  and node objects are cached in the <code>NeticaBN</code> object.
+    <ol>
+      <li> The network cache is an environment
+      called <code>$nets</code> in the <code>NeticaSession</code>
+      object.  This can be used in a read-only way by RNetica users.
+      In particular, <code><i>session</i>$nets$<i>netname</i></code>,
+      where <i>netname</i> is the Netica name of the network, can be
+      used to reference a network in a session.
+      <li> The node cache is an environment called <code>$nodes</code>
+      in the <code>NeticaBN</code> object.    Again, this can be used
+      in a read-only way,
+        e.g., <code><i>net</i>$nodes$<i>nodename</i></code>.
+      <li> R objects for networks are created and registered with the
+      cache in the session when the network is created
+      (<code>CreateNetwork</code>) or read into RNetica
+      (<code>ReadNetworks</code>).  R objects are only created and
+      registered with the cache in the network when first accessed.
+      Calling the function <code>NetworkAllNodes</code> on the network
+      will create R objects for all nodes in the network and register
+      them. 
+    </ol>
+  <li> The <code>CaseStream</code> object is now an abstract class,
+    with two concrete subclasses:  <code>FileCaseStream</code>
+    and <code>MemoryCaseStream</code>.  Again, these are now
+    represented as reference class objects and not strings with
+    attributes, so they should be more robust.  
+    <ol>
+      <li> The constructors, <code>CaseFileStream()</code> 
+        and <code>CaseMemoryStream()</code> (note that the name of the
+        constructor is not the name of the class) require a session
+        attribute.
+      <li>The class <code>MemoryCaseStream</code> has been renamed
+        name from "CaseSMemorytreamm".  The constructor is
+        still <code>CaseMemoryStream()</code> (this now matches the
+        pattern used for <code>FileCaseStream</code>).
+      <li> There are still problems
+      using <code>MemoryCaseStream</code> objects with some RNetica
+      functions (notably <code>LearnCPTs</code>).  For the moment,
+        it is safer to stick with the files which seem to work better.
+      <li> It should be the case that <code>CaseStream</code> objects
+      are closed when the session is stopped, but it is safer to
+      use <code>WithOpenCaseStream</code> to ensure closure.
+    </ol>
+  <li> <i>Sessions are no longer started automatically when RNetica is
+  loaded, they now must be started manually.</i>  The new
+  commands <code>startSession()</code>, <code>stopSession()</code>
+  and <code>restartSession()</code> (which take a session object as an
+    argument) handle this.
+    <ol>
+      <li> Typical calling sequence is <code>session &lt;-
+          NeticaSession(LicenseKey="<i>keystring</i>")</code> followed by
+        <code>startSession(session)</code>.  If <code>session</code>
+        is an object stored in the R global workspace, the first step
+        only needs to be executed the first time RNetica is used, the
+        second will be available thereafter.
+      <li> The function <code>StartNetica</code> creates a new Netica
+        session and starts it.  The function <code>StopNetica</code>
+        stops the default session (unless given an argument).
+      <li> The old behavior can be restored by setting the value of
+      the global variable <code>DefaultNeticaSession</code> to the
+      session object.  The function <code>getDefaultSession()</code>
+      provides the default for most functions where a session argument
+      is required.  This uses the value
+      of <code>DefaultNeticaSession</code>, starting it if it is
+      currently closed.  If the value is unset, the user will be
+      prompted (in an interactive session) to create a value for this
+      variable (using the value of <code>NeticaLicenseKey</code> if it
+        exists) to create one.
+      <li> The Netica license key is stored as a unencrypted string in
+      the <code>NeticaSession</code> object.  Do not share licensed
+      session objects with people who are not authorized to use that
+        license key.
+        <li> It is unknown what will happen if two sessions are
+        started at the same time, but unexpected consequences are
+        quite likely.
+    </ol>
+  <li> Error handling is now handled by the <code>NeticaSession</code>
+    object.  <code>NeticaBN</code> objects (as well as case stream and
+    rng objects) have back pointers to the
+    session object (the
+    field <code>$Session</code>).  <code>NeticaNode</code> objects
+    have back pointers to the network objects
+    (field <code>$Net</code>).  This should be mostly transparent to users.
+  <li> A long standing bug in which a Netica error or warning would be
+    followed by a series of warnings about bad error code has been found
+    and fixed, as has a problem with the internal R protection stack
+    that was trigger by this bug.  This should result in greater stability.
+  <li> The functions in <a href="Peanut.html">Peanut and PNetica</a>
+    version 0.2 are almost certainly not compatible with this
+    release.  An updated version of these packages should be available
+    shortly.  <a href="CPTtools.html">CPTtools</a> should not be affected.
+</ol>
 <p>
-A new 0.5 series of releases is planned.  Basically, I'm trying to
-redo the basic NeticaBN and NeticaNode classes as true R6 classes
-rather than S3 classes wrapped around symbols.  There will be some
-significant advantages, including automatic loading of node objects
-for networks, and the ability to refer to networks by name within a
-session object.  Potentially, also, multiple session possiblities, and
-I'm hoping a more stable code base.  Finally, by storing the symbol to
-node mapping in a local environment (hash table) instead of the Netica
-callback, I'm hoping to make the system more robust to some mysterious
-erros I'm seeing crop up.
-<p>
-  The current development is taking place on a fork in the SVN
-  repository.  
-  <ol>
-    <li> The
-    branch <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNetica-XP/">RNetica-XP</a>
-    (I meant to type XR, for <i>Extending R</i>, but I made a typo.)
-    Current version has the S3 objects converted to the new R6
-    objects, but is documentation and testing is not complete.
-    <li> The original (0.4 series) code is archived on the branch
-      <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNeticaS3/">RNeticaS3</a>.
-      That branch will continue to mark the old version when the
-      RNeticaXR becomes the active branch.
-  </ol>
-<p>
-The 0.4 series of releases are now in maintenance mode.
 The 0.4 series of releases includes the following
 improvements:
 <ol>
@@ -88,7 +217,7 @@ improvements:
   manipulating conditional probability tables.)
 <li> Added more functions for decision nets, although these are not
   currently working (support request in to Norsys).
-<li> A few other functions related to calcuating values and interval
+<li> A few other functions related to calculating values and interval
   and Gaussian findings.  Again, these are not working in the 0.4-1
   version and a help request to Norsys is pending.
 <li> Added some random findings generation code.  
@@ -96,8 +225,7 @@ improvements:
   names and is properly vectorized.
 <li> Fixed some minor errors and problems with error handling.
 <li> Added a new cc() function (and methods for c()) to keep c() from
-  dropping attributes.  (Only partially successful; RNetica 0.5 should
-  fix this problem.).
+  dropping attributes.  (<i>Update</i> these were dropped in RNetica 0.5.)
 </ol>
 <p>
 The 0.3 series of releases includes a number of different improvements.
@@ -109,11 +237,11 @@ The 0.3 series of releases includes a number of different improvements.
   under <code>gctorture(TRUE)</code>, which should mean that is it is
   much more robust to memory errors.  This is still a beta version,
   caution is still advisable.
-<li><i>Update</i>It now has case file support and includes support for learning
+<li>It now has case file support and includes support for learning
   conditional probability tables 
 <li> I've moved my development and testing platform to R 3.0.1.
   Binaries are build for R version 3.x.
-<li><i>Update</i> The version 0.3 cycle is more or less complete,
+<li> The version 0.3 cycle is more or less complete,
   except that I'm waiting for API updates from Norsys in response to
   problems. 
 </ol>
@@ -124,23 +252,16 @@ The 0.3 series of releases includes a number of different improvements.
   maximum number of iterations being reached.
 <li> Currently, memory streams cannot be used with the LearnCPTs
   functions.  This appears to be a Netica problem.
-<li> As I'm going through the compile cycle, I'm running into some
-  errors under Windows related to generating extra error messages
-  after the first error message or warning.  Haven't had time to track
-  this down yet.  Problem seems to only affect the 32-bit Windows
-  version (anybody still use that?).
 <li> The functions EnterIntervalFinding and EnterGaussianFinding seem
-  to give probabity 1 to a single state no matter the width of the
+  to give probability 1 to a single state no matter the width of the
   interval or the SD.
 <li> The functions CalcNodeValue and CalcNodeState return NA when I
   think they should return a non-missing value.
 <li> The function NodeExpectedUtils is generating an internal Netica
   error.
-<li> The function CreateNetwork (and probably the load network
-  functions as well) assume that StartNetica() has been called.
-  Normally, library(RNetica) call StartNetica(), but if you bypass the
-  normal library() mechanism, CreateNetwork() will give a Seg Fault
-  error instead of a sensible error message.
+<li> The functions CreateNetwork and ReadNetworks assume that
+  startSession() has been called. They now should give sensible error
+  messages when this occurs.
 <li> If a node has a name which is too close to the 30 character
   limit, and that node is disconnected from a link, leaving a stub
   variable, then the stub variable will have a name that is longer
@@ -153,7 +274,7 @@ The 0.3 series of releases includes a number of different improvements.
 <ol>
 <li> Testers
 <li> DBN functionality
-<li> Database suppot (I see no need to do this as better to use the
+<li> Database support (I see no need to do this as better to use the
   DBI R package).
 </ol>
 
@@ -186,13 +307,23 @@ legal advise, but my understanding is that for most uses the use of
 RNetica requires the purchase of a Netica API license (which is
 different from the Netica GUI license) from Norsys.
 <p>
-Once you have obtained a license key from Norsys, you can use it in
-one of two ways.  First, it can be passed as an argument to the
-function <code>StartNetica(<i>license key</i>)</code> (you may need to
-call <code>StopNetica()</code> first).  Second, if you execute the
-command <code>NeticaLicenseKey &lt;- <i>license key</i></code> in the
-main R workspace (the default namespace), then RNetica will use that
-value when loaded through <code>library(RNetica)</code>.  
+<b><i>Updated!</i></b> Once you have obtained a license key from
+Norsys, the license is used by executing the following lines of code:
+<pre>
+<i>session</i> &lt;- NeticaSession(LicenseKey="<i>Code from Norsys</i>")
+startSession(<i>session</i>)
+</pre>
+where <i>session</i> can be replaced with any legal R identifier.
+Note that if <code>DefaultNeticaSession</code> is used as the
+identifier, most functions that need session arguments will accept this
+value instead.  See the help for <code>StartNetica()</code> for
+alternative ways of using the License key.  (Backwards compatibility
+is currently there.)
+
+Note that the Netica license key is stored in plain text in
+the <code>NeticaSession</code> object.  Do not share that object
+(e.g., through sharing R dump files) with somebody who is not
+authorized to use that license.
 <p>
 Without the license key, the Netica API operates in a limited mode.
 All of the functions in the test scripts will run, but the size of the
@@ -200,8 +331,9 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.4-6) incorporates approximately 75% of the
-Netica C API Version 5.04 (no new version since 2012).  This is
+The current version (0.5-1) incorporates approximately 75% of the
+Netica C API Version 5.04 (there is a newer version for Windows but
+not for MacOS or Linux since 2012).  This is
 sufficient functionality to build, compile and carry out inferences
 with a Bayesian network.  Some of the more advanced functionality,
 including support for databases, influence diagrams, and dynamic
@@ -274,19 +406,25 @@ The following releases are archived here:
 <td>0.4-4</td><td><a href="RNetica_0.4-4.tar.gz">RNetica_0.4-4.tar.gz</a></td>
 <td><a href="RNetica_0.4-4.zip">RNetica_0.4-4.zip</a></td>
 <td><a href="RNetica_0.4-4.tgz">RNetica_0.4-4.tgz</a></td><td><a href="RNetica-manual_0.4-4.pdf">RNetica-manual_0.4-4.pdf</a></td><td>Peanut
-    compatability, User Object support</td></tr>
+    compatibility, User Object support</td></tr>
 <tr>
 <td>0.4-5</td><td><a href="RNetica_0.4-5.tar.gz">RNetica_0.4-5.tar.gz</a></td>
 <td><a href="RNetica_0.4-5.zip">RNetica_0.4-5.zip</a></td>
 <td><a href="RNetica_0.4-5.tgz">RNetica_0.4-5.tgz</a></td>
 <td><a href="RNetica-manual_0.4-5.pdf">RNetica-manual_0.4-5.pdf</a></td>
-<td>Peanut compatability, User Object support</td></tr>
+<td>Peanut compatibility, User Object support</td></tr>
 <tr>
 <td>0.4-6</td><td><a href="RNetica_0.4-6.tar.gz">RNetica_0.4-6.tar.gz</a></td>
 <td><a href="RNetica_0.4-6.zip">RNetica_0.4-6.zip</a></td>
 <td><a href="RNetica_0.4-6.tgz">RNetica_0.4-6.tgz</a></td>
 <td><a href="RNetica-manual_0.4-6.pdf">RNetica-manual_0.4-6.pdf</a></td>
 <td>Added cc() function and c() methods.</td></tr>
+<tr>
+<td>0.5-1</td><td><a href="RNetica_0.5-1.tar.gz">RNetica_0.5-1.tar.gz</a></td>
+<td><a href="RNetica_0.5-1.zip">RNetica_0.5-1.zip</a></td>
+<td><a href="RNetica_0.5-1.tgz">RNetica_0.5-1.tgz</a></td>
+<td><a href="RNetica-manual_0.5-1.pdf">RNetica-manual_0.5-1.pdf</a></td>
+<td>New Object model; new Session objects.</td></tr>
 <!-- NEXT ENTRY HERE -->
 </table>
 <p>
@@ -311,7 +449,7 @@ configure command, e.g.:
 Under Windows (or as an alternative to the <code>--with-netica</code> 
 switch), the environmental variable <code>NETICA_HOME</code> can be
 set to the location in which the Netica API was unpacked.  I have only
-tested with the API version 5.04, not with earlier versions.  
+tested with the API version 5.04, not with earlier (or later) versions.  
 <p>
 Although I am now supplying Windows and Mac OS X binaries, which
 include the Netica API (currently version 5.04).  As this is still an
@@ -320,21 +458,24 @@ support questions, and help file bug reports if needed.  NOTE:  this
 is an unlicensed version of the API:  you still need to purchase a
 license (although the unlicensed version will run the sample code in
 the man pages).
-<p> A recent communication with Brent indicated that a new Netica API
-  will be out soon.  When that comes out, there will likely be a big
-  update. 
+<p> A recent (not so recent anymore) communication with Brent
+  indicated that a new Netica API will be out soon.  When that comes
+  out, there will likely be a big update. 
 
 <h2>Development Version</h2>
 <p>
 The latest development version is available as a subversion repository
-at:  <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/">https://pluto.coe.fsu.edu/svn/common/RNetica/</a>.  
+at:  <a href="https://pluto.coe.fsu.edu/svn/common/RNetica/">https://pluto.coe.fsu.edu/svn/common/RNetica/</a>.
+There is also a branch corresponding to the old object model at:
+<a href="https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNeticaS3">https://pluto.coe.fsu.edu/svn/common/RNetica/branches/RNeticaS3</a>.
 <p>
+  
 If you have patches or other correspondence about RNetica you can
 contact me at <a href="mailto:almond@acm.org">almond@acm.org<a/>.  
 If you are filing a bug report, please be sure to include the
 following information:
 <ol>
-<li> The version number of CPTtools and R that you are using.
+<li> The version number of RNetica and R that you are using.
 <li> Your operating system and whether it is 64 or 32 bit.
 <li> The exact text of any error message that is generated.
 <li> A small script that reproduces the problem (if at all possible).
@@ -355,7 +496,8 @@ requests should be sent to the package maintainers.
   forthcoming. 
 
 <hr>
+Site last updated on 2017-03-30.
 <!-- Date Start -->
-Site last updated on 2017-08-01.
+Site last updated on 2017-09-18.
 <!-- Date End -->
 </body>

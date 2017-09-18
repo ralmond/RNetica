@@ -55,5 +55,13 @@
       <description>[CDATA[ Added user registration survey. ]]</description>
     </item>
 
+    <item>
+      <title>RNetica 0.5-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.5-1</guid>
+      <pubDate>Mon SEP 18 16:59:03 EDT 2017</pubDate>
+      <description>[CDATA[ New object model, new Session object. ]]</description>
+    </item>
+
   </channel>
 </rss>
