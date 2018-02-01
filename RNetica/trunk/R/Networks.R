@@ -88,8 +88,8 @@ NeticaBN <-
                     if (length(nodenames) < 7) {
                       cat("  Nodes : ",nodenames,".\n")
                     } else {
-                      cat("  Nodes: ",netnames[1:6],"...\n")
-                      cat("    and ",length(netnames)-6, "others.\n")
+                      cat("  Nodes: ",nodenames[1:6],"...\n")
+                      cat("    and ",length(nodenames)-6, "others.\n")
                     }
                   }
               ))

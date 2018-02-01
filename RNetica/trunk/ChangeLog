@@ -1,3 +1,7 @@
+2018-01-31  Russell G. Almond  <ralmond@Limu>
+
+	* R/Networks.R (NeticaBN): Fixed bug in show method.
+
 2017-09-10  Russell G. Almond  <ralmond@Limu>
 
 	* R/Edges.R ("NodeParents<-"):   match() forces everything to
