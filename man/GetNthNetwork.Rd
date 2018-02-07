@@ -74,12 +74,16 @@ GetNthNetwork(n, session = getDefaultSession())
 sess <- NeticaSession()
 startSession(sess)
 
+foo <- CreateNetwork("foo",sess)
+bar <- CreateNetwork("bar",sess)
+
 count <- 1
 while (!is.null(net <- GetNthNetwork(count,sess))) {
-  cat("Network number ",count," is ",net,".\n")
+  cat("Network number ",count," is ",NetworkName(net),".\n")
   count <- count +1
 }
 cat("Found ",count-1," networks.\n")
+stopifnot(count==3L)
 
 stopSession(sess)
 
