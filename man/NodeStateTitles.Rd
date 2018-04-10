@@ -24,12 +24,12 @@ NodeStateComments(node) <- value
   }
   \item{value}{
     A character vector of length \code{\link{NodeNumStates}(\var{node})} which
-    provides the new state titles or names.
+    provides the new state titles or comments.
   }
 }
 \details{
   The titles are meant to be a more human readable version of the state
-  names and are not subject the the \code{\link{IDname}} restrictions.
+  names and are not subject the \code{\link{IDname}} restrictions.
   These are displayed in the Netica GUI in certain display modes.  The
   comments are meant to be a longer free form notes.
 
