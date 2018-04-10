@@ -2,7 +2,7 @@
 \alias{NodeName}
 \alias{NodeName<-}
 \title{
-  Gets or set of a Netica node.
+  Gets or sets name of a Netica node.
 }
 \description{
 
