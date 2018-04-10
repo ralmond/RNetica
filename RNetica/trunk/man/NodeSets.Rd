@@ -48,12 +48,12 @@ RemoveNodeFromSets(node,sets)
   role in the model.  For example, \code{"ReportingVariable"} or
   \code{"Observable"}.
 
-  The expression \code{NodeSet(\var{node})} returns the node sets currently
+  The expression \code{NodeSets(\var{node})} returns the node sets currently
   associated with \var{node}.  If \code{incSystem=TRUE}, then the
   internal Netica system node sets will be included as well.  These
   begin with a colon (\sQuote{:}).
 
-  The expression \code{NodeSet(\var{node})<-\var{value}} removes any node sets
+  The expression \code{NodeSets(\var{node})<-\var{value}} removes any node sets
   previously associated with \var{node} and adds node to the node sets
   named in \var{value}.  The elements of \var{value} need not 
   correspond to existing node sets, new node sets will be created for
