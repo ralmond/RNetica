@@ -62,6 +62,37 @@
       <pubDate>Mon SEP 18 16:59:03 EDT 2017</pubDate>
       <description>[CDATA[ New object model, new Session object. ]]</description>
     </item>
+    <item>
+      <title>CPTtools 0.4-3</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/CPTtools.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/CPTtools_0.4-3</guid>
+      <pubDate>Thu Apr 12 12:44:55 EDT 2018</pubDate>
+      <description>[CDATA[ Re-added normal link. ]]</description>
+    </item>
+
+    <item>
+      <title>RNetica 0.5-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.5-2</guid>
+      <pubDate>Thu Apr 12 12:44:55 EDT 2018</pubDate>
+      <description>[CDATA[Minor Bug Fixes]]</description>
+    </item>
+
+    <item>
+      <title>Peanut 0.3-4</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.3-4</guid>
+      <pubDate>Thu Apr 12 12:44:55 EDT 2018</pubDate>
+      <description>[CDATA[RNetica 0.5 compatability, S4 methods, Qmat2Pnet Omega2Pnet ]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.3-4</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.3-4</guid>
+      <pubDate>Thu Apr 12 12:44:55 EDT 2018</pubDate>
+      <description>[CDATA[RNetica 0.5 compatability, S4 methods, Qmat2Pnet Omega2Pnet]]</description>
+    </item>
 
   </channel>
 </rss>
