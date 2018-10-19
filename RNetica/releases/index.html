@@ -1,6 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>RNetica, PNetica, CPTtools, Peanut and RGAuilts</title></head>
 <body>
   <h1>RNetica, PNetica, CPTtools, Peanut and RGAuilts</h1>
@@ -10,12 +11,14 @@ different packages of functions useful
 for building Bayesian networks:  <a href="RNetica.html">RNetica</a>,
 <a href="CPTtools.html">CPTtools</a>, <a href="Peanut.html">PNetica and
   Peanut</a>.
+  </p>
 <p>
 RNetica and CPTtools are beta-quality releases and Peanut and PNetica
 are both in early alpha stages.  There may be bugs and 
 problems and users should be comfortable debugging in R.  Although I
 am happy to accept bug reports, I do not promise to respond to them in
 a timely fashion.
+</p>
 <img src="PnetPackages.png">
 <p>
 Note that CPTtools is meant to be independent of the Bayes net
@@ -23,6 +26,7 @@ implementation and Peanut, the object oriented later on top of it,
 depends on CPTtools but not the implementation specific packages.
 RNetica depends on the Netica Bayes net engine and PNetica is the
 Peanut implementation using RNetica.
+</p>
 <p>
 I presented information about Peanut and PNetica, as well as
 CPTtools and RNetica, at the UAI workshop in 2015.  The official
@@ -30,17 +34,19 @@ paper is published
 in <a href="http://ceur-ws.org/Vol-1565/bmaw2015_paper4.pdf">CEUR
     volume 1565, paper 4</a>.  Slides for the talk are available here
 (<a href="DIRT-talk.pdf">PDF</a>).
-
+</p>
 <h1>User Survey</h1>
 
+<p>
 I'm now conducting a user survey.  It looks like I have more users
 than I thought I did, and I want to know a little bit about the
 projects for which RNetica is being used.  (This will help me get
 funding to continue working on it.)
-
+</p>
+<p>
 Please fill out the RNetica (and other package) 
 <a href="https://fsu.qualtrics.com/jfe/form/SV_7QVrVvd4NlwOYrb">survey</a>.
-
+</p>
 <h1>About RNetica</h1>
 <p>
 RNetica is best thought of as a "glue" layer between the open source
@@ -50,14 +56,14 @@ and the proprietary Bayesian network engine
 Netica &reg; <a href="http://www.norsys.com">http://www.norsys.com/</a>.
 Doing non-trivial work with RNetica requires the purchase of a Netica
 API license from Norsys.  
-<p>
+  </p><p>
 RNetica is now distributed in both source and object forms.
 Note that because RNetica uses c code, it requires knowledge of how to
 compile R packages.  Instructions can be found
 at <a href="http://cran.r-project.org/">CRAN</a>.  
-<p>
+  </p><p>
 <a href="RNetica.html">Click here for information about RNetica.</a>
-
+</p>
 <h1>CPTtools</h1>
 <p>
 Conditional Probability Table (CPT) Tools is a package of R functions
@@ -67,16 +73,16 @@ tools were originally designed to work with StatShop (an internal
 Bayesian network program developed at ETS), but they are general
 enough to work with other Bayes net packages as well.  The versions
 here are compatible with RNetica.  
-<p>
+  </p><p>
 It also contains tools for displaying and analyzing the output of
 Bayesian network analyses.  Again, the tools were originally designed
 to work with the output of StatShop, but work equally well with
 RNetica output.  Again, they should work with the output of other
 Bayes net packages with minimal adaptation.
-<p>
+  </p><p>
 CPTtools is beta release; however, the
 code is all in R, and hence does not require advanced knowledge of R.
-<p>
+  </p><p>
 <a href="CPTtools.html">Click here for information about CPTtools.</a>
 
 <h1>Peanut and PNetica</h1>
@@ -86,28 +92,29 @@ choices of parameters and parameterizations with specific
 parameterized nodes (Pnodes) in a parameterized network (Pnet).
 Peanut is mostly a generic interface, and PNetica is a specific
 implementation of the Peanut framework using RNetica.
-<p>
+  </p><p>
 Peanut and PNetica are in early beta release; however, the
 code is all in R, and hence does not require advanced knowledge of R.
-<p>
+  </p><p>
 <a href="Peanut.html">Click here for information about Peanut and PNetica.</a>
-
+</p>
 <h1>Russell G Almond's utilities</h1>
 <p> I've separated out a small collection of functions which I thought
   were generally useful, and not necessarily related to the Bayes net
   stuff into a <a href="RGAutils.html"><code>RGAutils</code></a>
   package.  
 <a href="RGAutils.html">Click here for information about RGAutils.</a>
-
-<hr>
+</p>
+<hr/>
 <h2> RSS Feed</h2>
-After learning that people were scraping my site looking for new
+<p>After learning that people were scraping my site looking for new
 releases, I've added an RSS feed.  The link
 is <a href="RNeticaRSS.xml">RNeticaRSS</a>.
-<p>
-<hr>
+</p>
+<hr/>
 <h2> Sponsorship Information </h2>
 
+<p>
 Work on RNetica, CPTtools and Peanut has been sponsored in part by the
 <i>Physics Playground</i> project, on which many of the tools were tested.
 <i>Physics Playground</i> development was supported by the Bill &amp; Melinda
@@ -117,10 +124,10 @@ foundation grant <i>DIP: Game-based Assessment and Support of
   STEM-related Competencies</i> (#1628937, Val Shute, PI). The tool
 development parts of each of these projects was let
 by <a href="mailto:ralmond@fsu.edu">Russell Almond </a>. 
-<p>
+  </p>
   
-<hr>
-Site last updated on 2017-07-07.
+<hr/>
+Site last updated on 2018-10-19.
 
 </body>
 </html>
