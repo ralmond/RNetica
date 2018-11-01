@@ -1,3 +1,7 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>Peanut and PNetica Release Information</title></head>
 <body>
 
@@ -10,26 +14,40 @@ a parameterized node (Pnode) class that can associates the parameters of the
 discrete partial credit models with the node object and a
 parameterized network (Pnet) class that contains a collection of
 parameterized nodes.  The figure below givens the object model.
-<p>
+</p><p>
   <img src="PnetClasses.png">
-<p>
+</p><p>
 The most important method in the class is the GEMfit method, which
 uses the generalized EM algorithm to the CPTs for the parameterized
 nodes to a set of cases.  It may offer other capabilities as it
 evolveds.  
-<p>
+</p><p>
 In order to keep the dependencies on a specific Bayes net package to a
 minimum, they were isolated in a separate package.  The Peanut package
 defines a series of functions and the PNetica package provides methods
 for objects of the NeticaBN and NeticaNode classes (both from
 the <a href="RNetica.html">RNetica</a> package).  The idea is similar
 to the relationship between the DBI and RMySQL packages.
-<p>
+</p><p>
   I presented information about Peanut and PNetica at the UAI workshop
   in 2015.  The offical paper is published
   in <a href="http://ceur-ws.org/Vol-1565/bmaw2015_paper4.pdf">CEUR
   volume 1565, paper 4</a>.  Slides for the talk are available here
-  (<a href="DIRT-talk.pdf">PDF</a>). 
+  (<a href="DIRT-talk.pdf">PDF</a>).
+</p><p>
+    I presented another talk about the application of Peanut to
+    <i><a href="https://pluto.coe.fsu.edu/ppteam/">Physics
+    Playground</a></i> at the 2017 Bayesian Application Workshop.  The
+    proceedings where not published, but here are my papers:</p>
+<ul>
+  <li>Defining the Proficiency Model:
+    <a href="TextCPTs_6-30-17.pdf">Paper</a>, 
+    <a href="Proficiency.pdf">Paper</a>.</li>
+  <li>Four Table Representation:
+    <a href="Peanut-short.pdf">Paper</a>, 
+    <a href="Peanut-talk1.pdf">Paper</a>.</li>
+</ul>
+    
 
 <h2>Peanut and PNetica License Information</h2>
 
@@ -38,7 +56,7 @@ Peanut and PNetica are made available under
   the <a href="http://www.r-project.org/Licenses/Artistic-2.0">Artistic
     License, version 2.0</a>.  PNetica depends on RNetica, which has a
   somewhat more complex <a href="RNetica.html#License">license</a>.
-
+</p>
 
 <h2>Current Version Status</h2>
 <p>
@@ -48,15 +66,15 @@ going from tables to nets and back (<code>Pnet2Omega, Pnet2Qmat,
 is partially completed (updated pages for most of the functions, but
 still haven't rewritten the package level functions).  It has also
 been rewriten to work with RNetica version 0.5 and up.
-<p>
+</p><p>
 PNetica version 0.3-4 seems to be having some problems with the
 AbsorbNodes function in RNetica.  I have not yet tracked down the
 issue, as a work around, simply leave the extra nodes in place.
 
 <h1>Peanut Releases</h1>
-
+<p>
 The following releases are archived here:
-
+</p>
 <table border="1">
 <tr>
 <th>Release</th><th>Source</th><th>Windows Binary</th><th>Mac Binary</th><th>Manual</th><th>Notes</th>
@@ -125,16 +143,16 @@ The following releases are archived here:
 <td>RNetica 0.5 compatability, Qmat2Pnet, Omega2Pnet</td></tr>
 <!-- NEXT ENTRY HERE (PNetica) -->
 </table>
-
+<p>
 Note the source versions have been compiled and tested under
 Linux/Unix, Mac OS X and Windows.  
-
+</p>
 <h2>Development Version</h2>
-
+<p>
 The latest development version is available as  subversion repositories
 at:  <a href="https://pluto.coe.fsu.edu/svn/common/Peanut/">https://pluto.coe.fsu.edu/svn/common/Peanut/</a>,
 <a href="https://pluto.coe.fsu.edu/svn/common/PNetica/">https://pluto.coe.fsu.edu/svn/common/PNetica/</a>.  
-<p>
+</p><p>
 If you have patches or other correspondence about Peanut you can
 contact me at <a href="mailto:almond@acm.org">almond@acm.org<a/>.  If
 you are filing a bug report, please be sure to include:
@@ -144,28 +162,29 @@ you are filing a bug report, please be sure to include:
 <li> The exact text of any error message that is generated.
 <li> A small script that reproduces the problem (if at all possible).
 </ol>
-<p>
+</a><p>
 I would also be willing to host alternatives to PNetica using other
 Bayes net packages on this server (either Web or Subversion).  Contact
 me for details.      
-
+</p>
 <h2>Legal Notices</h2>
 <p>
 Netica and Norsys are registered trademarks of Norsys, LLC, used by
 permission.  
-<p>
+</p><p>
 Although Norsys has been generally supportive of the RNetica project,
 they do not offer formal support in any way.  (In particular, the do
 not currently have anybody on staff who knows R.)  All support
 requests should be sent to the package maintainers.
-<p>
+</p><p>
   The software is offered AS IS, without any warranty of any kind.
   Support is provided on a volunteer basis, and may not be immediately
   forthcoming. 
 
-<hr>
-<!-- Date Start -->
-Site last updated on 2018-04-12
-<!-- Date End -->
-
+<hr/>
+<p>
+  <!-- Date Start -->
+  Site last updated on 2018-11-01
+  <!-- Date End -->
+</p>
 </body>
