@@ -1,0 +1,157 @@
+// ~->[DNET-1]->~
+
+// File created by Course at FloridaSU using Netica 5.24 on Mar 28, 2017 at 19:02:02 UTC.
+
+bnet MiniACEDPM {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1490727634;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (2, 38, 1057, 897);
+	resolution = 72;
+	drawingbounds = (1104, 816);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node SolveGeometricProblems {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = ();
+	probs = 
+		// High         Medium       Low          
+		  (0.1532,      0.2784,      0.5684);
+	whenchanged = 1490727513;
+	belief = (0.1532, 0.2784, 0.5684);
+	visual V1 {
+		center = (354, 42);
+		height = 1;
+		};
+	};
+
+node CommonRatio {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (1,           0,           0,            // High                   
+		   0.963,       0.036,       9.999424e-4,  // Medium                 
+		   0.567,       0.379,       0.05399996);  // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	belief = (0.743582, 0.225446, 0.03097196);
+	visual V1 {
+		center = (90, 162);
+		height = 6;
+		};
+	};
+
+node ExamplesGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.518,       0.351,       0.131,        // High                   
+		   0.122,       0.344,       0.534,        // Medium                 
+		   0.009,       0.089,       0.902);       // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	belief = (0.118438, 0.2001304, 0.6814316);
+	visual V1 {
+		center = (270, 162);
+		height = 5;
+		};
+	};
+
+node ExtendGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (1,           0,           0,            // High                   
+		   0.963,       0.036,       0.001,        // Medium                 
+		   0.567,       0.379,       0.054);       // Low                    ;
+	whenchanged = 2147483647;
+	belief = (0.743582, 0.225446, 0.030972);
+	visual V1 {
+		center = (456, 162);
+		height = 4;
+		};
+	};
+
+node ModelGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.281,       0.41,        0.309,        // High                   
+		   0.037,       0.201,       0.762,        // Medium                 
+		   0.001,       0.026,       0.973);       // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	belief = (0.0539184, 0.1335488, 0.8125328);
+	visual V1 {
+		center = (840, 156);
+		height = 2;
+		};
+	};
+
+node TableGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.713,       0.216,       0.071,        // High                   
+		   0.326,       0.348,       0.326,        // Medium                 
+		   0.071,       0.216,       0.713);       // Low                    ;
+	numcases = 
+		                 // SolveGeometricProblems 
+		  (1,            // High                   
+		   1,            // Medium                 
+		   1);           // Low                    ;
+	whenchanged = 2147483647;
+	belief = (0.2403464, 0.2527488, 0.5069048);
+	visual V1 {
+		center = (642, 162);
+		height = 3;
+		};
+	};
+ElimOrder = (CommonRatio, ExamplesGeometric, ExtendGeometric, ModelGeometric, TableGeometric, SolveGeometricProblems);
+};

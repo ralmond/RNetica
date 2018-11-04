@@ -1,0 +1,87 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 02/08/2018 at 03:45:42 PM.
+
+bnet ModelTableExtendEasyEM {
+autoupdate = FALSE;
+whenchanged = 1518075942;
+
+param X_ModelGeometric_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (0.967421566101701, 0, -0.967421566101701);
+	title = "ModelGeometric";
+	whenchanged = 1518075942;
+	};
+
+param X_TableGeometric_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (0.967421566101701, 0, -0.967421566101701);
+	title = "TableGeometric";
+	whenchanged = 1518075942;
+	};
+
+param X_ExtendGeometric_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (0.967421566101701, 0, -0.967421566101701);
+	title = "ExtendGeometric";
+	whenchanged = 1518075942;
+	};
+
+node isCorrect {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	levels = (1, 0);
+	inputs = (ModelGeometric, TableGeometric, ExtendGeometric);
+	parents = (X_ModelGeometric_1, X_TableGeometric_1, X_ExtendGeometric_1);
+	probs = 
+		// Yes          No            // ModelGeometric TableGeometric ExtendGeometric 
+		  (0.9934604,   0.006539591,  // High           High           High            
+		   0.983272,    0.01672804,   // High           High           Medium          
+		   0.9578832,   0.04211677,   // High           High           Low             
+		   0.983272,    0.01672804,   // High           Medium         High            
+		   0.9578832,   0.04211677,   // High           Medium         Medium          
+		   0.8979599,   0.1020401,    // High           Medium         Low             
+		   0.9578832,   0.04211677,   // High           Low            High            
+		   0.8979599,   0.1020401,    // High           Low            Medium          
+		   0.7729844,   0.2270156,    // High           Low            Low             
+		   0.9733781,   0.02662187,   // Medium         High           High            
+		   0.9339814,   0.06601861,   // Medium         High           Medium          
+		   0.8455347,   0.1544653,    // Medium         High           Low             
+		   0.9339814,   0.06601861,   // Medium         Medium         High            
+		   0.8455347,   0.1544653,    // Medium         Medium         Medium          
+		   0.6792833,   0.3207167,    // Medium         Medium         Low             
+		   0.8455347,   0.1544653,    // Medium         Low            High            
+		   0.6792833,   0.3207167,    // Medium         Low            Medium          
+		   0.4504037,   0.5495963,    // Medium         Low            Low             
+		   0.8979599,   0.1020401,    // Low            High           High            
+		   0.7729844,   0.2270156,    // Low            High           Medium          
+		   0.5684966,   0.4315033,    // Low            High           Low             
+		   0.7729844,   0.2270156,    // Low            Medium         High            
+		   0.5684966,   0.4315033,    // Low            Medium         Medium          
+		   0.3376465,   0.6623535,    // Low            Medium         Low             
+		   0.5684966,   0.4315033,    // Low            Low            High            
+		   0.3376465,   0.6623535,    // Low            Low            Medium          
+		   0.1647476,   0.8352524);   // Low            Low            Low             ;
+	numcases = 10;
+	whenchanged = 1518075925;
+	user U1 {
+		Q = "TRUE";
+		rules = "\"Compensatory\"";
+		link = "\"partialCredit\"";
+		lnAlphas = "structure(c(0.405465108108164, 0, 0), .Names = c(\"ModelGeometric\",  \"TableGeometric\", \
+			\"ExtendGeometric\"))";
+		betas = "-1";
+		};
+	};
+};

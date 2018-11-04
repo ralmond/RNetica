@@ -1,0 +1,42 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 02/08/2018 at 03:42:33 PM.
+
+bnet ExamplesMedEM {
+autoupdate = FALSE;
+whenchanged = 1518075753;
+
+param X_ExamplesGeometric_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (0.967421566101701, 0, -0.967421566101701);
+	title = "ExamplesGeometric";
+	whenchanged = 1518075753;
+	};
+
+node isCorrect {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	levels = (1, 0);
+	inputs = (ExamplesGeometric);
+	parents = (X_ExamplesGeometric_1);
+	probs = 
+		// Yes          No            // ExamplesGeometric 
+		  (0.8381621,   0.1618378,    // High              
+		   0.5,         0.5,          // Medium            
+		   0.1618378,   0.8381621);   // Low               ;
+	numcases = 10;
+	whenchanged = 1518075751;
+	user U1 {
+		Q = "TRUE";
+		rules = "\"Compensatory\"";
+		link = "\"partialCredit\"";
+		lnAlphas = "structure(0, .Names = \"ExamplesGeometric\")";
+		betas = "0";
+		};
+	};
+};

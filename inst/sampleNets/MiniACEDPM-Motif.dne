@@ -1,0 +1,228 @@
+// ~->[DNET-1]->~
+
+// File created by Course at FloridaSU using Netica 5.04 on Apr 06, 2017 at 16:29:10.
+
+bnet MiniACEDPM_Motif {
+autoupdate = TRUE;
+whenchanged = 1491510535;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (2, 38, 1057, 897);
+	resolution = 72;
+	drawingbounds = (1207, 887);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00E1E1E1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+node SolveGeometricProblems {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = ();
+	probs = 
+		// High         Medium       Low          
+		  (0.1532,      0.2784,      0.5684);
+	whenchanged = 1490727513;
+	visual V1 {
+		center = (354, 42);
+		height = 1;
+		};
+	};
+
+node CommonRatio {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (1, 0, -1);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (1,           0,           0,            // High                   
+		   0.963,       0.036,       9.999424e-4,  // Medium                 
+		   0.567,       0.379,       0.05399996);  // Low                    ;
+	numcases = 1;
+	EqnDirty = TRUE;
+	whenchanged = 1491509940;
+	visual V1 {
+		center = (90, 162);
+		height = 6;
+		};
+	};
+
+node ExamplesGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.518,       0.351,       0.131,        // High                   
+		   0.122,       0.344,       0.534,        // Medium                 
+		   0.009,       0.089,       0.902);       // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	visual V1 {
+		center = (270, 162);
+		height = 5;
+		};
+	};
+
+node ExtendGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (1,           0,           0,            // High                   
+		   0.963,       0.036,       0.001,        // Medium                 
+		   0.567,       0.379,       0.054);       // Low                    ;
+	whenchanged = 2147483647;
+	visual V1 {
+		center = (456, 162);
+		height = 4;
+		};
+	};
+
+node ModelGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.281,       0.41,        0.309,        // High                   
+		   0.037,       0.201,       0.762,        // Medium                 
+		   0.001,       0.026,       0.973);       // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	visual V1 {
+		center = (840, 156);
+		height = 2;
+		};
+	};
+
+node TableGeometric {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	parents = (SolveGeometricProblems);
+	probs = 
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.713,       0.216,       0.071,        // High                   
+		   0.326,       0.348,       0.326,        // Medium                 
+		   0.071,       0.216,       0.713);       // Low                    ;
+	numcases = 1;
+	whenchanged = 2147483647;
+	visual V1 {
+		center = (642, 162);
+		height = 3;
+		};
+	};
+
+node tCommonRatio1a {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Right, Wrong);
+	parents = (CommonRatio);
+	whenchanged = 1491510535;
+	visual V1 {
+		center = (80, 27);
+		height = 9;
+		};
+	};
+
+node tableExtendEasy {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	levels = (1, 0);
+	parents = (TableGeometric, ExtendGeometric);
+	probs = 
+		// Right        Wrong         // TableGeometric ExtendGeometric 
+		  (0.970688,    0.029312,     // High           High            
+		   0.924142,    0.075858,     // High           Medium          
+		   0.817574,    0.182426,     // High           Low             
+		   0.880797,    0.119203,     // Medium         High            
+		   0.731059,    0.268941,     // Medium         Medium          
+		   0.5,         0.5,          // Medium         Low             
+		   0.622459,    0.377541,     // Low            High            
+		   0.377541,    0.622459,     // Low            Medium          
+		   0.182426,    0.817574);    // Low            Low             ;
+	whenchanged = 1490728219;
+	visual V1 {
+		center = (618, 336);
+		height = 7;
+		};
+	};
+
+node modeltTableExtendEasy {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Right, Wrong);
+	levels = (1, 0);
+	inputs = (TableGeometric, ExtendGeometric, ModelGeometric);
+	parents = (TableGeometric, ExtendGeometric, ModelGeometric);
+	probs = 
+		// Right        Wrong         // TableGeometric ExtendGeometric ModelGeometric 
+		  (0.970688,    0.029312,     // High           High            High           
+		   0.970688,    0.029312,     // High           High            Medium         
+		   0.970688,    0.029312,     // High           High            Low            
+		   0.924142,    0.075858,     // High           Medium          High           
+		   0.924142,    0.075858,     // High           Medium          Medium         
+		   0.924142,    0.075858,     // High           Medium          Low            
+		   0.817574,    0.182426,     // High           Low             High           
+		   0.817574,    0.182426,     // High           Low             Medium         
+		   0.817574,    0.182426,     // High           Low             Low            
+		   0.880797,    0.119203,     // Medium         High            High           
+		   0.880797,    0.119203,     // Medium         High            Medium         
+		   0.880797,    0.119203,     // Medium         High            Low            
+		   0.731059,    0.268941,     // Medium         Medium          High           
+		   0.731059,    0.268941,     // Medium         Medium          Medium         
+		   0.731059,    0.268941,     // Medium         Medium          Low            
+		   0.5,         0.5,          // Medium         Low             High           
+		   0.5,         0.5,          // Medium         Low             Medium         
+		   0.5,         0.5,          // Medium         Low             Low            
+		   0.622459,    0.377541,     // Low            High            High           
+		   0.622459,    0.377541,     // Low            High            Medium         
+		   0.622459,    0.377541,     // Low            High            Low            
+		   0.377541,    0.622459,     // Low            Medium          High           
+		   0.377541,    0.622459,     // Low            Medium          Medium         
+		   0.377541,    0.622459,     // Low            Medium          Low            
+		   0.182426,    0.817574,     // Low            Low             High           
+		   0.182426,    0.817574,     // Low            Low             Medium         
+		   0.182426,    0.817574);    // Low            Low             Low            ;
+	whenchanged = 1490728985;
+	visual V1 {
+		center = (840, 330);
+		height = 8;
+		};
+	};
+};

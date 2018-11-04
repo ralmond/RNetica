@@ -120,6 +120,7 @@ SEXP RN_FreeRNG (SEXP rng) {
   SEXP ptr;
   PROTECT(ptr = RNGFree(GET_FIELD(rng,rngatt)));
   SET_FIELD(rng,rngatt,ptr);
+  UNPROTECT(1);
   return(rng);
 }
 
