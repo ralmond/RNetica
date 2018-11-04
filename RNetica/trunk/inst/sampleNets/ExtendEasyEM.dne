@@ -1,0 +1,42 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 5.04 on 02/08/2018 at 03:43:04 PM.
+
+bnet ExtendEasyEM {
+autoupdate = FALSE;
+whenchanged = 1518075783;
+
+param X_ExtendGeometric_1 {
+	kind = DISCONNECTED;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (High, Medium, Low);
+	levels = (0.967421566101701, 0, -0.967421566101701);
+	title = "ExtendGeometric";
+	whenchanged = 1518075783;
+	};
+
+node isCorrect {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Yes, No);
+	levels = (1, 0);
+	inputs = (ExtendGeometric);
+	parents = (X_ExtendGeometric_1);
+	probs = 
+		// Yes          No            // ExtendGeometric 
+		  (0.9659281,   0.03407189,   // High            
+		   0.8455347,   0.1544653,    // Medium          
+		   0.5138423,   0.4861577);   // Low             ;
+	numcases = 10;
+	whenchanged = 1518075782;
+	user U1 {
+		Q = "TRUE";
+		rules = "\"Compensatory\"";
+		link = "\"partialCredit\"";
+		lnAlphas = "structure(0, .Names = \"ExtendGeometric\")";
+		betas = "-1";
+		};
+	};
+};
