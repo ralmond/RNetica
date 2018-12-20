@@ -64,8 +64,6 @@ Decision Net support
      These two functions return NA in stituations where I'm expecting
      a numeric value or a state.
 ##   CalcNodeState, CalcNodeValue,
-##    GetNodeExpectedUtils,
-   Seems to be generating an internal Netica error.
 
 Testing
 ## NewNetTester_bn, DeleteNetTester_bn, TestWithCaseset_bn
