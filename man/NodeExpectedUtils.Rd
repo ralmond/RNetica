@@ -79,15 +79,14 @@ Instruction <- NetworkFindNode(rti,"Instruction")
 CompileNetwork(rti)
 
 
-\dontrun{
-## NETICA BUG, these currently give errors.
 NodeExpectedUtils(Test)
-NodeExpectedUtils(Instruction)
-
-NodeFinding(Test) <- "Yes"
-
+\dontrun{
+## This produces an error because Test is not set.
 NodeExpectedUtils(Instruction)
 }
+NodeFinding(Test) <- "Yes"
+NodeExpectedUtils(Instruction)
+
 
 DeleteNetwork(rti)
 stopSession(sess)

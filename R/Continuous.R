@@ -116,7 +116,7 @@ NodeExpectedUtils <- function (node) {
   if (length(node)>1 || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
-  result <- .Call("RN_GetNodeExpectedValue",node,PACKAGE=RNetica)
+  result <- .Call("RN_GetNodeExpectedUtils",node,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
