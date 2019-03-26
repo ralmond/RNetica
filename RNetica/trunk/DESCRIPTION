@@ -1,6 +1,6 @@
 Package: RNetica
-Version: 0.5-3
-Date: 2018/12/20
+Version: 0.5-4
+Date: 2019/03/23
 Title: R interface to Netica(R) Bayesian Network Engine 
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
@@ -8,5 +8,5 @@ Depends: R (>= 3.0), methods, utils
 Imports: grDevices, R.utils
 Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
 License: Artistic-2.0 + file LICENSE
-URL: http://pluto.coe.fsu.edu/RNetica
+URL: https://pluto.coe.fsu.edu/RNetica
 Collate: Session.R Networks.R Node.R Edges.R Inference.R Cases.R Experience.R Continuous.R Random.R LoadFuns.R

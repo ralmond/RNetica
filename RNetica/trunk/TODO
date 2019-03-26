@@ -94,15 +94,16 @@ Database Connectivity
 
 Ask Brent:
 1. NodeLikelihood and MPE and FindingsProbability
-2. IsNetCompiled function?
-3. GetNodesets for Node, Nodes in NodeSet?
-4. CopyNodes does not copy NodeSet information?
-5. EnterLikelihoodFindingClique
-6. NetworkUndo, Redo
-7. Learn_CPTs return value?
-8. Mysterious behavior of CalcNodeValue
-9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
+* 2. IsNetCompiled function?
+* 3. GetNodesets for Node, Nodes in NodeSet?
+* 4. CopyNodes does not copy NodeSet information?
+* 5. EnterLikelihoodFindingClique
+* 6. NetworkUndo, Redo
+* 7. Learn_CPTs return value?
+* 8. Mysterious behavior of CalcNodeValue
+o [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 10.  Error on NodeExpectedUtils
-11.  Learn_CPTs and case streams.
-12. Crash in AbsorbNode
-13. Getters for DBN properties
+* 11.  Learn_CPTs and case streams.
+* 12. Crash in AbsorbNode
+* 13. Getters for DBN properties
+o [RGA] ReadNetwork_bn has switch to suppress loading visual information.

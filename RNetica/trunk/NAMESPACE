@@ -4,6 +4,7 @@ importFrom("utils","getFromNamespace")
 importFrom("grDevices", "col2rgb")
 importFrom("stats", "runif")
 importFrom("R.utils","tempvar")
+importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF")
 
 
 export(NeticaSession)
