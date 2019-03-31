@@ -73,8 +73,8 @@ exportMethods("[","[[","[<-")
 export(
   NodeProbs, "NodeProbs<-", normalize.matrix,
   normalize, normalize.array, normalize.data.frame,
-  is.CPA, as.CPA, normalize.CPA, normalize.default,
-  as.CPF, is.CPF, normalize.CPF, EVERY_STATE,
+  normalize.CPA, normalize.default,
+  normalize.CPF, EVERY_STATE,
   IsNodeDeterministic, HasNodeTable,
   DeleteNodeTable
    )
