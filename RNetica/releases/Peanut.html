@@ -47,7 +47,9 @@ to the relationship between the DBI and RMySQL packages.
     <a href="Peanut-short.pdf">Paper</a>, 
     <a href="Peanut-talk1.pdf">Paper</a>.</li>
 </ul>
-    
+<p> </i>New in Version 0.4</i>  I've now added some node gadgets
+written in shiny (package shinyjs now required).  These should making
+editing nodes a lot easier.</p>    
 
 <h2>Peanut and PNetica License Information</h2>
 
@@ -60,7 +62,8 @@ Peanut and PNetica are made available under
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.3-4) now has a complete set of functions for
+The current version (Peanut 0.4-1, PNetica 0.3-6) now has a complete
+set of functions for 
 going from tables to nets and back (<code>Pnet2Omega, Pnet2Qmat,
     Qmat2Pnet, </code> and <code>Omega2Pnet</code>). The users manual
 is partially completed (updated pages for most of the functions, but
@@ -69,7 +72,12 @@ been rewriten to work with RNetica version 0.5 and up.
 </p><p>
 PNetica version 0.3-4 seems to be having some problems with the
 AbsorbNodes function in RNetica.  I have not yet tracked down the
-issue, as a work around, simply leave the extra nodes in place.
+issue, as a work around, simply leave the extra nodes in
+place. <i>Update:</i>  The issue appears to be related to nets where
+some nodes have visual information and others do no.  Brent is
+promising me a fix soon.  Meanwhile, you can work around by manually
+deleting the visual information in the .dne files (this are the
+sections beginning V1, V2, ...).
 
 <h1>Peanut Releases</h1>
 <p>
@@ -103,6 +111,12 @@ The following releases are archived here:
 <td><a href="Peanut_0.3-4.tgz">Peanut_0.3-4.tgz</a></td>
 <td><a href="Peanut-manual_0.3-4.pdf">Peanut-manual_0.3-4.pdf</a></td>
 <td>RNetica 0.5 compatability, S4 methods, Qmat2Pnet, Omega2Pnet</td></tr>
+<tr>
+<td>0.4-1</td><td><a href="Peanut_0.4-1.tar.gz">Peanut_0.4-1.tar.gz</a></td>
+<td><a href="Peanut_0.4-1.zip">Peanut_0.4-1.zip</a></td>
+<td><a href="Peanut_0.4-1.tgz">Peanut_0.4-1.tgz</a></td>
+<td><a href="Peanut-manual_0.4-1.pdf">Peanut-manual_0.4-1.pdf</a></td>
+<td>Added node gadgets.</td></tr>
 <!-- NEXT ENTRY HERE (Peanut) -->
 </table>
 
@@ -141,6 +155,12 @@ The following releases are archived here:
 <td><a href="PNetica_0.3-4.tgz">PNetica_0.3-4.tgz</a></td>
 <td><a href="PNetica-manual_0.2-2.pdf">Manual has not be updated</a></td>
 <td>RNetica 0.5 compatability, Qmat2Pnet, Omega2Pnet</td></tr>
+<tr>
+<td>0.3-6</td><td><a href="PNetica_0.3-6.tar.gz">PNetica_0.3-6.tar.gz</a></td>
+<td><a href="PNetica_0.3-6.zip">PNetica_0.3-6.zip</a></td>
+<td><a href="PNetica_0.3-6.tgz">PNetica_0.3-6.tgz</a></td>
+<td><a href="PNetica-manual_0.3-6.pdf">PNetica-manual_0.3-6.pdf</a></td>
+<td>Now properly gets session information from nets.</td></tr>
 <!-- NEXT ENTRY HERE (PNetica) -->
 </table>
 <p>
@@ -184,7 +204,7 @@ requests should be sent to the package maintainers.
 <hr/>
 <p>
   <!-- Date Start -->
-  Site last updated on 2018-11-01
+  Site last updated on 2019-04-01.  No Foolin'!
   <!-- Date End -->
 </p>
 </body>

@@ -54,6 +54,16 @@ it.  <a href="https://fsu.qualtrics.com/jfe/form/SV_7QVrVvd4NlwOYrb">Click
   Node objects.  This should improve stability, but may cause
   problems.</i>  The changes in the 0.5 series include the following:
 <ol>
+  <li> Moved a couple of functions from RNetica to CPTtools, as I
+    needed them there.  RNetica now depends on CPTtools.</li>
+  <li>Fixed a problem in NodeExpectedUtils.</li>
+  <li>Brent identified a couple issues (including one in
+    AdjoinNetworks) as being related to problems merging networks with
+    and without visual information.  Fix soon.  I have been manually
+    deleting visual information (V1, V2, ...) in .dne files as a work around.</li>
+  <li>Brent is promising me a new version of Netica API (latest is
+  still 5.04, released in 2012), soon.  Hopefully, this will fix a few
+  things.</li> 
   <li> Introduced a new <code>NeticaSession</code> object as a
   container for the link to the Netica session.  This also serves as a
   container for all of the networks included in a session and a
@@ -331,9 +341,8 @@ networks is generally limited.
 
 <h2>Current Version Status</h2>
 <p>
-The current version (0.5-2) incorporates approximately 75% of the
-Netica C API Version 5.04 (there is a newer version for Windows but
-not for MacOS or Linux since 2012).  This is
+The current version (0.5-4) incorporates approximately 75% of the
+Netica C API Version 5.04 (5.10 for Windows).  This is
 sufficient functionality to build, compile and carry out inferences
 with a Bayesian network.  Some of the more advanced functionality,
 including support for databases, influence diagrams, and dynamic
@@ -346,8 +355,8 @@ valgrind to test for memory leaks.  It is currently a beta release.
 Note that because it uses calls to C code, <i>it is possible for RNetica
 to crash R.</i>  Plan your work accordingly.
 <p>
-The development has been with R version 3.0.1&ndash;3.4.1 under Ubuntu
-16.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
+The development has been with R version 3.0.1&ndash;3.5.3 under Ubuntu
+16.04--18.04 with Netica API 5.04.  <code>R CMD check RNetica</code> 
 runs under Mac OS X and Windows 7 without errors.  Almost all of the
 testing has been with the 64 bit versions of R and Netica.  There may
 be some problems that crop up under 32 bit versions.  
@@ -431,6 +440,12 @@ The following releases are archived here:
 <td><a href="RNetica_0.5-2.tgz">RNetica_0.5-2.tgz</a></td>
 <td><a href="RNetica-manual_0.5-1.pdf">No updates to manual</a></td>
 <td>Minor Bug fix..</td></tr>
+<tr>
+<td>0.5-4</td><td><a href="RNetica_0.5-4.tar.gz">RNetica_0.5-4.tar.gz</a></td>
+<td><a href="RNetica_0.5-4.zip">RNetica_0.5-4.zip</a></td>
+<td><a href="RNetica_0.5-4.tgz">RNetica_0.5-4.tgz</a></td>
+<td><a href="RNetica-manual_0.5-4.pdf">RNetica-manual-0.5-4.pdf</a></td>
+<td>Moved as.CPA and as.CPF to CPTtools, now depends on CPTttols</td></tr>
 <!-- NEXT ENTRY HERE -->
 </table>
 <p>
@@ -464,7 +479,7 @@ support questions, and help file bug reports if needed.  NOTE:  this
 is an unlicensed version of the API:  you still need to purchase a
 license (although the unlicensed version will run the sample code in
 the man pages).
-<p> A recent (not so recent anymore) communication with Brent
+<p> A recent communication with Brent
   indicated that a new Netica API will be out soon.  When that comes
   out, there will likely be a big update. 
 
@@ -503,6 +518,6 @@ requests should be sent to the package maintainers.
 
 <hr>
 <!-- Date Start -->
-Site last updated on 2018-02-06.
+Site last updated on 2019-04-01; No Foolin'!
 <!-- Date End -->
 </body>

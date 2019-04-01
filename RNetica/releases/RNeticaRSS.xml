@@ -94,5 +94,38 @@
       <description>[CDATA[RNetica 0.5 compatability, S4 methods, Qmat2Pnet Omega2Pnet]]</description>
     </item>
 
+    <item>
+      <title>RNetica 0.5-4</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.5-4</guid>
+      <pubDate>Mon Apr  1 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ Moved as.CPA and as.CPF to CPTtools, now depends on CPTttols ]]</description>
+    </item>
+
+    <item>
+      <title>CPTtools 0.5-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/CPTtools.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/CPTtools_0.5-1</guid>
+      <pubDate>Mon Apr  1 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ Functions as.CPA and as.CPF moved from
+      RNetica, added barchart.CPF.  Now depends on lattice ]]</description>
+    </item>
+
+    <item>
+      <title>Peanut 0.4-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.4-1</guid>
+      <pubDate>Mon Apr  1 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ New shiny node gadgets.]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.3-6</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.3-6</guid>
+      <pubDate>Mon Apr  1 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ >Now properly gets session information from nets. ]]</description>
+    </item>
+
   </channel>
 </rss>
