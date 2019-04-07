@@ -37,6 +37,14 @@ AbsorbNodes(nodes)
 \author{
   Russell Almond
 }
+\section{Errors}{
+
+  There is a bug in version 5.04 (and 5.10) of the Netica API where
+  AbsorbNodes can crash if some nodes have visual information and some
+  do not.  For the moment, it is recommended that you call
+  \code{\link{ReadNetworks}} with \code{loadVisual=FALSE} to work around
+  this problem.
+}
 \seealso{
   \code{\linkS4class{NeticaNode}}, \code{\link{AddLink}()},
   \code{\link{NodeChildren}()}, \code{\link{NodeParents}()},

@@ -317,7 +317,7 @@ SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options,
 // Net level File I/O
 ///////////////////////////////////////////////////////////////////////
 
-SEXP RN_Read_Nets(SEXP filelist, SEXP session) {
+SEXP RN_Read_Nets(SEXP filelist, SEXP session, SEXP loadVisual) {
 
   R_len_t n, nn = length(filelist);
   SEXP filename;
@@ -326,14 +326,16 @@ SEXP RN_Read_Nets(SEXP filelist, SEXP session) {
   net_bn* netica_handle;
   SEXP result, bn;
   environ_ns* netica_env = GetSessionPtr(session);
+  int readOpts = NO_VISUAL_INFO;
+  if (LOGICAL(loadVisual)[0]) readOpts = NO_WINDOW;
+  
 
   PROTECT(result = allocVector(VECSXP,nn));
   
   for (n=0; n < nn; n++) {
       filename = STRING_ELT(filelist,n);
       file = NewFileStream_ns(CHAR(filename),netica_env,NULL);
-      netica_handle = ReadNet_bn(file,NO_WINDOW); //NO_WINDOW looks
-                                                  //like best opition choice.
+      netica_handle = ReadNet_bn(file,readOpts); 
       DeleteStream_ns(file);
 
     if (netica_handle) {

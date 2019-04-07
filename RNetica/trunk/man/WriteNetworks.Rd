@@ -14,7 +14,7 @@
 }
 \usage{
 WriteNetworks(nets, paths)
-ReadNetworks(paths, session)
+ReadNetworks(paths, session, loadVisual=TRUE)
 GetNetworkFileName(net, internal=FALSE)
 }
 \arguments{
@@ -35,6 +35,11 @@ GetNetworkFileName(net, internal=FALSE)
   \item{session}{An object of type \code{\linkS4class{NeticaSession}}
     which defines the reference to the Netica workspace.  Read networks
     will be created in this session.}
+  \item{loadVisual}{A logical flag.  If true, the visual information
+    associated with the network will be loaded, although it is not used
+    by RNetica, it will be saved for later.  If false, the visual
+    information will not be loaded, which will eliminate the potential
+    for some problems.}
   \item{internal}{A logical scalar.  If true, the actual Netica object
     will be consulted, if false, a cached value in the R object will be
     used.}
@@ -112,6 +117,22 @@ GetNetworkFileName(net, internal=FALSE)
   directory (unlike R which follows the Unix convention in this
   regard). 
 
+}
+\section{Visual Information}{
+
+  The \code{loadVisual} flag controls whether or not the information on
+  the position of the nodes is loaded with the network.  The default is
+  to load it, so it will be saved for opening the network in the GUI.
+
+  In version 5.04 of the Netica API, there appear to be some issues
+  related to visual information.  In particular,
+  \code{\link{AbsorbNodes}} can crash if some nodes have visual
+  information and others do not.  I have also found situations where
+  there were two sets of visual information in the file, which was
+  preventing it from being read.
+
+  I'm hoping for a new version of the API soon, but until then, it might
+  be more useful to load this with the flag false.
 }
 \seealso{
   \code{\linkS4class{NeticaBN}}, \code{\link{CreateNetwork}()},

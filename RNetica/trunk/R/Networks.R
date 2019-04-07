@@ -309,7 +309,7 @@ WriteNetworks <- function (nets, paths) {
 }
 
 
-ReadNetworks <- function (paths,session=getDefaultSession()) {
+ReadNetworks <- function (paths,session=getDefaultSession(),loadVisual=TRUE) {
   ##If they pass a network object, try to extract a path attribute.
   if (is.NeticaBN(paths)) {
     if (length(paths$PathnameName) == 0) {
@@ -318,16 +318,16 @@ ReadNetworks <- function (paths,session=getDefaultSession()) {
     if (missing(session)) {
       session <- paths$Session
     }
-    return(ReadNetworks(paths$PathnameName,session))
+    return(ReadNetworks(paths$PathnameName,session,loadVisual))
   }
   if (is.list(paths) && length(paths) >0 && is.NeticaBN(paths[[1]])) {
-    return(lapply(paths,function(path) ReadNetworks(path,session)))
+    return(lapply(paths,function(path) ReadNetworks(path,session,loadVisual)))
   }
   paths <- as.character(paths)
   if (any(is.na(paths))) {
     stop("Expected a list of pathnames, got, ",paths)
   }
-  handles <- .Call("RN_Read_Nets",paths,session,PACKAGE=RNetica)
+  handles <- .Call("RN_Read_Nets",paths,session,loadVisual,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   ## Re-register networks under new name.
   ## Save filenames for later recovery of network.
