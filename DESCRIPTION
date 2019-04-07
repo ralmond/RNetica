@@ -4,7 +4,7 @@ Date: 2019/03/23
 Title: R interface to Netica(R) Bayesian Network Engine 
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
-Depends: R (>= 3.0), methods, utils
+Depends: R (>= 3.0), methods, utils, CPTtools (>= 0.5)
 Imports: grDevices, R.utils
 Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
 License: Artistic-2.0 + file LICENSE

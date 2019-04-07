@@ -1,3 +1,10 @@
+2019-04-07  Russell Almond  <ralmond@Limu>
+
+	* src/Networks.c (RN_Read_Nets): According to Brent, this should
+	supress some errors we are getting with mangled visual
+	information.
+	
+
 2018-12-20  Rusell Almond  <ralmond@Cherry>
 
 	* R/Continuous.R (NodeExpectedUtils): Fixed the underlying call.
