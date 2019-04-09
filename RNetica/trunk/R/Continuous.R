@@ -48,12 +48,16 @@ NodeValue <- function (node) {
     stop("SEM value ", sem, " is not numeric.")
   }
   resetFirst <- as.logical(retractFirst)
-  handle <- .Call("RN_SetNodeGaussian",node,mean,sem,resetFirst,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
-  invisible(handle)
+  ## Netica bug, calculate likelihood manually.
+  ## handle <- .Call("RN_SetNodeGaussian",node,mean,sem,resetFirst,PACKAGE=RNetica)
+  ## ecount <- node$reportErrors()
+  ## if (ecount[1]>0) {
+  ##   stop("Netica Errors Encountered, see console for details.")
+  ## }
+  ## invisible(handle)
+  lik <- diff(pnorm(NodeLevels(node),mean,sem))
+  if (resetFirst) RetractNodeFinding(node)
+  NodeLikelihood(node) <- lik
 }
 
 "EnterIntervalFinding" <- function (node,low,high,retractFirst=TRUE) {
@@ -92,12 +96,16 @@ NodeValue <- function (node) {
     }
   }
   resetFirst <- as.logical(retractFirst)
-  handle <- .Call("RN_SetNodeGaussian",node,lv,hv,resetFirst,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
-  invisible(handle)
+  ## BUG in Netica, work around
+  ## handle <- .Call("RN_SetNodeInterval",node,lv,hv,resetFirst,PACKAGE=RNetica)
+  ## ecount <- node$reportErrors()
+  ## if (ecount[1]>0) {
+  ##   stop("Netica Errors Encountered, see console for details.")
+  ## }
+  ## invisible(handle)
+  lik <- diff(punif(NodeLevels(node),lv,hv))
+  if (resetFirst) RetractNodeFinding(node)
+  NodeLikelihood(node) <- lik
 }
 
 NodeExpectedValue <- function (node) {
@@ -200,17 +208,17 @@ VarianceOfReal <- function (target, nodelist) {
   result
 }
 
-## This is broken, need to add evidence
-woe <- function (enodes,estates,hnodes,hstatelists) {
-  if (!is.list(enodes))
-    enodes <- list(enodes)
-  if (!is.list(estates))
-    estates <- list(estates)
+woe <- function (enodes,hnodes,hstatelists) {
+  if (!is.list(enodes)) enodes <- list(enodes)
+  if (any(sapply(enodes,function (nd)
+    !is.NeticaNode(nd) || !is.active(nd))))
+    stop("Expected a list of active netica nodes, got",enodes)
   if (!is.list(hnodes))
     hnodes <- list(hnodes)
   if (!is.list(hstatelists))
     hstatelists <- list(hstatelists)
-  if (!all(sapply(hnodes,is.NeticaNode))) {
+  if (any(sapply(hnodes,function (nd)
+    !is.NeticaNode(nd) || !is.active(nd)))) {
     stop("Expected a list of Netica nodes, got ",hnodes)
   }
   if (length(hstatelists) > length(hnodes)) {
@@ -227,31 +235,49 @@ woe <- function (enodes,estates,hnodes,hstatelists) {
     hlike[hstatelist] <- 1
     hlike
   }, hnodes,hstatelists,SIMPLIFY=FALSE)
+  elikes <- lapply(enodes,NodeLikelihood)
 
   tryCatch({
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
       NodeLikelihood(hnodes[[i]]) <- hlikes[[i]]
     }
-    p_Htrue <- FindingsProbability(net)
+    p_Htrue.e <- FindingsProbability(net)
 
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
       NodeLikelihood(hnodes[[i]]) <- 1-hlikes[[i]]
     }
-    p_Hfalse <- FindingsProbability(net)
+    p_Hfalse.e <- FindingsProbability(net)
 
-    100*log10(p_Htrue/p_Hfalse)
+    tryCatch({
+      lapply(enodes,RetractNodeFinding)
+      for (i in 1:length(hnodes)) {
+        RetractNodeFinding(hnodes[[i]])
+        NodeLikelihood(hnodes[[i]]) <- hlikes[[i]]
+      }
+      p_Htrue <- FindingsProbability(net)
+
+      for (i in 1:length(hnodes)) {
+        RetractNodeFinding(hnodes[[i]])
+        NodeLikelihood(hnodes[[i]]) <- 1-hlikes[[i]]
+      }
+      p_Hfalse <- FindingsProbability(net)
+      100*(log10(p_Htrue.e/p_Hfalse.e) - log10(p_Htrue/p_Hfalse))
+    }, finally = mapply(function(enode,elik) {
+      NodeLikelihood(enode) <-elik
+    },enodes,elikes))
+
   }, finally = sapply(hnodes,RetractNodeFinding))
 
 }
 
 
-ewoe <- function (targets,hnodes,hstatelists) {
-  if (!is.list(targets))
-    targets <- list(targets)
-  if (!all(sapply(targets,is.NeticaNode))) {
-    stop("Expected a list of Netica nodes, got ",targets)
+ewoe <- function (enodes,hnodes,hstatelists) {
+  if (!is.list(enodes))
+    enodes <- list(enodes)
+  if (!all(sapply(enodes,is.NeticaNode))) {
+    stop("Expected a list of Netica nodes, got ",enodes)
   }
   if (!is.list(hnodes))
     hnodes <- list(hnodes)
@@ -279,20 +305,20 @@ ewoe <- function (targets,hnodes,hstatelists) {
       RetractNodeFinding(hnodes[[i]])
       NodeLikelihood(hnodes[[i]]) <- hlikes[[i]]
     }
-    p_Htrue <- lapply(targets,NodeBeliefs)
+    p_Htrue <- lapply(enodes,NodeBeliefs)
 
     for (i in 1:length(hnodes)) {
       RetractNodeFinding(hnodes[[i]])
       NodeLikelihood(hnodes[[i]]) <- 1-hlikes[[i]]
     }
-    p_Hfalse <- lapply(targets,NodeBeliefs)
+    p_Hfalse <- lapply(enodes,NodeBeliefs)
 
     ewoes <- mapply(function (p_H,p_notH) {100*sum(log10(p_H/p_notH)*p_H)},
                     p_Htrue,p_Hfalse)
-    if (length(names(targets)) > 0) {
-      names(ewoes) <- names(targets)
+    if (length(names(enodes)) > 0) {
+      names(ewoes) <- names(enodes)
     } else {
-      names(ewoes) <- sapply(targets,NodeName)
+      names(ewoes) <- sapply(enodes,NodeName)
     }
     ewoes
   }, finally = sapply(hnodes,RetractNodeFinding))

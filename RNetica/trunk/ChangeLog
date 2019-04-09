@@ -1,5 +1,8 @@
 2019-04-07  Russell Almond  <ralmond@Limu>
 
+	* R/Edges.R (normalize): Moved Normalize (as well as as.CPA and
+	as.CPF to CPTtools)
+
 	* src/Networks.c (RN_Read_Nets): According to Brent, this should
 	supress some errors we are getting with mangled visual
 	information.

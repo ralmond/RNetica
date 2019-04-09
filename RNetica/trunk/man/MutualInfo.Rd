@@ -79,6 +79,11 @@ VarianceOfReal(target, nodelist)
 \seealso{
   \code{\link{is.continuous}()}, \code{\link{NodeExpectedValue}()},
   \code{\link{NodeLevels}()},
+
+  The function \code{\link{ewoe}} returns the expected weight of
+  evidence which is a similar metric.
+
+
 }
 \examples{
 sess <- NeticaSession()
