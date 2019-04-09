@@ -1,10 +1,10 @@
 // ~->[DNET-1]->~
 
-// File created by ZapataD at ETSTech using Netica 2.17 on Mar 27, 2006 at 16:16:50.
+// File created by an unlicensed user using Netica 5.04 on 04/09/2019 at 05:47:55 PM.
 
 bnet ACEDMotif2 {
 autoupdate = TRUE;
-whenchanged = 1143493513;
+whenchanged = 1554846362;
 
 visual V1 {
 	defdispform = BELIEFBARS;
@@ -18,9 +18,20 @@ visual V1 {
 	showpagebreaks = FALSE;
 	usegrid = TRUE;
 	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00E1E1E1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00F8EED2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00D3CAA6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00C8C8C8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00FFFFB4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00FFBDBD;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00DEE8FF;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00F0FAFA;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00FFFFFF;};
+	NodeSet Observables {Disabled = 1; Color = 0x00C8C8C8;};
+	NodeSet Proficiencies {Disabled = 1; Color = 0x00C8C8C8;};
 	PrinterSetting A {
 		margins = (1270, 1270, 1270, 1270);
-		landscape = FALSE;
 		magnify = 1;
 		};
 	};
@@ -28,13 +39,13 @@ visual V1 {
 node SolveGeometricProblems {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = ();
 	probs = 
 		// High         Medium       Low          
 		  (0.1532,      0.2784,      0.5684);
 	whenchanged = 1143493513;
-	belief = (0.1532, 0.2784, 0.5684);
 	visual V1 {
 		center = (354, 42);
 		height = 1;
@@ -44,16 +55,16 @@ node SolveGeometricProblems {
 node CommonRatio {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (SolveGeometricProblems);
 	probs = 
-		// High         Medium       Low            // SolveGeometricProblems 
-		 ((1,           0,           0),            // High                   
-		  (0.963,       0.036,       9.999424e-4),  // Medium                 
-		  (0.567,       0.379,       0.05399996));  // Low                    ;
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (1,           0,           0,            // High                   
+		   0.963,       0.036,       9.999424e-4,  // Medium                 
+		   0.567,       0.379,       0.05399996);  // Low                    ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.743582, 0.225446, 0.030972);
 	visual V1 {
 		center = (114, 132);
 		height = 4;
@@ -66,16 +77,16 @@ node CommonRatio {
 node VisualGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (SolveGeometricProblems);
 	probs = 
-		// High         Medium       Low            // SolveGeometricProblems 
-		 ((0.749,       0.211,       0.04),         // High                   
-		  (0.295,       0.41,        0.295),        // Medium                 
-		  (0.04,        0.211,       0.749));       // Low                    ;
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.749,       0.211,       0.04,         // High                   
+		   0.295,       0.41,        0.295,        // Medium                 
+		   0.04,        0.211,       0.749);       // Low                    ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.219611, 0.266402, 0.513988);
 	visual V1 {
 		center = (672, 90);
 		height = 6;
@@ -88,20 +99,16 @@ node VisualGeometric {
 node TableGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (SolveGeometricProblems);
 	probs = 
-		// High         Medium       Low            // SolveGeometricProblems 
-		 ((0.713,       0.216,       0.071),        // High                   
-		  (0.326,       0.348,       0.326),        // Medium                 
-		  (0.071,       0.216,       0.713));       // Low                    ;
-	numcases = 
-		                 // SolveGeometricProblems 
-		  (1,            // High                   
-		   1,            // Medium                 
-		   1);           // Low                    ;
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.713,       0.216,       0.071,        // High                   
+		   0.326,       0.348,       0.326,        // Medium                 
+		   0.071,       0.216,       0.713);       // Low                    ;
+	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.240346, 0.252749, 0.506905);
 	visual V1 {
 		center = (588, 168);
 		height = 14;
@@ -111,16 +118,16 @@ node TableGeometric {
 node InduceRulesGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (SolveGeometricProblems);
 	probs = 
-		// High         Medium       Low            // SolveGeometricProblems 
-		 ((0.395,       0.396,       0.209),        // High                   
-		  (0.07,        0.275,       0.655),        // Medium                 
-		  (0.004,       0.05,        0.946));       // Low                    ;
+		// High         Medium       Low           // SolveGeometricProblems 
+		  (0.395,       0.396,       0.209,        // High                   
+		   0.07,        0.275,       0.655,        // Medium                 
+		   0.004,       0.05,        0.946);       // Low                    ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.0822756, 0.165647, 0.752077);
 	visual V1 {
 		center = (342, 216);
 		height = 5;
@@ -133,18 +140,18 @@ node InduceRulesGeometric {
 node CommonRatioMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (CommonRatio);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Common Ratio Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143493501;
-	belief = (0.660052, 0.339948);
 	visual V1 {
 		center = (104, 516);
 		height = 8;
@@ -154,18 +161,18 @@ node CommonRatioMediumTask {
 node VisualMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (VisualGeometric);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Visual Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143484340;
-	belief = (0.433883, 0.566117);
 	visual V1 {
 		center = (762, 408);
 		height = 9;
@@ -175,18 +182,18 @@ node VisualMediumTask {
 node TableGeometricMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (TableGeometric);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Table Geometric Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143484366;
-	belief = (0.440131, 0.559869);
 	visual V1 {
 		center = (732, 498);
 		height = 11;
@@ -196,15 +203,15 @@ node TableGeometricMediumTask {
 node AlgebraRuleGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (InduceRulesGeometric);
 	probs = 
-		// High         Medium       Low            // InduceRulesGeometric 
-		 ((0.1589416,   0.4232342,   0.4178242),    // High                 
-		  (0.009290083, 0.116352,    0.8743579),    // Medium               
-		  (1.04e-4,     0.006073,    0.993823));    // Low                  ;
+		// High         Medium       Low           // InduceRulesGeometric 
+		  (0.1589416,   0.4232342,   0.4178242,    // High                 
+		   0.009290083, 0.116352,    0.8743579,    // Medium               
+		   1.04e-4,     0.006073,    0.993823);    // Low                  ;
 	whenchanged = 2147483647;
-	belief = (0.0146941, 0.0586626, 0.926643);
 	visual V1 {
 		center = (306, 294);
 		height = 3;
@@ -214,16 +221,16 @@ node AlgebraRuleGeometric {
 node VerbalRuleGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (InduceRulesGeometric);
 	probs = 
-		// High         Medium       Low            // InduceRulesGeometric 
-		 ((0.8909276,   0.1084034,   6.690208e-4),  // High                 
-		  (0.1615161,   0.6769677,   0.1615161),    // Medium               
-		  (6.690208e-4, 0.1084034,   0.8909276));   // Low                  ;
+		// High         Medium       Low           // InduceRulesGeometric 
+		  (0.8909276,   0.1084034,   6.690208e-4,  // High                 
+		   0.1615161,   0.6769677,   0.1615161,    // Medium               
+		   6.690208e-4, 0.1084034,   0.8909276);   // Low                  ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.100559, 0.202584, 0.696856);
 	visual V1 {
 		center = (534, 246);
 		height = 15;
@@ -233,16 +240,16 @@ node VerbalRuleGeometric {
 node ExplicitGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (AlgebraRuleGeometric);
 	probs = 
-		// High         Medium       Low            // AlgebraRuleGeometric 
-		 ((0.2582583,   0.4534535,   0.2882883),    // High                 
-		  (0.02250225,  0.190119,    0.7873787),    // Medium               
-		  (3.900429e-4, 0.01530168,  0.9843083));   // Low                  ;
+		// High         Medium       Low           // AlgebraRuleGeometric 
+		  (0.2582583,   0.4534535,   0.2882883,    // High                 
+		   0.02250225,  0.190119,    0.7873787,    // Medium               
+		   3.900429e-4, 0.01530168,  0.9843083);   // Low                  ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.00547635, 0.0319952, 0.962528);
 	visual V1 {
 		center = (210, 372);
 		height = 7;
@@ -252,16 +259,16 @@ node ExplicitGeometric {
 node RecursiveRuleGeometric {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (High, Medium, Low);
 	parents = (AlgebraRuleGeometric);
 	probs = 
-		// High         Medium       Low            // AlgebraRuleGeometric 
-		 ((0.9641929,   0.0345069,   0.00130026),   // High                 
-		  (0.6726,      0.2783,      0.0491),       // Medium               
-		  (0.182,       0.4354,      0.3826));      // Low                  ;
+		// High         Medium       Low           // AlgebraRuleGeometric 
+		  (0.9641929,   0.0345069,   0.00130026,   // High                 
+		   0.6726,      0.2783,      0.0491,       // Medium               
+		   0.182,       0.4354,      0.3826);      // Low                  ;
 	numcases = 1;
 	whenchanged = 2147483647;
-	belief = (0.222273, 0.420293, 0.357433);
 	visual V1 {
 		center = (420, 366);
 		height = 2;
@@ -274,18 +281,18 @@ node RecursiveRuleGeometric {
 node VerbalRuleMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (VerbalRuleGeometric);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Verbal Rule Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143493460;
-	belief = (0.366072, 0.633928);
 	visual V1 {
 		center = (576, 576);
 		height = 12;
@@ -295,18 +302,18 @@ node VerbalRuleMediumTask {
 node ExplicitGeometricMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (ExplicitGeometric);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Explicit Geometric Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143493488;
-	belief = (0.285046, 0.714954);
 	visual V1 {
 		center = (252, 582);
 		height = 13;
@@ -316,22 +323,24 @@ node ExplicitGeometricMediumTask {
 node RecursiveRuleMediumTask {
 	kind = NATURE;
 	discrete = TRUE;
+	chance = CHANCE;
 	states = (True, False);
 	inputs = (theta);
 	parents = (RecursiveRuleGeometric);
 	probs = 
-		// True         False          // theta  
-		 ((0.7246,      0.2754),       // High   
-		  (0.5,         0.5),          // Medium 
-		  (0.2754,      0.7246));      // Low    ;
+		// True         False         // theta  
+		  (0.7246,      0.2754,       // High   
+		   0.5,         0.5,          // Medium 
+		   0.2754,      0.7246);      // Low    ;
 	title = "Recursive Rule Medium Task";
 	comment = "Is response \"correct\", Easy task, three level parent.  IRT difficulty 0.";
 	whenchanged = 1143493472;
-	belief = (0.469643, 0.530357);
 	visual V1 {
 		center = (426, 504);
 		height = 10;
 		};
 	};
+NodeSet Observables {Nodes = (CommonRatioMediumTask, VisualMediumTask, TableGeometricMediumTask, VerbalRuleMediumTask, ExplicitGeometricMediumTask, RecursiveRuleMediumTask);};
+NodeSet Proficiencies {Nodes = (SolveGeometricProblems, CommonRatio, VisualGeometric, TableGeometric, InduceRulesGeometric, AlgebraRuleGeometric, VerbalRuleGeometric, ExplicitGeometric, RecursiveRuleGeometric);};
 ElimOrder = (CommonRatioMediumTask, VisualMediumTask, TableGeometricMediumTask, VerbalRuleMediumTask, ExplicitGeometricMediumTask, RecursiveRuleMediumTask, CommonRatio, VisualGeometric, TableGeometric, SolveGeometricProblems, VerbalRuleGeometric, InduceRulesGeometric, ExplicitGeometric, AlgebraRuleGeometric, RecursiveRuleGeometric);
 };

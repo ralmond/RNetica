@@ -939,50 +939,6 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
 })
 
 
-
-######################################################################
-### Normalization
-######################################################################
-
-normalize <- function(cpt) {
-  UseMethod("normalize",cpt)
-}
-
-normalize.array <- function(cpt) {
-  normalize(as.CPA(cpt))
-}
-
-normalize.data.frame <- function (cpt) {
-  normalize(as.CPF(cpt))
-}
-
-normalize.default <- function (cpt) {
-  if (!is.numeric(cpt)) {
-    stop("Can only normalize CPAs, CPFs and numeric objects.")
-  }
-  return (cpt/sum(cpt))
-}
-
-normalize.matrix <- function (cpt) {
-  if (!is.numeric(cpt)) {
-    stop("Can only normalize CPAs, CPFs and numeric objects.")
-  }
-  sweep(cpt,1L,apply(cpt,1L,sum),"/")
-}
-
-normalize.CPA <- function (cpt) {
-  ndim <- length(dim(cpt))
-  if (ndim <= 1L) return(cpt/sum(cpt))
-  ndim <- ndim-1L
-  sweep(cpt,1L:ndim,apply(cpt,1L:ndim,sum),"/")
-}
-
-normalize.CPF <- function (cpt) {
-  probs <- sapply(cpt,is.numeric)
-  cpt[probs] <- sweep(cpt[probs],1L,apply(cpt[probs],1L,sum),"/")
-  cpt
-}
-
 ############################################################################
 ## Merging Networks:  EM -- SM algorithm
 ###########################################################################

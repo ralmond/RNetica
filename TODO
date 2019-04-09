@@ -101,9 +101,15 @@ Ask Brent:
 * 6. NetworkUndo, Redo
 * 7. Learn_CPTs return value?
 * 8. Mysterious behavior of CalcNodeValue
-o [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
+x [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 10.  Error on NodeExpectedUtils
 * 11.  Learn_CPTs and case streams.
 * 12. Crash in AbsorbNode
 * 13. Getters for DBN properties
-o [RGA] ReadNetwork_bn has switch to suppress loading visual information.
+x ReadNetwork_bn has switch to suppress loading visual information.
+
+Why does theta[] <- c(...) not work for continuous nodes, but
+NodeProbs(theta) works.
+
+Document:
+woe, ewoe

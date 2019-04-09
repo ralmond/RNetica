@@ -378,3 +378,62 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
   DeleteNodeList_bn(nodelist);
   return stream;
 }
+
+extern caseset_cs* NewCaseset_rn(SEXP caseStream, SEXP session);
+
+SEXP RN_TestNetwork(SEXP testerData) {
+  
+  nodelist_bn* target_nodes = RN_AS_NODELIST(GET_SLOT(testerData,mkChar("targetNodes")),NULL);
+  nodelist_bn* ignore_nodes = NULL;
+  if (GET_LENGTH(GET_SLOT(testerData,mkChar("ignoreNodes"))) > 1) {
+    ignore_nodes = RN_AS_NODELIST(GET_SLOT(testerData,mkChar("ignoreNodes")),
+                                  NULL);
+  }
+  tester_bn* test = NewNetTester_bn(target_nodes,ignore_nodes,-1);
+  if (test== NULL)
+    error("Tester Creation Failed");
+  // Loop over case streams
+  SEXP streams = PROTECT(GET_SLOT(testerData,mkChar("dataStream")));
+  SEXP session = GET_FIELD(GET_SLOT(testerData,mkChar("net")),
+                           mkChar("session"));
+  R_len_t n, ns = length(streams);
+  for (n=0; n<ns; n++) {
+    SEXP stream = PROTECT(VECTOR_ELT(streams,n));
+    caseset_cs* cases = NewCaseset_rn(stream,session);
+    TestWithCaseset_bn(test,cases);
+    DeleteCaseset_cs(cases);
+    UNPROTECT(1);
+  }
+  UNPROTECT(2);
+  
+  SEXP errorRate = PROTECT(GET_SLOT(testerData,mkChar("errorRate")));
+  SEXP logLoss = PROTECT(GET_SLOT(testerData,mkChar("logLoss")));
+  SEXP quadraticLoss = PROTECT(GET_SLOT(testerData,
+                                        mkChar("quadraticLoss")));
+  SEXP confusion = PROTECT(GET_SLOT(testerData,mkChar("confusion")));
+  for (int inode=0; inode<LengthNodeList_bn(target_nodes); inode++) {
+    node_bn* node = NthNode_bn(target_nodes,inode);
+    REAL(errorRate)[inode] = GetTestErrorRate_bn(test,node);
+    REAL(logLoss)[inode] = GetTestLogLoss_bn(test,node);
+    REAL(quadraticLoss)[inode] = GetTestQuadraticLoss_bn(test,node);
+    int nn = GetNodeNumberStates_bn(node);
+    SEXP conf = PROTECT(VECTOR_ELT(confusion,inode));
+    for (int ipred=0; ipred<nn; ipred++) {
+      for (int jact=0; jact<nn; jact++) {
+        REAL(conf)[ipred*nn+jact] =
+          GetTestConfusion_bn(test, node, ipred, jact);
+      }
+    }
+    SET_VECTOR_ELT(confusion,inode,conf);
+    UNPROTECT(1);
+  }
+  SET_SLOT(testerData,mkChar("confusion"),confusion);
+  SET_SLOT(testerData,mkChar("quadraticLoss"),quadraticLoss);
+  SET_SLOT(testerData,mkChar("logLoss"),logLoss);
+  SET_SLOT(testerData,mkChar("errorRate"),errorRate);
+  UNPROTECT(4);
+
+  DeleteNetTester_bn(test);
+  
+  return testerData;
+}

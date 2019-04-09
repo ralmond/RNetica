@@ -59,22 +59,6 @@ is.NeticaBN(x)
   Russell Almond
 }
 \note{
-  [This reflects RNetica version 0.1--0.4.  It is no longer current as
-  of version 0.5.]
-
-  Internally, the \code{NeticaBN} objects are
-  character strings with extra attributes.  So \code{as.character(net)}
-  will return the name of the network.  Because of this, the default
-  \code{\link[base]{c}()} function will strip off the essential
-  attributes returning them to strings.  Use the \code{\link{cc}()}
-  function instead to avoid this problem.
-
-  Note that if a \code{NeticaBN} object is stored in an R object, and
-  the network is subsequently renamed (with a call to the set method of
-  \code{NetworkName}), the old object may persist with the wrong name.
-  This may result in a situation where the printed names of the objects
-  are different but \code{net1==net2} returns true.  This can be fixed
-  with the code \code{NetworkName(net) <- NetworkName(net)}.
 
   \code{NeticaBN} objects are all rendered inactive when
   \code{StopNetica()} is called, therefore they do not persist across R

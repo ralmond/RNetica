@@ -66,21 +66,6 @@ is.NeticaNode(x)
   Russell Almond
 }
 \note{
-  The first two paragraphs are obsolete as of Version 0.5.
-
-  Internally, the \code{NeticaNode} objects are
-  character strings with extra attributes.  So \code{as.character(node)}
-  will return the name of the node.  Because of this, the default
-  \code{\link[base]{c}()} function will strip off the essential
-  attributes returning them to strings.  Use the \code{\link{cc}()}
-  function instead to avoid this problem.
-
-  Note that if a \code{NeticaNode} object is stored in an R object, and
-  the Node is subsequently renamed (with a call to the set method of
-  \code{NodeName}), the old object may persist with the wrong name.
-  This may result in a situation where the printed names of the objects
-  are different but \code{node1==node2} returns true.  This can be fixed
-  with the code \code{NodeName(net) <- NodeName(net)}.
 
   \code{NeticaNode} objects are all rendered inactive when
   \code{StopNetica()} is called, therefore they do not persist across R

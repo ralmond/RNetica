@@ -4,7 +4,7 @@ importFrom("utils","getFromNamespace")
 importFrom("grDevices", "col2rgb")
 importFrom("stats", "runif")
 importFrom("R.utils","tempvar")
-importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF")
+importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF", "normalize")
 
 
 export(NeticaSession)
@@ -71,10 +71,7 @@ exportMethods("[","[[","[<-")
    )
 
 export(
-  NodeProbs, "NodeProbs<-", normalize.matrix,
-  normalize, normalize.array, normalize.data.frame,
-  normalize.CPA, normalize.default,
-  normalize.CPF, EVERY_STATE,
+  NodeProbs, "NodeProbs<-", EVERY_STATE,
   IsNodeDeterministic, HasNodeTable,
   DeleteNodeTable
    )

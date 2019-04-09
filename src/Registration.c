@@ -892,6 +892,7 @@ extern SEXP RN_isRNGActive(SEXP rng);
 extern SEXP RN_SetNetRandomGen (SEXP net, SEXP seed, SEXP session);
 extern SEXP RN_GenerateRandomCase(SEXP nodelist, SEXP method, 
                                   SEXP timeout, SEXP seed, SEXP session) ;
+extern SEXP RN_TestNetwork(SEXP tester);
 
 
 R_CallMethodDef callMethods[] = {
@@ -1038,6 +1039,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_isRNGActive", (DL_FUNC) &RN_isRNGActive,1},
   {"RN_SetNetRandomGen", (DL_FUNC) &RN_SetNetRandomGen, 3},
   {"RN_GenerateRandomCase", (DL_FUNC) &RN_GenerateRandomCase,5},
+  {"RN_TestNetwork", (DL_FUNC) &RN_TestNetwork,1},
   {NULL, NULL, 0},
 };
 

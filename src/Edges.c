@@ -10,7 +10,7 @@
 #include <RNetica.h>
 
 //#define DEBUG_SET_PARENTS 1
-#define DEBUG_ABSORB 1
+//#define DEBUG_ABSORB 1
 
 SEXP RN_AddLink(SEXP parent, SEXP child) {
   node_bn* parent_handle = GetNodeHandle(parent);
@@ -195,13 +195,19 @@ SEXP RN_SetNodeParents(SEXP node, SEXP value) {
 SEXP RN_AbsorbNodes(SEXP nodelist) {
 #ifdef DEBUG_ABSORB
   Rprintf("Creating node list.\n");
+#endif
   nodelist_bn* deleteme = RN_AS_NODELIST(nodelist,NULL);
   int kk=LengthNodeList_bn(deleteme);
+#ifdef DEBUG_ABSORB
   Rprintf("Absorbing %d nodes.\n",kk);
+#endif
   node_bn* node0 = NthNode_bn(deleteme,0);
+#ifdef DEBUG_ABSORB
   Rprintf("First node address %x.\n",(long) node0);
+#endif
   const char *nodename;
   nodename = GetNodeName_bn(node0);
+#ifdef DEBUG_ABSORB
   Rprintf("Its name is %s.\n",nodename);
 #endif
 

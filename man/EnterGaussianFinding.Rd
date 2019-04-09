@@ -48,11 +48,15 @@ EnterGaussianFinding(node, mean, sem, retractFirst = TRUE)
 }
 \section{Warning }{
 
-  This function is not behaving at all like what I expected.  In
-  particular, I expect that it would behave like a normal likelihood,
+  The Netica function EnterGaussianFinding_bn is not behaving at all
+  like what I expected.  In particular, I expect that it would behave
+  like a normal likelihood, 
   but instead it seems to be behaving as if I typed the expression
   \code{\link{NodeValue}(node)<-mean}.  I've queried Norsys about
-  this.  Use with caution until I get a clarification.
+  this.  
+
+  Meanwhile, I've worked around by calling \code{\link{NodeLikelihood}}
+  instead of the internal Netica function.
 
 }
 \seealso{
@@ -69,16 +73,15 @@ cirt5 <- CreateNetwork("ContinuousIRT5", session=sess)
 
 theta <- NewContinuousNode(cirt5,"Theta")
 NodeLevels(theta) <- c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)
-theta[] <- rep(1/NodeNumStates(theta),NodeNumStates(theta))
+NodeProbs(theta) <- rep(1/NodeNumStates(theta),NodeNumStates(theta))
 
 CompileNetwork(cirt5) ## Ready to enter findings
 
 EnterGaussianFinding(theta,0,1)
 NodeBeliefs(theta)
 
-## I expect this to look like:
-diff(pnorm(c(-5,-2.5,-1.5,-0.5,0.5,1.5,2.5,5)))
-## But it doesn't!
+stopifnot(all(abs(NodeBeliefs(theta) -
+              diff(pnorm(NodeLevels(theta),0,1))) < .0001))
 
 DeleteNetwork(cirt5)
 stopSession(sess)
