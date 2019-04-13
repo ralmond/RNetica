@@ -86,7 +86,7 @@ is.NeticaNode(x)
   \code{\link{NewContinuousNode}()}, \code{\link{NewDiscreteNode}()},
   \code{\link{DeleteNodes}()}, \code{\link{NodeName}()},
   \code{\link{NodeStates}()}, \code{\link{NodeLevels}()},
-  \code{\link{cc}()}
+  %\code{\link{cc}()}
 
 }
 \examples{

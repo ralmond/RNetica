@@ -83,7 +83,8 @@ NodeProbs(node) <- value
   \code{\link{Extract.NeticaNode}},
   \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
-  \code{\link{CPA}}, \code{\link{CPF}}, \code{\link{normalize}()}
+  \code{\link[CPTtools]{CPA}},
+  \code{\link[CPTtools]{CPF}}, \code{\link{normalize}()}
 }
 \examples{
 sess <- NeticaSession()
@@ -105,9 +106,9 @@ Aprobs <- NodeProbs(A)
 Bprobs <- NodeProbs(B)
 Cprobs <- NodeProbs(C)
 stopifnot(
-  is.CPA(Aprobs),
-  is.CPA(Bprobs),
-  is.CPA(Cprobs)
+  CPTtools::is.CPA(Aprobs),
+  CPTtools::is.CPA(Bprobs),
+  CPTtools::is.CPA(Cprobs)
 )
 
 DeleteNetwork(abc)

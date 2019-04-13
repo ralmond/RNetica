@@ -11,10 +11,12 @@
   the expected weight of evidence for unobserved nodes.
 }
 \usage{
-woe(hnodes, hstatelists)
+woe(enodes, hnodes, hstatelists)
 ewoe(enodes, hnodes, hstatelists)
 }
 \arguments{
+  \item{enodes}{A list of \code{\linkS4class{NeticaNode}}s whose
+    [expected] weight of evidence is to be calculated.}
   \item{hnodes}{A list of \code{\linkS4class{NeticaNode}}s
     whose values are of interest.  As a special case, a single
     \code{NeticaNode} is treated as a list of length one.}
@@ -23,8 +25,6 @@ ewoe(enodes, hnodes, hstatelists)
     and representing states of the corresponding node.
     As a special case, a character vector is turned into a list of
     length one.}
-  \item{enodes}{A list of \code{\linkS4class{NeticaNode}}s whose
-    expected weight of evidence is to be calculated.}
 }
 \details{
 
@@ -93,7 +93,7 @@ ewoe(enodes, hnodes, hstatelists)
 \seealso{
   \code{\link[CPTtools]{woeHist}}, \code{\link[CPTtools]{woeBal}},
   \code{\link{NodeFinding}}, \code{\link{NodeLikelihood}},
-  \code{\link{RetractNodeFindings}}, \code{\link{MutualInfo}}
+  \code{\link{RetractNodeFinding}}, \code{\link{MutualInfo}}
 }
 \examples{
 

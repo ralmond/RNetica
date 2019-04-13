@@ -54,6 +54,7 @@ const char* RNGATT = "Netica_RNG";
 
 SEXP RNeticaPackageName=NULL;
 SEXP sessionclass=NULL;
+
 SEXP sessionconstructor=NULL;
 SEXP sessionatt=NULL;
 SEXP namefield=NULL;
@@ -93,6 +94,16 @@ SEXP rngclass = NULL;
 SEXP rngatt = NULL;
 SEXP RngList = NULL;
 
+// NetworkTester Slots
+SEXP ignoreNodes = NULL;
+SEXP targetNodes = NULL;
+SEXP dataStreams = NULL;
+SEXP errorRate = NULL;
+SEXP logLoss = NULL;
+SEXP quadraticLoss = NULL;
+SEXP confusion = NULL;
+
+  
 static int symbolRegCount=0;
 
 void RN_Define_Symbols() {
@@ -254,6 +265,28 @@ void RN_Define_Symbols() {
     PROTECT(callme=lang3(getter,cname,RNeticaPackageName));
     R_PreserveObject(cliquenodeconstructor=eval(callme,R_GlobalEnv));
     UNPROTECT(1);
+  }
+
+  if (ignoreNodes==NULL) { 
+    R_PreserveObject(ignoreNodes = install("ignoreNodes"));  
+  }
+  if (targetNodes==NULL) { 
+    R_PreserveObject(targetNodes = install("targetNodes"));  
+  }
+  if (dataStreams==NULL) { 
+    R_PreserveObject(dataStreams = install("data"));  
+  }
+  if (errorRate==NULL) { 
+    R_PreserveObject(errorRate = install("errorRate"));  
+  }
+  if (logLoss==NULL) { 
+    R_PreserveObject(logLoss = install("logLoss"));  
+  }
+  if (quadraticLoss==NULL) { 
+    R_PreserveObject(quadraticLoss = install("quadraticLoss"));  
+  }
+  if (confusion==NULL) { 
+    R_PreserveObject(confusion = install("confusion"));  
   }
 
   UNPROTECT(2);

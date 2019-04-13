@@ -132,6 +132,15 @@ extern const char* RNGClass;
 extern SEXP rngatt;
 extern SEXP RngList;
 
+extern SEXP ignoreNodes;
+extern SEXP targetNodes;
+extern SEXP dataStreams;
+extern SEXP errorRate;
+extern SEXP logLoss;
+extern SEXP quadraticLoss;
+extern SEXP confusion;
+
+
 extern void RN_Define_Symbols();  //Reloads symbol definitions.
 extern void RN_Free_Symbols();  //Seems we can only allocate them on 
                                 //a call basis.

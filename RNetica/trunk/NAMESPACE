@@ -2,9 +2,10 @@ import(methods)
 import(utils)
 importFrom("utils","getFromNamespace")
 importFrom("grDevices", "col2rgb")
-importFrom("stats", "runif")
+importFrom("stats", "runif","pnorm","punif")
 importFrom("R.utils","tempvar")
-importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF", "normalize")
+importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF", "normalize",
+           "fcKappa","gkLambda")
 
 
 export(NeticaSession)
@@ -125,5 +126,12 @@ export(NodeValue, "NodeValue<-",
 exportClasses(NeticaRNG)
 export(GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
        is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG)
+
+exportClasses(NetworkTester)
+export(testerNet, testerTarget, testerIgnore,
+       testerErrorRate, testerLogLoss, testerQuadraticLoss,
+       testerConfusion, testerKappa, testerLambda,
+       testNetwork)
+S3method(summary,NetworkTester)
 
 useDynLib(RNetica)

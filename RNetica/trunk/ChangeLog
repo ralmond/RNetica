@@ -1,3 +1,8 @@
+2019-04-13  Rusell Almond  <ralmond@Cherry>
+
+	* R/Cases.R (OpenCaseStream): fixed return value of OpenCaseStream
+	
+
 2019-04-07  Russell Almond  <ralmond@Limu>
 
 	* R/Edges.R (normalize): Moved Normalize (as well as as.CPA and
