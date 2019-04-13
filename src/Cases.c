@@ -18,6 +18,7 @@ mempcpy (void *dest, const void *src, size_t n)
 #include <RNetica.h>
 
 //#define DEBUG_MEMSTREAMS
+//#define DEBUG_TESTER 1
 
 /**
  * Case sets are generally tab separated files of variable values,
@@ -382,22 +383,48 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
 extern caseset_cs* NewCaseset_rn(SEXP caseStream, SEXP session);
 
 SEXP RN_TestNetwork(SEXP testerData) {
-  
-  nodelist_bn* target_nodes = RN_AS_NODELIST(GET_SLOT(testerData,mkChar("targetNodes")),NULL);
+#ifdef DEBUG_TESTER
+  Rprintf("RN_TestNetwork: Checking Node Lists.\n");
+#endif
+  net_bn* net_handle = GetNeticaHandle(GET_SLOT(testerData,netfield));
+  nodelist_bn* target_nodes = RN_AS_NODELIST(GET_SLOT(testerData,targetNodes),
+                                             net_handle);
   nodelist_bn* ignore_nodes = NULL;
-  if (GET_LENGTH(GET_SLOT(testerData,mkChar("ignoreNodes"))) > 1) {
-    ignore_nodes = RN_AS_NODELIST(GET_SLOT(testerData,mkChar("ignoreNodes")),
-                                  NULL);
+  //if (GET_LENGTH(GET_SLOT(testerData,ignoreNodes)) > 1) {
+  ignore_nodes = RN_AS_NODELIST(GET_SLOT(testerData,ignoreNodes),
+                                net_handle);
+    //}
+#ifdef DEBUG_TESTER
+  Rprintf("RN_TestNetwork: Creating Tester.\n");
+  Rprintf("RN_TestNetwork: target nodes: %ld.\n",target_nodes);
+  Rprintf("RN_TestNetwork: length target nodes: %d.\n",
+          LengthNodeList_bn(target_nodes));
+  Rprintf("RN_TestNetwork: first node: %s.\n",
+          GetNodeName_bn(NthNode_bn(target_nodes,0)));
+  Rprintf("RN_TestNetwork: ignore nodes %ld.\n",ignore_nodes);
+  if (ignore_nodes != NULL) {
+    Rprintf("RN_TestNetwork: length target nodes: %d.\n",
+            LengthNodeList_bn(ignore_nodes));
+    if (LengthNodeList_bn(ignore_nodes) > 0) 
+      Rprintf("RN_TestNetwork: first node: %s.\n",
+              GetNodeName_bn(NthNode_bn(ignore_nodes,0)));
   }
+#endif
   tester_bn* test = NewNetTester_bn(target_nodes,ignore_nodes,-1);
   if (test== NULL)
     error("Tester Creation Failed");
   // Loop over case streams
-  SEXP streams = PROTECT(GET_SLOT(testerData,mkChar("dataStream")));
-  SEXP session = GET_FIELD(GET_SLOT(testerData,mkChar("net")),
-                           mkChar("session"));
+#ifdef DEBUG_TESTER
+  Rprintf("RN_TestNetwork: Processesing Casesets.\n");
+#endif
+  SEXP streams = PROTECT(GET_SLOT(testerData,dataStreams));
+  SEXP session = PROTECT(GET_FIELD(GET_SLOT(testerData,netfield),
+                                   sessionfield));
   R_len_t n, ns = length(streams);
   for (n=0; n<ns; n++) {
+#ifdef DEBUG_TESTER
+    Rprintf("RN_TestNetwork: Processesing Caseset %d.\n",n);
+#endif
     SEXP stream = PROTECT(VECTOR_ELT(streams,n));
     caseset_cs* cases = NewCaseset_rn(stream,session);
     TestWithCaseset_bn(test,cases);
@@ -406,31 +433,40 @@ SEXP RN_TestNetwork(SEXP testerData) {
   }
   UNPROTECT(2);
   
-  SEXP errorRate = PROTECT(GET_SLOT(testerData,mkChar("errorRate")));
-  SEXP logLoss = PROTECT(GET_SLOT(testerData,mkChar("logLoss")));
-  SEXP quadraticLoss = PROTECT(GET_SLOT(testerData,
-                                        mkChar("quadraticLoss")));
-  SEXP confusion = PROTECT(GET_SLOT(testerData,mkChar("confusion")));
+#ifdef DEBUG_TESTER
+  Rprintf("RN_TestNetwork: Unpacking Slots.\n");
+#endif
+  SEXP error_Rate = PROTECT(GET_SLOT(testerData,errorRate));
+  SEXP log_Loss = PROTECT(GET_SLOT(testerData,logLoss));
+  SEXP quadratic_Loss = PROTECT(GET_SLOT(testerData,
+                                        quadraticLoss));
+  SEXP confusion_ = PROTECT(GET_SLOT(testerData,confusion));
   for (int inode=0; inode<LengthNodeList_bn(target_nodes); inode++) {
     node_bn* node = NthNode_bn(target_nodes,inode);
-    REAL(errorRate)[inode] = GetTestErrorRate_bn(test,node);
-    REAL(logLoss)[inode] = GetTestLogLoss_bn(test,node);
-    REAL(quadraticLoss)[inode] = GetTestQuadraticLoss_bn(test,node);
+#ifdef DEBUG_TESTER
+    Rprintf("RN_TestNetwork: Processesing Node %s.\n",GetNodeName_bn(node));
+#endif
+    REAL(error_Rate)[inode] = GetTestErrorRate_bn(test,node);
+    REAL(log_Loss)[inode] = GetTestLogLoss_bn(test,node);
+    REAL(quadratic_Loss)[inode] = GetTestQuadraticLoss_bn(test,node);
     int nn = GetNodeNumberStates_bn(node);
-    SEXP conf = PROTECT(VECTOR_ELT(confusion,inode));
+    SEXP conf = PROTECT(VECTOR_ELT(confusion_,inode));
     for (int ipred=0; ipred<nn; ipred++) {
       for (int jact=0; jact<nn; jact++) {
         REAL(conf)[ipred*nn+jact] =
           GetTestConfusion_bn(test, node, ipred, jact);
       }
     }
-    SET_VECTOR_ELT(confusion,inode,conf);
+    SET_VECTOR_ELT(confusion_,inode,conf);
     UNPROTECT(1);
   }
-  SET_SLOT(testerData,mkChar("confusion"),confusion);
-  SET_SLOT(testerData,mkChar("quadraticLoss"),quadraticLoss);
-  SET_SLOT(testerData,mkChar("logLoss"),logLoss);
-  SET_SLOT(testerData,mkChar("errorRate"),errorRate);
+#ifdef DEBUG_TESTER
+  Rprintf("RN_TestNetwork: Packing Slots.\n");
+#endif
+  SET_SLOT(testerData,confusion,confusion_);
+  SET_SLOT(testerData,quadraticLoss,quadratic_Loss);
+  SET_SLOT(testerData,logLoss,log_Loss);
+  SET_SLOT(testerData,errorRate,error_Rate);
   UNPROTECT(4);
 
   DeleteNetTester_bn(test);

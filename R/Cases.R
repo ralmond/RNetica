@@ -187,6 +187,7 @@ OpenCaseStream <- function (oldstream) {
   } else {
     stop("expected oldstram to be a CaseStream")
   }
+  oldstream
 }
 
 

@@ -73,7 +73,7 @@ is.NeticaBN(x)
   \code{\link{GetNamedNetworks}()},\code{\link{NetworkName}()},
   \code{\link{is.active}()}, \code{\link{NetworkAllNodes}()},
   \code{\link{WriteNetworks}()}, \code{\link{GetNetworkFileName}()},
-  \code{\link{cc}()}
+  %\code{\link{cc}()}
 }
 \examples{
 \dontrun{
