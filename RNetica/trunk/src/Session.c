@@ -368,7 +368,17 @@ SEXP RN_Session_Version(SEXP sessobj) {
  *There is probably a more elegant interface using .Call which returns
  *all of the error messages.  This is a sufficient solution which does
  *not require switching between R and .C strings.
+ * Time to implement that solution :).
  */
+
+SEXP append_mess (SEXP messList, const char *mess) {
+  R_len_t n=GET_LENGTH(messList);
+  messList = SET_LENGTH(messList,n+1);
+  SET_STRING_ELT(messList,n,mkChar(mess));
+  return messList;
+}
+  
+
 
 /**
  * Prints the errors using Rprintf.
@@ -383,22 +393,20 @@ SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag) {
   int clearit = LOGICAL(clearflag)[0];
   environ_ns* netica_env = GetSessionPtr(sessobj);
 
-  SEXP errorCounts;
+  SEXP allErrors, fatal, errerr, warnerr, note, report;
+  PROTECT(allErrors = allocVector(VECSXP,5));
 
-  PROTECT(errorCounts = allocVector(INTSXP,4));
-  int* counts = INTEGER(errorCounts);
-  counts[0] = counts[1] = counts[2] = counts[3] = NA_INTEGER;
   report_ns* err = NULL;
   int ecount = 0;
 
-  counts[0] = 0;
+  PROTECT(fatal=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, XXX_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
     Rprintf("Netica fatal error  @%x.\n", (long) err);
 #endif
     Rprintf("Fatal Netica error: %s\n",ErrorMessage_ns(err));
+    fatal = append_mess(fatal,ErrorMessage_ns(err));
     ecount++;
-    counts[0]++;
     if (clearit) {
       ClearError_ns(err);
       err = NULL;
@@ -407,66 +415,92 @@ SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag) {
   if (ecount >0) {
     error("Fatal errors encountered, recommend restarting Netica");
   }
-
+  SET_VECTOR_ELT(allErrors,0,fatal);
+  UNPROTECT(1);
+  
+  PROTECT(errerr=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, ERROR_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
     Rprintf("Netica error  @%x.\n", (long) err);
-#endif
     Rprintf("Netica error: %s\n",ErrorMessage_ns(err));
-    counts[0]++;
-    if (ecount++ > maxerr) goto backToR;
+#endif
+    errerr = append_mess(errerr,ErrorMessage_ns(err));
+    if (ecount++ > maxerr) {
+      SET_VECTOR_ELT(allErrors,1,errerr);
+      UNPROTECT(1);
+      goto backToR;
+    }
     if (clearit) {
       ClearError_ns(err);
       err = NULL;
     }
   }
+  SET_VECTOR_ELT(allErrors,1,errerr);
+  UNPROTECT(1);
   
-  counts[1]=0;
+  PROTECT(warnerr=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, WARNING_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
     Rprintf("Netica warning  @%x.\n", (long) err);
-#endif
     Rprintf("Netica warning: %s\n",ErrorMessage_ns(err));
-    counts[1]++;
-    if (ecount++ > maxerr)
+#endif
+    warnerr = append_mess(warnerr,ErrorMessage_ns(err));
+    if (ecount++ > maxerr) {
+      SET_VECTOR_ELT(allErrors,2,warnerr);
+      UNPROTECT(1);
       goto backToR;
+    }
     if (clearit) {
       ClearError_ns(err);
       err = NULL;
     }
   }
+  SET_VECTOR_ELT(allErrors,2,warnerr);
+  UNPROTECT(1);
 
-  counts[2]=0;
+  PROTECT(note=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, NOTICE_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
     Rprintf("Netica notice  @%x.\n", (long) err);
-#endif
     Rprintf("Netica notice: %s\n",ErrorMessage_ns(err));
-    counts[2]++;
-    if (ecount++ > maxerr) goto backToR;
+#endif
+    note = append_mess(note,ErrorMessage_ns(err));
+    if (ecount++ > maxerr) {
+      SET_VECTOR_ELT(allErrors,3,note);
+      UNPROTECT(1);
+      goto backToR;
+    }
     if (clearit) {
       ClearError_ns(err);
       err = NULL;
     }
   }
+  SET_VECTOR_ELT(allErrors,3,note);
+  UNPROTECT(1);
 
-  counts[3] = 0;
+  PROTECT(report=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, REPORT_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
     Rprintf("Netica report  @%x.\n", (long) err);
-#endif
     Rprintf("Netica report: %s\n",ErrorMessage_ns(err));
-    counts[3]++;
-    if (ecount++ > maxerr) goto backToR;
+#endif
+    report = append_mess(report,ErrorMessage_ns(err));
+    if (ecount++ > maxerr) {
+      SET_VECTOR_ELT(allErrors,3,note);
+      UNPROTECT(1);
+      goto backToR;
+    }
     if (clearit) {
       ClearError_ns(err);
       err = NULL;
     }
   }
+  SET_VECTOR_ELT(allErrors,3,note);
+  UNPROTECT(1);
 
 backToR:
   UNPROTECT(1);
-  return errorCounts;
+  return allErrors;
 }
 
 

@@ -1,3 +1,15 @@
+2019-07-15  Rusell Almond  <ralmond@Cherry>
+
+	* R/Edges.R (doSelection): Considering redoing [[ so that it
+	always refers to deterministic nodes.
+	(doSelection): Added returnCPT arg to differentiate [[ and [,
+	([[<-): Added new function to handle deterministic nodes.
+	([<-): Fixed problem with assuming continuous nodes are deterministic.
+	
+
+	* src/Session.c (RN_Session_errors): Changed to return a list of
+	error message vectors.
+
 2019-04-13  Rusell Almond  <ralmond@Cherry>
 
 	* R/Cases.R (OpenCaseStream): fixed return value of OpenCaseStream

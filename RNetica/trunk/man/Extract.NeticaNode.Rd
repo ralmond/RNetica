@@ -1,6 +1,7 @@
 \name{Extract.NeticaNode}
 \alias{Extract.NeticaNode}
 \alias{[<-,NeticaNode-method}
+\alias{[[<-,NeticaNode-method}
 \alias{[,NeticaNode-method}
 \alias{[[,NeticaNode-method}
 \alias{EVERY_STATE}
@@ -10,14 +11,18 @@
 \description{
   Provides an efficient mechanism for extracting or setting portions of
   large conditional probability tables.  In particular, allows setting
-  many rows a CPT to the same value.
+  many rows a CPT to the same value.  The \code{node[]} form is for
+  chance (probabilistic) nodes, the \code{node[[]]} form is for
+  deterministic (functional) nodes.  See
+  \code{\link{IsNodeDeterministic}}. 
 }
 \usage{
 \S4method{[}{NeticaNode}(x, i, j,\ldots, drop=FALSE) 
-\S4method{[[}{NeticaNode}(x, i, j, \ldots)  
+\S4method{[[}{NeticaNode}(x, i, j, \ldots, drop=FALSE)  
 \S4method{[}{NeticaNode}(x, i, j, \ldots) <- value 
+\S4method{[[}{NeticaNode}(x, i, j, \ldots) <- value 
 EVERY_STATE
-%]]]]  To make parens come out right.
+%]]]]]]  To make parens come out right.
 }
 \arguments{
   \item{x}{
@@ -76,23 +81,35 @@ EVERY_STATE
   need to cover every parent configuration, thus it is ideal for holding
   subset of the complete table.
 
-  A third difference is that a number of special values are allowed for
-  the probability table.  First, if the node is deterministic, the value
-  of a parent configuration can be set to the state name instead of a
-  probability vector.  This creates a deterministic conditional
-  probability table full of 1's and 0's.  For continuous nodes, the
-  nodes value for a parent configuration (assuming all discrete or
-  discretized parents) can be set directly.  Finally, if the last column
+  A third difference is that if the last column
   of the conditional probabilities is not supplied, it will be
   computed.  This is particularly handy for binary nodes.
 
   Normally, the expression \code{node[\ldots]} produces a data frame
   either in \code{\link{CPF}} format, or with the probabilities replaced
-  by a single column of values.  If \code{drop==TRUE} or equivalently if
-  \code{node[[\ldots]]} was the expression, only the matrix of
-  probabilities or the vector of values will be returned.  The
-  expression \code{node[[\ldots]] <- value} is not supported.
-  
+  by a single column of values.  If \code{drop==TRUE}, only the matrix of
+  probabilities or the vector of values will be returned.  See also
+  \code{\link[CPTtools]{numericPart}}. 
+
+
+  Deterministic nodes (see \code{\link{IsNodeDeterministic}}) should be
+  accessed using the \code{node[[...]]} form.  In this form, the node
+  has a value table which maps a configuration of the parent values to a
+  value of the node.  That will be a numeric value for continuous
+  nodes, and a factor for discrete variables.  Note that Netica figures
+  out whether or not a node is deterministic on the fly.  For that
+  reason, it is strongly recommended to use \code{node[[...]]} to access
+  the value table, and \code{node[...]} to access the CPT.
+
+  In using the form \code{node[[...]] <- value} the value depends on
+  whether the node is continuous or discrete.  For continuous nodes, the
+  node's value for a parent configuration (assuming all discrete or
+  discretized parents) can be set directly if \code{value} is numeric.
+  (If \code{value} is a factor or a string, it behaves like a discrete
+  node.).  For a discrete node, \code{value} can be a factor, string or
+  integer, incidating the state.  This creates a deterministic conditional
+  probability table full of 1's and 0's.
+
   The sections below describe the various indexing options.
 
 }
@@ -251,7 +268,7 @@ EVERY_STATE
   When a node is deterministic, that is all probabilities are \eqn{0} or
   \eqn{1}, then it is meaningful to talk about the conditional value of
   a node instead of the conditional probability table.  The expression
-  \code{node[\ldots]} displays the conditional probability table in a
+  \code{node[[\ldots]]} displays the conditional probability table in a
   special way when the node is deterministic.  In this case it displays
   the value as a single variable giving the state of the child variable
   given the configuration of the parents.  In the case of discrete
@@ -259,7 +276,7 @@ EVERY_STATE
   continuous nodes, this is a numeric vector giving the value.
 
   The same conventions can be used in setting the conditional
-  probability of a node.  In the expression \code{node[\ldots] <- value}
+  probability of a node.  In the expression \code{node[[\ldots]] <- value}
   if \code{value} is a factor or character vector then the selected
   configurations are set to deterministic probabilities with the
   indicated value given probability of \eqn{1} and all others with
@@ -272,10 +289,13 @@ EVERY_STATE
   TRUE}) use a variation of this system.  Here the value is an arbitrary
   numeric value.  For this to be meaningful, it is assumed that all of
   the parents of \code{node} are either discrete or have been
-  discretized. 
+  discretized. The use of the \code{node[[\ldots]] <- \var{value}} is
+  particularly important for continuous nodes becuase it indicates that
+  \var{value} is a potential value of the node rather than a
+  probability. 
 
   Warning:  Setting an unconditional discrete node to a constant value,
-  that is executing an expression like \code{node[] <- \var{value}} 
+  that is executing an expression like \code{node[[]] <- \var{value}} 
   is almost certainly a mistake.  Probably what is intended by that
   expression is \code{\link{NodeFinding}(\var{node}) <- \var{value}}.  In
   particular, if the former expression is used and the later someone
@@ -312,20 +332,45 @@ EVERY_STATE
 \value{
   For the form \code{node[\ldots]} the return value is a data frame in
   the \code{\link{CPF}} format giving the conditional probability
-  table.  If the node is deterministic
-  (\code{IsNodeDetermistic(\var{node})==TRUE}), then the probabilities will be
-  replaced with a single column giving the value of the node.  If the
-  node is discrete, then the value will be a factor.  If the node is
-  continuous, then the value will be a real vector.
+  table.
 
-  If \code{drop==TRUE} or an expression of the form
-  \code{node[[\ldots]]} was called, then the return value will be a
+  For the form \code{node[[\ldots]]}, if the node is deterministic
+  (\code{IsNodeDetermistic(\var{node})==TRUE}) then the probabilities
+  will be replaced with a single column giving the value of the node.
+  If the node is discrete, then the value will be a factor.  If the node
+  is continuous, then the value will be a real vector.
+
+  If \code{drop==TRUE} then the return value will be a
   matrix of probabilities (the last several columns of the data frame).
   If the node is deterministic, then the result will instead be either a
   factor (discrete node) or real vector (continuous node) giving the
   value of the node for each parent configuration.
 
-  The form \code{node[\ldots]<-\var{value}} returns \code{node} invisibly.
+  The forms \code{node[\ldots]<-\var{value}} and \code{node[[\ldots]]<-\var{value}} return \code{node} invisibly.
+}
+\section{Backward Incompatable changes and Deprecated Uses}{
+
+  RNetica version 0.7 changed the ways that the \code{node[\ldots]} and
+  \code{node[[\ldots]]}  were handled, establishing that the former is
+  for manipulating conditional probability tables, and the latter for
+  manipulating value tables for deterministic nodes.
+
+  The return value of \code{node[]} for a deterministic
+  node node has changed  This now returns the conditional probability
+  table.  Use \code{node[[]]} to get the value table.
+
+  The use of \code{node[[\ldots]]} as a synnonym for
+  \code{node[\ldots,drop=TRUE]} is deprecated.  (I'm not sure it was
+  working correctly).
+
+  The use of \code{node[\ldots]<- value} to set rows in a function table
+  for a discrete node is deprecated.  Use \code{node[[\ldots]]<- value}
+  instead.
+
+  An error where \code{node[\ldots]<- value} always treated continuous
+  nodes as deterministic is fixed.  (Note that continuous nodes cannot
+  be treated as random unless they have been discretized.)
+  
 }
 \references{
 \newcommand{\nref}{\href{http://norsys.com/onLineAPIManual/functions/#1.html}{#1()}}
@@ -371,7 +416,8 @@ EVERY_STATE
 \seealso{
   \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
-  \code{\link{ParentStates}()}, \code{\link{CPF}}, \code{\link{CPA}} 
+  \code{\link{ParentStates}()}, \code{\link{CPF}}, \code{\link{CPA}},
+  \code{\link{IsNodeDeterministic}}
 }
 \examples{
 
@@ -402,22 +448,22 @@ stopifnot(
 
 NodeProbs(C2) <- c(1,0)
 stopifnot(
-  C2[]=="C1"
+  C2[[]]=="C1"
 )
 ## This is just a demonstration of the syntax, in practice
 ## the expression NodeFinding(C2) <- "C2" is usually better.
-C2[] <- "C2"
+C2[[]] <- "C2"
 stopifnot(
   NodeProbs(C2)==c(0,1)
 )
-C3[] <- 3
+C3[[]] <- 3
 stopifnot(
-  C3[] == "C3"
+  C3[[]] == "C3"
 )
 
 ## Setting value of continuous node
-Cont[] <- 145.4
-stopifnot( abs(Cont[] - 145.4) < .0001)
+Cont[[]] <- 145.4
+stopifnot( abs(Cont[[]] - 145.4) < .0001)
 
 ## Setting value with probabilities
 C2[] <- c(.3,.7)
@@ -439,10 +485,7 @@ AddLink(A,B2)
 stopifnot(
   nrow(B[])==NodeNumStates(A),
   ncol(B[])==1+NodeNumStates(B),
-  nrow(B[[]])==NodeNumStates(A),
-  ncol(B[[]])==NodeNumStates(B),
-  all(is.na(B[][,2:(1+NodeNumStates(B))])),
-  all(is.na(B[[]]))
+  all(is.na(B[][,2:(1+NodeNumStates(B))]))
 )
 
 NodeProbs(B) <- normalize(matrix(1:12,4))
@@ -498,15 +541,14 @@ stopifnot(
 
 
 ## Setting to exact values
-B2[1:2] <- "B1"
-B2[3] <- "B2"
-B2[4] <- "B2"
-B2tab <- B2[]
+B2[[1:2]] <- "B1"
+B2[[3]] <- "B2"
+B2[[4]] <- "B2"
+B2tab <- B2[[]]
 stopifnot(
   IsNodeDeterministic(B2),
   nrow(B2tab)==4,ncol(B2tab)==2,
-  length(B2[[]]) == 4,
-  B2[[]] == c("B1","B1","B2","B2"),
+  B2tab[,2] == c("B1","B1","B2","B2"),
   as.integer(B2tab[,2]) == c(1,1,2,2)
 )
 ## Setting one value to non-deterministic changes the way the table is
@@ -518,7 +560,7 @@ stopifnot(
   nrow(B2tab)==4,ncol(B2tab)==3,
   sum(abs(B2tab[2,2:3]- c(.5,.5))) < .001,
   B2tab[1,2:3] == c(1,0),
-  B2[[3]] == c(0,1)
+  B2[3,drop=TRUE] == c(0,1)
 )
 
 ## Self-normalizing setting
@@ -570,10 +612,9 @@ stopifnot(
 ## Continuous node with one discrete parent
 AddLink(A,Cont)  ##Notice how old value is replicated
 stopifnot(
-  nrow(Cont[]) ==4, ncol(Cont[]) == 2,
-  length(Cont[[]]) == 4,
-  abs(Cont[][,2]-145.4) <.0001,
-  abs(Cont[[3]]-145.4) <.0001
+  nrow(Cont[[]]) ==4, ncol(Cont[[]]) == 2,
+  abs(Cont[[]][,2]-145.4) <.0001,
+  abs(Cont[[3,drop=TRUE]]-145.4) <.0001
 )
 AddLink(A,CC)
 stopifnot(
@@ -581,20 +622,20 @@ stopifnot(
   is.na(CC[][,2])
 )
 
-Cont[] <- 7
+Cont[[]] <- 7
 stopifnot(
-  abs(Cont[[]]-7) <.0001
+  abs(Cont[[,drop=TRUE]]-7) <.0001
 )
-Cont[2] <- 3.2
+Cont[[2]] <- 3.2
 stopifnot(
-  abs(Cont[[]]-c(7,3.2,7,7)) <.0001
+  abs(Cont[[,drop=TRUE]]-c(7,3.2,7,7)) <.0001
 )
 
-Cont[1:2] <- 0
-Cont[3:4] <- c(8,1)
+Cont[[1:2]] <- 0
+Cont[[3:4]] <- c(8,1)
 stopifnot(
-  abs(Cont[[]]-c(0,0,8,1)) <.0001,
-  abs(Cont[3:4,drop=TRUE]-c(8,1)) < .0001
+  abs(Cont[[,drop=TRUE]]-c(0,0,8,1)) <.0001,
+  abs(Cont[[3:4,drop=TRUE]]-c(8,1)) < .0001
 )
 
 
@@ -605,7 +646,7 @@ AddLink(B,C2)
 C2[] <- c(.5,.5)
 stopifnot(
   nrow(C2[])==12, ncol(C2[])==4,
-  sum(abs(C2[[]]-.5)) < .0001
+  sum(abs(numericPart(C2[])-.5)) < .0001
 )
   
 
@@ -613,7 +654,7 @@ AddLink(A,C4)
 AddLink(B,C4)
 stopifnot(
   nrow(C4[])==12, ncol(C4[])==6,
-  all(is.na(C4[[]]))
+  all(is.na(C4[,drop=TRUE]))
 )
 
 NodeProbs(C4) <- normalize(array(1:48,c(4,3,4)))
@@ -647,7 +688,7 @@ stopifnot(
 C2[dfsel] <- matrix(c(.7,.6,.3,.4),2)
 C2[dfselbak] <- c(.9,.1)
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.7,.5,.5, .5,.5,.5,.9, .9,.5,.6,.5))) < .0001
+  sum(abs(numericPart(C2[])[,1] - c(.5,.7,.5,.5, .5,.5,.5,.9, .9,.5,.6,.5))) < .0001
 )
 ## Test for error with using variables in selection inside of a
 ## function.
@@ -666,8 +707,8 @@ testSel(C2,factor(c("A2","A3"),levels=NodeStates(A)),
 
 ## Array-like selection
 stopifnot(
-  sum(abs(C4[[2,3]]-c(10,22,34,46)/112))<.0001,
-  sum(abs(C4[[B=2,A=4]]-c(8,20,32,44)/104))<.0001
+  sum(abs(numericPart(C4[2,3])-c(10,22,34,46)/112))<.0001,
+  sum(abs(numericPart(C4[B=2,A=4])-c(8,20,32,44)/104))<.0001
 )
 
 C1.23 <- C4[1,2:3]
@@ -678,7 +719,8 @@ stopifnot(
 C2[] <- .5
 C2[1,2:3] <- .99
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, .99,.5,.5,.5, .99,.5,.5,.5))) < .0001
+  sum(abs(numericPart(C2[])[,1] -
+          c(.5,.5,.5,.5, .99,.5,.5,.5, .99,.5,.5,.5))) < .0001
 )
 
 C1.23 <- C4["A1",c("B2","B3")]
@@ -689,7 +731,7 @@ stopifnot(
 C2[] <- .5
 C2["A1",c("B2","B3")] <- .99
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, .99,.5,.5,.5, .99,.5,.5,.5))) < .0001
+  sum(abs(C2[,drop=TRUE][,1] - c(.5,.5,.5,.5, .99,.5,.5,.5, .99,.5,.5,.5))) < .0001
 )
 
 C34.12 <- C4[3:4,1:2]
@@ -700,7 +742,7 @@ stopifnot(
 C2[] <- .5
 C2[3:4,1:2] <- .99
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.99,.99, .5,.5,.99,.99, .5,.5,.5,.5))) < .0001
+  sum(abs(C2[][,3] - c(.5,.5,.99,.99, .5,.5,.99,.99, .5,.5,.5,.5))) < .0001
 )
 
 ## Wildcards
@@ -713,7 +755,7 @@ stopifnot(
 C2[] <-.5
 C2[1,EVERY_STATE] <- "C1"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
+  sum(abs(C2[][,3] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
 )
 
 C.2 <- C4[EVERY_STATE,2]
@@ -722,9 +764,9 @@ stopifnot(
   sum(abs(C.2[,3] -c(5/92, 6/96, 7/100, 8/104))) < .0001
 )
 C2[] <-.5
-C2[EVERY_STATE,2] <- "C2"
+C2[[EVERY_STATE,2]] <- "C2"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
 )
 
 C1. <- C4["A1","*"]
@@ -733,9 +775,9 @@ stopifnot(
   sum(abs(C1.[,3] -c(1/76, 5/92, 9/108))) < .0001
 )
 C2[] <-.5
-C2["A1","*"] <- "C1"
+C2[["A1","*"]] <- "C1"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
 )
 
 C.2 <- C4["*","B2"]
@@ -744,9 +786,9 @@ stopifnot(
   sum(abs(C.2[,3] -c(5/92, 6/96, 7/100, 8/104))) < .0001
 )
 C2[] <-.5
-C2["*","B2"] <- "C2"
+C2[["*","B2"]] <- "C2"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
 )
 
 ## Missing parent values
@@ -757,9 +799,9 @@ stopifnot(
   sum(abs(C1.[,3] -c(1/76, 5/92, 9/108))) < .0001
 )
 C2[] <-.5
-C2[1,] <- "C1"
+C2[[1,]] <- "C1"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
 )
 
 C.2 <- C4[,2]
@@ -768,9 +810,9 @@ stopifnot(
   sum(abs(C.2[,3] -c(5/92, 6/96, 7/100, 8/104))) < .0001
 )
 C2[] <-.5
-C2[,2] <- "C2"
+C2[[,2]] <- "C2"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
 )
 
 C1. <- C4[A=1]
@@ -779,9 +821,9 @@ stopifnot(
   sum(abs(C1.[,3] -c(1/76, 5/92, 9/108))) < .0001
 )
 C2[] <-.5
-C2[A=1] <- "C1"
+C2[[A=1]] <- "C1"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(1,.5,.5,.5, 1,.5,.5,.5, 1,.5,.5,.5))) < .0001
 )
 
 C.2 <- C4[B="B2"]
@@ -790,9 +832,9 @@ stopifnot(
   sum(abs(C.2[,3] -c(5/92, 6/96, 7/100, 8/104))) < .0001
 )
 C2[] <-.5
-C2[B="B2"] <- "C2"
+C2[[B="B2"]] <- "C2"
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
+  sum(abs(C2[drop=TRUE][,1] - c(.5,.5,.5,.5, 0,0,0,0, .5,.5,.5,.5))) < .0001
 )
 
 ## Data frame as value
@@ -803,65 +845,65 @@ dfset <- data.frame(A=factor(c("A2","A3"),levels=NodeStates(A)),
 C2[] <- .5
 C2[] <- dfset
 stopifnot(
-  sum(abs(C2[[]][,1] - c(.5,1,.5,.5, .5,.5,.5,.5, .5,.5,0,.5))) < .0001
+  sum(abs(C2[][,3] - c(.5,1,.5,.5, .5,.5,.5,.5, .5,.5,0,.5))) < .0001
 )
 
 ## Continuous Child node
 AddLink(B2,Cont)
 stopifnot(
-  nrow(Cont[])==8, ncol(Cont[])==3,
-  sum(abs(Cont[[]]-c(0,0,8,1))) < .0001
+  nrow(Cont[[]])==8, ncol(Cont[[]])==3,
+  sum(abs(Cont[[drop=TRUE]]-c(0,0,8,1))) < .0001
 )
 
 AddLink(A,CCC)
 AddLink(B,CCC)
 stopifnot(
   nrow(CCC[])==12, ncol(CCC[])==3,
-  all(is.na(CCC[[]]))
+  all(is.na(CCC[][,3]))
 )
 
-Cont[] <- 0
-Cont[1,1] <- 1.1
-Cont[2:3,2] <- c(2.2,3.2)
-Cont["A4","*"] <- 4
+Cont[[]] <- 0
+Cont[[1,1]] <- 1.1
+Cont[[2:3,2]] <- c(2.2,3.2)
+Cont[["A4","*"]] <- 4
 \dontrun{
 ## Can't set to multiple values when using * selection.
-Cont["A4","*"] <- c(4.1,4.2) ## Generates an error
+Cont[["A4","*"]] <- c(4.1,4.2) ## Generates an error
 }
 stopifnot(
-  sum(abs(Cont[[]]-c(1.1,0,0,4,0,2.2,3.2,4))) < .0001,
-  abs(Cont[["A1","B1"]]-1.1) <.0001,
-  sum(abs(Cont[[B=2,A=2:3]]-c(2.2,3.2))) < .0001,
-  sum(abs(Cont[[A=4]] -4)) < .0001
+  sum(abs(Cont[[drop=TRUE]]-c(1.1,0,0,4,0,2.2,3.2,4))) < .0001,
+  abs(Cont[["A1","B1",drop=TRUE]]-1.1) <.0001,
+  sum(abs(Cont[[B=2,A=2:3,drop=TRUE]]-c(2.2,3.2))) < .0001,
+  sum(abs(Cont[[A=4,drop=TRUE]] -4)) < .0001
 )
 
 ## Set by integer count
 ## 12 rows in A*B combinations
 for (i in 1:12) {
-  CCC[i] <- i
+  CCC[[i]] <- i
   C2[i] <- i/100
 }
 stopifnot(
-  sum(abs(CCC[[]]-t(matrix(1:24,3,4)))) <.0001,
-  sum(abs(C2[[]][,1]-t(matrix(1:24/100,3,4)))) <.001
+  sum(abs(CCC[[drop=TRUE]]-t(matrix(1:24,3,4)))) <.0001,
+  sum(abs(C2[drop=TRUE][,1]-t(matrix(1:24/100,3,4)))) <.001
 )
 for (i in 1:12) {
   stopifnot(
-    abs(CCC[[i]] - i) <.0001,
-    abs(C2[[i]][1] - i/100) <.0001
+    abs(CCC[[i,drop=TRUE]] - i) <.0001,
+    abs(C2[i,drop=TRUE][1] - i/100) <.0001
   )
 }
 
 ### Try some things with three parents, just to make sure that works
 ### too.
-C2tab <- C2[[]]
+C2tab <- C2[drop=TRUE]
 AddLink(C3,C2)
-C2.1tab <- C2[[,,"C1"]]
+C2.1tab <- C2[,,"C1",drop=TRUE]
 stopifnot(all.equal(C2tab,C2.1tab),
-          all.equal(C2tab,C2[[,,"C1"]]),
-          all.equal(C2tab,C2[[C="C3"]]))
+          all.equal(C2tab,C2[,,"C1",drop=TRUE]),
+          all.equal(C2tab,C2[C="C3",drop=TRUE]))
 
-stopifnot(all(abs(C2[["A1","B1","C1"]]-NodeProbs(C2)[1,1,1,])<.0001),
+stopifnot(all(abs(C2["A1","B1","C1",drop=TRUE]-NodeProbs(C2)[1,1,1,])<.0001),
           all.equal(C2["A1",,],C2[A="A1"]),
           all.equal(C2[,"B2",],C2[B="B2"]),
           all.equal(C2["A1","B2",],C2[B="B2",A="A1"]))

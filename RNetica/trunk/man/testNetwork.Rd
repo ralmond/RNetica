@@ -38,7 +38,8 @@ testNetwork(targetNodes, dataStreams, ignoreNodes = list())
 
   After all case streams are processed, the
   \code{\linkS4class{NetworkTester}} object is returned and its
-  statistics can be queried.
+  statistics can be queried. See \code{\link{testerConfusion}} for a
+  list of available results.
 
 }
 \value{
@@ -71,7 +72,16 @@ testNetwork(targetNodes, dataStreams, ignoreNodes = list())
 
 }
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+
+  The output of \code{\link{testNetwork}} is \code{\linkS4class{NetworkTester}}.
+ 
+  Accessors for \code{\linkS4class{NetworkTester}}
+  \code{\link{testerConfusion}}, \code{\link{testerErrorRate}},
+  \code{\link{testerIgnore}}, \code{\link{testerKappa}}, 
+  \code{\link{testerLambda}}, \code{\link{testerLogLoss}},
+  \code{\link{testerNet}}, \code{\link{testerQuadraticLoss}}, 
+  \code{\link{testerTarget}}
+
 }
 \examples{
 sess <- NeticaSession()
