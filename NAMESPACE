@@ -6,6 +6,8 @@ importFrom("stats", "runif","pnorm","punif")
 importFrom("R.utils","tempvar")
 importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF", "normalize",
            "fcKappa","gkLambda")
+importFrom("futile.logger","flog.fatal","flog.error","flog.warn",
+           "flog.info","flog.debug","flog.trace")
 
 
 export(NeticaSession)
@@ -14,6 +16,7 @@ exportMethods(is.active,startSession,stopSession)
 
 export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,
+       logErrors, flogErrors, printErrors,
        getDefaultSession,startSession,stopSession,
        CreateNetwork, DeleteNetwork,
        is.active, is.IDname, as.IDname, is.NeticaBN,
@@ -60,7 +63,7 @@ export(
   )
 
 exportClasses(CliqueNode)
-exportMethods("[","[[","[<-")
+exportMethods("[","[[","[<-","[[<-")
  export(
    AddLink, DeleteLink, ReverseLink,
    NodeParents, "NodeParents<-", NodeChildren,

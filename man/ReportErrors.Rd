@@ -1,6 +1,9 @@
 \name{ReportErrors}
 \alias{ReportErrors}
 \alias{ClearAllErrors}
+\alias{logErrors}
+\alias{flogErrors}
+\alias{printErrors}
 \title{Reports internal Netica errors.
 }
 \description{
@@ -14,6 +17,9 @@
 
 ReportErrors(maxreport = 9, clear = TRUE, session=getDefaultSession())
 ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
+logErrors(allErrs)
+flogErrors(allErrs)
+printErrors(allErrs)
 
 }
 \arguments{
@@ -32,6 +38,10 @@ ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
     then the default value is the value of the function
     \code{\link{getDefaultSession}()} which is usually the value of
     \code{DefaultNeticaSession} in the global environment.}
+  \item{allErrs}{This is a list of length 5, with each element a
+    character vector containing the error messages for \code{"XXX_ERR"},
+    \code{"ERROR_ERR"}, \code{"WARNING_ERR"}, \code{"NOTICE_ERR"} and
+    \code{"REPORT_ERR"} respectively.}
 }
 \details{
 
@@ -44,6 +54,10 @@ ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
   \code{session$reportErrors} and \code{session$clearErrors} (see
   \code{\linkS4class{NeticaSession}}).  
 
+  The latest version now uses \code{\link[futile.logger]{flog.logger}}
+  to log the errors.  This allows the level of logging to be controlled
+  as well as allow for easy redirection of the Netica errors into a log
+  file. 
 
 }
 \value{
@@ -60,6 +74,21 @@ ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
 \author{
   Russell Almond
 }
+\section{Implementation}{
+  The function \code{ReportErrors} is implemented as follows.  First, it
+  calls the \code{reportErrors} method of the
+  \code{\linkS4class{NeticaSession}} object.  This generates a list of
+  vectors of error messages (\code{allErrs}).  This is passed to the
+  \code{logErrors} function which reports the errors and returns the
+  vector of counts.
+
+  The \code{flogErrors} function logs the errors using
+  \code{\link[futile.logger]{flog.logger}}.  The function
+  \code{printErrors} simply prints them to the console.  To remove the
+  use of \code{futile.logger} redefine \code{logErrors} to use
+  \code{printErrors} instead of \code{logErrors}.
+
+}
 \note{
 
   At this point, the protocol is that the higher level RNetica functions
@@ -73,13 +102,12 @@ ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
   to the \code{\linkS4class{NeticaSession}} and then call the report
   error mechanism on that.
 
-  Future versions may use a more sophisticated error checking mechanism
+    Future versions may use a more sophisticated error checking mechanism
   that allows for more user control.
 
-  There is currently a known bug where somehow \code{ReportErrors} keeps
+  There was a known bug where \code{ReportErrors} keeps
   finding an error that indicates that there is an invalid error pointer
-  (which keeps retriggering the error).  Hopefully, that will be fixed
-  in future versions.
+  (which keeps retriggering the error).  This should now be fixed.
 
 }
 
@@ -88,6 +116,9 @@ ClearAllErrors(severity="XXX_ERR",session=getDefaultSession())
   
   \code{\link{StopNetica}()} -- should be called after
   \code{"XXX_ERROR"} is signaled by Netica.
+
+  \code{\link[futile.logger]{flog.logger}} -- describes the logging
+  mechanism. 
 
 }
 \examples{

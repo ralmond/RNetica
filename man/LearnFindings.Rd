@@ -107,10 +107,10 @@ stopifnot(
   NodeExperience(B1)==c(11,10),
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - c(6,5)/11)) < .001,
-  sum(abs(B1[["A1"]] - c(9,2)/11)) < .001,
-  sum(abs(B1[["A2"]] - c(2,8)/10)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(9,2)/11)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(2,8)/10)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 ## Second Case
@@ -126,10 +126,10 @@ stopifnot(
   NodeExperience(B1)==c(11,11),
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - c(6,6)/12)) < .001,
-  sum(abs(B1[["A1"]] - c(9,2)/11)) < .001,
-  sum(abs(B1[["A2"]] - c(3,8)/11)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(9,2)/11)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(3,8)/11)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 ## Retract Case 2
@@ -140,10 +140,10 @@ stopifnot(
   NodeExperience(B1)==c(11,10),
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - c(6,5)/11)) < .001,
-  sum(abs(B1[["A1"]] - c(9,2)/11)) < .001,
-  sum(abs(B1[["A2"]] - c(2,8)/10)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(9,2)/11)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(2,8)/10)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 DeleteNetwork(abb)

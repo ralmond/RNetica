@@ -59,11 +59,10 @@ NeticaSession <-
                   reportErrors = function(maxreport=9,clear=TRUE) {
                     if (!isActive())
                       stop("Session is inactive.")
-                    counts <-
+                    allErrs <-
                       .Call("RN_Session_errors",.self,as.integer(maxreport),
                             as.logical(clear),PACKAGE=RNetica)
-                    names(counts) <- c("Errors","Warnings","Notices","Reports")
-                    invisible(counts)
+                    logErrors(allErrs)
                   },
                   clearErrors = function(severity="XXX_ERR") {
                     .Call("RN_ClearSessionErrors",.self,
@@ -121,6 +120,35 @@ setMethod("restartSession","NeticaSession", function(session) {
   stopSession(session)
   startSession(session)
 })
+
+logErrors <- function (allErrs) {
+  flogErrors(allErrs)
+  counts <- sapply(allErrs[-1],length)
+  names(counts) <- c("Errors","Warnings","Notices","Reports")
+  invisible(counts)
+}
+
+flogErrors <- function (allErrs) {
+  lapply(allErrs[1],flog.fatal)
+  lapply(allErrs[2],flog.error)
+  lapply(allErrs[3],flog.warn)
+  lapply(allErrs[4],flog.info)
+  lapply(allErrs[5],flog.debug)
+}
+
+printErrors <- function (allErrs) {
+  lapply(allErrs[1],
+         function (e) print(paste("Fatal Netica Error:",e)))
+  lapply(allErrs[2],
+         function (e) print(paste("Netica Error:",e)))
+  lapply(allErrs[3],
+         function (e) print(paste("Netica Warning:",e)))
+  lapply(allErrs[4],
+         function (e) print(paste("Netica Note:",e)))
+  lapply(allErrs[5],
+         function (e) print(paste("Netica Report:",e)))
+}
+
 
 ############################
 ## These were functions of the hidden Netica environment variable before,

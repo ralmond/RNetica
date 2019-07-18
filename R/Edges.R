@@ -494,16 +494,18 @@ DeleteNodeTable <- function (node) {
 ## env is frame in which to do the evaluation, which is probably the
 ## parent frame of the calling funciton
 ## Now getting this using the sys.call function.
-parseDims <- function (node, dropvalue=FALSE) {
+parseDims <- function (node, clist, dropvalue=FALSE, calling.frame=2) {
   ## This creates a call object with the arguments
-  calling.frame <- 2
-  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  ## My code works, I don't know why!
+  ## R seems to stick an extra .local when called with [[...]], so move from
+  ## -1 to -2
   if (dropvalue) clist <- clist[-length(clist)]
   if (!is.null(names(clist))) {
     dropme <- names(clist) == "drop"
     clist <- clist[!dropme]
   }
   ## Empty condition
+  if (length(clist)==0) return(NULL)
   if (length(clist)==1 && class(clist[[1]]) == "name" &&
       clist[[1]]=="") return (NULL)
   ## Need to find and irradicate stray marks
@@ -655,19 +657,40 @@ setMethod("[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node.")
   }
+  if (IsNodeDeterministic(x)) {
+    warning("Use of '[' with deterministic nodes depricated, use '[['.", x)
+  }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
-  selection <- parseDims(x)             #Reads call to get args.
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  selection <- parseDims(x,clist)             #Reads call to get args.
   if (is.null(selection) && length(NodeParents(x))>0) {
     selection <- rep(EV_STATE,length(NodeParents(x)))
   }
-  doSelection(x,selection,drop)
+  doSelection(x,selection,drop,returnCPT=TRUE)
 })
 
-doSelection <- function (x,selection,drop) {
+setMethod("[[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
+  if (!is.NeticaNode(x) || !is.active(x)) {
+    stop("Expected an active netica node, got",x)
+  }
+  if (!IsNodeDeterministic(x)) {
+    warning("Use of '[[' with chance nodes is depricated: Use numericPart and '['.")
+  }
+  ## Massage selection into a matrix of numeric indexes, EVERY_STATE
+  ## values are only recognized on setting values, so expand them
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  selection <- parseDims(x,clist)             #Reads call to get args.
+  if (is.null(selection) && length(NodeParents(x))>0) {
+    selection <- rep(EV_STATE,length(NodeParents(x)))
+  }
+  doSelection(x,selection,drop, returnCPT=FALSE)
+})
+
+doSelection <- function (x,selection,drop, returnCPT=FALSE) {
   ## No parent case
   if (is.null(selection)) {
-    if (IsNodeDeterministic(x)) {
+    if (!returnCPT && IsNodeDeterministic(x)) {
       if (is.discrete(x)) {
         val <- .Call("RN_GetNodeFuncState",x,NULL,PACKAGE=RNetica)
         result <- NodeStates(x)[val]
@@ -691,7 +714,7 @@ doSelection <- function (x,selection,drop) {
     selection <- integerIndex(x,selection,expandEvery=TRUE)
     if (drop && (is.null(nrow(selection)) || nrow(selection) == 1L)) {
       ## Single Row case
-      if (IsNodeDeterministic(x)) {
+      if (!returnCPT && IsNodeDeterministic(x)) {
         if (is.discrete(x)) {
           val <- .Call("RN_GetNodeFuncState",x,selection,PACKAGE=RNetica)
           result <- NodeStates(x)[val]
@@ -714,7 +737,7 @@ doSelection <- function (x,selection,drop) {
       ## matrix or data frame
       config <- selectionToConfig(x,selection)
       nsel <- nrow(selection)
-      if (IsNodeDeterministic(x)) {
+      if (!returnCPT && IsNodeDeterministic(x)) {
         val <- rep(NA,nsel)
         if (is.discrete(x)) {
           for (i in 1L:nsel) {
@@ -763,18 +786,19 @@ doSelection <- function (x,selection,drop) {
   result
 }
 
-setMethod("[[", "NeticaNode", function(x, i, j, ...) {
-  if (!is.NeticaNode(x) || !is.active(x)) {
-    stop("Expected an active netica node.")
-  }
-  ## Massage selection into a matrix of numeric indexes, EVERY_STATE
-  ## values are only recognized on setting values, so expand them
-  selection <- parseDims(x)             #Reads call to get args.
-  if (is.null(selection) && length(NodeParents(x))>0) {
-    selection <- rep(EV_STATE,length(NodeParents(x)))
-  }
-  doSelection(x,selection,drop=TRUE)
-})
+## Replaced.
+## setMethod("[[", "NeticaNode", function(x, i, j, ...) {
+##   if (!is.NeticaNode(x) || !is.active(x)) {
+##     stop("Expected an active netica node.")
+##   }
+##   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
+##   ## values are only recognized on setting values, so expand them
+##   selection <- parseDims(x)             #Reads call to get args.
+##   if (is.null(selection) && length(NodeParents(x))>0) {
+##     selection <- rep(EV_STATE,length(NodeParents(x)))
+##   }
+##   doSelection(x,selection,drop=TRUE)
+## })
 
 
 setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
@@ -785,7 +809,8 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are handled specially by Netica, so leave them in place.
   ## env is where
-  selection <- parseDims(x,dropvalue=TRUE)
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  selection <- parseDims(x,clist,dropvalue=TRUE)
   npar <- length(NodeParents(x))
   nstate <- NodeNumStates(x)
   if (is.null(selection) && is.data.frame(value)) {
@@ -868,10 +893,18 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
       value <- cbind(value,1-value)
     }
   }
+  if (!valisprobs) {
+    warning("The use of '[<-' with deterministic nodes is depricated.  Use '[[<-'.")
+  }
   if (is.null(selection)) {
     ## No parents
     if (is.continuous(x)) {
-      .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),PACKAGE=RNetica)
+        if (valisprobs) {
+          .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE=RNetica)
+        } else {
+          .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),
+                PACKAGE=RNetica)
+        }
     } else {
       if (valisprobs) {
         .Call("RN_SetNodeProbs",x,NULL,as.double(value),PACKAGE=RNetica)
@@ -883,7 +916,12 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
     if (is.null(nrow(selection))) {
       ## Single Row case
       if (is.continuous(x)) {
-        .Call("RN_SetNodeFuncReal",x,selection,as.double(value),PACKAGE=RNetica)
+        if (valisprobs) {
+          .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE=RNetica)
+        } else {
+          .Call("RN_SetNodeFuncReal",x,selection,as.double(value),
+                PACKAGE=RNetica)
+        }
       } else {
         if (valisprobs) {
           .Call("RN_SetNodeProbs",x,selection,as.double(value),PACKAGE=RNetica)
@@ -928,6 +966,120 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
                   as.integer(value), PACKAGE=RNetica)
           }
         }
+      }
+    }
+  }
+  ecount <- x$reportErrors()
+  if (ecount[1L]>0) {
+    stop("Node: ", x,"Netica Errors Encountered, see console for details.")
+  }
+  invisible(x)
+})
+
+setMethod("[[<-","NeticaNode",function(x, i, j, ..., value) {
+  if (!is.NeticaNode(x) || !is.active(x)) {
+    stop("Expected an active netica node, got",x)
+  }
+
+  ## Massage selection into a matrix of numeric indexes, EVERY_STATE
+  ## values are handled specially by Netica, so leave them in place.
+  ## env is where
+  clist <- as.list(sys.call(-1)[-1:-2])          #kill braces and node name.
+  selection <- parseDims(x,clist,dropvalue=TRUE)
+  npar <- length(NodeParents(x))
+  nstate <- NodeNumStates(x)
+  if (is.null(selection) && is.data.frame(value)) {
+    facts <- sapply(value,is.factor)
+    if (sum(facts) == npar) {
+      ## Use selection from factors in data frame
+      selection <- value[facts]
+      value <- value[!facts]
+    } else if (sum(facts) == npar+1L && all(facts)) {
+      ## Same condition, only last column is values
+      selection <- value[1L:npar]
+      value <- value[[npar+1L]]
+    }
+  }
+  if (is.null(selection) && npar>0) {
+    selection <- rep(EV_STATE,npar)
+  }
+  if (is.list(selection)) {
+    selection <- integerIndex(x,selection,expandEvery=FALSE)
+  }
+
+  ## Now massage value into an appropriate vector
+  if (is.data.frame(value)) {
+      value <- value[,1L]
+  }
+  if (is.continuous(x)) {
+    valisfact <- FALSE
+    if (is.factor(value)) {
+      value <- as.numeric(value)
+      valisfact <- TRUE
+    }
+    if (is.character(value)) {
+      valisfact <- TRUE
+      value <- match(value,NodeStates(x))
+    }
+
+  } else {
+    valisfact <- TRUE
+    if (is.numeric(value))
+      if (any(value != as.integer(value)) || any (value < 0) ||
+          any(value > NodeNumStates(x))) {
+        stop ("Values must be strings, factors, or integers between 1 and ",
+              NodeNumStates(x))
+      }
+    if (is.factor(value)) {
+      value <- as.numeric(value)
+    }
+    if (is.character(value)) {
+      value <- match(value,NodeStates(x))
+    }
+  }
+  if (length(value) > 1L && (is.null(nrow(selection)) ||
+                             nrow(selection)!=length(value))) {
+    stop("Number of rows selected and rows in value do not match; node",
+         x$Name)
+  }
+
+  if (is.null(selection)) {
+    ## No parents
+    if (valisfact) {
+      .Call("RN_SetNodeFuncState",x,NULL,as.integer(value),PACKAGE=RNetica)
+    } else {
+      .Call("RN_SetNodeFuncReal",x,NULL,as.double(value),
+            PACKAGE=RNetica)
+    }
+  } else if (is.null(nrow(selection))) {
+    ## Single Row case
+    if (valisfact) {
+      .Call("RN_SetNodeFuncState",x,selection,as.integer(value),
+            PACKAGE=RNetica)
+    } else {
+      .Call("RN_SetNodeFuncReal",x,selection,as.double(value),
+            PACKAGE=RNetica)
+    }
+  } else {
+    ## matrix or data frame
+    nsel <- nrow(selection)
+    if (valisfact) {
+      if (length(value) > 1L) {
+        for (i in 1L:nsel) {
+          .Call("RN_SetNodeFuncState",x,selection[i,],
+                as.integer(value[i]), PACKAGE=RNetica)
+        }
+      } else {
+        for (i in 1L:nsel) {
+          .Call("RN_SetNodeFuncState",x,selection[i,],
+                as.integer(value), PACKAGE=RNetica)
+        }
+      }
+    } else {
+      for (i in 1L:nsel) {
+        .Call("RN_SetNodeFuncReal",x,selection[i,],
+              as.double(ifelse(length(value)==1L,value,value[i])),
+              PACKAGE=RNetica)
       }
     }
   }

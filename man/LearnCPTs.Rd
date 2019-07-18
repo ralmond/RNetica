@@ -180,10 +180,10 @@ stopifnot(
   NodeExperience(B1)==c(15,15),
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - .5)) < .001,
-  sum(abs(B1[["A1"]] - c(11,4)/15)) < .001,
-  sum(abs(B1[["A2"]] - c(4,11)/15)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(11,4)/15)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(4,11)/15)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 
@@ -203,10 +203,10 @@ stopifnot(
   NodeExperience(B1)==c(19,19),
   NodeExperience(B2)==c(13,15),
   sum(abs(NodeProbs(A) - c(14,15)/29)) < .001,
-  sum(abs(B1[["A1"]] - c(13,6)/19)) < .001,
-  sum(abs(B1[["A2"]] - c(6,13)/19)) < .001,
-  sum(abs(B2[["A1"]] - c(10,3)/13)) < .001,
-  sum(abs(B2[["A2"]] - c(3,12)/15)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(13,6)/19)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(6,13)/19)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(10,3)/13)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(3,12)/15)) < .001
 )
 
 DeleteNetwork(abb)
@@ -251,10 +251,10 @@ stopifnot(
   sum(abs(NodeExperience(B1)-c(15,15))) < .001,
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - .5)) < .001,
-  sum(abs(B1[["A1"]] - c(11,4)/15)) < .001,
-  sum(abs(B1[["A2"]] - c(4,11)/15)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(11,4)/15)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(4,11)/15)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 
@@ -332,10 +332,10 @@ LearnCPTs(outfile,list(A,B1),method="GRADIENT")
 stopifnot(
   NodeExperience(B2)==c(10,10),
   sum(abs(NodeProbs(A) - .5)) < .001,
-  sum(abs(B1[["A1"]] - c(3,2)/5)) < .001,
-  sum(abs(B1[["A2"]] - c(2,3)/5)) < .001,
-  sum(abs(B2[["A1"]] - c(8,2)/10)) < .001,
-  sum(abs(B2[["A2"]] - c(2,8)/10)) < .001
+  sum(abs(B1["A1",drop=TRUE] - c(3,2)/5)) < .001,
+  sum(abs(B1["A2",drop=TRUE] - c(2,3)/5)) < .001,
+  sum(abs(B2["A1",drop=TRUE] - c(8,2)/10)) < .001,
+  sum(abs(B2["A2",drop=TRUE] - c(2,8)/10)) < .001
 )
 
 ## Gradient algorithm sets experience to -infinity, so need to reset.

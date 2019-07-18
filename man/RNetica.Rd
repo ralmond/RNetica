@@ -301,15 +301,19 @@ and \code{\link{stopSession}}.
   in the graph.  RNetica provides two functions for accessing and
   setting this CPT.  The function \code{\link{NodeProbs}()} returns (or
   sets) the conditional probability table as a multi-dimensional
-  array. However, using the array extractor \dQuote{[} %]
+  array. However, using the array extractor \dQuote{[...]}
   (\code{\link{Extract.NeticaNode}}) allows the conditional probability
   table to be manipulated as a data frame, where the first several
   columns provide the states of the parent variables, and the remaining
   columns the probabilities of the the node being in each of those
   states given the parent configurations.  This latter approach has a
   number of features for working with large tables and tables with
-  complex structure.
-
+  complex structure.  The double square bracket extractor
+  \dQuote{[[...]]} (\code{\link{Extract.NeticaNode}}) words with
+  logical \code{\link{IsNodeDeterministic}} nodes where parent
+  configuration maps to exactly one state of the child.  So rather than
+  returning a probability distribution, they return a value table.
+  
   Finally, when the network is complete, the function
   \code{\link{WriteNetworks}()} can be used to save it to a file, which
   can either be later read into RNetica, or can be used with the Netica
