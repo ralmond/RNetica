@@ -57,7 +57,10 @@ NodeVisStyle(node) <- value
 
   The Netica documentation indicates that in the future additional
   parameters can be added to the style, for example:
-  "LabeledBox,CornerRoundingRadius=3,LineThickness=2" 
+  "LabeledBox,CornerRoundingRadius=3,LineThickness=2"
+
+  With Netica API 5.10 (current on Windows but not Unix/Mac OS) the
+  default value seems to be "None" and not "Default".
 
 }
 \seealso{
@@ -69,7 +72,7 @@ startSession(sess)
 snet <- CreateNetwork("StylishNet", session=sess)
 
 snode <- NewDiscreteNode(snet,"StyleMe")
-stopifnot(NodeVisStyle(snode)=="Default")
+stopifnot((NodeVisStyle(snode)=="Default" || NodeVisStyle(snode)=="None"))
 
 NodeVisStyle(snode) <- "Meter"
 stopifnot(NodeVisStyle(snode)=="Meter")
