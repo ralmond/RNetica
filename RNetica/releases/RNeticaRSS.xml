@@ -124,8 +124,16 @@
       <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
       <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.3-6</guid>
       <pubDate>Mon Apr  1 16:48:51 EDT 2019</pubDate>
-      <description>[CDATA[ >Now properly gets session information from nets. ]]</description>
+      <description>[CDATA[ Now properly gets session information from nets. ]]</description>
     </item>
 
+    <item>
+      <title>RNetica 0.7-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.5-4</guid>
+      <pubDate>Fri Jul  19 16:34:51 EDT 2019</pubDate>
+      <description>[CDATA[ Added Network tester and fixed extractors.
+      WARNING:  May cause backwards compatability issues.  ]]</description>
+    </item>
   </channel>
 </rss>

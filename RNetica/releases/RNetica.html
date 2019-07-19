@@ -50,6 +50,27 @@ it.  <a href="https://fsu.qualtrics.com/jfe/form/SV_7QVrVvd4NlwOYrb">Click
   here</a> to fill out the survey.
 
 <h2>News</h2>
+<i>The 0.7 release changes the way that the <code>[]</code>
+  and <code>[[]]</code> opertators are used in a way that breaks
+  backwards compatability.  The <code>[]</code> operator 
+  is used to manipulate CPTs for probabilistic nodes and
+  the <code>[[]]</code> operator is used to manipulate value tables
+  for deterministic (logical) nodes.</i>
+<ol>
+  <li> Changed the way the <code>[[]]</code> and <code>[]</code>
+    operators work.  Now <code>[</code> and <code>[&lt;-</code> always
+    manipulate CPTs for probabilistic nodes.  This should fix a
+    problem with being unable to use the <code>[]</code> to set CPTs
+    for continuous nodes that have been discritized.  </li>
+  <li> The <code>[[</code> and <code>[[&lt;-</code> operators now focus
+    on manipulating the the value tables for deterministic nodes.</li>
+  <li> The <code>[[...]]</code> expression is no longer a synnonmym
+    for <code>[[...,drop=TRUE]]</code>.  This may break some code but
+    it should be straightforward to fix.</li>
+  <li> Added a new <code>testNetwork</code> function which can be used
+    to calculate evidentiary power of the networks.</li>
+</ol>
+
 <i>The 0.5 release is a major rewrite of the fundamental Network and
   Node objects.  This should improve stability, but may cause
   problems.</i>  The changes in the 0.5 series include the following:
@@ -278,11 +299,12 @@ The 0.3 series of releases includes a number of different improvements.
   than 30 characters, causing problems.  To avoid make sure names are
   no more than 26 characters.  UPDATE.  Changed as.IDname() to make
   shorter names.
+<li> Brent has promised me a beta version of the API fixing some of
+  these issues soon.
 </ol>
 <p> Approximately 4/5 of the API functionality is mapped.  Things that
   are still not mapped:
 <ol>
-<li> Testers
 <li> DBN functionality
 <li> Database support (I see no need to do this as better to use the
   DBI R package).
@@ -446,6 +468,12 @@ The following releases are archived here:
 <td><a href="RNetica_0.5-4.tgz">RNetica_0.5-4.tgz</a></td>
 <td><a href="RNetica-manual_0.5-4.pdf">RNetica-manual-0.5-4.pdf</a></td>
 <td>Moved as.CPA and as.CPF to CPTtools, now depends on CPTttols</td></tr>
+<tr>
+<td>0.7-1</td><td><a href="RNetica_0.7-1.tar.gz">RNetica_0.7-1.tar.gz</a></td>
+<td><a href="RNetica_0.7-1.zip">RNetica_0.7-1.zip</a></td>
+<td><a href="RNetica_0.7-1.tgz">RNetica_0.7-1.tgz</a></td>
+<td><a href="RNetica-manual_0.7-1.pdf">RNetica-manual-0.7-1.pdf</a></td>
+<td>Changed the way [] and [[]] work, and added NetworkTester</td></tr>
 <!-- NEXT ENTRY HERE -->
 </table>
 <p>
@@ -518,6 +546,6 @@ requests should be sent to the package maintainers.
 
 <hr>
 <!-- Date Start -->
-Site last updated on 2019-04-01; No Foolin'!
+Site last updated on 2019-07-19
 <!-- Date End -->
 </body>
