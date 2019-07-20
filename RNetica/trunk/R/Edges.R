@@ -933,7 +933,7 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
     } else {
       ## matrix or data frame
       nsel <- nrow(selection)
-      if (is.continuous(x)) {
+      if (!valisprobs && is.continuous(x)) {
         for (i in 1L:nsel) {
           .Call("RN_SetNodeFuncReal",x,selection[i,],
                 as.double(ifelse(length(value)==1L,value,value[i])),
