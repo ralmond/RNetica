@@ -130,10 +130,19 @@
     <item>
       <title>RNetica 0.7-1</title>
       <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
-      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.5-4</guid>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.7-1</guid>
       <pubDate>Fri Jul  19 16:34:51 EDT 2019</pubDate>
       <description>[CDATA[ Added Network tester and fixed extractors.
       WARNING:  May cause backwards compatability issues.  ]]</description>
+    </item>
+    <item>
+      <title>RNetica 0.7-1a</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.7-1a</guid>
+      <pubDate>Sun Jul 21 13:19:51 EDT 2019</pubDate>
+      <description>[CDATA[ Added Network tester and fixed extractors.
+      WARNING:  May cause backwards compatability issues.  (Very small
+      bug fix from Friday's leave)]]</description>
     </item>
   </channel>
 </rss>
