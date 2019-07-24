@@ -136,13 +136,28 @@
       WARNING:  May cause backwards compatability issues.  ]]</description>
     </item>
     <item>
-      <title>RNetica 0.7-1a</title>
-      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
-      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.7-1a</guid>
-      <pubDate>Sun Jul 21 13:19:51 EDT 2019</pubDate>
-      <description>[CDATA[ Added Network tester and fixed extractors.
-      WARNING:  May cause backwards compatability issues.  (Very small
-      bug fix from Friday's leave)]]</description>
+      <title>CPTtools 0.5-3</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/CPTtools.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/CPTtools_0.5-3</guid>
+      <pubDate>Tue Jul 23 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ Added Kappa and Lambda, fixed
+      exports.]]</description>
     </item>
+    <item>
+      <title>Peanut 0.6-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.6-1</guid>
+      <pubDate>Tue Jul 23 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ Added Statistics. Continuous variables.]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.6-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.6-1</guid>
+      <pubDate>Jul 23 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[ Statistic support.  Continuous variables ]]</description>
+    </item>
+
   </channel>
 </rss>
