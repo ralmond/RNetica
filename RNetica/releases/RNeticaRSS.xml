@@ -159,5 +159,13 @@
       <description>[CDATA[ Statistic support.  Continuous variables ]]</description>
     </item>
 
+    <item>
+      <title>RNetica 0.7-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.7-2</guid>
+      <pubDate>Tue Aug  6 17:13:35 EDT 2019</pubDate>
+      <description>[CDATA[ Added str.XXX methods, which should avoid
+      warnings in RStudio. (PC zip file will be release shortly)]]</description>
+    </item>
   </channel>
 </rss>
