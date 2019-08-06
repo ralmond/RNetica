@@ -99,6 +99,12 @@ setRefClass("CaseStream",fields=c(Name="character",
                   }
                 }))
 
+str.CaseStream <- function(object, ...) {
+    object$show()
+    invisible(object)
+}
+
+
 FileCaseStream <-
 setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
             contains="CaseStream",

@@ -92,6 +92,12 @@ NeticaSession <-
                   }
               ))
 
+str.NeticaSession <- function(object,...) {
+    object$show()
+    invisible(object)
+}
+
+
 setGeneric("startSession",function (session) standardGeneric("startSession"))
 setMethod("startSession","NeticaSession", function (session) {
   .Call("RN_start_Session",session,PACKAGE=RNetica)

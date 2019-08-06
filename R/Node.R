@@ -86,6 +86,13 @@ setMethod("as.character", "NeticaNode", function(x, ...) {
   toString(x)
 })
 
+## Need this function so RStudio won't choke on Node objects.
+str.NeticaNode <- function (object, ...) {
+    object$show()
+    invisible(object)
+}
+
+
 is.NeticaNode <- function (x) {
   is(x,"NeticaNode")
 }

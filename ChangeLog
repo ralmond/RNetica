@@ -1,3 +1,12 @@
+2019-08-06  Russell Almond  <ralmond@macox.com>
+
+	* R/Random.R (str.NeticaRNG): Yet more.
+	* R/Session.R (str.NeticaSession): Same Thing
+	* R/Networks.R (str.NeticaBN): Sam Ting
+	* R/Node.R (str.NeticaNode): See below.
+	* R/Cases.R (str.CaseStream): Added str.XXX methods, so RStudio
+	won't choke.
+
 2019-07-15  Rusell Almond  <ralmond@Cherry>
 
 	* R/Edges.R (doSelection): Considering redoing [[ so that it
