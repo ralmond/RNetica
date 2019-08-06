@@ -87,6 +87,11 @@ setMethod("as.character", "NeticaRNG", function(x, ...) {
   toString(x)
 })
 
+str.NeticaRNG <- function(object,...) {
+    object$show()
+    invisible(object)
+}
+
 is.NeticaRNG <- function (x) {
   is(x,"NeticaRNG")
 }
