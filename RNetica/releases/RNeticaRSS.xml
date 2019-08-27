@@ -167,5 +167,20 @@
       <description>[CDATA[ Added str.XXX methods, which should avoid
       warnings in RStudio. (PC zip file will be release shortly)]]</description>
     </item>
+    <item>
+      <title>Peanut 0.6-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.6-2</guid>
+      <pubDate>Mon Aug 26 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[Debugging and doc catch up.]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.6-2</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.6-2</guid>
+      <pubDate>Mon Aug 26 16:48:51 EDT 2019</pubDate>
+      <description>[CDATA[Debugging.]]</description>
+    </item>
   </channel>
 </rss>
