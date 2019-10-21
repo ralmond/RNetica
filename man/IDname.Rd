@@ -9,7 +9,7 @@
 
   The function \code{is.IDname()} returns a logical vector indicating
   whether or not each element of \code{x} is a valid Netica identifier.
-  The function \code{is.IDname()} attempts to massage the input value to
+  The function \code{as.IDname()} attempts to massage the input value to
   conform to the IDname rules.
 
 }

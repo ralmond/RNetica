@@ -696,7 +696,7 @@ NodeLevels <- function (node) {
       stop("Expected exactly ", NodeNumStates(node), " levels")
     }
   } else {
-    if (is.unsorted(value)) {
+    if (is.unsorted(value) && is.unsorted(rev(value))) {
       stop("Level cut points must be in increasing or decreasing order.")
     }
   }
