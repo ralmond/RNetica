@@ -116,6 +116,13 @@ x [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 x ReadNetwork_bn has switch to suppress loading visual information.
 * 14. Segfault on NewNodeTester_bn()
    
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘testerConfusion’ ‘testerErrorRate’ ‘testerIgnore’ ‘testerKappa’
+  ‘testerLambda’ ‘testerLogLoss’ ‘testerNet’ ‘testerQuadraticLoss’
+  ‘testerTarget’
+Undocumented S4 classes:
+  ‘NetworkTester’
 
 
 
