@@ -415,6 +415,7 @@ NodeUserField <- function (node, fieldname) {
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")
   }
+  if (!is.na(value) && value=="NA_character_") value <- NA_character_
   value
 }
 
@@ -426,6 +427,7 @@ NodeUserField <- function (node, fieldname) {
     stop("Illegal Netica Field Name, ",fieldname)
   }
   value <- as.character(value)
+  if (is.na(value)) value <- "NA_character_"
   if (length(value)>1 || is.na(value)) {
     stop("Illegal field value.")
   }
