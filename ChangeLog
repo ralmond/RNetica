@@ -1,3 +1,8 @@
+2019-11-10  Rusell Almond  <ralmond@Cherry>
+
+	* R/Experience.R ("NodeExperience<-"): Forced experience value to
+	be real to prevent c-level error.	
+
 2019-10-21  Rusell Almond  <ralmond@Cherry>
 
 	* R/Node.R ("NodeLevels<-"): Fixed test for levels so that they

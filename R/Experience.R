@@ -33,6 +33,7 @@ NodeExperience <- function (node) {
   if (!is.numeric(value)) {
     stop("Value must be numeric")
   }
+  value <- as.numeric(value)            #Must be real
   parnames <- ParentStates(node)
   statecounts <- sapply(parnames,length)
   if (length(statecounts) == 0L) {
