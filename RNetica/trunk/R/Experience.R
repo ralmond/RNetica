@@ -33,7 +33,9 @@ NodeExperience <- function (node) {
   if (!is.numeric(value)) {
     stop("Value must be numeric")
   }
+  dv <- dim(value)
   value <- as.numeric(value)            #Must be real
+  dim(value) <- dv                      #as.numeric does not preserve dim()
   parnames <- ParentStates(node)
   statecounts <- sapply(parnames,length)
   if (length(statecounts) == 0L) {
