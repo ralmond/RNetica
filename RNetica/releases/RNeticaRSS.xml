@@ -182,5 +182,35 @@
       <pubDate>Mon Aug 26 16:48:51 EDT 2019</pubDate>
       <description>[CDATA[Debugging.]]</description>
     </item>
+    <item>
+      <title>RNetica 0.7-3</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/RNetica.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/RNetica_0.7-3</guid>
+      <pubDate>Thu Nov 21 17:58:20 EST 2019</pubDate>
+      <description>[CDATA[NodeLevels can be increasing or decreasing.
+      Fixed type problem with NodeExperience.]]</description>
+    </item>
+    <item>
+      <title>CPTtools 0.6-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/CPTtools.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/CPTtools_0.6-1</guid>
+      <pubDate>Thu Nov 21 17:58:20 EST 2019</pubDate>
+      <description>[CDATA[ Added isMonotonic() function.]]</description>
+    </item>
+    <item>
+      <title>Peanut 0.7-1</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/Peanut_0.7-1</guid>
+      <pubDate>Thu Nov 21 17:58:20 EST 2019</pubDate>
+      <description>[CDATA[Round Trip to Spreadsheet Tested.]]</description>
+    </item>
+
+    <item>
+      <title>PNetica 0.6-7</title>
+      <link>https://pluto.coe.fsu.edu/RNetica/Peanut.html</link>
+      <guid>https://pluto.coe.fsu.edu/RNetica/PNetica_0.7-1</guid>
+      <pubDate>Thu Nov 21 17:58:20 EST 2019</pubDate>
+      <description>[CDATA[ Round Trip to Spreadsheet Tested. ]]</description>
+    </item>
   </channel>
 </rss>
