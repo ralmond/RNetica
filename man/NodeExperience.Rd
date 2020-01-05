@@ -67,6 +67,10 @@ NodeExperience(node) <- value
   term to refer to a network in which all of the nodes were
   parameterized in that way.
 
+  If the node experience has not been set, then
+  \code{NodeExperience(node)} will return \code{NA}.  However, Netica
+  will not allow one to unset the node experience once it is set.
+
 }
 \seealso{
   \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
@@ -85,11 +89,14 @@ AddLink(A,B)
 AddLink(A,C)
 AddLink(B,C)
 
+stopifnot(is.na(NodeExperience(A)))
+
 ## Parentless node, only need one value
 NodeExperience(A) <- 10
 stopifnot(
   abs(NodeExperience(A)-10)<.00001
 )
+
 
 NodeExperience(B) <- c(1,2,3,4)
 stopifnot(

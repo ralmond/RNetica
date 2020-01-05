@@ -49,6 +49,11 @@ NodeProbs(node) <- value
   \code{dimnames} for the resulting array will correspond to the state
   names.  
 
+  In the \code{CPTtools} package, this known as the
+  \code{\link[CPTtools]{CPA}} format, and tools exist to convert between
+  this form an a two dimensional matrix, or \code{\link[CPTtools]{CPF}}
+  format. 
+ 
   The setter form expects an array of the same dimensions as an
   argument, although it does not need to have the dimnames set.
   
@@ -73,18 +78,15 @@ NodeProbs(node) <- value
 
   All of this assumes that these are discrete nodes, that is
   \code{\link{is.discrete}(node)} will return true for both \code{node}
-  and all of the parents.  It is unknown what Netica does is this is not
-  right.
-
-  This doc file is still pretty lame.  Probably need to redo output as a
-  CPT class.
+  and all of the parents.  If the nodes are continuous, they need to
+  be discritized through the use of \code{\link{NodeLabels}}.  
 }
 \seealso{
   \code{\link{Extract.NeticaNode}},
   \code{\linkS4class{NeticaNode}}, \code{\link{NodeParents}()},
   \code{\link{NodeInputNames}()}, \code{\link{NodeStates}()},
   \code{\link[CPTtools]{CPA}},
-  \code{\link[CPTtools]{CPF}}, \code{\link{normalize}()}
+  \code{\link[CPTtools]{CPF}}, \code{\link[CPTtools]{normalize}()}
 }
 \examples{
 sess <- NeticaSession()

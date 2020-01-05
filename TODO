@@ -85,7 +85,8 @@ several hundred cases to a case file.  Should reimplement that on the
 C side so we don't need to constantly do the R->c conversions.
 
 DBNs
-## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn
+## ExpandNet_bn, SetNodeInputDelay_bn, SetNodePersistance_bn,
+   GetNodeAtTime_bn 
 There are currently no corresponding Get functions for these.
 
 Do Not implement
@@ -101,12 +102,14 @@ Database Connectivity
 
 Ask Brent:
 1. NodeLikelihood and MPE and FindingsProbability
-* 2. IsNetCompiled function?
+2. IsNetCompiled function? -- Node size works.
 * 3. GetNodesets for Node, Nodes in NodeSet?
 * 4. CopyNodes does not copy NodeSet information?
+   Still outstanding.
 * 5. EnterLikelihoodFindingClique
 * 6. NetworkUndo, Redo
 * 7. Learn_CPTs return value?
+   It has one, but what it is?
 * 8. Mysterious behavior of CalcNodeValue
 x [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 10.  Error on NodeExpectedUtils
@@ -116,13 +119,9 @@ x [RGA] 9. Unexpected behavior of EnterGaussianFinding and EnterIntervalFinding
 x ReadNetwork_bn has switch to suppress loading visual information.
 * 14. Segfault on NewNodeTester_bn()
    
-* checking for missing documentation entries ... WARNING
-Undocumented code objects:
-  ‘testerConfusion’ ‘testerErrorRate’ ‘testerIgnore’ ‘testerKappa’
-  ‘testerLambda’ ‘testerLogLoss’ ‘testerNet’ ‘testerQuadraticLoss’
-  ‘testerTarget’
-Undocumented S4 classes:
-  ‘NetworkTester’
+   Issues with Version 6.07
+   
 
-
-
+* NodeExperience <- UNDEF_DBL
+* GRADIENT_DESCENT_LEARNING
+   

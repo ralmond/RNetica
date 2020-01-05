@@ -15,7 +15,7 @@
 \usage{
 NodeEquation(node)
 NodeEquation(node,autoconvert=TRUE) <- value
-EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
+EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = FALSE)
 }
 \arguments{
   \item{node}{
@@ -59,6 +59,11 @@ EquationToTable(node, numSamples = 25, sampUnc = TRUE, addExist = TRUE)
   somewhat unclear.  In particular, it is not clear when Netica uses
   sampling to calculating the CPT (this should not be needed in most of
   the examples I've worked with).
+
+  The use of the \code{addExist} \code{EquationToTable()} allows several
+  equations to be blended.  Note that both the CPT
+  (\code{\link{NodeProbs}}) and the node experience
+  (\code{\link{NodeExperience}}) must be set to
 
   There are two differences between the RNetica implementation and the
   default Netica behavior.  First, equations can be fairly complex.  If

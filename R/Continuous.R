@@ -361,7 +361,8 @@ NodeEquation <- function (node) {
   invisible(handle)
 }
 
-EquationToTable <- function (node, numSamples=25, sampUnc=TRUE, addExist=TRUE) {
+EquationToTable <- function (node, numSamples=25, sampUnc=TRUE,
+                             addExist=FALSE) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
