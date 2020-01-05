@@ -33,6 +33,9 @@ NodeExperience <- function (node) {
   if (!is.numeric(value)) {
     stop("Value must be numeric")
   }
+  if (any(is.na(value) || any(value <= 0))) {
+    stop("Values must be positive numbers.  NAs are not allowed.")
+  }
   dv <- dim(value)
   value <- as.numeric(value)            #Must be real
   dim(value) <- dv                      #as.numeric does not preserve dim()

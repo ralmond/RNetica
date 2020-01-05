@@ -8,11 +8,11 @@ the installation at the place where it is located.
 On Linux and Unix (including Mac OS X) distributions you do that with
 the "--with-netica" switch to configure.  Thus I compile with
 
-R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_504'
+R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'
 
 To check I run with
 
-R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504'"
+R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_607'"
 
 For Windows installations, set an environmental variable NETICA_HOME
 with the path in which you unpacked the Netica API.  R will give a

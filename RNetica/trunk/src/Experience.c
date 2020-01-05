@@ -7,6 +7,10 @@
 #include <R.h>
 #include <Rdefines.h>
 #include <RNetica.h>
+#ifndef GRADIENT_DESCENT_LEARNING
+/* Fix for lable changes from version 5.04 to 6.07 */  
+#define GRADIENT_DESCENT_LEARNING  GRADIENT_ASCENT_LEARNING
+#endif
 
 SEXP RN_GetNodeExperience(SEXP node, SEXP states) {
   node_bn* node_handle;
@@ -16,8 +20,12 @@ SEXP RN_GetNodeExperience(SEXP node, SEXP states) {
     error("Could not find node %s.",NODE_NAME(node));
     return(R_NilValue);
   } else {
-    return ScalarReal(GetNodeExperience_bn(node_handle, 
-                                           RN_AS_STATE_BN(states)));
+    double val = GetNodeExperience_bn(node_handle, 
+                                      RN_AS_STATE_BN(states));
+    if (val == UNDEF_DBL) {
+      val = R_NaReal;
+    }
+    return ScalarReal(val);
   }
 }
 
@@ -28,8 +36,11 @@ SEXP RN_SetNodeExperience(SEXP node, SEXP states, SEXP weight) {
   if (!node_handle) {
     error("Could not find node %s.",NODE_NAME(node));
   } else {
-    SetNodeExperience_bn(node_handle, RN_AS_STATE_BN(states),
-                         REAL(weight)[0]);
+    double val =REAL(weight)[0];
+    if (!R_finite(val)) {
+      val = UNDEF_DBL;
+    }
+    SetNodeExperience_bn(node_handle, RN_AS_STATE_BN(states), val);
   }
   return node;
 }
