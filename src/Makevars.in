@@ -1,3 +1,15 @@
-PKG_LIBS= -L@NETICA_LIB@ -lnetica -lstdc++
+NETICA_LIB = @NETICA_LIB@
+INSTALL_LIB = ${R_PACKAGE_DIR}/libs
+PKG_LIBS= @NETICA_LIBS@ -lstdc++
 PKG_CFLAGS= -I. -I@NETICA_INCDIR@
 
+.PHONY:  all libnetica.so
+
+all: $(SHLIB)
+$(SHLIB): libnetica.so
+
+libnetica.so:
+	mkdir -p "$(INSTALL_LIB)"
+	echo "Copying $(NETICA_LIB)/libnetica.so to $(INSTALL_LIB)"
+	cp "$(NETICA_LIB)/libnetica.so" "$(INSTALL_LIB)"
+	ls "$(INSTALL_LIB)"
