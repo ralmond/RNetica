@@ -10,7 +10,7 @@
 //#ifndef GRADIENT_DESCENT_LEARNING
 /* Fix for lable changes from version 5.04 to 6.07 */  
 // #define GRADIENT_DESCENT_LEARNING  GRADIENT_ASCENT_LEARNING 
-#endif
+// #endif
 
 SEXP RN_GetNodeExperience(SEXP node, SEXP states) {
   node_bn* node_handle;
