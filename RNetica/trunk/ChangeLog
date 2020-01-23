@@ -1,3 +1,7 @@
+2020-01-23    <ralmond@pluto.coe.fsu.edu>
+
+	* src/Experience.c: There is currently a problem with the enum constant GRADIENT_DESCENT_LEARNING being renamed GRADIENT_ASCENT_LEARNING in Netica 6.07.  Need specific config test for this. 
+
 2019-12-25  Rusell Almond  <ralmond@Cherry>
 
 	* R/Experience.R ("NodeExperience<-"): Added ability to set value

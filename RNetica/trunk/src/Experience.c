@@ -7,9 +7,9 @@
 #include <R.h>
 #include <Rdefines.h>
 #include <RNetica.h>
-#ifndef GRADIENT_DESCENT_LEARNING
+//#ifndef GRADIENT_DESCENT_LEARNING
 /* Fix for lable changes from version 5.04 to 6.07 */  
-#define GRADIENT_DESCENT_LEARNING  GRADIENT_ASCENT_LEARNING
+// #define GRADIENT_DESCENT_LEARNING  GRADIENT_ASCENT_LEARNING 
 #endif
 
 SEXP RN_GetNodeExperience(SEXP node, SEXP states) {
