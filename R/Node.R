@@ -328,6 +328,10 @@ NodeName <- function (node, internal=FALSE) {
     stop("Illegal Netica Name, ",value)
   }
   oldname <- NodeName(node)
+  if (oldname==value) {
+    flog.trace("Node is already named ",oldname,"skipping")
+    return(node)
+  }
   net <- node$Net
   handle <- .Call("RN_SetNodeName",node,value,PACKAGE=RNetica)
   ecount <- node$reportErrors()
