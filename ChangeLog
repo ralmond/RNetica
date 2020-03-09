@@ -1,5 +1,7 @@
 2020-03-09  Russell Almond  <ralmond@Cherry>
 
+	* R/Networks.R ("NetworkName<-"): Same problem, different place.
+
 	* R/Node.R ("NodeName<-"): Netica is generating errors when we try
 	to set a node to its existing name.  Trap for that and return
 	nothing. 
