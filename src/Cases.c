@@ -344,7 +344,7 @@ SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
 #if NETICA_VERSION > 600
   long_ns idnum = -1;
 #else
-  long idnum = -1
+  long idnum = -1;
 #endif
   double freqnum = -1.0;
   bool_ns addflag=FALSE;
