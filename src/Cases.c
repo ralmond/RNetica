@@ -263,7 +263,11 @@ SEXP RN_GetMemoryStreamContents(SEXP stream) {
   SEXP contents;
   char *line;
   char *buf;
+#if NETICA_VERSION > 600
+  long_ns ipos, totlen=0;
+#else
   long ipos, totlen=0;
+#endif
   size_t irow, nrow;
 
   const char *nbuf = GetStreamContents_ns(GetCaseStream_Handle(stream),&totlen);
@@ -337,7 +341,11 @@ SEXP RN_WriteFindings(SEXP nodes, SEXP pathOrStream, SEXP id, SEXP freq,
 
 SEXP RN_ReadFindings(SEXP nodes, SEXP stream, SEXP pos, SEXP add) {
   nodelist_bn* nodelist = RN_AS_NODELIST(nodes,NULL);
+#if NETICA_VERSION > 600
+  long_ns idnum = -1;
+#else
   long idnum = -1;
+#endif
   double freqnum = -1.0;
   bool_ns addflag=FALSE;
   caseposn_bn case_posn=0;

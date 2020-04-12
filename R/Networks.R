@@ -398,6 +398,10 @@ NetworkName <- function (net, internal=FALSE) {
   if (length(value)>1 || !is.IDname(value)) {
     stop("Illegal Netica Name, ",value)
   }
+  if (oldname==value) {
+    flog.trace("Not renaming, already has name %s.",oldname)
+    return (net)
+  }
   handle <- .Call("RN_SetNetName",net,value,session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
