@@ -1,0 +1,7 @@
+*.o
+*~
+
+config.log
+config.status
+
+Makevars
