@@ -1,3 +1,15 @@
+2020-04-16  Russell Almond  <ralmond@pei>
+
+	* src/Makevars.in (PKG_CFLAGS): Added -DNETICA_VERSION here.  I still don't understand autoconf.
+
+	* src/Experience.c (NewLearner_rn): Added switch for Ascent/descent
+
+2020-04-16  Russell Almond  <ralmond@Cherry>
+
+	* configure.ac: Changed compile procedure to (a) use pkg-config
+	when available and (b) use a NETICA_VERSION flag, as NETICA
+	doesn't seem to supply this.
+
 2020-03-09  Russell Almond  <ralmond@Cherry>
 
 	* R/Networks.R ("NetworkName<-"): Same problem, different place.

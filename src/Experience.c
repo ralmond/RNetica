@@ -89,7 +89,11 @@ learner_bn* NewLearner_rn(SEXP method, SEXP maxIters, SEXP maxTol,
     } else if(strcmp(meth,"EM") == 0) {
       algorithm = EM_LEARNING;
     } else if(strcmp(meth,"GRADIENT") == 0) {
+      #if NETICA_VERSION > 600
+      algorithm = GRADIENT_ASCENT_LEARNING;
+      #else
       algorithm = GRADIENT_DESCENT_LEARNING;
+      #endif
     } else {
       error("RN_NewLearner: Pos should be 'COUNTING', 'EM' or 'GRADIENT'.");
     }

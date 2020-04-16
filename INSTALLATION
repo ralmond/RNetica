@@ -3,21 +3,65 @@ rather than the object version of RNetica.
 
 The current version does not automatically download the Netica API,
 you need to download and unzip it yourself.  You also need to point
-the installation at the place where it is located.  
+the installation at the place where it is located.
+
+The current latest versions are:
+Linux:  https://norsys.com/downloads/NeticaAPI_Linux_607.zip
+Windows: https://norsys.com/downloads/NeticaAPI_Win_510.zip
+MacOS: https://norsys.com/downloads/NeticaAPI_Mac.zip
+or https://norsys.com/downloads/NeticaJ_MacOSX10.7_504.zip
+
+
+Linux and MacOS X.  The appropriate libnetica.so file from the Netica
+tarball needs to be copied into a directory where R can find it when
+loading.  Under Ubuntu 18.04, the choices seem to be /usr/lib,
+/usr/share/lib, and ${R_HOME}/lib.
+
+=====================================
+
+As of 2020, Norsys is making available a version 6.07 of the API,
+currenlty only out for Linux, but probably available soon for MacOS
+and Windows.  There are some slight difference in the header files and
+shared library locations between the two, so it is necessary for the
+configuration file to pickup which version you are using.
+
+The best way to do this is using the pkg-config mechanism.  This works
+on all three platforms, but may need to be installed.
+
+I have included a netica.pc config file, this should be (a) edited so
+the first line points to where the Netica API lives (in my case in a
+directory under my home directory) and then (b) moved to somewhere
+where pkg-config can find it.  (If pkg-config is configured correctly,
+then `pkg-config -variable pc_path pkg-config` should reveal the
+localtion of the pkg-config packages.
+
+The file netica504.pc is for the older version of the API (still most
+recent for MacOS and Windows).  If you are using that version, then
+rename the files (so it will be easy to replace when you upgrade).
+Netica_5.04 is not recommended because of the bug in the absorb nodes
+function, but it is still necesary until Norsys releases new
+versions of the DLL/shared library for Windows/MacOS.
+
+================================================================
+
+These describe the older mechanism, now replaced by pkg-config.
 
 On Linux and Unix (including Mac OS X) distributions you do that with
 the "--with-netica" switch to configure.  Thus I compile with
 
-R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'
+R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_504'
 
 To check I run with
 
-R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_607'"
+R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504'"
 
 For Windows installations, set an environmental variable NETICA_HOME
 with the path in which you unpacked the Netica API.  R will give a
 warning about manual configuration, this is the necessary manual
 configuration. 
+
+===================================================
+
 
 If you have obtained a valid Netica API license key from Norsys, you
 can insert it in the variable NeticaLicenseKey in the main workspace.
@@ -25,3 +69,15 @@ RNetica will then consult this value when loading the Netica DLL.  All
 of the functions in the man pages work in the unlicensed version, so R
 CMD check RNetica does not require a license key.
 
+As of version 0.6, the startup mechanism now requires the program to
+explicitly call:
+sess <- NeticaSession()
+startSession(sess)
+
+In particular, this exposes the session object which contains
+references to all available networks.  The licence key can be passed
+as an optional argument to NeticaSession:
+sess <- NeticaSession(LicenseKey=NeticaLicenceKey).
+
+I've been keeping the license key in a file NeticaLicense.R in my home
+directory, which I source at the begining of each session.
