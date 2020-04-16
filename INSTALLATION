@@ -5,6 +5,11 @@ The current version does not automatically download the Netica API,
 you need to download and unzip it yourself.  You also need to point
 the installation at the place where it is located.  
 
+Linux and MacOS X.  The appropriate libnetica.so file from the Netica
+tarball needs to be copied into a directory where R can find it when
+loading.  Under Ubuntu 18.04, the choices seem to be /usr/lib,
+/usr/share/lib, and ${R_HOME}/lib.
+
 =====================================
 
 As of 2020, Norsys is making available a version 6.07 of the API,
@@ -19,8 +24,9 @@ on all three platforms, but may need to be installed.
 I have included a netica.pc config file, this should be (a) edited so
 the first line points to where the Netica API lives (in my case in a
 directory under my home directory) and then (b) moved to somewhere
-where pkg-config can find it.  (Under Ubuntu/PopOS that seems to be
-/usr/share/pkgconfig; I'll check for other OSes as I go.)
+where pkg-config can find it.  (If pkg-config is configured correctly,
+then `pkg-config -variable pc_path pkg-config` should reveal the
+localtion of the pkg-config packages.
 
 The file netica504.pc is for the older version of the API.  If you are
 using that version, then rename the files (so it will be easy to
@@ -36,11 +42,11 @@ These describe the older mechanism.
 On Linux and Unix (including Mac OS X) distributions you do that with
 the "--with-netica" switch to configure.  Thus I compile with
 
-R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'
+R CMD INSTALL RNetica --configure-args='--with-netica=/home/ralmond/software/Netica_API_504'
 
 To check I run with
 
-R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_607'"
+R CMD check RNetica --install-args="--configure-args='--with-netica=/home/ralmond/software/Netica_API_504'"
 
 For Windows installations, set an environmental variable NETICA_HOME
 with the path in which you unpacked the Netica API.  R will give a

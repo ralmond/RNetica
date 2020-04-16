@@ -1,7 +1,10 @@
 /**
  * Header Files for R-Netica User Interface.
  */
+#ifndef RNETICA_H
+#define RNETICA_H 1
 #include <Netica.h>
+#include <config.h>
 /**
  * This is a global pointer to the Netica environment.
  * It is created once during a session.
@@ -173,3 +176,4 @@ extern void CloseOpenCaseStreams();
 //Frees unneeded RNGs
 extern void FreeRNGs();
 
+#endif /* RNETICA_H */

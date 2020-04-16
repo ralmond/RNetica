@@ -1,4 +1,4 @@
-prefix=/home/ralmond/software/Netia_API_504
+prefix=/home/ralmond/software/Netica_API_607
 exec_prefix=${prefix}
 includedir=${prefix}/src
 libdir=${prefix}/lib
@@ -6,7 +6,7 @@ libdir=${prefix}/lib
 Name: netica
 Description:  Netica API shared library 
 URI: https://norsys.com
-Version: 5.0.4
+Version: 6.0.7
 Cflags: -I${includedir}
 Libs: -L${libdir} -lnetica
 
