@@ -7,6 +7,6 @@ Name: netica
 Description:  Netica API shared library 
 URI: https://norsys.com
 Version: 6.0.7
-Cflags: -I${includedir}
+Cflags: -I${includedir} -DNETICA_VERSION=607
 Libs: -L${libdir} -lnetica
 

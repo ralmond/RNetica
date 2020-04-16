@@ -3,7 +3,14 @@ rather than the object version of RNetica.
 
 The current version does not automatically download the Netica API,
 you need to download and unzip it yourself.  You also need to point
-the installation at the place where it is located.  
+the installation at the place where it is located.
+
+The current latest versions are:
+Linux:  https://norsys.com/downloads/NeticaAPI_Linux_607.zip
+Windows: https://norsys.com/downloads/NeticaAPI_Win_510.zip
+MacOS: https://norsys.com/downloads/NeticaAPI_Mac.zip
+or https://norsys.com/downloads/NeticaJ_MacOSX10.7_504.zip
+
 
 Linux and MacOS X.  The appropriate libnetica.so file from the Netica
 tarball needs to be copied into a directory where R can find it when
@@ -28,16 +35,16 @@ where pkg-config can find it.  (If pkg-config is configured correctly,
 then `pkg-config -variable pc_path pkg-config` should reveal the
 localtion of the pkg-config packages.
 
-The file netica504.pc is for the older version of the API.  If you are
-using that version, then rename the files (so it will be easy to
-replace when you upgrade).  Netica_5.04 is not recommended because of
-the bug in the absorb nodes function, but it may still be necesary
-until Norsys releases new versions of the DLL/shared library for
-Windows/MacOS.
+The file netica504.pc is for the older version of the API (still most
+recent for MacOS and Windows).  If you are using that version, then
+rename the files (so it will be easy to replace when you upgrade).
+Netica_5.04 is not recommended because of the bug in the absorb nodes
+function, but it is still necesary until Norsys releases new
+versions of the DLL/shared library for Windows/MacOS.
 
 ================================================================
 
-These describe the older mechanism.
+These describe the older mechanism, now replaced by pkg-config.
 
 On Linux and Unix (including Mac OS X) distributions you do that with
 the "--with-netica" switch to configure.  Thus I compile with
