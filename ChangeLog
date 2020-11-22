@@ -1,3 +1,7 @@
+2020-11-22  Russell Almond  <ralmond@pei>
+
+	* R/Continuous.R ("NodeValue<-"): Wrapped in as.numeric() to force integers to doubles.  
+
 2020-04-16  Russell Almond  <ralmond@pei>
 
 	* src/Makevars.in (PKG_CFLAGS): Added -DNETICA_VERSION here.  I still don't understand autoconf.
