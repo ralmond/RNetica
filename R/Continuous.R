@@ -22,7 +22,7 @@ NodeValue <- function (node) {
   if (length(value) >1) {
     stop("Node must be set to a single value.")
   }
-  val <- value
+  val <- as.numeric(value)
   if (is.character(val) || is.na(val)) {
     stop("Value ", value, " not legal for node ",node)
   }

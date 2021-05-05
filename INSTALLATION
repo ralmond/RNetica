@@ -32,7 +32,7 @@ I have included a netica.pc config file, this should be (a) edited so
 the first line points to where the Netica API lives (in my case in a
 directory under my home directory) and then (b) moved to somewhere
 where pkg-config can find it.  (If pkg-config is configured correctly,
-then `pkg-config -variable pc_path pkg-config` should reveal the
+then `pkg-config --variable=pc_path pkg-config` should reveal the
 localtion of the pkg-config packages.
 
 The file netica504.pc is for the older version of the API (still most
