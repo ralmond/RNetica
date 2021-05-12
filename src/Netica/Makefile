@@ -15,11 +15,13 @@ else
   NeticaDir = Netica_API_607
 endif
 
-
+.PHONY: NeticaAPI clean
 NeticaAPI:
 	echo $(findstring darwin, $(OSTYPE))
 	curl $(APIurl) --out NeticaAPI.zip
 	unzip NeticaAPI.zip
-	cp $(NeticaDir)/src/Netica.h .
-	cp $(NeticaDir)/lib/libnetica.* .
+	# cp $(NeticaDir)/src/Netica.h .
+	# cp $(NeticaDir)/lib/libnetica.* .
 
+clean:
+	rm -r $(NeticaDIR)
