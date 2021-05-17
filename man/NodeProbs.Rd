@@ -79,7 +79,7 @@ NodeProbs(node) <- value
   All of this assumes that these are discrete nodes, that is
   \code{\link{is.discrete}(node)} will return true for both \code{node}
   and all of the parents.  If the nodes are continuous, they need to
-  be discritized through the use of \code{\link{NodeLabels}}.  
+  be discritized through the use of \code{\link{NodeLevels}}.  
 }
 \seealso{
   \code{\link{Extract.NeticaNode}},
