@@ -24,5 +24,4 @@ NeticaAPI:
 	# cp $(NeticaDir)/lib/libnetica.* .
 
 clean:
-	rm -f NeticaAPI.zip
-	rm -rf $(NeticaDir) 
+	rm -r $(NeticaDIR)
