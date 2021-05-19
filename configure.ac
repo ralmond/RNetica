@@ -62,7 +62,7 @@ fi
 if test x"${NETICA_GOOD}" = x"no"; then
    AC_MSG_NOTICE([Need to download Netica from Norsys.com])
 
-   (cd src/Netica; make NeticaAPI) || exit 1
+   (cd src/Netica; ./configure; make NeticaAPI) || exit 1
    NETICA_HOME="$(pwd)/src/Netica/Netica_API_504"
    AS_IF([test ! -d "${NETICA_HOME}"],
    	 [NETICA_HOME="$(pwd)/src/Netica/Netica_API_607";

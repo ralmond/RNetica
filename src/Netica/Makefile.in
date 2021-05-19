@@ -16,8 +16,9 @@ NeticaDir = @NETICA_DIR@
 .PHONY: NeticaAPI clean
 NeticaAPI:
 	curl $(APIurl) --out NeticaAPI.zip
-	unzip NeticaAPI.zip
+	unzip -o NeticaAPI.zip
 
 clean:
 	rm -f NeticaAPI.zip
-	rm -rf $(NeticaDir) 
+	rm -rf $(NeticaDir)
+	rm Makefile
