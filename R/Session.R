@@ -135,11 +135,22 @@ logErrors <- function (allErrs) {
 }
 
 flogErrors <- function (allErrs) {
-  lapply(allErrs[1],flog.fatal)
-  lapply(allErrs[2],flog.error)
-  lapply(allErrs[3],flog.warn)
-  lapply(allErrs[4],flog.info)
-  lapply(allErrs[5],flog.debug)
+  #Stop unnecessary calls to flog for performance reasons
+    if(length(allErrs[[1]]) != 0){
+      lapply(allErrs[1],flog.fatal)
+    }
+    if(length(allErrs[[2]]) != 0){
+      lapply(allErrs[2],flog.error)
+    }
+    if(length(allErrs[[3]]) != 0){
+      lapply(allErrs[3],flog.warn)
+    }
+    if(length(allErrs[[4]]) != 0){
+      lapply(allErrs[4],flog.info)
+    }
+    if(length(allErrs[[5]]) != 0){
+      lapply(allErrs[5],flog.debug)
+    }
 }
 
 printErrors <- function (allErrs) {
