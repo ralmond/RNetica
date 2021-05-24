@@ -3,4 +3,11 @@ INSTALL_LIB = ${R_PACKAGE_DIR}/libs
 PKG_LIBS= @NETICA_LIBS@ -lstdc++
 PKG_CFLAGS= -I. -I@NETICA_INCDIR@ -DNETICA_VERSION=@NETICA_VERSION@
 
+.PHONY: all Neticaso
 
+all: $(SHLIB)
+$(SHLIB): Neticaso
+
+Neticaso:
+	mkdir -p "$(INSTALL_LIB)"
+	if [ -e "$(NETICA_LIB)/libnetica.so" ]; then cp "$(NETICA_LIB)/libnetica.so" "$(INSTALL_LIB)"; fi

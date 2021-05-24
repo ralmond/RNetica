@@ -1,0 +1,24 @@
+## The purpose of this makefile is to download and install the Netica
+## API from the Norsys website, thus making its installation
+## transparent to the user.
+
+APIurl = @NETICA_ZIP@
+NeticaDir = @NETICA_DIR@
+
+## Assume we have either MacOS or Linux:  win will use Makefile.win
+# ifeq ($(shell uname -s),Darwin)
+#   APIurl = $(APIurlMac)
+# else
+#   APIurl = $(APIurlLinux)
+#   NeticaDir = Netica_API_607
+# endif
+
+.PHONY: NeticaAPI clean
+NeticaAPI:
+	curl $(APIurl) --out NeticaAPI.zip
+	unzip -o NeticaAPI.zip
+
+clean:
+	rm -f NeticaAPI.zip
+	rm -rf $(NeticaDir)
+	rm Makefile

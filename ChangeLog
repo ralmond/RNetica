@@ -1,3 +1,8 @@
+2020-08-08  Russell Almond  <ralmond@Cherry>
+
+	* R/Continuous.R ("NodeValue<-"): wrapped value in as.numeric as
+	needs to be real and not integer.
+
 2020-04-16  Russell Almond  <ralmond@pei>
 
 	* src/Makevars.in (PKG_CFLAGS): Added -DNETICA_VERSION here.  I still don't understand autoconf.

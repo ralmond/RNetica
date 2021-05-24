@@ -1,0 +1,17 @@
+## The purpose of this makefile is to download and install the Netica
+## API from the Norsys website, thus making its installation
+## transparent to the user.
+
+APIurl = https://norsys.com/downloads/NeticaAPI_Win.zip
+NeticaDir = Netica_API_510
+
+.PHONY: NeticaAPI clean
+NeticaAPI:
+	curl $(APIurl) --out NeticaAPI.zip
+	unzip NeticaAPI.zip
+	# cp $(NeticaDir)/src/Netica.h .
+	# cp $(NeticaDir)/lib/libnetica.* .
+
+clean:
+	rm -f NeticaAPI.zip
+	rm -rf $(NeticaDir) 
