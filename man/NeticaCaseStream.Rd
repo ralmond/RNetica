@@ -32,7 +32,6 @@ getCaseStreamLastFreq(stream)
   }
   \item{stream}{A \code{\linkS4class{CaseStream}} object.}
   \item{x}{A object to be printed or whose type is to be determined.}
-  \item{...}{Other arguments to \code{toString}.  These are ignored.}
 }
 \details{
 

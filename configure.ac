@@ -1,6 +1,9 @@
 # An input file for autoconf to configure 
 # 
 #
+# require at least autoconf 2.61
+AC_PREREQ(2.61)
+
 AC_INIT([RNetica], 0.8) dnl RNetica, 1.8-2
 
  dnl Get the C compiler, including any values set by the user
@@ -17,30 +20,59 @@ AC_PROG_CC
 
 dnl ======================================================
 
-dnl DEFAULT_NETICA_HOME="/home/ralmond/software/Netica_API_504"
-dnl DEFAULT_NETICA_HOME="/opt/Netica_API_504"
-NETICA_VERSION=504              dnl Not in current Netica API
+## check for pkg-config
+AC_CHECK_PROG(PKGCONFIG,pkg-config,yes)
+
+## default to assuming Netica library has been found
+NETICA_GOOD="no"
+NETICA_VERSION=504
+
+## also use pkg-config to check for Netica
+##
+if test x"${PKGCONFIG}" == x"yes"; then
+   ## check via pkg-config for nlopt
+   if pkg-config --exists netica; then
+       ## obtain cflags and obtain libs
+       NETICA_HOME=$(pkg-config --variable=prefix netica)
+       NETICA_CFLAGS=$(pkg-config --cflags netica)
+       NETICA_LIBS=$(pkg-config --libs netica)
+       NETICA_VERSION=$(pkg-config --modversion netica)
+       NETICA_GOOD="yes"
+   fi
+fi
+
+
 AC_ARG_WITH([netica],
             AC_HELP_STRING([--with-netica=PATH],
                            [the path to the Netica API directory]),
             [NETICA_HOME=${withval}]
             )
 if test -z "${NETICA_HOME}" ; then
-  PKG_CHECK_MODULES([NETICA], [netica],
-    [NETICA_HOME=`pkg-config --variable=prefix netica`],
-    AC_MSG_ERROR([Netica package not supplied with --with-netica, with NETICA_HOME variable or pkg-config]))
-    AC_MSG_CHECKING([Netica location using pkg-config])
-    AC_MSG_RESULT($NETICA_HOME)
-    if `pkg-config --exact-version=6.0.7 netica` ; then
-       NETICA_VERSION=607
-    fi
+   NETICA_GOOD="no"
 else 
-    AC_MSG_CHECKING([existance of NETICA_HOME or --with-netica])
+   AC_MSG_CHECKING([existance of NETICA_HOME or --with-netica])
+   AC_MSG_RESULT($NETICA_HOME)
+   AS_IF([test ! -e "${NETICA_HOME}/src/Netica.h"],
+   [NETICA_GOOD="yes"])
+fi
+
+
+## in case neither of the two methods above worked, download Netica from Norsys 
+## web site
+if test x"${NETICA_GOOD}" = x"no"; then
+   AC_MSG_NOTICE([Need to download Netica from Norsys.com])
+
+   (cd src/Netica; ./configure; make NeticaAPI) || exit 1
+   NETICA_HOME="$(pwd)/src/Netica/Netica_API_504"
+   AS_IF([test ! -d "${NETICA_HOME}"],
+   	 [NETICA_HOME="$(pwd)/src/Netica/Netica_API_607";
+	  NETICA_VERSION=607])
+    AC_MSG_CHECKING([Downloaded Netica])
     AC_MSG_RESULT($NETICA_HOME)
 fi
 
-    dnl Netica has non-standard path to lib64 directory.
-    dnl which is different in different versions:  Arg!!
+## Netica has non-standard path to lib64 directory.
+## which is different in different versions:  Arg!!
 
 NETICA_LIB="${NETICA_HOME}/lib"
 AC_CHECK_SIZEOF([long])
@@ -48,7 +80,7 @@ AS_IF([test $ac_cv_sizeof_long -eq 8],
       [NETICA_LIB="${NETICA_HOME}/lib/64bit"])
 AS_IF([test $ac_cv_sizeof_long -eq 4],
       [NETICA_LIB="${NETICA_HOME}/lib/32bit"])
-dnl Now, if this version doesn't exist, fall back.
+## Now, if this version doesn't exist, fall back.
 AS_IF([test ! -d "${NETICA_LIB}"],
       [ NETICA_LIB="${NETICA_HOME}/lib"])
 AC_MSG_CHECKING([Location of Netica library])
@@ -79,5 +111,4 @@ AC_SUBST(NETICA_VERSION)
 AC_CONFIG_HEADERS(src/config.h)
 
 AC_OUTPUT(src/Makevars)
-#chmod +x cleanup
 
