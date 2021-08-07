@@ -584,6 +584,7 @@ PACKAGE_URL=''
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 NETICA_DIR
+NETICA_LIC
 NETICA_ZIP
 target_os
 target_vendor
@@ -1837,21 +1838,25 @@ test -n "$target_alias" &&
     NONENONEs,x,x, &&
   program_prefix=${target_alias}-
 
+
 case "${target_os}" in
      linux*)
         NETICA_ZIP=https://norsys.com/downloads/NeticaAPI_Linux_607.zip
-     	NETICA_DIR=Netica_API_504
+     	NETICA_DIR=Netica_API_607
 	;;
      darwin*)
 	NETICA_ZIP=https://norsys.com/downloads/NeticaAPI_Mac.zip
      	NETICA_DIR=Netica_API_504
      	;;
      cigwin*|mingw*)
-	NETICA_ZIP=https://norsys.com/downloads/NeticaAPI_Win_510c.zip
+	NETICA_ZIP=https://norsys.com/downloads/NeticaAPI_Win_510.zip
      	NETICA_DIR=Netica_API_510
      	;;
 esac
+
+NETICA_LIC=https://norsys.com/downloads/LicAgree.txt
 ac_config_files="$ac_config_files Makefile"
+
 
 
 

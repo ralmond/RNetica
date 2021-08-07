@@ -88,8 +88,14 @@ AC_MSG_RESULT($NETICA_LIB)
 
 
 NETICA_INCDIR="${NETICA_HOME}/src"
-NETICA_LIBS="-L${NETICA_LIB} -lnetica"
+NETICA_LIBS="-L${NETICA_LIB} -lnetica -Wl,-rpath,${NETICA_LIBPATH}"
 NETICA_CFLAGS="-I${NETICA_INCDIR} -DNETICA_VERSION=${NETICA_VERSION}"
+## This is for fixing the links in the shared object to point to the
+# install directory. See Rblpapi example.
+# Need to substitute @<:@ and @:>@ for M4 quote characters []
+# NETICA_LIBPATH=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()[1], "RNetica", "Netica"))')
+NETICA_LIBPATH=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()@<:@1@:>@, "RNetica", "Netica"))')
+
 
 echo "****************************************"
 echo "Configuration information:"
@@ -101,10 +107,12 @@ echo "Netica API DIRECTORY:     ${NETICA_HOME}"
 echo "Netica Lib Flags:     ${NETICA_LIBS}"
 echo "Netica CFlags Directory: ${NETICA_CFLAGS}"
 echo "Netica version: ${NETICA_VERSION}"
+echo "Netica RPATH: ${NETICA_LIBPATH}"
 echo ""
 echo "Compilation flags:        ${CFLAGS} ${LANGUAGE_DEFS}"
 echo "Link flags:               ${LIBS}"
 AC_SUBST(NETICA_LIB)
+AC_SUBST(NETICA_LIBPATH)
 AC_SUBST(NETICA_LIBS)
 AC_SUBST(NETICA_INCDIR)
 AC_SUBST(NETICA_VERSION)

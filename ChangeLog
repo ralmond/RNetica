@@ -1,3 +1,8 @@
+2021-07-29  Russell Almond  <ralmond@cherry.local>
+
+	* R/LoadFuns.R (.onload): Now explicitly calling library.dynam in .onLoad() so we can load libnetica.so first.
+	
+
 2020-08-08  Russell Almond  <ralmond@Cherry>
 
 	* R/Continuous.R ("NodeValue<-"): wrapped value in as.numeric as

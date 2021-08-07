@@ -3,6 +3,7 @@
 ## transparent to the user.
 
 APIurl = @NETICA_ZIP@
+LicURL = @NETICA_LIC@
 NeticaDir = @NETICA_DIR@
 
 ## Assume we have either MacOS or Linux:  win will use Makefile.win
@@ -13,10 +14,11 @@ NeticaDir = @NETICA_DIR@
 #   NeticaDir = Netica_API_607
 # endif
 
-.PHONY: NeticaAPI clean
+.PHONY: NeticaAPI
 NeticaAPI:
-	curl $(APIurl) --out NeticaAPI.zip
-	unzip -o NeticaAPI.zip
+	curl $(LicURL) -o LicAgree.txt
+	curl $(APIurl) -o NeticaAPI.zip
+	unzip -o NeticaAPI.zip "*/src/*" "*/lib/*"
 
 clean:
 	rm -f NeticaAPI.zip

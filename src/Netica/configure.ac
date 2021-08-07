@@ -12,6 +12,7 @@ fi
 
 AC_CANONICAL_TARGET
 
+
 case "${target_os}" in
      linux*)
         NETICA_ZIP=https://norsys.com/downloads/NeticaAPI_Linux_607.zip
@@ -26,7 +27,10 @@ case "${target_os}" in
      	NETICA_DIR=Netica_API_510
      	;;
 esac	
+
+NETICA_LIC=https://norsys.com/downloads/LicAgree.txt
 AC_CONFIG_FILES([Makefile])
 AC_SUBST(NETICA_ZIP)
+AC_SUBST(NETICA_LIC)
 AC_SUBST(NETICA_DIR)
 AC_OUTPUT

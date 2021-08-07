@@ -1,21 +1,32 @@
 If you are seeing this file in the code, then you have the source
 rather than the object version of RNetica.  
 
-The current version does not automatically download the Netica API,
-you need to download and unzip it yourself.  You also need to point
-the installation at the place where it is located.
+
+The most recent verion finally solves the Netica Installation problem.
+Unless a switch is given to point to a pre-installed version of the
+Netica API, the latest version will be downloaded from Norsys's
+website and installed along with the R library.
+
+NOTE:  This assumes that you have read and accepted the Netica License
+Agreement, available at https://norsys.com/downloads/LicAgree.txt
+
+
+**********************************
+
+You can also download and pre-install the Netica API.
 
 The current latest versions are:
 Linux:  https://norsys.com/downloads/NeticaAPI_Linux_607.zip
 Windows: https://norsys.com/downloads/NeticaAPI_Win_510.zip
 MacOS: https://norsys.com/downloads/NeticaAPI_Mac.zip
-or https://norsys.com/downloads/NeticaJ_MacOSX10.7_504.zip
+
 
 
 Linux and MacOS X.  The appropriate libnetica.so file from the Netica
 tarball needs to be copied into a directory where R can find it when
 loading.  Under Ubuntu 18.04, the choices seem to be /usr/lib,
 /usr/share/lib, and ${R_HOME}/lib.
+
 
 =====================================
 

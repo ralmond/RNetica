@@ -1,16 +1,4 @@
-The RNetica package is licensed under the Artistic-2.0
-Changes and derived versions are premitted with attribution.
 
-During Installation, a copy of libnetica.so (Unix and MacOS) or
-Netica.dll (Windows) is installed along with the RNetica.so (or .dll).
-The Norsys License agreement governs the use of these libraries.  This
-is included below. 
-
-This installer downloads a limited version of Netica, which will work
-with small networks (including all of the example code in the R
-documentation).  To access the full version, a Netica API (which is
-separate from the GUI) license code must be purchased from Norsys.
-See their website at https://norsys.com for more information.
 
           NORSYS LICENSE AGREEMENT FOR NETICA         Norsys Agreement #116
           -----------------------------------

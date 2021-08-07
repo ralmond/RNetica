@@ -623,6 +623,7 @@ LIBOBJS
 NETICA_VERSION
 NETICA_INCDIR
 NETICA_LIBS
+NETICA_LIBPATH
 NETICA_LIB
 EGREP
 GREP
@@ -654,6 +655,7 @@ infodir
 docdir
 oldincludedir
 includedir
+runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -725,6 +727,7 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
+runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -977,6 +980,15 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
+  -runstatedir | --runstatedir | --runstatedi | --runstated \
+  | --runstate | --runstat | --runsta | --runst | --runs \
+  | --run | --ru | --r)
+    ac_prev=runstatedir ;;
+  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+  | --run=* | --ru=* | --r=*)
+    runstatedir=$ac_optarg ;;
+
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1114,7 +1126,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir
+		libdir localedir mandir runstatedir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1267,6 +1279,7 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -3416,8 +3429,14 @@ $as_echo "$NETICA_LIB" >&6; }
 
 
 NETICA_INCDIR="${NETICA_HOME}/src"
-NETICA_LIBS="-L${NETICA_LIB} -lnetica"
+NETICA_LIBS="-L${NETICA_LIB} -lnetica -Wl,-rpath,${NETICA_LIBPATH}"
 NETICA_CFLAGS="-I${NETICA_INCDIR} -DNETICA_VERSION=${NETICA_VERSION}"
+## This is for fixing the links in the shared object to point to the
+# install directory. See Rblpapi example.
+# Need to substitute [ and ] for M4 quote characters []
+# NETICA_LIBPATH=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()[1], "RNetica", "Netica"))')
+NETICA_LIBPATH=$(${R_HOME}/bin/Rscript -e 'cat(file.path(.libPaths()[1], "RNetica", "Netica"))')
+
 
 echo "****************************************"
 echo "Configuration information:"
@@ -3429,9 +3448,11 @@ echo "Netica API DIRECTORY:     ${NETICA_HOME}"
 echo "Netica Lib Flags:     ${NETICA_LIBS}"
 echo "Netica CFlags Directory: ${NETICA_CFLAGS}"
 echo "Netica version: ${NETICA_VERSION}"
+echo "Netica RPATH: ${NETICA_LIBPATH}"
 echo ""
 echo "Compilation flags:        ${CFLAGS} ${LANGUAGE_DEFS}"
 echo "Link flags:               ${LIBS}"
+
 
 
 

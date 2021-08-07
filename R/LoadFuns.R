@@ -4,15 +4,6 @@
 LicenseKey <- NULL
 
 
-## .onLoad <-
-## function(libname, pkgname)
-## {
-##  library.dynam("RNetica", pkgname, libname)
-##   ## Deep voodoo needed to get around R safeguards
-##   ## Need to do it in Load before export
-##   assignInMyNamespace("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE="RNetica"))
-## }
-
 ### I'm trying to set the value of EVERY_STATE to the value found in
 ### the Netica code.  But I have a problem.  If I call
 ### RN_GetEveryState to fetch the value when the namespace is loaded,
@@ -43,15 +34,21 @@ EV_STATE <- NULL
 ## EVERY_STATE <-
 ##   delayedAssign("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
 .onload <- function(libname, pkgname) {
-  ## Now fetched from getDefaultLicense
-   ## if(exists("NeticaLicenseKey",mode="character")) {
-   ##   assignInMyNamespace("LicenseKey", NeticaLicenseKey)
-   ##   #cat("License Key Installed.")
-   ## }
   assignInMyNamespace("CCodeLoaded", FALSE)
 }
 
 .onAttach <- function(libname, pkgname) {
+  ## Need to explicitly load libnetica/Netica.dll before loading RNetica
+  ## Also need the local=FALSE flag.
+  ## RE: http://www.stat.ucdavis.edu/~duncan/R/dynload/
+  rlibs <- .libPaths()
+  rlibs <- rlibs[dir.exists(rlibs)]
+  lpath <- find.package(pkgname,rlibs)
+  if (file.exists(file.path(lpath,"Netica","libnetica.so")))
+    dyn.load(file.path(lpath,"Netica","libnetica.so"),local=FALSE)
+  if (file.exists(file.path(lpath,"Netica","Netica.dll")))
+    dyn.load(file.path(lpath,"Netica","Netica.dll"),local=FALSE)
+  library.dynam("RNetica", pkgname, libname)
   .C("RN_Define_Symbols",PACKAGE=RNetica)
   assignInMyNamespace("CCodeLoaded", TRUE)
   assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))

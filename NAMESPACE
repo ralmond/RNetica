@@ -137,4 +137,5 @@ export(testerNet, testerTarget, testerIgnore,
        testNetwork)
 S3method(summary,NetworkTester)
 
-useDynLib(RNetica)
+## Now called from .onLoad so we can explicitly load it.
+##useDynLib(RNetica)
