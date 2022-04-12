@@ -1,6 +1,13 @@
+2022-04-08  Russell Almond  <ralmond@cherry.local>
+
+	* R/Node.R (str.NeticaNode): Added str.NeticaNode to suppress
+	warnings when running in RStudio.  
+	
+
 2021-07-29  Russell Almond  <ralmond@cherry.local>
 
-	* R/LoadFuns.R (.onload): Now explicitly calling library.dynam in .onLoad() so we can load libnetica.so first.
+	* R/LoadFuns.R (.onload): Now explicitly calling library.dynam in
+	.onLoad() so we can load libnetica.so first. 
 	
 
 2020-08-08  Russell Almond  <ralmond@Cherry>

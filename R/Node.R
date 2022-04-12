@@ -862,3 +862,10 @@ NetworkNodeSetColor <- function(net, setname, newcolor) {
   result
 }
 
+
+str.NeticaNode <- function(object, ...) {
+  ## Main function is to put this in a list,
+  ## this will make notes not accessable in RStudio Environment tab,
+  ## but it will suppress the warning.
+  str(toString(object),...)
+}

@@ -61,6 +61,7 @@ export(
   NodeStateComments, "NodeStateComments<-",
   NodeLevels, "NodeLevels<-", ParentStates, ParentNames
   )
+S3method(str,NeticaNode)
 
 exportClasses(CliqueNode)
 exportMethods("[","[[","[<-","[[<-")
@@ -136,6 +137,7 @@ export(testerNet, testerTarget, testerIgnore,
        testerConfusion, testerKappa, testerLambda,
        testNetwork)
 S3method(summary,NetworkTester)
+
 
 ## Now called from .onLoad so we can explicitly load it.
 ##useDynLib(RNetica)
