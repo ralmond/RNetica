@@ -1,4 +1,4 @@
-prefix=/home/ralmond/software/Netica_API_504
+prefix=/Users/ralmond/software/Netica_API_504
 exec_prefix=${prefix}
 includedir=${prefix}/src
 libdir=${prefix}/lib

@@ -44,6 +44,8 @@ EV_STATE <- NULL
   rlibs <- .libPaths()
   rlibs <- rlibs[dir.exists(rlibs)]
   lpath <- find.package(pkgname,rlibs)
+##  cat("Netica Libraries",paste(list.files(file.path(lpath,"Netica")),
+##                                 collapse=", "),"\n")
   if (file.exists(file.path(lpath,"Netica","libnetica.so")))
     dyn.load(file.path(lpath,"Netica","libnetica.so"),local=FALSE)
   if (file.exists(file.path(lpath,"Netica","Netica.dll")))

@@ -2,9 +2,9 @@
 # 
 #
 # require at least autoconf 2.61
-AC_PREREQ(2.61)
+AC_PREREQ([2.71])
 
-AC_INIT([RNetica], 0.8) dnl RNetica, 1.8-2
+AC_INIT([RNetica],[0.8]) dnl RNetica, 1.8-2
 
  dnl Get the C compiler, including any values set by the user
  dnl We need this to perform compilation and link checks.
@@ -29,6 +29,7 @@ NETICA_VERSION=504
 
 ## also use pkg-config to check for Netica
 ##
+
 if test x"${PKGCONFIG}" == x"yes"; then
    ## check via pkg-config for nlopt
    if pkg-config --exists netica; then
@@ -43,7 +44,7 @@ fi
 
 
 AC_ARG_WITH([netica],
-            AC_HELP_STRING([--with-netica=PATH],
+            AS_HELP_STRING([--with-netica=PATH],
                            [the path to the Netica API directory]),
             [NETICA_HOME=${withval}]
             )
@@ -88,7 +89,10 @@ AC_MSG_RESULT($NETICA_LIB)
 
 
 NETICA_INCDIR="${NETICA_HOME}/src"
-NETICA_LIBS="-L${NETICA_LIB} -lnetica -Wl,-rpath,${NETICA_LIBPATH}"
+AS_IF([ test x"${NETICA_LIBS}" == x""],
+     [NETICA_LIBS="-L${NETICA_LIB} -lnetica"])
+
+# NETICA_LIBS="${NETICA_LIBS} -Wl,-rpath,${NETICA_LIBPATH}"
 NETICA_CFLAGS="-I${NETICA_INCDIR} -DNETICA_VERSION=${NETICA_VERSION}"
 ## This is for fixing the links in the shared object to point to the
 # install directory. See Rblpapi example.
@@ -118,5 +122,6 @@ AC_SUBST(NETICA_INCDIR)
 AC_SUBST(NETICA_VERSION)
 AC_CONFIG_HEADERS(src/config.h)
 
-AC_OUTPUT(src/Makevars)
+AC_CONFIG_FILES([src/Makevars])
+AC_OUTPUT
 

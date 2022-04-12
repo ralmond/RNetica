@@ -1,17 +1,24 @@
 NETICA_LIBPATH = @NETICA_LIBPATH@
 NETICA_LIB = @NETICA_LIB@
+NETICA_LIBS = @NETICA_LIBS@
 INSTALL_LIB = @NETICA_LIBPATH@
-PKG_LIBS="-L${NETICA_LIB} -lnetica -Wl,-rpath,${NETICA_LIBPATH} -lstdc++"
+PKG_LIBS = ${NETICA_LIBS} -Wl,-rpath,${NETICA_LIBPATH} -lstdc++
 PKG_CFLAGS= -I. -I@NETICA_INCDIR@ -DNETICA_VERSION=@NETICA_VERSION@
 
 .PHONY: all Neticaso
 
 all: $(SHLIB)
-	@if command -v install_name_tool; then echo "fixing libpath"; install_name_tool -change libnetica.so "$(NETICA_LIBPATH)/libnetica.so" RNetica.so; fi
+	@if [ command -v install_name_tool ]; then \
+	if [ -e "$(NETICA_LIBPATH)/libnetica.so" ]; then \
+		echo "fixing libpath";\
+		install_name_tool -change libnetica.so "$(NETICA_LIBPATH)/libnetica.so" RNetica.so;\
+	fi \
+	fi
 
 $(SHLIB): Neticaso
 
 Neticaso:
 	mkdir -p "$(INSTALL_LIB)"
 	if [ -e "$(NETICA_LIB)/libnetica.so" ]; then cp "$(NETICA_LIB)/libnetica.so" "$(INSTALL_LIB)"; fi
+	if [ -e "$(NETICA_LIB)/libnetica.a" ]; then cp "$(NETICA_LIB)/libnetica.a" "$(INSTALL_LIB)"; fi
 	if [ -e "$(NETICA_LIB)/../doc/LicAgree.txt" ]; then cp "$(NETICA_LIB)/../doc/LicAgree.txt" "$(INSTALL_LIB)"; fi
