@@ -33,26 +33,22 @@ EV_STATE <- NULL
 ##   }})
 ## EVERY_STATE <-
 ##   delayedAssign("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
-.onload <- function(libname, pkgname) {
-  assignInMyNamespace("CCodeLoaded", FALSE)
+.onLoad <- function(libname, pkgname) {
+  if (file.exists(file.path(libname,pkgname,"Netica","libnetica.so")))
+    dyn.load(file.path(libname,pkgname,"Netica","libnetica.so"),local=FALSE)
+  if (file.exists(file.path(libname,pkgname,"Netica","Netica.dll")))
+    dyn.load(file.path(libname,pkgname,"Netica","Netica.dll"),local=FALSE)
+  library.dynam("RNetica", pkgname, libname)
 }
 
 .onAttach <- function(libname, pkgname) {
   ## Need to explicitly load libnetica/Netica.dll before loading RNetica
   ## Also need the local=FALSE flag.
   ## RE: http://www.stat.ucdavis.edu/~duncan/R/dynload/
-  rlibs <- .libPaths()
-  rlibs <- rlibs[dir.exists(rlibs)]
-  lpath <- find.package(pkgname,rlibs)
-##  cat("Netica Libraries",paste(list.files(file.path(lpath,"Netica")),
-##                                 collapse=", "),"\n")
-  if (file.exists(file.path(lpath,"Netica","libnetica.so")))
-    dyn.load(file.path(lpath,"Netica","libnetica.so"),local=FALSE)
-  if (file.exists(file.path(lpath,"Netica","Netica.dll")))
-    dyn.load(file.path(lpath,"Netica","Netica.dll"),local=FALSE)
-  library.dynam("RNetica", pkgname, libname)
+  ## cat("libname = ",libname, "pkgname= ",pkgname,"\n")
+  ## cat("Netica Libraries",paste(list.files(file.path(libname,pkgname,"Netica")),
+  ##                                collapse=", "),"\n")
   .C("RN_Define_Symbols",PACKAGE=RNetica)
-  assignInMyNamespace("CCodeLoaded", TRUE)
   assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
 ##   ##StartNetica()
 }
