@@ -1,3 +1,15 @@
+2022-04-15  Russell Almond  <ralmond@cherry.local>
+
+	* R/LoadFuns.R (.onLoad): This also fixes the problem with
+	libnetica.so not getting properly loaded, so pulled that out of
+	.onLoad().  
+
+	* src/Makevars.in (PKG_LIBS): Need -Wl,-rpath,${NETICA_LIBPATH} to
+	get to link properly under Pop_OS.  According to https://developer.r-project.org/Blog/public/2019/02/14/staged-install/index.html
+	I should use \$ORIGIN/../usrlibs (where userlibs=Netica).
+	Turns out magic formula is '$${ORIGIN}/../Netica'.
+	
+
 2022-04-08  Russell Almond  <ralmond@cherry.local>
 
 	* R/Node.R (str.NeticaNode): Added str.NeticaNode to suppress

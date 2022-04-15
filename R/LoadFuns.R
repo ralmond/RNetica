@@ -34,8 +34,8 @@ EV_STATE <- NULL
 ## EVERY_STATE <-
 ##   delayedAssign("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
 .onLoad <- function(libname, pkgname) {
-  if (file.exists(file.path(libname,pkgname,"Netica","libnetica.so")))
-    dyn.load(file.path(libname,pkgname,"Netica","libnetica.so"),local=FALSE)
+  ## if (file.exists(file.path(libname,pkgname,"Netica","libnetica.so")))
+  ##   dyn.load(file.path(libname,pkgname,"Netica","libnetica.so"),local=FALSE)
   if (file.exists(file.path(libname,pkgname,"Netica","Netica.dll")))
     dyn.load(file.path(libname,pkgname,"Netica","Netica.dll"),local=FALSE)
   library.dynam("RNetica", pkgname, libname)
