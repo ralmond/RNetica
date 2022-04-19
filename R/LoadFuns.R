@@ -21,19 +21,12 @@ EVERY_STATE <- -9999
 ## Give a prebinidng for internal value to get around locked namespace
 ## problem.
 EV_STATE <- NULL
-## es <- local({
-##   esval <- -Inf
-##   function(v) {
-##     if (!missing(v)) {
-##       error("Can't set the value of EVERY_STATE.")
-##     }
-##     if (!is.finite(esval))
-##       esval <<- .Call("RN_GetEveryState",PACKAGE=RNetica)
-##     esval
-##   }})
-## EVERY_STATE <-
-##   delayedAssign("EVERY_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
+
+
 .onLoad <- function(libname, pkgname) {
+  ## Need to explicitly load libnetica/Netica.dll before loading RNetica
+  ## Also need the local=FALSE flag.
+  ## RE: http://www.stat.ucdavis.edu/~duncan/R/dynload/
   ## if (file.exists(file.path(libname,pkgname,"Netica","libnetica.so")))
   ##   dyn.load(file.path(libname,pkgname,"Netica","libnetica.so"),local=FALSE)
   if (file.exists(file.path(libname,pkgname,"Netica","Netica.dll")))
@@ -42,14 +35,9 @@ EV_STATE <- NULL
 }
 
 .onAttach <- function(libname, pkgname) {
-  ## Need to explicitly load libnetica/Netica.dll before loading RNetica
-  ## Also need the local=FALSE flag.
-  ## RE: http://www.stat.ucdavis.edu/~duncan/R/dynload/
-  ## cat("libname = ",libname, "pkgname= ",pkgname,"\n")
-  ## cat("Netica Libraries",paste(list.files(file.path(libname,pkgname,"Netica")),
-  ##                                collapse=", "),"\n")
   .C("RN_Define_Symbols",PACKAGE=RNetica)
   assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
+  assignInMyNamespace("CCodeLoaded",TRUE)
 ##   ##StartNetica()
 }
 

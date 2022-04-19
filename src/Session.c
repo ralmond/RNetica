@@ -21,7 +21,7 @@
   changes */
 
 //#define DEBUGFIELDS 1
-//#define DEBUG_NETICA_ERRORS 1
+#define DEBUG_NETICA_ERRORS 1
 
 
 SEXP RX_do_RC_field(SEXP obj, SEXP name) {
@@ -399,6 +399,10 @@ SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag) {
   report_ns* err = NULL;
   int ecount = 0;
 
+  if (netica_env == NULL)
+    Rprintf("Null environment pointer in RN_Session_errors, session is borked!\n");
+
+
   PROTECT(fatal=allocVector(STRSXP,0));
   while ((err = GetError_ns(netica_env, XXX_ERR, err))!=NULL) {
 #ifdef DEBUG_NETICA_ERRORS  
@@ -406,9 +410,19 @@ SEXP RN_Session_errors(SEXP sessobj, SEXP maxerrobj, SEXP clearflag) {
 #endif
     Rprintf("Fatal Netica error: %s\n",ErrorMessage_ns(err));
     fatal = append_mess(fatal,ErrorMessage_ns(err));
+#ifdef DEBUG_NETICA_ERRORS  
+    Rprintf("Message length now %d.\n",GET_LENGTH(fatal));
+#endif
     ecount++;
     if (clearit) {
-      ClearError_ns(err);
+      if (err == NULL)
+        Rprintf("Null error, really borked!\n");
+      else {
+#ifdef DEBUG_NETICA_ERRORS  
+        Rprintf("Clearing the error.\n");
+#endif
+        ClearError_ns(err);
+      }
       err = NULL;
     }
   }
@@ -514,6 +528,10 @@ SEXP RN_ClearSessionErrors(SEXP sessobj, SEXP severity) {
   errseverity_ns etype = XXX_ERR;
   environ_ns* netica_env = GetSessionPtr(sessobj);
   const char* sev = CHAR(STRING_ELT(severity,0));
+
+  if (netica_env == NULL)
+    Rprintf("Null environment pointer passed to RN_ClearSessionErrors, session is borked!\n");
+
 
   if (sev != NULL) {
     if (strcmp(sev,"NOTHING_ERR")==0) {

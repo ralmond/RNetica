@@ -116,6 +116,7 @@ CreateNetwork <- function (names,session=getDefaultSession()) {
   }
   handles <- .Call("RN_New_Nets",names,session,PACKAGE=RNetica)
   if (length(handles)==1) handles <- handles[[1]]
+  recover()
   ecount <- session$reportErrors()
   if (ecount[1]>0) {
     stop("Netica Errors Encountered, see console for details.")

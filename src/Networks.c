@@ -148,6 +148,7 @@ SEXP MakeNet_RRef(net_bn* net, const char* name, SEXP sessobj) {
   net_bn* bn_ptr;
   SEXP bn, sname;
 
+
   PROTECT(bn=RN_FindNetworkStr(sessobj,name));
   if (isNull(bn) || RX_isUnbound(bn)) {
     UNPROTECT(1);
@@ -177,12 +178,16 @@ SEXP RN_New_Nets(SEXP namelist, SEXP session) {
   environ_ns* netica_env = GetSessionPtr(session);
   SEXP handles;
 
+  if (netica_env == NULL)
+    Rprintf("Null environment pointer in RN_New_Nets, session is borked!\n");
+
+
   PROTECT(handles=allocVector(VECSXP,nn));
   for (n=0; n < nn; n++) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = NewNet_bn(name,netica_env);
     PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
-    //Rprintf("Bn object created.\n");
+    Rprintf("Bn object created.\n");
     SET_VECTOR_ELT(handles,n,bn);
     UNPROTECT(1);
   }

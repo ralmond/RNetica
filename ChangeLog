@@ -1,3 +1,8 @@
+2022-04-19  Russell Almond  <ralmond@dhcp138177.coe.fsu.edu>
+
+	* R/LoadFuns.R (.onAttach): Returned CCodeLoaded to this
+	function, it is referenced in externalptr().
+
 2022-04-15  Russell Almond  <ralmond@cherry.local>
 
 	* R/LoadFuns.R (.onLoad): This also fixes the problem with
