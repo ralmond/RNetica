@@ -1,0 +1,7 @@
+#!/bin/sh
+
+NeticaDir=Netica_API_510
+
+rm -f NeticaAPI.zip
+rm -rf $(NeticaDir)
+rm Makefile

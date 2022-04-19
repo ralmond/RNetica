@@ -1,0 +1,23 @@
+#!/bin/sh
+## The purpose of this makefile is to download and install the Netica
+## API from the Norsys website, thus making its installation
+## transparent to the user.
+
+APIurl=https://norsys.com/downloads/NeticaAPI_Win_510.zip
+LicURL=https://norsys.com/downloads/LicAgree.txt
+NeticaDir=Netica_API_510
+echo $LicURL
+
+curl ${LicURL} -o LicAgree.txt
+curl ${APIurl} -o NeticaAPI.zip
+
+## Ugh.  unzip -s doesn't work on this version of unzip, so need to unpack
+## manually
+mkdir -p $NeticaDir $NeticaDir/src $NeticaDir/lib $NeticaDir/lib64
+unzip -oj NeticaAPI.zip "*/src/*" -d $NeticaDir/src
+unzip -oj NeticaAPI.zip "*/lib/*" -d $NeticaDir/lib
+unzip -oj NeticaAPI.zip "*/lib/64 bit/*" -d $NeticaDir/lib64
+
+
+
+

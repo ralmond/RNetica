@@ -1,0 +1,78 @@
+## Manual configuration file for Windows version of RNetica
+
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "could not determine R_HOME"
+  exit 1
+fi
+
+## default to assuming Netica library has been found
+NETICA_GOOD="no"
+NETICA_VERSION=504
+
+## also use pkg-config to check for Netica
+##
+
+echo "Checking for pkg-config"
+if command -v pkg-config; then
+   ## check via pkg-config for nlopt
+   if pkg-config --exists netica; then
+       ## obtain cflags and obtain libs
+       NETICA_HOME=$(pkg-config --variable=prefix netica)
+       NETICA_CFLAGS=$(pkg-config --cflags netica)
+       NETICA_LDFLAGS=$(pkg-config --libs netica)
+       NETICA_VERSION=$(pkg-config --modversion netica)
+       NETICA_GOOD="yes"
+   fi
+fi
+
+echo "Testing for Netica at ${NETICA_HOME}..."
+if test -z "${NETICA_HOME}" ; then
+   NETICA_GOOD="no"
+elif test -e "${NETICA_HOME}/src/Netica.h"; then
+   NETICA_GOOD="yes"
+else
+   NETICA_GOOD="no"
+fi
+echo $NETICA_GOOD
+
+
+
+if test x"${NETICA_GOOD}" = x"no"; then
+   echo "Need to download Netica from Norsys.com"
+
+   (cd src/Netica; ./Makeit.win) || exit 1
+   NETICA_HOME="$(pwd)/src/Netica/Netica_API_510"
+fi
+echo "Using Netica at $NETICA_HOME"
+
+echo "${R_HOME}/bin${R_ARCH_BIN}/Rscript" 
+x86=`"${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e 'cat(.Machine$sizeof.pointer==4)'`
+echo "Building for x86..." $x86
+if test $x86 = "TRUE"; then
+   NETICA_LIB="${NETICA_HOME}/lib/64 bit"
+   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/x64
+else
+   NETICA_LIB="${NETICA_HOME}/lib"
+   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
+fi
+
+if test -z "$NETICA_CFLAGS"; then
+   NETICA_CFLAGS=-I"${NETICA_HOME}/src"
+fi
+
+if test -z "$NETICA_LDFLAGS"; then
+   NETICA_LDFLAGS="-L${NETICA_LIB} -lnetica"
+fi
+
+echo "%%%%%%%%%%%%%%%%%%%%%%%%%%"
+echo "%% Netica Home = $NETICA_HOME"
+echo "%% Netica Lib = $NETICA_LIB"
+echo "%% Install Lib = $INSTALL_LIB"
+echo "%% Netica CFlags = $NETICA_CFLAGS"
+echo "%% Netica LDFlags = $NETICA_LDFLAGS"
+
+sed -e"s|@NETICA_LIB@|${NETICA_LIB}|" -e"s|@INSTALL_LIB@|${INSTALL_LIB}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" -e"s|@NETICA_LDFLAGS@|${NETICA_LDFLAGS}|" <src/Makevars.winin >src/Makevars.win
+
+
+
