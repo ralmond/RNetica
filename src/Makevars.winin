@@ -5,7 +5,7 @@ INSTALL_LIB=@INSTALL_LIB@
 # else
 #   INSTALL_LIB=${R_PACKAGE_DIR}/libs/i386
 # endif
-PKG_LIBS=@NETICA_LDFLAGS@
+PKG_LIBS=-L. @NETICA_LDFLAGS@
 PKG_CFLAGS=-I. @NETICA_CFLAGS@
 
 .PHONY:  all NeticaDLL
@@ -16,6 +16,7 @@ $(SHLIB): NeticaDLL
 NeticaDLL:
 	mkdir -p "$(INSTALL_LIB)"
 	cp "$(NETICA_LIB)/Netica.dll" "$(INSTALL_LIB)" 
+	cp "$(NETICA_LIB)/Netica.lib" "$(INSTALL_LIB)" 
 
 clean:
 	Netica/clean.win
