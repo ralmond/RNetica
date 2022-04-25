@@ -206,6 +206,7 @@ NodeInputNames <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
+  CCodeLoader()
   names <- .Call("RN_GetNodeInputNames",node,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1L]>0) {
@@ -222,6 +223,7 @@ NodeInputNames <- function (node) {
   if (any(is.na(value)) || any(!is.IDname(value))) {
     stop("Illegal link names: ", value)
   }
+  CCodeLoader()
   handle <- .Call("RN_SetNodeInputNames",node, value,PACKAGE=RNetica);
   ecount <- node$reportErrors()
   if (ecount[1L]>0) {
@@ -255,6 +257,7 @@ AbsorbNodes <- function (nodes) {
   }
   ## print(nodes)
   net <- nodes[[1]]$Net
+  CCodeLoader()
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1L]>0) {
@@ -283,10 +286,11 @@ is.NodeRelated <- function (node1, node2, relation="connected") {
   relation <- as.character(relation)
   if (is.na(relation[1L])) {
     stop("Bad relation.")
-  }
+s  }
   if (length(relation) >1L) {
     warning("Relation has length > 1, only first value is used.")
   }
+  CCodeLoader()
   handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE=RNetica)
   ecount <- node1$reportErrors()
   if (ecount[1L]>0) {
@@ -309,6 +313,7 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   if (length(relation) >1L) {
     warning("Relation has length > 1, only first value is used.")
   }
+  CCodeLoader()
   handle <- .Call("RN_GetRelatedNodes",nodelist,relation,PACKAGE=RNetica)
   ecount <- nodelist[[1]]$reportErrors()
   if (ecount[1L]>0) {
@@ -323,6 +328,7 @@ MakeCliqueNode <- function(nodelist) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   net <- nodelist[[1]]$Net
+  CCodeLoader()
   handle <- .Call("RN_MakeCliqueNode",nodelist,net,PACKAGE=RNetica)
   ecount <- net$reportErrors()
   if (ecount[1L]>0) {
@@ -377,6 +383,7 @@ configindex <- function(config,nstates) {
 }
 
 NodeProbs <- function (node) {
+  CCodeLoader()
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
@@ -412,6 +419,7 @@ NodeProbs <- function (node) {
 }
 
 "NodeProbs<-" <- function (node,value) {
+  CCodeLoader()
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
@@ -455,6 +463,7 @@ IsNodeDeterministic <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
+  CCodeLoader()
   handle <- .Call("RN_IsNodeDeterministic",node,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1L]>0) {
@@ -467,6 +476,7 @@ HasNodeTable <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
+  CCodeLoader()
   result <- .Call("RN_HasNodeTable",node,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1L]>0) {
@@ -480,6 +490,7 @@ DeleteNodeTable <- function (node) {
   if (length(node)>1L || !is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)
   }
+  CCodeLoader()
   handle <- .Call("RN_DeleteNodeTable",node,PACKAGE=RNetica)
   ecount <- node$reportErrors()
   if (ecount[1L]>0) {
@@ -688,6 +699,7 @@ setMethod("[[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
 })
 
 doSelection <- function (x,selection,drop, returnCPT=FALSE) {
+  CCodeLoader()
   ## No parent case
   if (is.null(selection)) {
     if (!returnCPT && IsNodeDeterministic(x)) {
@@ -802,6 +814,7 @@ doSelection <- function (x,selection,drop, returnCPT=FALSE) {
 
 
 setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
+  CCodeLoader()
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node, got",x)
   }
@@ -977,6 +990,7 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
 })
 
 setMethod("[[<-","NeticaNode",function(x, i, j, ..., value) {
+  CCodeLoader()
   if (!is.NeticaNode(x) || !is.active(x)) {
     stop("Expected an active netica node, got",x)
   }

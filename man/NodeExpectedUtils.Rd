@@ -69,8 +69,9 @@ sess <- NeticaSession()
 startSession(sess)
 
 ## Read the RTI network from the library.
-rti <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","CostOfTesting.dne"), session=sess)
+rti <- ReadNetworks(system.file("sampleNets","CostOfTesting.dne",
+                                package="RNetica"),
+                    session=sess)
 ## The two decision nodes
 Test <- NetworkFindNode(rti,"Test")
 Instruction <- NetworkFindNode(rti,"Instruction")

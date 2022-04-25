@@ -62,9 +62,7 @@ AddLink(B,C)
 ## Input filename
 ## Note, this is a cached copy of the file written in the WriteFindings
 ## documentation. 
-casefile <- file.path(library(help="RNetica")$path,
-                           "testData","abctestcases.cas")
-
+casefile <- system.file("testData","abctestcases.cas", package="RNetica")
 
 filestream <- ReadCase(CaseFileStream(casefile, session=sess),list(A,B,C),1002)
 stopifnot( !isCaseStreamOpen(filestream),

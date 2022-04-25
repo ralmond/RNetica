@@ -21,5 +21,4 @@ aclocal.m4
 ./
 config.h
 #DESCRIPTION#
-.Rbuildignore
 symbols.rds

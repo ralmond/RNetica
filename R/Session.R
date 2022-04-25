@@ -25,6 +25,7 @@ externalptr <- function () {
 
 is_null_ptr <- function(ptr) {
   if (!is(ptr,"externalptr-class")) return (NA)
+  CCodeLoader()
   .Call("RX_is_null_ptr",ptr,PACKAGE=RNetica)
 }
 
@@ -51,6 +52,7 @@ NeticaSession <-
                     sess
                   },
                   isActive = function() {
+                    CCodeLoader()
                     .Call("RN_isSessionActive",.self,PACKAGE=RNetica)
                   },
                   neticaVersion = function() {
@@ -100,6 +102,7 @@ str.NeticaSession <- function(object,...) {
 
 setGeneric("startSession",function (session) standardGeneric("startSession"))
 setMethod("startSession","NeticaSession", function (session) {
+  CCodeLoader()
   .Call("RN_start_Session",session,PACKAGE=RNetica)
   ecount <- session$reportErrors()
   if (ecount[1]>0) {

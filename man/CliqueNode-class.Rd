@@ -65,8 +65,9 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
 sess <- NeticaSession()
 startSession(sess)
 
-EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","System.dne"), session=sess)
+EMSMSystem <- ReadNetworks(system.file("sampleNets","System.dne",
+                                       package="RNetica"),
+                           session=sess)
 
 CompileNetwork(EMSMSystem)
 ## Note that Skill1 and Skill2 are in different cliques

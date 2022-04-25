@@ -1,3 +1,7 @@
+2022-04-24  Russell Almond  <ralmond@pei>
+
+	* configure.ac: Added //. to ${NETICA_VERSION} to strip periods.
+
 2022-04-19  Russell Almond  <ralmond@dhcp138177.coe.fsu.edu>
 
 	* R/LoadFuns.R (.onAttach): Returned CCodeLoaded to this

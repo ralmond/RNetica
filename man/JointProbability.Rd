@@ -72,8 +72,9 @@ models. In Artificial Intelligence and Statistics 99, Proceedings
 sess <- NeticaSession()
 startSession(sess)
 
-EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne"), session=sess)
+EMSMMotif <- ReadNetworks(system.file("sampleNets","EMSMMotif.dne",
+                                      package="RNetica"),
+                          session=sess)
 
 ## Force Skills 1 and 2 into the same clique.
 Skills12 <- NetworkFindNode(EMSMMotif,c("Skill1","Skill2"))

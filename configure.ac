@@ -2,7 +2,7 @@
 # 
 #
 # require at least autoconf 2.61
-AC_PREREQ([2.71])
+AC_PREREQ([2.69])
 
 AC_INIT([RNetica],[0.8]) dnl RNetica, 1.8-2
 
@@ -67,7 +67,7 @@ if test x"${NETICA_GOOD}" = x"no"; then
    NETICA_HOME="$(pwd)/src/Netica/Netica_API_504"
    AS_IF([test ! -d "${NETICA_HOME}"],
    	 [NETICA_HOME="$(pwd)/src/Netica/Netica_API_607";
-	  NETICA_VERSION=607])
+	  NETICA_VERSION=6.0.7])
     AC_MSG_CHECKING([Downloaded Netica])
     AC_MSG_RESULT($NETICA_HOME)
 fi
@@ -93,7 +93,7 @@ AS_IF([ test x"${NETICA_LIBS}" == x""],
      [NETICA_LIBS="-L${NETICA_LIB} -lnetica"])
 
 # NETICA_LIBS="${NETICA_LIBS} -Wl,-rpath,${NETICA_LIBPATH}"
-NETICA_CFLAGS="-I${NETICA_INCDIR} -DNETICA_VERSION=${NETICA_VERSION}"
+NETICA_CFLAGS="-I${NETICA_INCDIR} -DNETICA_VERSION=${NETICA_VERSION//.}"
 ## This is for fixing the links in the shared object to point to the
 # install directory. See Rblpapi example.
 # Need to substitute @<:@ and @:>@ for M4 quote characters []
@@ -120,6 +120,7 @@ AC_SUBST(NETICA_LIBPATH)
 AC_SUBST(NETICA_LIBS)
 AC_SUBST(NETICA_INCDIR)
 AC_SUBST(NETICA_VERSION)
+AC_SUBST(NETICA_CFLAGS)
 AC_CONFIG_HEADERS(src/config.h)
 
 AC_CONFIG_FILES([src/Makevars])

@@ -87,8 +87,9 @@ testNetwork(targetNodes, dataStreams, ignoreNodes = list())
 sess <- NeticaSession()
 startSession(sess)
 
-irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne"), session=sess)
+irt5 <- ReadNetworks(system.file("sampleNets","IRT5.dne",
+                                 package="RNetica"),
+                     session=sess)
 
 irt5.theta <- NetworkFindNode(irt5,"Theta")
 irt5.x <- NetworkFindNode(irt5,paste("Item",1:5,sep="_"))

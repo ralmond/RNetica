@@ -131,8 +131,7 @@ AddLink(B,C)
 ## Input filename
 ## Note, this is a cached copy of the file written in the WriteFindings
 ## documentation. 
-casefile <- file.path(library(help="RNetica")$path,
-                           "testData","abctestcases.cas")
+casefile <- system.file("testData","abctestcases.cas", package="RNetica")
 filestream <- CaseFileStream(casefile, session=sess)
 ## Case 1
 filestream <- ReadFindings(list(A,B,C),filestream,"FIRST")

@@ -34,11 +34,21 @@ EV_STATE <- NULL
   library.dynam("RNetica", pkgname, libname)
 }
 
+
+#' Loads the call points for the C functions.
+#'
+#' Should be harmless if run when not necessary
+CCodeLoader <- function() {
+  if (!exists("CCodeLoaded") || !isTRUE(CCodeLoaded)) {
+    .C("RN_Define_Symbols",PACKAGE=RNetica)
+    assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
+    assignInMyNamespace("CCodeLoaded",TRUE)
+  }
+}
+
 .onAttach <- function(libname, pkgname) {
-  .C("RN_Define_Symbols",PACKAGE=RNetica)
-  assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
-  assignInMyNamespace("CCodeLoaded",TRUE)
-##   ##StartNetica()
+  CCodeLoader()
+  ##   ##StartNetica()
 }
 
 .onDetach <- function(libpath) {
@@ -47,4 +57,6 @@ EV_STATE <- NULL
 
 .onUnload <- function(libpath) {
   library.dynam.unload("RNetica", libpath)
+  if (file.exists(file.path(libpath,"Netica","Netica.dll")))
+    dyn.unload(file.path(libpath,"Netica","Netica.dll"))
 }

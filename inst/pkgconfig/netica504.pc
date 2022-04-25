@@ -6,7 +6,7 @@ libdir=${prefix}/lib
 Name: netica
 Description:  Netica API shared library 
 URI: https://norsys.com
-Version: 5.0.4
+Version: 5.04
 Cflags: -I${includedir}
 Libs: -L${libdir} -lnetica
 
