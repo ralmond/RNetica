@@ -430,9 +430,32 @@ and \code{\link{stopSession}}.
 
 }
 \author{
-Russell Almond
+\packageAuthor{RNetica}
 \cr
-Maintainer: Russell Almond <almond@acm.org>
+Maintainer: \packageMaintainer{RNetica}
+}
+\section{Acknowledgements}{
+
+  We are grateful to support from the following projects for supporting
+  the work in the development and maintenance of this package.
+  \itemize{
+    \item{Bill \& Melinda Gates Foundation grant
+"Games as Learning/Assessment:  Stealth Assessment" (\#0PP1035331,
+Val Shute, PI)}
+    \item{National Science Foundation grant "DIP:
+Game-based Assessment and Support of STEM-related Competencies"
+(\#1628937, Val Shute, PI).}
+    \item{National Scient Foundation grant "Mathematical Learning via
+Architectual Design and Modeling Using E-Rebuild." (\#1720533,
+Fengfeng Ke, PI).}
+  }
+
+  I would also like to thank Brent Borlange @ Norsys for answering
+  questions related to the API as well as making improvements to fix
+  issues raised during the construction of RNetica.  Although Norsys
+  does not officially support RNetica, their unoffical support has been
+  quite valuable.
+
 }
 \references{
 

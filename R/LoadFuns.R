@@ -1,8 +1,5 @@
 ## Functions to call when the package is loaded.
 
-## Variable which stores the Netica License string (if you have one).
-LicenseKey <- NULL
-
 
 ### I'm trying to set the value of EVERY_STATE to the value found in
 ### the Netica code.  But I have a problem.  If I call

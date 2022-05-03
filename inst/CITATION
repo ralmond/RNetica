@@ -1,0 +1,46 @@
+citHeader("The RNetica package provides a binding to the Netica(R) API, both RNetica and Netica should be cited when applicable.  Netica and Norsys are registerd trademarks of Norsys, LLC, used by permission.")
+
+citEntry(entry="Manual",
+  title = 	 "R interface to Netica(R) Bayesian Network Engine",
+  author = personList(as.person("Russell G. Almond")),
+  year =     "?",
+  journal =  "?",
+  volume = "?",
+  number = "?",
+  pages = "?",
+  sponsors = c(Gates='Bill & Melinda Gates Foundation grant
+"Games as Learning/Assessment:  Stealth Assessment" (#0PP1035331,
+Val Shute, PI)', NSFDIP='National Science foundation grant "DIP:
+Game-based Assessment and Support of STEM-related Competencies"
+(#1628937, Val Shute, PI)', NSFDRK12='The NSF project "Mathematical Learning via
+Architectual Design and Modeling Using E-Rebuild." (#1720533,
+Fengfeng Ke, PI)'),
+  textVersion = "Russell G. Almond (20XX), CPTtools:  Tools for Creating Conditional Probability Tables, https://pluto.coe.fsu.edu/CPTtools" )  
+
+citEntry(entry="Manual",
+  title = 	 "Netica Application Program Interface.",
+  author = personList(person(family="Norsys, LLC")),
+  year =     "?",
+  journal =  "?",
+  volume = "?",
+  number = "?",
+  pages = "?",
+  url = "https://norsys.com/",
+  textVersion = "Norsys, LLC. (2012), Netica Application Program Interface, retrieved from https://norsys.com/.")
+
+
+
+citFooter('Work on RNetica, CPTtools and Peanut has been sponsored in part by
+the _Physics Playground_ and _E-Rebuild_ projects, on which
+many of the tools were tested.  _Physics Playground_ development
+was supported by the Bill & Melinda Gates Foundation grant
+"Games as Learning/Assessment:  Stealth Assessment" (#0PP1035331,
+Val Shute, PI) and the National Science foundation grant "DIP:
+Game-based Assessment and Support of STEM-related Competencies"
+(#1628937, Val Shute, PI). The project "Mathematical Learning via
+Architectual Design and Modeling Using E-Rebuild." (#1720533,
+Fengfeng Ke, PI) has provided additional support.')
+    
+
+
+  

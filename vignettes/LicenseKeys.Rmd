@@ -1,0 +1,30 @@
+---
+title: "Netica License Keys"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Netica License Keys}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(RNetica)
+```
+
+## Licensed and unlicensed version of the Netica API
+
+
+## Obtaining a License Code
+
+
+## Starting a Licensed Session
+
+
+

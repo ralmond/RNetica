@@ -40,10 +40,13 @@ NeticaSession <-
                        nets="environment"),
               methods=list(
                   initialize = function(...,
+                                        LicenseKey=options("NeticaLicenseKey")[[1]],
                                         SessionName=paste("RNetica Session",
                                                           date()),
                                         autostart=FALSE){
-                    sess <- callSuper(...,SessionName=SessionName,
+                    sess <- callSuper(...,LicenseKey=ifelse(is.null(LicenseKey),
+                                                            "",LicenseKey),
+                                      SessionName=SessionName,
                                       NeticaHandle=externalptr(),
                                       nets=new.env(parent=emptyenv()))
 
@@ -98,6 +101,19 @@ str.NeticaSession <- function(object,...) {
     object$show()
     invisible(object)
 }
+
+## This is added to suppress a warning about adding arguments in the
+## documentation.
+NeticaSession <-
+  function(..., LicenseKey = options("NeticaLicenseKey")[[1]],
+           SessionName = paste("RNetica Session", date()),
+           Checking = character(), maxmem = integer()) {
+    getRefClass("NeticaSession")$new(...,LicenseKey=LicenseKey,
+                                     SessionName=SessionName,
+                                     Checking=Checking,
+                                     maxmem=maxmem)
+}
+    
 
 
 setGeneric("startSession",function (session) standardGeneric("startSession"))
@@ -276,10 +292,11 @@ getDefaultSession <- function() {
 
 
 ##These functions start are also supplied for backwards compatability.
-StartNetica <- function(license=LicenseKey, checking=NULL,
+StartNetica <- function(license=options("NeticaLicenseKey")[[1]],
+                        checking=NULL,
                         maxmem=NULL,
                         session = NeticaSession(LicenseKey=license,
-                                                checking=checking,
+                                                Checking=checking,
                                                 maxmem=maxmem)) {
   if (!is.active(session))
     startSession(session)

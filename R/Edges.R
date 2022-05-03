@@ -286,11 +286,10 @@ is.NodeRelated <- function (node1, node2, relation="connected") {
   relation <- as.character(relation)
   if (is.na(relation[1L])) {
     stop("Bad relation.")
-s  }
+  }
   if (length(relation) >1L) {
     warning("Relation has length > 1, only first value is used.")
   }
-  CCodeLoader()
   handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE=RNetica)
   ecount <- node1$reportErrors()
   if (ecount[1L]>0) {

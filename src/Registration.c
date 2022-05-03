@@ -777,7 +777,7 @@ extern SEXP RN_Named_Nets(SEXP namelist, SEXP session);
 extern SEXP RN_GetNth_Nets(SEXP nlist, SEXP session);
 extern SEXP RN_Copy_Nets(SEXP nets, SEXP namelist, SEXP options, SEXP session);
 extern SEXP RN_Read_Nets(SEXP filelist, SEXP session, SEXP loadVisual);
-extern SEXP RN_Write_Nets(SEXP nets, SEXP filelist);
+extern SEXP RN_Write_Nets(SEXP nets, SEXP filelist, SEXP session);
 extern SEXP RN_GetNetFilename(SEXP bn);
 extern SEXP RN_GetNetName(SEXP bn);
 extern SEXP RN_SetNetName(SEXP bn, SEXP newnames, SEXP session);
@@ -948,7 +948,7 @@ R_CallMethodDef callMethods[] = {
   {"RN_GetNth_Nets", (DL_FUNC) &RN_GetNth_Nets, 2},
   {"RN_Copy_Nets", (DL_FUNC) &RN_Copy_Nets, 4},
   {"RN_Read_Nets", (DL_FUNC) &RN_Read_Nets, 3},
-  {"RN_WriteNets", (DL_FUNC) &RN_Write_Nets, 2},
+  {"RN_WriteNets", (DL_FUNC) &RN_Write_Nets, 3},
   {"RN_GetNetFilename", (DL_FUNC) &RN_GetNetFilename, 1},
   {"RN_GetNetName", (DL_FUNC) &RN_GetNetName, 1},
   {"RN_GetNetTitle", (DL_FUNC) &RN_GetNetTitle, 1},

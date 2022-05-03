@@ -19,8 +19,9 @@
 startSession(session)
 stopSession(session)
 restartSession(session)
-StartNetica(license = LicenseKey, checking = NULL, maxmem = NULL,
-           session=NeticaSession(LicenseKey=license, checking=checking,
+StartNetica(license = options("NeticaLicenseKey")[[1]],
+            checking = NULL, maxmem = NULL,
+           session=NeticaSession(LicenseKey=license, Checking=checking,
                                  maxmem=maxmem))
 StopNetica(session=getDefaultSession())
 }
@@ -28,11 +29,11 @@ StopNetica(session=getDefaultSession())
   \item{session}{An object of class \code{\linkS4class{NeticaSession}}
     which encapsulates the connection to Netica.}
   \item{license}{A string containing a license key from Norsys.  If this
-    is \code{NULL} the limited student/demonstration
+    is \code{NULL} or \code{""} the limited student/demonstration
     version of Netica is used rather than the full version.  If the
-    variable \code{NeticaLicenseKey} is set before \code{RNetica} is
-    loaded, then the value of that variable at the time the package is
-    loaded will become the default for \var{license}.
+    option \dQuote{NeticaLicenseKey} is set (using
+    \code{\link[base]{options}}), then that will become the default for
+      \var{license}. 
 }
   \item{checking}{A character string containing one of the keywords:
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
@@ -87,6 +88,11 @@ StopNetica(session=getDefaultSession())
   license is to create a default session and store it in the variable
   \code{DefaultNeticaSession} in the global environment.  This session
   object then contains the license key.
+
+  Starting with verison 0.9, the new recommended way to set the license
+  key is \code{options("NeticaLicenseKey")<-}.  This should now get
+  picked up by \code{getDefaultSession} as well as used as a default in
+  \code{\linkS4class{NeticaSession}}. 
 
   The \code{checking} argument, if supplied, is used to call the Netica
   function \code{ArgumentChecking_ns()}.  See the documentation of that
