@@ -9,4 +9,5 @@ Imports: grDevices, R.utils
 Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
 License: file LICENSE
 URL: https://pluto.coe.fsu.edu/RNetica
+Biarch: TRUE
 Collate: Session.R Networks.R Node.R Edges.R Inference.R Cases.R Experience.R Continuous.R Random.R LoadFuns.R Tester.R
