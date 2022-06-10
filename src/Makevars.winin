@@ -8,7 +8,7 @@ else
    NETICA_LIB="${NETICA_HOME}/lib"
    INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
    LONG_SIZE=4
-endfi
+endif
 touch config.h.win ## Force reset of config.h
 
 PKG_LIBS=-L. @NETICA_LDFLAGS@
