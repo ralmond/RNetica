@@ -9,17 +9,19 @@ else
    INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
    LONG_SIZE=4
 endif
-touch config.h.win 
 
 PKG_LIBS=-L. @NETICA_LDFLAGS@
 PKG_CFLAGS=-I. @NETICA_CFLAGS@
 
-.PHONY:  all NeticaDLL
+.PHONY:  all NeticaDLL setLongSize
 
 all: $(SHLIB)
 $(SHLIB): NeticaDLL config.h
 
-config.h: config.h.win
+setLongSize:
+	touch config.h.win 
+
+config.h: config.h.win setLongSize
 	sed -e"s|@LONG_SIZE@|${LONG_SIZE}|" <src/config.h.win >src/config.h
 
 NeticaDLL:
