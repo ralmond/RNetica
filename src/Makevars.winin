@@ -21,7 +21,7 @@ $(SHLIB): NeticaDLL config.h
 setLongSize:
 	touch config.h.win 
 
-config.h: config.h.win setLongSize
+config.h: 
 	sed -e"s|@LONG_SIZE@|${LONG_SIZE}|" <src/config.h.win >src/config.h
 
 NeticaDLL:
@@ -31,3 +31,5 @@ NeticaDLL:
 
 clean:
 	Netica/clean.win
+	rm config.h
+	
