@@ -13,7 +13,7 @@ endif
 PKG_LIBS=-L. @NETICA_LDFLAGS@
 PKG_CFLAGS=-I. @NETICA_CFLAGS@
 
-.PHONY:  all NeticaDLL setLongSize
+.PHONY:  all NeticaDLL clean
 
 all: $(SHLIB)
 $(SHLIB): NeticaDLL config.h
@@ -31,3 +31,5 @@ NeticaDLL:
 
 clean:
 	Netica/clean.win
+	rm config.h
+	
