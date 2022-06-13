@@ -77,7 +77,7 @@ echo "%% Netica LDFlags = $NETICA_LDFLAGS"
 
 sed -e"s|@NETICA_HOME@|${NETICA_HOME}|" -e"s|@INSTALL_LIB@|${INSTALL_LIB}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" -e"s|@NETICA_LDFLAGS@|${NETICA_LDFLAGS}|" <src/Makevars.winin >src/Makevars.win
 
-#sed -e"s|@LONG_SIZE@|${LONG_SIZE}|" <src/config.h.win >src/config.h
+sed -e"s|@LONG_SIZE@|LONG_SIZE|" <src/config.h.win >src/config.h
 
 
 

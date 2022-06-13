@@ -11,18 +11,13 @@ else
 endif
 
 PKG_LIBS=-L. @NETICA_LDFLAGS@
-PKG_CFLAGS=-I. @NETICA_CFLAGS@
+PKG_CFLAGS=-I. @NETICA_CFLAGS@ -DLONG_SIZE=${LONG_SIZE}
 
 .PHONY:  all NeticaDLL clean
 
 all: $(SHLIB)
 $(SHLIB): NeticaDLL config.h
 
-setLongSize:
-	touch config.h.win 
-
-config.h: 
-	sed -e"s|@LONG_SIZE@|${LONG_SIZE}|" <src/config.h.win >src/config.h
 
 NeticaDLL:
 	mkdir -p "$(INSTALL_LIB)"
