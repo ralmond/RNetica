@@ -75,7 +75,7 @@ echo "%% Install Lib = $INSTALL_LIB"
 echo "%% Netica CFlags = $NETICA_CFLAGS"
 echo "%% Netica LDFlags = $NETICA_LDFLAGS"
 
-sed -e"s|@NETICA_HOME@|${NETICA_HOME}|" -e"s|@INSTALL_LIB@|${INSTALL_LIB}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" <src/Makevars.winin >src/Makevars.win
+sed -e"s|@NETICA_HOME@|${NETICA_HOME}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" <src/Makevars.winin >src/Makevars.win
 
 sed -e"s|@LONG_SIZE@|LONG_SIZE|" <src/config.h.win >src/config.h
 
