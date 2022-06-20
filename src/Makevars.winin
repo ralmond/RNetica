@@ -1,11 +1,11 @@
 NETICA_HOME = @NETICA_HOME@
 ifeq  "$(WIN)" "64"
    NETICA_LIB = ${NETICA_HOME}/lib64
-   INSTALL_LIB = "${R_PACKAGE_DIR}/libs/x64"
+   INSTALL_LIB = ${R_PACKAGE_DIR}/libs/x64
    LONG_SIZE = 8
 else
    NETICA_LIB = ${NETICA_HOME}/lib
-   INSTALL_LIB = "${R_PACKAGE_DIR}/libs/i386"
+   INSTALL_LIB = ${R_PACKAGE_DIR}/libs/i386
    LONG_SIZE = 4
 endif
 
