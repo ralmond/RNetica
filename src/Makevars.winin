@@ -9,7 +9,7 @@ else
    LONG_SIZE = 4
 endif
 
-PKG_LIBS = -L. -L${INSTALL_LIB} Netica.dll
+PKG_LIBS = -L. ${INSTALL_LIB}/Netica.dll
 PKG_CFLAGS = -I. @NETICA_CFLAGS@ -DLONG_SIZE=${LONG_SIZE}
 
 .PHONY:  all NeticaDLL clean
