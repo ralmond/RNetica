@@ -29,8 +29,11 @@ EV_STATE <- NULL
   ## RE: http://www.stat.ucdavis.edu/~duncan/R/dynload/
   ## if (file.exists(file.path(libname,pkgname,"Netica","libnetica.so")))
   ##   dyn.load(file.path(libname,pkgname,"Netica","libnetica.so"),local=FALSE)
-  if (file.exists(file.path(libname,pkgname,"Netica","Netica.dll")))
-    dyn.load(file.path(libname,pkgname,"Netica","Netica.dll"),local=FALSE)
+  if (file.exists(file.path(libname,pkgname,"libs",
+                            Sys.getenv("R_ARCH"),"Netica.dll")))
+      dyn.load(file.path(libname,pkgname,"libs",
+                         Sys.getenv("R_ARCH"),"Netica.dll"),
+               local=FALSE)
   library.dynam("RNetica", pkgname, libname)
 }
 
