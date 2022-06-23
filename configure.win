@@ -46,18 +46,19 @@ if test x"${NETICA_GOOD}" = x"no"; then
 fi
 echo "Using Netica at $NETICA_HOME"
 
-echo "${R_HOME}/bin${R_ARCH_BIN}/Rscript" 
-x86=`"${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e 'cat(.Machine$sizeof.pointer==8)'`
-echo "Building for x86..." $x86
-if test $x86 = "TRUE"; then
-   NETICA_LIB="${NETICA_HOME}/lib64"
-   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/x64
-   LONG_SIZE=8
-else
-   NETICA_LIB="${NETICA_HOME}/lib"
-   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
-   LONG_SIZE=4
-fi
+#Moved to Makefile.win
+#echo "${R_HOME}/bin${R_ARCH_BIN}/Rscript" 
+#x86=`"${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e 'cat(.Machine$sizeof.pointer==8)'`
+#echo "Building for x86..." $x86
+#if test $x86 = "TRUE"; then
+#   NETICA_LIB="${NETICA_HOME}/lib64"
+#   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/x64
+#   LONG_SIZE=8
+#else
+#   NETICA_LIB="${NETICA_HOME}/lib"
+#   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
+#   LONG_SIZE=4
+#fi
 
 if test -z "$NETICA_CFLAGS"; then
    NETICA_CFLAGS=-I"${NETICA_HOME}/src"
@@ -74,9 +75,9 @@ echo "%% Install Lib = $INSTALL_LIB"
 echo "%% Netica CFlags = $NETICA_CFLAGS"
 echo "%% Netica LDFlags = $NETICA_LDFLAGS"
 
-sed -e"s|@NETICA_LIB@|${NETICA_LIB}|" -e"s|@INSTALL_LIB@|${INSTALL_LIB}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" -e"s|@NETICA_LDFLAGS@|${NETICA_LDFLAGS}|" <src/Makevars.winin >src/Makevars.win
+sed -e"s|@NETICA_HOME@|${NETICA_HOME}|" -es"|@NETICA_CFLAGS@|${NETICA_CFLAGS}|" <src/Makevars.winin >src/Makevars.win
 
-sed -e"s|@LONG_SIZE@|${LONG_SIZE}|" <src/config.h.win >src/config.h
+sed -e"s|@LONG_SIZE@|LONG_SIZE|" <src/config.h.win >src/config.h
 
 
 

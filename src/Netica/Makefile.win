@@ -14,4 +14,5 @@ NeticaAPI:
 
 clean:
 	rm -f NeticaAPI.zip
+	rm -f LicAgree.txt
 	rm -rf $(NeticaDir) 

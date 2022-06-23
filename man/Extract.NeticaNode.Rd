@@ -884,8 +884,8 @@ for (i in 1:12) {
   C2[i] <- i/100
 }
 stopifnot(
-  sum(abs(CCC[[drop=TRUE]]-t(matrix(1:24,3,4)))) <.0001,
-  sum(abs(C2[drop=TRUE][,1]-t(matrix(1:24/100,3,4)))) <.001
+  sum(abs(CCC[[drop=TRUE]]-t(matrix(1:12,3,4)))) <.0001,
+  sum(abs(C2[drop=TRUE][,1]-t(matrix(1:12/100,3,4)))) <.001
 )
 for (i in 1:12) {
   stopifnot(
