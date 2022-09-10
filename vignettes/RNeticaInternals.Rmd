@@ -1,0 +1,64 @@
+---
+title: "RNetica Internals"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RNetica Internals}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+# License Considerations
+
+## License File
+
+## License Key
+
+# Persistant Objects
+
+## Active and Inactive Objects
+
+## R6 Objects and Environments
+
+## Finding Netica Objects from R Objects
+
+## Finding R Objects from Netica Objects
+
+# Linking C code
+
+## Loading Libraries
+
+## Registration
+
+## Error Handling
+
+## License Key
+
+# Compilation Structure
+
+## Downloading and Extracting Netica API
+
+## Using pkg-config
+
+## Linux:  Link against reloaced so
+
+## Macos:  install_name_tool
+
+## Windows:  manually load DLL
+
+## POSIX Configuration:  configure and autoconf
+
+## Windows Configuration:  configure.win
+
+
+
