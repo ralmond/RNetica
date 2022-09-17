@@ -45,10 +45,7 @@ AddLink <- function (parent, child) {
     stop ("Child is not an active Netica node", child)
   }
   handle <- .Call("RN_AddLink",parent,child,PACKAGE=RNetica)
-  ecount <- parent$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  parent$signalErrors()
   invisible(handle)
 }
 
@@ -60,10 +57,7 @@ DeleteLink <- function (parent, child) {
     stop ("Child is not an active Netica node", child)
   }
   handle <- .Call("RN_DeleteLink",parent,child,PACKAGE=RNetica)
-  ecount <- parent$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  parent$signalErrors()
   invisible(handle)
 }
 
@@ -75,10 +69,7 @@ ReverseLink <- function (parent, child) {
     stop ("Child is not an active Netica node", child)
   }
   handle <- .Call("RN_ReverseLink",parent,child,PACKAGE=RNetica)
-  ecount <- parent$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  parent$signalErrors()
   invisible(handle)
 }
 
@@ -87,10 +78,7 @@ NodeChildren <- function (parent) {
     stop ("Parent is not an active Netica node", parent)
   }
   handle <- .Call("RN_GetNodeChildren",parent,PACKAGE=RNetica)
-  ecount <- parent$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  parent$signalErrors()
   handle
 }
 
@@ -100,10 +88,7 @@ NodeParents <- function (child) {
     stop ("Child is not an active Netica node", child)
   }
   handle <- .Call("RN_GetNodeParents",child,PACKAGE=RNetica)
-  ecount <- child$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  child$signalErrors()
   handle
 }
 
@@ -150,23 +135,14 @@ NodeParents <- function (child) {
     oldnames <- names(oldpar)
     oldpar <- vector("list",length(oldpar))
     .Call("RN_SetNodeParents",child, oldpar,PACKAGE=RNetica)
-    ecount <- child$reportErrors()
-    if (ecount[1L]>0) {
-      stop("Netica Errors Encountered while clearing old parents, see console for details.")
-    }
+    child$signalErrors()
     ## This sets names to old parent names, which is probabily not
     ## what was wanted, so clear names.
     .Call("RN_SetNodeInputNames",child, oldnames,PACKAGE=RNetica)
-    ecount <- child$reportErrors()
-    if (ecount[1L]>0) {
-      stop("Netica Errors Encountered while clearing names, see console for details.")
-    }
+    child$signalErrors()
   }
   handle <- .Call("RN_SetNodeParents",child, value,PACKAGE=RNetica)
-  ecount <- child$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  child$signalErrors()
   invisible(handle)
 }
 
@@ -208,10 +184,7 @@ NodeInputNames <- function (node) {
   }
   CCodeLoader()
   names <- .Call("RN_GetNodeInputNames",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   names
 }
 
@@ -225,10 +198,7 @@ NodeInputNames <- function (node) {
   }
   CCodeLoader()
   handle <- .Call("RN_SetNodeInputNames",node, value,PACKAGE=RNetica);
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -259,10 +229,7 @@ AbsorbNodes <- function (nodes) {
   net <- nodes[[1]]$Net
   CCodeLoader()
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   ## Delete the node objects from the net cache.
   for (nd in nodes) {
     if (is(nd,"NeticaNode")) {
@@ -291,10 +258,7 @@ is.NodeRelated <- function (node1, node2, relation="connected") {
     warning("Relation has length > 1, only first value is used.")
   }
   handle <- .Call("RN_IsNodeRelated",node1,relation,node2,PACKAGE=RNetica)
-  ecount <- node1$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node1$signalErrors()
   handle
 }
 
@@ -314,10 +278,7 @@ GetRelatedNodes <- function (nodelist, relation="connected") {
   }
   CCodeLoader()
   handle <- .Call("RN_GetRelatedNodes",nodelist,relation,PACKAGE=RNetica)
-  ecount <- nodelist[[1]]$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  nodelist[[1]]$signalErrors()
   handle
 }
 
@@ -329,10 +290,7 @@ MakeCliqueNode <- function(nodelist) {
   net <- nodelist[[1]]$Net
   CCodeLoader()
   handle <- .Call("RN_MakeCliqueNode",nodelist,net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   handle
 }
 
@@ -409,10 +367,7 @@ NodeProbs <- function (node) {
     if (!is.null(row))
       result[] <- row
   }
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   class(result) <- c("CPA",class(result))
   result
 }
@@ -450,10 +405,7 @@ NodeProbs <- function (node) {
   } else { ## Prior node with no parents.
     .Call("RN_SetNodeProbs",node,NULL,value,PACKAGE=RNetica)
   }
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(node)
 }
 
@@ -464,10 +416,7 @@ IsNodeDeterministic <- function (node) {
   }
   CCodeLoader()
   handle <- .Call("RN_IsNodeDeterministic",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   handle
 }
 
@@ -477,10 +426,7 @@ HasNodeTable <- function (node) {
   }
   CCodeLoader()
   result <- .Call("RN_HasNodeTable",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   names(result) <- c("exists","complete")
   result
 }
@@ -491,10 +437,7 @@ DeleteNodeTable <- function (node) {
   }
   CCodeLoader()
   handle <- .Call("RN_DeleteNodeTable",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -790,10 +733,7 @@ doSelection <- function (x,selection,drop, returnCPT=FALSE) {
       }
     }
   }
-  ecount <- x$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  x$signalErrors()
   result
 }
 
@@ -981,10 +921,7 @@ setMethod("[<-","NeticaNode",function(x, i, j, ..., value) {
       }
     }
   }
-  ecount <- x$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Node: ", x,"Netica Errors Encountered, see console for details.")
-  }
+  x$signalErrors()
   invisible(x)
 })
 
@@ -1096,10 +1033,7 @@ setMethod("[[<-","NeticaNode",function(x, i, j, ..., value) {
       }
     }
   }
-  ecount <- x$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Node: ", x,"Netica Errors Encountered, see console for details.")
-  }
+  x$signalErrors()
   invisible(x)
 })
 

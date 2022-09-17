@@ -178,8 +178,14 @@ stopSession(sess)
       points to a Netica node, and false if it does not. }
     \item{\code{clearErrors(severity)}:}{ Calls \code{clearErrors} on
       the \code{Net$Session} object. }
-    \item{\code{reportErrors(maxreport, clear)}:}{ Calls
-      \code{reportErrors} on the \code{Net$Session} object. }
+    \item{\code{reportErrors(maxreport, clear, call)}:}{ Calls
+      \code{reportErrors} on the \code{Net$Session} object. Returns an
+    object of class \code{\link{NeticaCondition}} if there was a
+    message, or \code{NULL} if not.}
+    \item{\code{signalErrors(maxreport, clear, call)}:}{ Calls
+      \code{signalErrors} on the \code{Net$Session} object.  If there was a
+    problem, the appropriate condition is signaled, see
+    \code{\link{NeticaCondition}}.  }
     \item{\code{initialize(Name, Net, discrete, ...)}:}{ Initialziation
       function.  Should not be called directly by user code. Use
       \code{\link{NewDiscreteNode}} or \code{\link{NewContinuousNode}}

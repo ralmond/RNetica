@@ -228,5 +228,7 @@ stopSession(sess)
   }
 
 The following methods are inherited (from \code{\linkS4class{CaseStream}}):
-close ("CaseStream"), isActive ("CaseStream"), isOpen ("CaseStream"), show ("CaseStream"), clearErrors ("CaseStream"), reportErrors ("CaseStream"), initialize ("CaseStream")
+close ("CaseStream"), isActive ("CaseStream"), isOpen ("CaseStream"),
+show ("CaseStream"), clearErrors ("CaseStream"), reportErrors
+("CaseStream"), signalErrors ("CaseStream"), initialize ("CaseStream")
 }

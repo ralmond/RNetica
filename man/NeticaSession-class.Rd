@@ -117,44 +117,63 @@ destructively modified.  Also fields (slots) are accessed using the
   \enumerate{
 
     \item{The old \code{\link{NeticaBN}} and \code{\link{NeticaNode}}
-    classes, which were implemented as S3 classes formed by adding
-    attributes to strings, have been replaced with R6 reference classes,
-    which should be more robust.  In particular, the
-    \code{\link[base]{c}()} command strips attributes, which tended to
-    destroy node and net objects.}
+      classes, which were implemented as S3 classes formed by adding
+      attributes to strings, have been replaced with R6 reference classes,
+      which should be more robust.  In particular, the
+      \code{\link[base]{c}()} command strips attributes, which tended to
+      destroy node and net objects.}
 
     \item{The session pointer used to be handled with a global variable
-    in the RNetica source code.  It is now a field in the new session
-    object.  This should allow more flexibility as well as not relying
-    on a hidden mechanism.}
+      in the RNetica source code.  It is now a field in the new session
+      object.  This should allow more flexibility as well as not relying
+      on a hidden mechanism.}
 
     \item{Instead of using back-pointers from the Netica objects,
-    Sessions contain an environment where nets are registered and nets
-    contain an environment where nodes are registered.  This should fix
-    a problem with the backpointers pointing to the wrong location.}  
-    }
+      Sessions contain an environment where nets are registered and nets
+      contain an environment where nodes are registered.  This should fix
+      a problem with the backpointers pointing to the wrong location.}  
+  }
     
-    In the earlier design, the session object was hidden.  For that
-    reason, the function \code{\link{getDefaultSession}()} has been
-    added.  This looks for an object called \code{DefaultNeticaSession}
-    in the gobal environment.  If this object does not exist, the user
-    will be prompted to make one the first time
-    \code{\link{getDefaultSession}()} is called.  This is the default
-    for most high level functions which take a section argument;
-    hopefully, this will provide backwards compatability.
+  In the earlier design, the session object was hidden.  For that
+  reason, the function \code{\link{getDefaultSession}()} has been
+  added.  This looks for an object called \code{DefaultNeticaSession}
+  in the gobal environment.  If this object does not exist, the user
+  will be prompted to make one the first time
+  \code{\link{getDefaultSession}()} is called.  This is the default
+  for most high level functions which take a section argument;
+  hopefully, this will provide backwards compatability.
+  
+}
+\section{Error Handing}{
 
-    The error reporting mechanism now also works through the session
-    object.  The \code{session$reportErrors()} and
-    \code{\var{session}$clearErrors()} methods are used to maintain this
-    system.  The \code{\link{NeticaBN}} object contains a back pointer
-    to its session, and delegates error reporting to the session.  In
-    particular, \code{\var{net}$Session} returns the session object.
-    Similarly, a \code{\link{NeticaNode}} contains a back pointer to the
-    \code{\link{NeticaBN}}, so \code{\var{node}$Net$Session} accesses the
-    session. 
+    The error reporting mechanism works through the session
+  object.  The \code{session$reportErrors()} and
+  \code{\var{session}$clearErrors()} methods are used to maintain this
+  system.  The \code{\link{NeticaBN}} object contains a back pointer
+  to its session, and delegates error reporting to the session.  In
+  particular, \code{\var{net}$Session} returns the session object.
+  Similarly, a \code{\link{NeticaNode}} contains a back pointer to the
+  \code{\link{NeticaBN}}, so \code{\var{node}$Net$Session} accesses the
+  session.
+
+    As of Version 0.10-1, the error reporting mechanism has been
+  updated.  The \code{reprotErrors} method has been changed to return
+  an object of type \code{\link{NeticaCondition}} if Netica signaled
+  an error, warning or message during executing the API call.  This is
+  of class \dQuote{error}, \dQuote{warning}, or \dQuote{message},
+  depending on severety of the message.  If no message was returned,
+  then \code{reportErrors} returns \code{NULL}.
+
+  The recommended way to handle errors, used internally in most RNetica
+  functions, is to call the \code{signalErrors} message.  This will
+  throw the appropriate condition, calling \code{\link[base]{stop}} for errors,
+  \code{\link[base]{warning}} for warnings and
+  \code{\link[base]{signalCondition}} for conditions.  This will cause
+  internal Netica errors to be handled with the same mechanisms used to
+  control ordinary R errors.
+
 
 }
-
 \seealso{
   \code{\link{CreateNetwork}}, \code{\link{GetNthNetwork}},
   \code{\link{GetNamedNetworks}}, and \code{\link{ReadNetworks}}.  It is
@@ -253,10 +272,27 @@ for (netname in DefaultNeticaSession$listNets()) {
     \code{"NOTHING_ERR"}, \code{"REPORT_ERR"},
     \code{"NOTICE_ERR"}, \code{"WARNING_ERR"}, \code{"ERROR_ERR"},
     \code{"XXX_ERR"}.  The default is to report all errors.}
-    \item{\code{reportErrors(maxreport, clear)}:}{ Reports errors.  The
+  \item{\code{reportErrors(maxreport=9, clear = TRUE,
+      call= sys.call(sys.parent()))}:}{ Reports errors.  The
       \code{maxreport} value gives the maximum number of errors to
       report.  The \code{clear} value (default true) asks if errors
-      should be cleared after reporting.  Note:  errors are reported to
-      standard output, not standard error. }
+      should be cleared after reporting. If the internal Netica error
+      reporting function returns messages, then a new object of type
+      \code{\link{NeticaCondition}} is created.  The original Netica
+      errors are given in extra fields with the names \dQuote{Fatal},
+      \dQuote{Error}, \dQuote{Warning}, \dQuote{Notice} and
+      \dQuote{Report}.  The default value for call is the function which
+      calls the \code{session$reportErrors} method.  If there are no
+      messages, \code{NULL} is return instead of the condition.}
+
+    \item{\code{signalErrors(maxreport, clear, call)}:}{ Calls
+      \code{reportErrors}, and then if the return result is an
+      \dQuote{error}, calls \code{\link[base]{stop}}; if the result is a
+      \dQuote{warning}, calls \code{warning}; if the reseult is a
+      \dQuote{message}, calls \code{\link[base]{signalCondition}} (which
+      by default does nothing).  If \code{reportErrors} returns
+      \code{NULL} it does nothing.  If the signaling the condition does
+      not result in a non-local exit to the function, it returns the
+      output of \code{reportErrors} invisibly.}
   }
 }

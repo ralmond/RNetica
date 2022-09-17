@@ -61,13 +61,21 @@ NeticaSession <-
                   neticaVersion = function() {
                     .Call("RN_Session_Version",.self,PACKAGE=RNetica)
                   },
-                  reportErrors = function(maxreport=9,clear=TRUE) {
+                  reportErrors = function(maxreport=9,clear=TRUE,
+                                          call = sys.call(sys.parent())) {
                     if (!isActive())
                       stop("Session is inactive.")
                     allErrs <-
                       .Call("RN_Session_errors",.self,as.integer(maxreport),
                             as.logical(clear),PACKAGE=RNetica)
-                    logErrors(allErrs)
+                    NeticaCondition(allErrs,call)
+                  },
+                  signalErrors = function(maxreport=9,clear=TRUE,
+                                          call = sys.call(sys.parent())) {
+                    e <- reportErrors(maxreport, clear, call)
+                    if (inherits(e,"error")) stop(e)
+                    if (inherits(e,"warning")) warn(e)
+                    if (inherits(e,"condition")) signalCondition(e)
                   },
                   clearErrors = function(severity="XXX_ERR") {
                     .Call("RN_ClearSessionErrors",.self,
@@ -120,10 +128,7 @@ setGeneric("startSession",function (session) standardGeneric("startSession"))
 setMethod("startSession","NeticaSession", function (session) {
   CCodeLoader()
   .Call("RN_start_Session",session,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   invisible(session)
 })
 setGeneric("stopSession",function (session) standardGeneric("stopSession"))
@@ -131,10 +136,7 @@ setMethod("stopSession","NeticaSession", function (session) {
   netnames <- session$listNets()
   for (nn in netnames)
     session$findNet(nn)$deactivate()
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   .Call("RN_stop_Session",session,PACKAGE=RNetica)
   invisible(session)
   })
@@ -146,44 +148,82 @@ setMethod("restartSession","NeticaSession", function(session) {
   startSession(session)
 })
 
-logErrors <- function (allErrs) {
-  flogErrors(allErrs)
-  counts <- sapply(allErrs[-1],length)
-  names(counts) <- c("Errors","Warnings","Notices","Reports")
-  invisible(counts)
+##################################################
+## Error Handling Function
+
+NeticaCondition <- function(allErrs,call) {
+  names(allErrs) <- c("Fatal","Error","Warning","Notice","Report")
+  counts <- sapply(allErrs,length)
+  if (!any(counts>0)) return (NULL) # No errors
+  names(counts) <- c("Fatal","Error","Warning","Notice","Report")
+  if (counts["Fatal"]>0) class <- c("fatal", "error")
+  else if (counts["Error"]>0) class <- c("error")
+  else if (counts["Warning"]>0) class <- c("warning")
+  else class <- c("message",class)
+  message <- paste("Netica ",paste(class,collapse=" "), "encountered.")
+  cond <- c(message=message, call=call, counts=counts, allErrs)
+  class(cond) <- c("NeticaCondition",class,"condition")
+  cond
 }
 
 flogErrors <- function (allErrs) {
-  #Stop unnecessary calls to flog for performance reasons
-    if(length(allErrs[[1]]) != 0){
-      lapply(allErrs[1],flog.fatal)
-    }
-    if(length(allErrs[[2]]) != 0){
-      lapply(allErrs[2],flog.error)
-    }
-    if(length(allErrs[[3]]) != 0){
-      lapply(allErrs[3],flog.warn)
-    }
-    if(length(allErrs[[4]]) != 0){
-      lapply(allErrs[4],flog.info)
-    }
-    if(length(allErrs[[5]]) != 0){
-      lapply(allErrs[5],flog.debug)
-    }
+  if (is(allErrs,"fatal"))
+    futile.logger::flog.fatal(conditionMessage(allErrs))
+  else if (is(allErrs,"error"))
+    futile.logger::flog.error(conditionMessage(allErrs))
+  if (is(allErrs,"warning"))
+    futile.logger::flog.warn(conditionMessage(allErrs))
+  if (is(allErrs,"message"))
+    futile.logger::flog.info(conditionMessage(allErrs))
+  if(length(allErrs$Fatal) > 0L){
+    lapply(allErrs$Fatal,futile.logger::flog.fatal)
+  }
+  if(length(allErrs$Error) > 0L){
+    lapply(allErrs$Warning,futile.logger::flog.error)
+  }
+  if(length(allErrs$Warning) >0L){
+    lapply(allErrs$Warning,futile.logger::flog.warn)
+  }
+  if(length(allErrs$Notice) > 0L){
+    lapply(allErrs$Notice,futile.logger::flog.info)
+  }
+  if(length(allErrs$Report) > 0L){
+    lapply(allErrs$Report,futile.logger::flog.debug)
+  }
 }
 
-printErrors <- function (allErrs) {
-  lapply(allErrs[1],
-         function (e) print(paste("Fatal Netica Error:",e)))
-  lapply(allErrs[2],
-         function (e) print(paste("Netica Error:",e)))
-  lapply(allErrs[3],
-         function (e) print(paste("Netica Warning:",e)))
-  lapply(allErrs[4],
-         function (e) print(paste("Netica Note:",e)))
-  lapply(allErrs[5],
-         function (e) print(paste("Netica Report:",e)))
+##' Now assume that the argument will be a Netica Condition.
+##' @Depricated
+logErrors <- function (allErrs) {
+  flogErrors(allErrs)
+  counts <- c("Errors"=NA_integer_,"Warnings"=NA_integer_,
+              "Notices"=NA_integer_,"Reports"=NA_integer_)
+  counts["Errors"] <- length(allErrs$Error)
+  counts["Warnings"] <- length(allErrs$Warning)
+  counts["Notices"] <- length(allErrs$Notice)
+  counts["Reports"] <- length(allErrs$Report)
+  invisible(counts)
 }
+
+print.NeticaCondition <- function (x,...) {
+  print.condition(x,...)
+
+  lapply(x$Fatal,
+         function (e) print(paste("Fatal Netica Error:",e)))
+  lapply(x$Error,
+         function (e) print(paste("Netica Error:",e)))
+  lapply(x$Warning,
+         function (e) print(paste("Netica Warning:",e)))
+  lapply(x$Notice,
+         function (e) print(paste("Netica Note:",e)))
+  lapply(x$Report,
+         function (e) print(paste("Netica Report:",e)))
+  invisible(x)
+}
+
+##' @depricated
+printErrors <- function (allErrs)
+  print(allErrs)
 
 
 ############################
@@ -205,8 +245,12 @@ NeticaVersion <- function (session=getDefaultSession()) {
 ## call Netica through .Call and the call ReportErrors to report on
 ## errors.
 ReportErrors <- function(maxreport=9,clear=TRUE,session=getDefaultSession()) {
-  session$reportErrors(maxreport,clear)
+  err <-   session$reportErrors(maxreport,clear)
+  if (!is.null(err))
+    print(err)
+  invisible(err)
 }
+
 ## * Clears all errors at a given severity (and lower?)
 ## * sev -- should be either NULL (all arguments) or a single character
 ## * string, one of "NOTHING_ERR", "REPORT_ERR", "NOTICE_ERR",

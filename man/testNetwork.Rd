@@ -9,7 +9,6 @@
   returns an object of class \code{\linkS4class{NetworkTester}} which
   contains statistics about the recovery of the target nodes from the
   data.
-  
 
 }
 \usage{

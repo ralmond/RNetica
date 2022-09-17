@@ -403,6 +403,58 @@ and \code{\link{stopSession}}.
   }
 
 }
+\section{Error Handling}{
+
+  After a call to a C function in the Netica API, an additional function
+  must be called to check for errors.  It can return messages at
+  different levels of severity.   The \code{reportErrors} method of the
+  \code{\linkS4class{NeticaSession}} object calls this function and
+  bundles it into an object of class \code{link{NeticaConditon}}.  The
+  class of the output of \code{reportErros} is determined by the
+  messages with the highest severity.
+
+  \tabular{rr}{
+    \bold{Netica Error Priority} \tab \bold{R condition class} \cr
+    \dQuote{XXX_ERR} \tab \code{ "NeticaCondition" "fatal" "error"
+      "condition" }\cr
+    \dQuote{ERROR_ERR} \tab \code{ "NeticaCondition" "error" "
+      condition" }\cr
+    \dQuote{WARNING_ERR} \tab \code{ "NeticaCondition" "warning"
+      "condition" }\cr
+    \dQuote{NOTICE_ERR} \tab \code{ "NeticaCondition" "message"
+      "condition" }\cr
+    \dQuote{REPORT_ERR} \tab \code{ "NeticaCondition" "message"
+      "condition" }\cr
+    no messages \tab \code{"NULL"} \cr
+  }
+
+  Note that errors origininating from Netica have the type
+  \dQuote{NeticaCondition} so that error class can be separately tracked
+  by error handlers.  The types \dQuote{error}, \dQuote{warning},
+  \dQuote{message}, and \dQuote{condition} are all subclasses of the
+  base R class \code{\link{condition}}, and all \code{NeticaCondition}
+  objects have a message and a call field.  The default argument for
+  call, sets the call field to be the function or method from which
+  \code{reportErrors} or \code{signalErrors} was called.  In addition,
+  \code{NeticaCondition} objects have fields of type \code{Fatal},
+  \code{Error}, \code{Warning}, \code{Notice} and \code{Report} which
+  are all character vectors giving the text of the messages returned
+  from Netica.
+
+  The \code{\linkS4class{NeticaSession}} object also has a
+  \code{signalErrors} method.  This calls \code{reportErrors}, and then
+  if the result is a \code{NeticaCondition} signals the error using the
+  appropriate method:  \code{\link[base]{stop}} for (fatal) errors,
+  \code{\link[base]{warning}} for warnings, and
+  \code{\link[base]{signalCondition}} for other conditions.  The
+  \code{\linkS4class{NeticaBN}} and \code{\linkS4class{NeticaNode}}
+  objects (as well as some other persistant objects) also have 
+  \code{reportErrors} and \code{signalErrors} methods, which delegate
+  this function to the session.  One of these methods is called after
+  any RNetica function which calls an internal Netica C API call, so
+  that these errors will be properly captured.
+    
+}
 \section{Warning}{
 
   The current status of RNetica is that of a beta

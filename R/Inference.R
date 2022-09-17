@@ -11,10 +11,7 @@ CompileNetwork <- function (net) {
     stop("Expected an active Netica network, got, ",net)
   }
   .Call("RN_CompileNet",net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(net)
 }
 
@@ -23,10 +20,7 @@ UncompileNetwork <- function (net) {
     stop("Expected an active Netica network, got, ",net)
   }
   .Call("RN_UncompileNet",net,PACKAGE=RNetica)
-    ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(net)
 }
 
@@ -35,10 +29,7 @@ RetractNetFindings <-function (net) {
     stop("Expected an active Netica network, got, ",net)
   }
   .Call("RN_RetractNetFindings",net,PACKAGE=RNetica)
-    ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(net)
 }
 
@@ -47,10 +38,7 @@ NodeFinding <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeFinding",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   if (is.numeric(result) && !is.na(result)) {
     result <- NodeStates(node)[result+1] ## Convert to name.
   }
@@ -73,10 +61,7 @@ NodeFinding <- function (node) {
     stop("Value ", value, " not legal for node ",node)
   }
   handle <- .Call("RN_SetNodeFinding",node,val,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -98,10 +83,7 @@ EnterNegativeFinding <- function(node, eliminatedVals) {
   }
   val <- as.integer(val) - 1L
   handle <- .Call("RN_SetNodeFindingNot",node,val,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -110,10 +92,7 @@ RetractNodeFinding <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   handle <- .Call("RN_RetractNodeFinding",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -138,10 +117,7 @@ IsBeliefUpdated <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   handle <- .Call("RN_IsBeliefUpdated",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   handle
 }
 
@@ -150,10 +126,7 @@ NodeBeliefs <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeBeliefs",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   names(result) <- NodeStates(node)
   result
 }
@@ -163,10 +136,7 @@ NodeLikelihood <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeLikelihood",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   names(result) <- NodeStates(node)
   result
 }
@@ -182,10 +152,7 @@ NodeLikelihood <- function (node) {
     stop("Expected values between 0 and 1 with at least one positive value.")
   }
   handle <- .Call("RN_SetNodeLikelihood",node,value,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -196,10 +163,7 @@ JointProbability <- function(nodelist) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   result <- .Call("RN_JointProbability",nodelist,PACKAGE=RNetica)
-  ecount <- nodelist[[1]]$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  nodelist[[1]]$signalErrors()
   dnames <- lapply(nodelist,NodeStates)
   names(dnames) <- sapply(nodelist,NodeName)
   dimnames(result) <- dnames
@@ -211,10 +175,7 @@ FindingsProbability <- function(net) {
     stop("Expected an active Netica network, got, ",net)
   }
   result <- .Call("RN_FindingsProbability",net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   result
 }
 
@@ -223,10 +184,7 @@ MostProbableConfig <- function(net, nth=0) {
     stop("Expected a list of Netica nodes, got, ",nodelist)
   }
   config <- .Call("RN_MostProbableConfig",net,as.integer(nth),PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   nodelist <- NetworkAllNodes(net)
   result <- vector(mode="list",length=length(nodelist))
   for (i in 1:length(nodelist)) {
@@ -241,10 +199,7 @@ JunctionTreeReport <- function (net) {
     stop("Expected an active Netica network, got, ",net)
   }
   report <- .Call("RN_JunctionTreeReport",net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$reportErrors()
   ##TODO Parse the report into a table.
   report
 }
@@ -254,11 +209,7 @@ NetworkCompiledSize <- function(net) {
     stop("Expected an active Netica network, got, ",net)
   }
   result <- .Call("RN_SizeCompiledNetwork",net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
-  result
+  net$signalErrors()
 }
 
 ## Currently, I'm abusing the function SizeCompiledNetwork, which
@@ -280,10 +231,7 @@ EliminationOrder <- function (net) {
     stop("Expected an active Netica network, got, ",net)
   }
   result <- .Call("RN_GetEliminationOrder",net,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   result
 }
 
@@ -302,9 +250,6 @@ EliminationOrder <- function (net) {
     }
   }
   handle <- .Call("RN_SetEliminationOrder",net,value, PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(handle)
 }

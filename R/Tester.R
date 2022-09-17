@@ -118,10 +118,7 @@ testNetwork <- function(targetNodes, dataStreams, ignoreNodes=list()) {
                 data=dataStreams,errorRate=errorRate,logLoss=logLoss,
                 quadraticLoss=quadraticLoss,confusion=confusion)
   handle <- .Call("RN_TestNetwork",tester,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(handle)
 }
 

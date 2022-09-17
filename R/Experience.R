@@ -19,10 +19,7 @@ NodeExperience <- function (node) {
   } else { ## Prior node, no parents.
     result<- .Call("RN_GetNodeExperience",node,NULL,PACKAGE=RNetica)
   }
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   result
 }
 
@@ -71,10 +68,7 @@ NodeExperience <- function (node) {
   } else { ## Prior node, no parents.
     .Call("RN_SetNodeExperience",node,NULL,value,PACKAGE=RNetica)
   }
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(node)
 }
 
@@ -87,10 +81,7 @@ FadeCPT <- function (node, degree=0.2) {
     stop("Degree must be between 0 and 1")
   }
   handle <- .Call("RN_FadeCPT",node,as.double(degree),PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -103,10 +94,7 @@ LearnFindings <- function (nodes, weight=1.0) {
     stop("Expected a list of Netica nodes, got, ",nodes)
   }
   handles <- .Call("RN_LearnFindings",nodes,as.double(weight),PACKAGE=RNetica)
-  ecount <- nodes[[1]]$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  nodes[[1]]$signalErrors()
   if (length(handles)==1) handles <- handles[[1]]
   invisible(handles)
 }
@@ -139,11 +127,8 @@ LearnCases <- function(caseStream, nodelist, weight=1.0) {
   WithOpenCaseStream(stream,
    {
      .Call("RN_LearnCaseStream",stream,nodelist,weight, PACKAGE=RNetica)
-     ecount <- session$reportErrors()
-     if (ecount[1]>0) {
-       stop("Netica Errors Encountered, see console for details.")
-     }
-  invisible(stream)
+     session$signalErrors()
+     invisible(stream)
   })
 }
 
@@ -202,10 +187,7 @@ LearnCPTs <- function(caseStream, nodelist, method="COUNTING",
      result <- .Call("RN_LearnCPTs",stream,nodelist,method,
                      maxIters,maxTol,weight, session,
                      PACKAGE=RNetica)
-     ecount <- session$reportErrors()
-     if (ecount[1]>0) {
-       stop("Netica Errors Encountered, see console for details.")
-     }
+     session$signalErrors()
      result
    })
 }

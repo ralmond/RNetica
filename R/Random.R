@@ -22,18 +22,23 @@ setRefClass("NeticaRNG",fields=c(Name="character",
                 isActive = function() {
                   .Call("RN_isRNGActive",.self,PACKAGE=RNetica)
                 },
-                reportErrors = function(maxreport=9,clear=TRUE) {
-                  Session$reportErrors(maxreport,clear)
+                reportErrors = function(maxreport=9,clear=TRUE,
+                                        call = sys.call(sys.parent())) {
+                  Session$reportErrors(maxreport,clear,call)
+                },
+                signalErrors = function(maxreport=9,clear=TRUE,
+                                        call = sys.call(sys.parent())) {
+                  e <- reportErrors(maxreport, clear, call)
+                  if (inherits(e,"error")) stop(e)
+                  if (inherits(e,"warning")) warn(e)
+                  if (inherits(e,"condition")) signalCondition(e)
                 },
                 clearErrors = function(severity="XXX_ERR") {
                   Session$clearErrors(severity)
                 },
                 free=function() {
                   .Call("RN_FreeRNG",.self,PACKAGE=RNetica)
-                  ecount <- Session$reportErrors()
-                  if (ecount[1]>0) {
-                    stop("Netica Errors Encountered, see console for details.")
-                  }
+                  Session$signalErrors()
                 },
                 show=function() {
                   if (isActive()) {
@@ -56,10 +61,7 @@ NewNeticaRNG <- function (seed=sample.int(.Machine$integer.max,1L),
   rng <- NeticaRNG$new(Name=name,Session=session,Seed=seed)
   rng <-
     .Call("RN_NewRandomGenerator",as.character(seed),rng,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  ecount <- session$signalErrors()
   rng
 }
 
@@ -122,10 +124,7 @@ NetworkSetRNG <- function (net, seed=sample.int(.Machine$integer.max,1L)) {
   }
   seed <- as.character(seed)
   result <- .Call("RN_SetNetRandomGen",net,seed,net$Session,PACKAGE=RNetica)
-  ecount <- net$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  net$signalErrors()
   invisible(result)
 }
 
@@ -154,10 +153,7 @@ GenerateRandomCase <- function (nodelist, method="Default",
   result <-
     .Call("RN_GenerateRandomCase",nodelist,method,timeout,rng,
           session,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   if (result < 0) {
     warning("Random number generation not successful.")
   }

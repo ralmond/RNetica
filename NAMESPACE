@@ -6,13 +6,14 @@ importFrom("stats", "runif","pnorm","punif")
 importFrom("R.utils","tempvar")
 importFrom("CPTtools","is.CPA","as.CPA","is.CPF","as.CPF", "normalize",
            "fcKappa","gkLambda")
-importFrom("futile.logger","flog.fatal","flog.error","flog.warn",
-           "flog.info","flog.debug","flog.trace")
+## importFrom("futile.logger","flog.fatal","flog.error","flog.warn",
+##            "flog.info","flog.debug","flog.trace")
 
 
-export(NeticaSession)
+export(NeticaSession, NeticaCondition, flogErrors)
 exportClasses(NeticaSession)
 exportMethods(is.active,startSession,stopSession)
+S3method(print,NeticaCondition)
 
 export(StartNetica, StopNetica, NeticaVersion,
        ReportErrors, ClearAllErrors,
