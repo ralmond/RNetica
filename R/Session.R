@@ -154,13 +154,28 @@ setMethod("restartSession","NeticaSession", function(session) {
 NeticaCondition <- function(allErrs,call) {
   names(allErrs) <- c("Fatal","Error","Warning","Notice","Report")
   counts <- sapply(allErrs,length)
+  msg <- character(0)
   if (!any(counts>0)) return (NULL) # No errors
   names(counts) <- c("Fatal","Error","Warning","Notice","Report")
-  if (counts["Fatal"]>0) class <- c("fatal", "error")
-  else if (counts["Error"]>0) class <- c("error")
-  else if (counts["Warning"]>0) class <- c("warning")
-  else class <- c("message",class)
-  message <- paste("Netica ",paste(class,collapse=" "), "encountered.")
+  if (counts["Fatal"]>0) {
+    class <- c("fatal", "error")
+    msg <- c(msg, paste("Netica fatal error: ",allErrs$Fatal))
+  }
+  else if (counts["Error"]>0) {
+    class <- c("error")
+    msg <- c(msg, paste("Netica error: ",allErrs$Error))
+  }
+  else if (counts["Warning"]>0) {
+    class <- c("warning")
+    msg <- c(msg, paste("Netica warning: ",allErrs$Warning))
+  }
+  else {
+    class <- c("message",class)
+    msg <- c(msg, paste("Netica notice: ",allErrs$Notice))
+    msg <- c(msg, paste("Netica report: ",allErrs$Report))
+  }
+    
+  message <- paste(msg,collapse="\n")
   cond <- c(message=message, call=call, counts=counts, allErrs)
   class(cond) <- c("NeticaCondition",class,"condition")
   cond
