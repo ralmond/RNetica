@@ -216,8 +216,6 @@ ParentNames <- function (node) {
   ifelse (nchar(inames)==0,parnames,inames)
 }
 
-
-
 AbsorbNodes <- function (nodes) {
   if (is.NeticaNode(nodes) && length(nodes) ==1L) {
     nodes <- list(nodes)
@@ -228,6 +226,10 @@ AbsorbNodes <- function (nodes) {
   ## print(nodes)
   net <- nodes[[1]]$Net
   CCodeLoader()
+  if (NeticaVersion(NetworkSession(net))$number < 600) {
+    warning("Absorb Nodes has errors in API version < 6.0")
+    return(NULL)
+  }
   handles <- .Call("RN_AbsorbNodes",nodes,PACKAGE=RNetica)
   net$signalErrors()
   ## Delete the node objects from the net cache.
@@ -240,8 +242,6 @@ AbsorbNodes <- function (nodes) {
   if (length(handles)==1L) handles <- handles[[1L]]
   invisible(handles)
 }
-
-
 
 is.NodeRelated <- function (node1, node2, relation="connected") {
   if (length(node1)>1L || !is.NeticaNode(node1) || !is.active(node1)) {

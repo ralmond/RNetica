@@ -1,3 +1,11 @@
+2023-04-05  Russell Almond  <ralmond@cherry>
+
+	* R/LoadFuns.R (CCodeLoader): Added a check for environmental
+	variable 'NeticaLicenseKey' and used it to set option if available.
+
+	* R/Edges.R (AbsorbNodes): Added patch to avoid bug in AbsorbNodes
+	in Netica < 6.07.
+	
 
 2022-09-10  Russell Almond  <ralmond@cherry.local>
 
