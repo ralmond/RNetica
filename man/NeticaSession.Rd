@@ -8,7 +8,7 @@
   collection of the networks associated with this Netica session.  
 }
 \usage{
-NeticaSession(...,LicenseKey=character(),
+NeticaSession(...,LicenseKey=options("NeticaLicenseKey")[[1]],
               SessionName=paste("RNetica Session", date()),
               Checking=character(), maxmem=integer())
 getDefaultSession()
@@ -18,7 +18,8 @@ getDefaultSession()
     Base class uses fields below.}
   \item{LicenseKey}{If supplied, this should be a character scalar
     providing the license key purchased from Norsys
-    \url{http://www.norsys.com/}.  If left as default, RNetica will run
+    \url{http://www.norsys.com/}.  If left as default, and if the
+    license key is not set in Netica, RNetica will run
     in a limited mode.}
   \item{SessionName}{A character vector giving an identifier for the
     session.  Only used in printing.}
@@ -57,6 +58,10 @@ Object of class \code{numeric} containing an
   networks.  This is sufficient to run the test cases, and explore the
   capabilities, but for serious model building you will need to purchase
   a license.
+
+  Starting with verion 0.9, RNetica looks for the license key in the
+  \dQuote{NeticaLicenseKey} option, using the
+  \code{\link[base]{options}} function.
 
   The \code{checking} argument, if supplied, is used to call the Netica
   function \code{ArgumentChecking_ns()}.  See the documentation of that

@@ -91,8 +91,9 @@ is.NetworkCompiled(net)
 sess <- NeticaSession()
 startSession(sess)
 
-irt5 <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","IRT5.dne"), session=sess)
+irt5 <- ReadNetworks(system.file("sampleNets","IRT5.dne",
+                                 package="RNetica"),
+                     session=sess)
 stopifnot (!is.NetworkCompiled(irt5))
 
 CompileNetwork(irt5) ## Ready to enter findings

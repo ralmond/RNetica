@@ -53,8 +53,9 @@ EnterFindings(net, findings)
 sess <- NeticaSession()
 startSession(sess)
 
-Motif <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne"), session=sess)
+Motif <- ReadNetworks(system.file("sampleNets","EMSMMotif.dne",
+                                  package="RNetica"),
+                      session=sess)
 
 CompileNetwork(Motif)
 obs <- c(Obs1a1="Right",Obs1a2="Wrong",

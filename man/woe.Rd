@@ -100,8 +100,9 @@ ewoe(enodes, hnodes, hstatelists)
 sess <- NeticaSession()
 startSession(sess)
 
-aced2 <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","ACEDMotif2.dne"), session=sess)
+aced2 <- ReadNetworks(system.file("sampleNets","ACEDMotif2.dne",
+                                  package="RNetica"),
+                      session=sess)
 aced2.obs <- NetworkNodesInSet(aced2,"Observables")
 aced2.prof <- NetworkNodesInSet(aced2,"Proficiencies")
 

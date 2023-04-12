@@ -403,6 +403,58 @@ and \code{\link{stopSession}}.
   }
 
 }
+\section{Error Handling}{
+
+  After a call to a C function in the Netica API, an additional function
+  must be called to check for errors.  It can return messages at
+  different levels of severity.   The \code{reportErrors} method of the
+  \code{\linkS4class{NeticaSession}} object calls this function and
+  bundles it into an object of class \code{link{NeticaConditon}}.  The
+  class of the output of \code{reportErros} is determined by the
+  messages with the highest severity.
+
+  \tabular{rr}{
+    \bold{Netica Error Priority} \tab \bold{R condition class} \cr
+    \dQuote{XXX_ERR} \tab \code{ "NeticaCondition" "fatal" "error"
+      "condition" }\cr
+    \dQuote{ERROR_ERR} \tab \code{ "NeticaCondition" "error" "
+      condition" }\cr
+    \dQuote{WARNING_ERR} \tab \code{ "NeticaCondition" "warning"
+      "condition" }\cr
+    \dQuote{NOTICE_ERR} \tab \code{ "NeticaCondition" "message"
+      "condition" }\cr
+    \dQuote{REPORT_ERR} \tab \code{ "NeticaCondition" "message"
+      "condition" }\cr
+    no messages \tab \code{"NULL"} \cr
+  }
+
+  Note that errors origininating from Netica have the type
+  \dQuote{NeticaCondition} so that error class can be separately tracked
+  by error handlers.  The types \dQuote{error}, \dQuote{warning},
+  \dQuote{message}, and \dQuote{condition} are all subclasses of the
+  base R class \code{\link{condition}}, and all \code{NeticaCondition}
+  objects have a message and a call field.  The default argument for
+  call, sets the call field to be the function or method from which
+  \code{reportErrors} or \code{signalErrors} was called.  In addition,
+  \code{NeticaCondition} objects have fields of type \code{Fatal},
+  \code{Error}, \code{Warning}, \code{Notice} and \code{Report} which
+  are all character vectors giving the text of the messages returned
+  from Netica.
+
+  The \code{\linkS4class{NeticaSession}} object also has a
+  \code{signalErrors} method.  This calls \code{reportErrors}, and then
+  if the result is a \code{NeticaCondition} signals the error using the
+  appropriate method:  \code{\link[base]{stop}} for (fatal) errors,
+  \code{\link[base]{warning}} for warnings, and
+  \code{\link[base]{signalCondition}} for other conditions.  The
+  \code{\linkS4class{NeticaBN}} and \code{\linkS4class{NeticaNode}}
+  objects (as well as some other persistant objects) also have 
+  \code{reportErrors} and \code{signalErrors} methods, which delegate
+  this function to the session.  One of these methods is called after
+  any RNetica function which calls an internal Netica C API call, so
+  that these errors will be properly captured.
+    
+}
 \section{Warning}{
 
   The current status of RNetica is that of a beta
@@ -430,9 +482,32 @@ and \code{\link{stopSession}}.
 
 }
 \author{
-Russell Almond
+\packageAuthor{RNetica}
 \cr
-Maintainer: Russell Almond <almond@acm.org>
+Maintainer: \packageMaintainer{RNetica}
+}
+\section{Acknowledgements}{
+
+  We are grateful to support from the following projects for supporting
+  the work in the development and maintenance of this package.
+  \itemize{
+    \item{Bill \& Melinda Gates Foundation grant
+"Games as Learning/Assessment:  Stealth Assessment" (\#0PP1035331,
+Val Shute, PI)}
+    \item{National Science Foundation grant "DIP:
+Game-based Assessment and Support of STEM-related Competencies"
+(\#1628937, Val Shute, PI).}
+    \item{National Scient Foundation grant "Mathematical Learning via
+Architectual Design and Modeling Using E-Rebuild." (\#1720533,
+Fengfeng Ke, PI).}
+  }
+
+  I would also like to thank Brent Borlange @ Norsys for answering
+  questions related to the API as well as making improvements to fix
+  issues raised during the construction of RNetica.  Although Norsys
+  does not officially support RNetica, their unoffical support has been
+  quite valuable.
+
 }
 \references{
 
@@ -478,17 +553,20 @@ DeleteNetwork(abc)
 ###################################################################
 ##  Inference using the EM-SM algorithm (Almond & Mislevy, 1999).  
 ## System/Student model
-EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","System.dne"), session=sess)
+EMSMSystem <- ReadNetworks(system.file("sampleNets","System.dne",
+                                       package="RNetica"),
+                           session=sess)
 
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne"), session=sess)
+EMTask1a <- ReadNetworks(system.file("sampleNets","EMTask1a.dne",
+                                     package="RNetica"),
+                         session=sess)
 
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne"), session=sess)
+EMTask2a <- ReadNetworks(system.file("sampleNets","EMTask2a.dne",
+                                     package="RNetica"),
+                         session=sess)
 
 ## Task 1a has a footprint of Skill1 and Skill2 (those are the
 ## referenced student model nodes.  So we want joint the footprint into

@@ -1,8 +1,5 @@
 ## Functions to call when the package is loaded.
 
-## Variable which stores the Netica License string (if you have one).
-LicenseKey <- NULL
-
 
 ### I'm trying to set the value of EVERY_STATE to the value found in
 ### the Netica code.  But I have a problem.  If I call
@@ -43,11 +40,23 @@ EV_STATE <- NULL
   library.dynam("RNetica", pkgname, libname)
 }
 
+
+#' Loads the call points for the C functions.
+#'
+#' Should be harmless if run when not necessary
+CCodeLoader <- function() {
+  if (!exists("CCodeLoaded") || !isTRUE(CCodeLoaded)) {
+    .C("RN_Define_Symbols",PACKAGE=RNetica)
+    assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
+    assignInMyNamespace("CCodeLoaded",TRUE)
+    if (is.null(options("NeticaLicenceKey")))
+      options("NeticaLicenseKey"=Sys.getenv("NeticaLicenseKey"))
+  }
+}
+
 .onAttach <- function(libname, pkgname) {
-  .C("RN_Define_Symbols",PACKAGE=RNetica)
-  assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
-  assignInMyNamespace("CCodeLoaded",TRUE)
-##   ##StartNetica()
+  CCodeLoader()
+  ##   ##StartNetica()
 }
 
 .onDetach <- function(libpath) {
@@ -56,4 +65,6 @@ EV_STATE <- NULL
 
 .onUnload <- function(libpath) {
   library.dynam.unload("RNetica", libpath)
+  if (file.exists(file.path(libpath,"Netica","Netica.dll")))
+    dyn.unload(file.path(libpath,"Netica","Netica.dll"))
 }

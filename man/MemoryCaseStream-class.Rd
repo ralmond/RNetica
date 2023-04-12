@@ -143,8 +143,7 @@ AddLink(A,C)
 AddLink(B,C)
 
 ## This is the file written in CaseFileStream help.
-casefile <- file.path(library(help="RNetica")$path,
-                           "testData","abctestcases.cas")
+casefile <- system.file("testData","abctestcases.cas", package="RNetica")
                      
 CaseFileDelimiter("\t", session=sess)
 CaseFileMissingCode("*", session=sess)
@@ -229,5 +228,7 @@ stopSession(sess)
   }
 
 The following methods are inherited (from \code{\linkS4class{CaseStream}}):
-close ("CaseStream"), isActive ("CaseStream"), isOpen ("CaseStream"), show ("CaseStream"), clearErrors ("CaseStream"), reportErrors ("CaseStream"), initialize ("CaseStream")
+close ("CaseStream"), isActive ("CaseStream"), isOpen ("CaseStream"),
+show ("CaseStream"), clearErrors ("CaseStream"), reportErrors
+("CaseStream"), signalErrors ("CaseStream"), initialize ("CaseStream")
 }

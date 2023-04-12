@@ -90,8 +90,9 @@ MostProbableConfig(net,nth = 0)
 sess <- NeticaSession()
 startSession(sess)
 
-EMSMMotif <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMSMMotif.dne"), session=sess)
+EMSMMotif <- ReadNetworks(system.file("sampleNets","EMSMMotif.dne",
+                                       package="RNetica"),
+                          session=sess)
 
 CompileNetwork(EMSMMotif)
 obs <- NetworkNodesInSet(EMSMMotif,"Observable")

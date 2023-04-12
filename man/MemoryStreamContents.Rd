@@ -92,8 +92,7 @@ MemoryStreamContents(stream) <- value
 sess <- NeticaSession()
 startSession(sess)
 
-casefile <- file.path(library(help="RNetica")$path,
-                           "testData","abctestcases.cas")
+casefile <- system.file("testData","abctestcases.cas", package="RNetica")
                      
 CaseFileDelimiter("\t", session=sess)
 CaseFileMissingCode("*", session=sess)

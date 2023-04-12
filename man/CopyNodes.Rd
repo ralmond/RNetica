@@ -94,11 +94,13 @@ CopyNodes(nodes, newnamelist = NULL, newnet = NULL, options = character(0))
 \examples{
 sess <- NeticaSession()
 startSession(sess)
-System <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","System.dne"), session=sess)
+System <- ReadNetworks(system.file("sampleNets","System.dne",
+                                   package="RNetica"),
+                       session=sess)
 
-EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne"), session=sess)
+EMTask1a <- ReadNetworks(system.file("sampleNets","EMTask1a.dne",
+                                     package="RNetica"),
+                         session=sess)
 
 student1 <- CopyNetworks(System, "Student1")
 student1.sysnodes <- NetworkAllNodes(student1)

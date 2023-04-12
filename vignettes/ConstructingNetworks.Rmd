@@ -1,0 +1,42 @@
+---
+title: "Constructing Networks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Constructing Networks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(RNetica)
+```
+
+```{r all}
+###########################################################
+## Network Construction:
+sess <- NeticaSession()
+startSession(sess)
+
+abc <- CreateNetwork("ABC", session=sess)
+A <- NewDiscreteNode(abc,"A",c("A1","A2","A3","A4"))
+B <- NewDiscreteNode(abc,"B",c("B1","B2","B3"))
+C <- NewDiscreteNode(abc,"C",c("C1","C2"))
+
+AddLink(A,B)
+NodeParents(C) <- list(A,B)
+
+NodeProbs(A)<-c(.1,.2,.3,.4)
+NodeProbs(B) <- normalize(matrix(1:12,4,3))
+NodeProbs(C) <- normalize(array(1:24,c(4,3,2)))
+abcFile <- tempfile("peanut",fileext=".dne")
+WriteNetworks(abc,abcFile)
+
+DeleteNetwork(abc)
+```

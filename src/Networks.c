@@ -187,7 +187,7 @@ SEXP RN_New_Nets(SEXP namelist, SEXP session) {
     name = CHAR(STRING_ELT(namelist,n));
     netica_handle = NewNet_bn(name,netica_env);
     PROTECT(bn = MakeNet_RRef(netica_handle,name,session));
-    Rprintf("Bn object created.\n");
+    //Rprintf("Bn object created.\n");
     SET_VECTOR_ELT(handles,n,bn);
     UNPROTECT(1);
   }

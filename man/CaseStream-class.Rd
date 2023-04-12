@@ -234,8 +234,14 @@ stopSession(sess)
       symmetric with other Netica reference objects. }
     \item{\code{clearErrors(severity)}:}{ Calls \code{clearErrors} on
       the \code{Session} object. }
-    \item{\code{reportErrors(maxreport, clear)}:}{ Calls
-      \code{reportErrors} on the \code{Session} object. }
+    \item{\code{reportErrors(maxreport, clear, call)}:}{ Calls
+      \code{reportErrors} on the \code{Session} object. Returns an
+      object of class \code{\link{NeticaCondition}} if there was a
+      message, or \code{NULL} if not.}
+    \item{\code{signalErrors(maxreport, clear, call)}:}{ Calls
+      \code{signalErrors} on the \code{Session} object.  If there was a
+      problem, the appropriate condition is signaled, see
+    \code{\link{NeticaCondition}}.  }
     \item{\code{initialize(Name, Session, ...)}:}{ Internal initializer.
      User code should not call.}
   }

@@ -1,0 +1,86 @@
+---
+title: "Using Bayesian Networks for Inference"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Inference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(RNetica)
+```
+
+```{r all}
+
+###################################################################
+##  Inference using the EM-SM algorithm (Almond & Mislevy, 1999).  
+## System/Student model
+sess <- NeticaSession()
+startSession(sess)
+
+EMSMSystem <- ReadNetworks(system.file("sampleNets","System.dne",
+                                       package="RNetica"),
+                           session=sess)
+
+
+## Evidence model for Task 1a
+EMTask1a <- ReadNetworks(system.file("sampleNets","EMTask1a.dne",
+                                     package="RNetica"),
+                         session=sess)
+
+## Evidence model for Task 2a
+EMTask2a <- ReadNetworks(system.file("sampleNets","EMTask2a.dne",
+                                     package="RNetica"),
+                         session=sess)
+
+## Task 1a has a footprint of Skill1 and Skill2 (those are the
+## referenced student model nodes.  So we want joint the footprint into
+## a single clique.
+MakeCliqueNode(NetworkFindNode(EMSMSystem, NetworkFootprint(EMTask1a)))
+## The footprint for Task2 a is already a clique, so no need to do
+## anything. 
+
+## Make a copy for student 1
+student1 <- CopyNetworks(EMSMSystem,"student1")
+## Monitor nodes for proficiency
+student1.prof <- NetworkNodesInSet(student1,"Proficiency")
+
+student1.t1a <- AdjoinNetwork(student1,EMTask1a)
+## We are done with the original EMTask1a now
+DeleteNetwork(EMTask1a)
+
+## Now add findings
+CompileNetwork(student1)
+NodeFinding(student1.t1a$Obs1a1) <- "Right"
+NodeFinding(student1.t1a$Obs1a2) <- "Right"
+
+student1.probt1a <- JointProbability(student1.prof)
+
+## Done with the observables, absorb them
+AbsorbNodes(student1.t1a)
+CompileNetwork(student1)
+student1.probt1ax <- JointProbability(student1.prof)
+
+## Now Task 2
+student1.t2a <- AdjoinNetwork(student1,EMTask2a,"t2a")
+DeleteNetwork(EMTask2a)
+
+## Add findings
+CompileNetwork(student1)
+NodeFinding(student1.t2a$Obs2a) <- "Half"
+
+AbsorbNodes(student1.t2a)
+CompileNetwork(student1)
+student1.probt1a2ax <- JointProbability(student1.prof)
+
+DeleteNetwork(list(student1, EMSMSystem))
+stopSession(sess)
+```

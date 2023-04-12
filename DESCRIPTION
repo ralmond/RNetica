@@ -1,13 +1,38 @@
 Package: RNetica
-Version: 0.9-1
-Date: 2021/07/31
+Version: 0.10-1
+Date: 2022/09/10
 Title: R interface to Netica(R) Bayesian Network Engine 
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
-Depends: R (>= 3.0), methods, utils, CPTtools (>= 0.5-3), futile.logger
+Authors@R: 
+    person(given = "Russell",
+           family = "Almond",
+           role = c("aut", "cre"),
+           email = "ralmond@fsu.edu",
+           comment = c(ORCID = "0000-0002-8876-9337"))
+Depends: R (>= 3.0), methods, utils, CPTtools (>= 0.5-3)
 Imports: grDevices, R.utils
+Suggests: 
+    knitr,
+    rmarkdown,
+    tidyr,
+    futile.logger
+VignetteBuilder: knitr
 Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
 License: file LICENSE
 URL: https://pluto.coe.fsu.edu/RNetica
 Biarch: TRUE
 Collate: Session.R Networks.R Node.R Edges.R Inference.R Cases.R Experience.R Continuous.R Random.R LoadFuns.R Tester.R
+Biarch: true
+Support: c(
+   'Bill & Melinda Gates Foundation grant
+   "Games as Learning/Assessment:  Stealth Assessment" (#0PP1035331,
+   Val Shute, PI)',
+   'National Science Foundation grant "DIP:
+   Game-based Assessment and Support of STEM-related Competencies"
+   (#1628937, Val Shute, PI)',
+   'National Scient Foundation grant "Mathematical Learning via
+   Architectual Design and Modeling Using E-Rebuild." (\#1720533,
+   Fengfeng Ke, PI)',
+   'Institute of Educational Statistics Grant: "Exploring adaptive cognitive and affective learning support for next-generation STEM learning games." (#R305A170376-20, Val Shute and Russell Almond, PIs')	
+   

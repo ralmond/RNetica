@@ -8,10 +8,7 @@ NodeValue <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeValue",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   result
 }
 
@@ -27,10 +24,7 @@ NodeValue <- function (node) {
     stop("Value ", value, " not legal for node ",node)
   }
   handle <- .Call("RN_SetNodeValue",node,val,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 
@@ -50,10 +44,7 @@ NodeValue <- function (node) {
   resetFirst <- as.logical(retractFirst)
   ## Netica bug, calculate likelihood manually.
   ## handle <- .Call("RN_SetNodeGaussian",node,mean,sem,resetFirst,PACKAGE=RNetica)
-  ## ecount <- node$reportErrors()
-  ## if (ecount[1]>0) {
-  ##   stop("Netica Errors Encountered, see console for details.")
-  ## }
+  ## node$signalErrors()
   ## invisible(handle)
   lik <- diff(pnorm(NodeLevels(node),mean,sem))
   if (resetFirst) RetractNodeFinding(node)
@@ -98,10 +89,7 @@ NodeValue <- function (node) {
   resetFirst <- as.logical(retractFirst)
   ## BUG in Netica, work around
   ## handle <- .Call("RN_SetNodeInterval",node,lv,hv,resetFirst,PACKAGE=RNetica)
-  ## ecount <- node$reportErrors()
-  ## if (ecount[1]>0) {
-  ##   stop("Netica Errors Encountered, see console for details.")
-  ## }
+  ## node$signalErrors()
   ## invisible(handle)
   lik <- diff(punif(NodeLevels(node),lv,hv))
   if (resetFirst) RetractNodeFinding(node)
@@ -113,10 +101,7 @@ NodeExpectedValue <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeExpectedValue",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   result
 }
 
@@ -125,10 +110,7 @@ NodeExpectedUtils <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_GetNodeExpectedUtils",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   names(result) <- NodeStates(node)
   result
 }
@@ -138,10 +120,7 @@ CalcNodeState <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_CalcNodeState",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  ecount <- node$signalErrors()
   if (is.numeric(result) && !is.na(result)) {
     result <- NodeStates(node)[result+1] ## Convert to name.
   }
@@ -153,10 +132,7 @@ CalcNodeValue <- function (node) {
     stop ("Node is not an active Netica node", node)
   }
   result <- .Call("RN_CalcNodeValue",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   result
 }
 
@@ -172,10 +148,7 @@ MutualInfo <- function (target, nodelist) {
     stop("Nodelist must be list of active Netica Nodes")
   }
   result <- .Call("RN_GetMutalInfo",target,nodelist,PACKAGE=RNetica)
-  ecount <- target$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  target$signalErrors()
   if (!is.null(names(nodelist))) {
     names(result) <- names(nodelist)
   } else {
@@ -196,10 +169,7 @@ VarianceOfReal <- function (target, nodelist) {
     stop("Nodelist must be list of active Netica Nodes")
   }
   result <- .Call("RN_GetVarianceOfReal",target,nodelist,PACKAGE=RNetica)
-  ecount <-target$reportErrors()
-  if (ecount[1L]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  target$signalErrors()
   if (!is.null(names(nodelist))) {
     names(result) <- names(nodelist)
   } else {
@@ -335,10 +305,7 @@ NodeEquation <- function (node) {
     stop("Expected an active Netica node, got, ",node)
   }
   equation <- .Call("RN_GetNodeEquation",node,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   equation
 }
 
@@ -352,10 +319,7 @@ NodeEquation <- function (node) {
   }
   value <- paste(value,collapse="\n")
   handle <- .Call("RN_SetNodeEquation",node,value,PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   if (autoconvert)
     EquationToTable(node)
   invisible(handle)
@@ -377,10 +341,7 @@ EquationToTable <- function (node, numSamples=25, sampUnc=TRUE,
   }
   handle <- .Call("RN_EquationToTable",node,numSamples,sampUnc,addExist,
                   PACKAGE=RNetica)
-  ecount <- node$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  node$signalErrors()
   invisible(handle)
 }
 

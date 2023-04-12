@@ -70,15 +70,17 @@ sess <- NeticaSession()
 startSession(sess)
 
 ## System/Student model
-EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","System.dne"), session=sess)
+EMSMSystem <- ReadNetworks(system.file("sampleNets","System.dne",
+                                       package="RNetica"),
+                           session=sess)
 
 CompileNetwork(EMSMSystem)
 JunctionTreeReport(EMSMSystem)
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne"), session=sess)
+EMTask1a <- ReadNetworks(system.file("sampleNets","EMTask1a.dne",
+                                     package="RNetica"),
+                         session=sess)
 
 NetworkFootprint(EMTask1a)
 ## The corresponding clique is not in system model, so force it in.
@@ -88,8 +90,9 @@ JunctionTreeReport(EMSMSystem)
 
 
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne"), session=sess)
+EMTask2a <- ReadNetworks(system.file("sampleNets","EMTask2a.dne",
+                                     package="RNetica"),
+                         session=sess)
 NetworkFootprint(EMTask2a)
 ## This is already a clique, so nothing to do.
 

@@ -16,10 +16,7 @@ CaseFileDelimiter <- function (newdelimiter=NULL, session=getDefaultSession()) {
     if (length(newdelimiter)==0) newdelimiter <- 0
   }
   olddelim <- .Call("RN_CaseFileDelimiter",newdelimiter,session,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   intToUtf8(olddelim)
 }
 
@@ -41,10 +38,7 @@ CaseFileMissingCode <- function (newcode=NULL,session=getDefaultSession()) {
     }
   }
   oldcode <- .Call("RN_MissingCode",newcode,session,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   intToUtf8(oldcode)
 }
 
@@ -72,8 +66,16 @@ setRefClass("CaseStream",fields=c(Name="character",
                 isActive = function() {
                   .Call("RN_isCaseStreamActive",.self,PACKAGE=RNetica)
                 },
-                reportErrors = function(maxreport=9,clear=TRUE) {
-                  Session$reportErrors(maxreport,clear)
+                reportErrors = function(maxreport=9,clear=TRUE,
+                                        call = sys.call(sys.parent())) {
+                  Session$reportErrors(maxreport,clear,call)
+                },
+                signalErrors = function(maxreport=9,clear=TRUE,
+                                        call = sys.call(sys.parent())) {
+                  e <- reportErrors(maxreport, clear, call)
+                  if (inherits(e,"error")) stop(e)
+                  if (inherits(e,"warning")) warn(e)
+                  if (inherits(e,"condition")) signalCondition(e)
                 },
                 clearErrors = function(severity="XXX_ERR") {
                   Session$clearErrors(severity)
@@ -125,10 +127,7 @@ setRefClass("FileCaseStream",fields=c(Case_Stream_Path="character"),
                     .Call("RN_OpenCaseFileStream",Case_Stream_Path,
                           .self,Session,
                           PACKAGE=RNetica)
-                  ecount <- Session$reportErrors()
-                  if (ecount[1]>0) {
-                    stop("Netica Errors Encountered, see console for details.")
-                  }
+                  Session$signalErrors()
                   stream
                 },
                 show=function() {
@@ -172,10 +171,7 @@ setRefClass("MemoryCaseStream",fields=c(Case_Stream_DataFrameName="character",
                           Case_Stream_DataFrameName,
                           .self,Session,
                           PACKAGE=RNetica)
-                  ecount <- Session$reportErrors()
-                  if (ecount[1]>0) {
-                    stop("Netica Errors Encountered, see console for details.")
-                  }
+                  Session$signalErrors()
                   stream
                 },
                 show=function() {
@@ -306,10 +302,7 @@ WriteFindings <- function (nodes,pathOrStream,id=-1L,freq=-1.0) {
   session <- NodeNet(nodes[[1]])$Session
   stream <- .Call("RN_WriteFindings",nodes,pathOrStream,id,freq,
                   session,PACKAGE=RNetica)
-  ecount <- session$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  session$signalErrors()
   stream
 }
 
@@ -343,10 +336,7 @@ ReadFindings <- function (nodes, stream, pos="NEXT", add=FALSE) {
     }
   }
   stream <- .Call("RN_ReadFindings",nodes,stream,pos,add,PACKAGE=RNetica)
-  ecount <- nodes[[1]]$reportErrors()
-  if (ecount[1]>0) {
-    stop("Netica Errors Encountered, see console for details.")
-  }
+  nodes[[1]]$signalErrors()
   stream
 }
 
@@ -378,10 +368,7 @@ MemoryStreamContents <- function (stream) {
   }
   if (isCaseStreamOpen(stream)) {
     contents <- .Call("RN_GetMemoryStreamContents",stream,PACKAGE=RNetica)
-    ecount <- stream$reportErrors()
-    if (ecount[1]>0) {
-      stop("Netica Errors Encountered, see console for details.")
-    }
+    stream$signalErrors()
     if (is.null(contents)) {
       result <- NULL
     } else {
@@ -419,10 +406,7 @@ MemoryStreamContents <- function (stream) {
       close(con)
     }
     stream <- .Call("RN_SetMemoryStreamContents",stream,contents,PACKAGE=RNetica)
-    ecount <- stream$reportErrors()
-    if (ecount[1]>0) {
-      stop("Netica Errors Encountered, see console for details.")
-    }
+    stream$signalErrors()
   }
   stream
 }

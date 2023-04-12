@@ -151,8 +151,7 @@ AddLink(A,C)
 AddLink(B,C)
 
 ## This is the file written in CaseFileStream help.
-casefile <- file.path(library(help="RNetica")$path,
-                           "testData","abctestcases.cas")
+casefile <- system.file("testData","abctestcases.cas", package="RNetica")
 CaseFileDelimiter("\t", session=sess)
 CaseFileMissingCode("*", session=sess)
 cases <- read.CaseFile(casefile, session=sess)

@@ -93,21 +93,25 @@ sess <- NeticaSession()
 startSession(sess)
 
 ## System/Student model
-EMSMSystem <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","System.dne"), session=sess)
+EMSMSystem <- ReadNetworks(system.file("sampleNets","System.dne",
+                                       package="RNetica"),
+                                       session=sess)
 
 
 ## Evidence model for Task 1a
-EMTask1a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask1a.dne"), session=sess)
+EMTask1a <- ReadNetworks(system.file("sampleNets","EMTask1a.dne",
+                                      package="RNetica"),
+                                      session=sess)
 
 ## Evidence model for Task 2a
-EMTask2a <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask2a.dne"), session=sess)
+EMTask2a <- ReadNetworks(system.file("sampleNets","EMTask2a.dne",
+                                      package="RNetica"),
+                                      session=sess)
 
 ## Evidence model for Task 2b
-EMTask2b <- ReadNetworks(file.path(library(help="RNetica")$path,
-                           "sampleNets","EMTask2b.dne"), session=sess)
+EMTask2b <- ReadNetworks(system.file("sampleNets","EMTask2b.dne",
+                                      package="RNetica"),
+                                      session=sess)
 
 ## Task 1a has a footprint of Skill1 and Skill2 (those are the
 ## referenced student model nodes.  So we want joint the footprint into
