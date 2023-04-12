@@ -1,3 +1,9 @@
+2023-04-12  Russell Almond  <ralmond@pei>
+
+	* R/Networks.R (NetworkSession): Added this function as it seems to be needed.
+
+	
+
 2023-04-05  Russell Almond  <ralmond@cherry>
 
 	* R/LoadFuns.R (CCodeLoader): Added a check for environmental

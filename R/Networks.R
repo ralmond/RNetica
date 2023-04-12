@@ -344,7 +344,7 @@ GetNetworkFileName <- function (net,internal=FALSE) {
   }
   if (internal) {
     pathname <- .Call("RN_GetNetFilename",net,PACKAGE=RNetica)
-    net$signalErrors()
+    net$signalErrors() 
     pathname
   } else
     net$PathnameName
@@ -353,6 +353,11 @@ GetNetworkFileName <- function (net,internal=FALSE) {
 ################################################################
 ## Getters and Setters for High Level Net properities
 ################################################################
+
+NetworkSession <- function (net) {
+  net$Session
+}
+
 
 NetworkName <- function (net, internal=FALSE) {
   if (!is.NeticaBN(net)) {
@@ -438,6 +443,7 @@ NetworkComment <- function (net) {
   net$signalErrors()
   invisible(handle)
 }
+
 
 GetNetworkAutoUpdate <- function (net) {
   if (!is.NeticaBN(net)) {

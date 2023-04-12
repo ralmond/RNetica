@@ -34,7 +34,7 @@ export(WriteNetworks, ReadNetworks,
        GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
        NetworkUserField, "NetworkUserField<-",
        NetworkUserObj, "NetworkUserObj<-",
-       NetworkAllUserFields,
+       NetworkAllUserFields, NetworkSession,
        dputToString, dgetFromString
 #       NetworkUndo, NetworkRedo  # These don't do anything sensible.
        )
