@@ -68,6 +68,7 @@ stopifnot(
 )
 
 ## These are leaf nodes, shouldn't change topology, except locally. 
+if (NeticaVersion(sess)$number >600) {
 AbsorbNodes(xnodes[4:5])
 stopifnot(
   ## Nodes 4 and 5 are now deleted
@@ -87,7 +88,7 @@ stopifnot(
   is.NodeRelated(xnodes[[1]],xnodes[[3]],"parent"),
   is.NodeRelated(xnodes[[3]],xnodes[[1]],"child")
 )
-
+}
 DeleteNetwork(anet)
 stopSession(sess)
 
