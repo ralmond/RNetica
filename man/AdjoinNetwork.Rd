@@ -155,11 +155,13 @@ stopifnot(
 
 ## Now Task 2
 student1.t2a <- AdjoinNetwork(student1,EMTask2a,as.IDname("t2a"))
+if (NeticaVersion(sess)$number >600) {
 stopifnot(
   setequal(names(student1.t2a),names(NetworkNodesInSet(student1,"t2a")))
 )
 stopifnot(setequal(student1$listNodes(),
  c("CliqueNode1", "Obs2a", "Skill1", "Skill2", "Skill3")))
+}
 DeleteNetwork(EMTask2a)
 
 ## Add findings
@@ -185,9 +187,10 @@ stopifnot(
 ##   numbers.
 AdjoinNetwork(student1,EMTask2b)
 AdjoinNetwork(student1,EMTask2b)
+if (NeticaVersion(sess)$number >600) {
 stopifnot(setequal(student1$listNodes(),
  c("CliqueNode1", "Obs2b", "Obs2b1", "Skill1", "Skill2", "Skill3")))
-
+}
 DeleteNetwork(student1)
 DeleteNetwork(EMTask2b)
 DeleteNetwork(EMSMSystem)
