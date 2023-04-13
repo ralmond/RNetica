@@ -139,9 +139,11 @@ NodeFinding(student1.t1a$Obs1a2) <- "Right"
 
 student1.probt1a <- JointProbability(student1.prof)
 ## Done with the observables, absorb them
+if (NeticaVersion(sess)$number >600) {
 AbsorbNodes(student1.t1a)
 stopifnot(setequal(student1$listNodes(),
  c("CliqueNode1", "Skill1", "Skill2", "Skill3")))
+}
 
 CompileNetwork(student1)
 student1.probt1ax <- JointProbability(student1.prof)
@@ -166,9 +168,11 @@ NodeFinding(student1.t2a$Obs2a) <- "Half"
 
 student1.probt1a2a <- JointProbability(student1.prof)
 
+if (NeticaVersion(sess)$number >600) {
 AbsorbNodes(student1.t2a)
 stopifnot(setequal(student1$listNodes(),
  c("CliqueNode1", "Skill1", "Skill2", "Skill3")))
+}
 CompileNetwork(student1)
 student1.probt1a2ax <- JointProbability(student1.prof)
 
