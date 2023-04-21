@@ -1,3 +1,7 @@
+2023-04-21  Russell Almond  <ralmond@cherry>
+
+	* R/Networks.R (NeticaBN$signalErrors): Fixed warn -> warning (HT mbedward).
+
 2023-04-13  Russell Almond  <ralmond@pei>
 
 	* R/Experience.R ("NodeExperience<-"): Fixed issue with checking for NAs. 

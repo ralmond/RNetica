@@ -57,7 +57,7 @@ NeticaBN <-
                                           call = sys.call(sys.parent())) {
                     e <- reportErrors(maxreport, clear, call)
                     if (inherits(e,"error")) stop(e)
-                    if (inherits(e,"warning")) warn(e)
+                    if (inherits(e,"warning")) warning(e)
                     if (inherits(e,"condition")) signalCondition(e)
                   },
                   clearErrors = function(severity="XXX_ERR") {
