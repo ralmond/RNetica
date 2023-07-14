@@ -73,7 +73,7 @@ if test -z "$NETICA_CFLAGS"; then
 fi
 
 if test -z "$NETICA_LDFLAGS"; then
-   NETICA_LDFLAGS="${INSTALL_LIB}/Netica.dll"
+   NETICA_LDFLAGS="\${R_PACKAGE_DIR}/${INSTALL_LIB}/Netica.dll"
 fi
 
 echo "%%%%%%%%%%%%%%%%%%%%%%%%%%"
