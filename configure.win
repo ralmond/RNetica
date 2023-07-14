@@ -53,11 +53,11 @@ echo "Building for x86..." $x86
 
 if test $x86 = "TRUE"; then
    NETICA_LIB="${NETICA_HOME}/lib64"
-   INSTALL_LIB="$(pwd)/libs/x64"
+   INSTALL_LIB="libs/x64"
    LONG_SIZE=8
 else
    NETICA_LIB="${NETICA_HOME}/lib"
-   INSTALL_LIB="$(pwd)/libs/i386"
+   INSTALL_LIB="libs/i386"
    LONG_SIZE=4
 fi
 
