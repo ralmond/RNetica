@@ -63,9 +63,9 @@ fi
 
 ## Need to do this here, as apparently it is not getting picked up in
 ## Makevars.win
-mkdir -p "${INSTALL_LIB}"
-cp "${NETICA_LIB}/Netica.dll" "${INSTALL_LIB}" 
-cp "${NETICA_LIB}/Netica.lib" "${INSTALL_LIB}" 
+#mkdir -p "${INSTALL_LIB}"
+#cp "${NETICA_LIB}/Netica.dll" "${INSTALL_LIB}" 
+#cp "${NETICA_LIB}/Netica.lib" "${INSTALL_LIB}" 
 
 
 if test -z "$NETICA_CFLAGS"; then

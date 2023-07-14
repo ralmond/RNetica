@@ -14,11 +14,11 @@ PKG_CFLAGS = -I. @NETICA_CFLAGS@ -DLONG_SIZE=${LONG_SIZE}
 
 .PHONY:  all NeticaDLL clean
 
-all: $(SHLIB)
+all: NeticaDLL
 
 
 NeticaDLL:
-	mkdir -p "$(INSTALL_LIB)"
+	mkdir -p "${INSTALL_LIB}"
 	cp "${NETICA_LIB}/Netica.dll" "${INSTALL_LIB}" 
 	cp "${NETICA_LIB}/Netica.lib" "${INSTALL_LIB}" 
 
