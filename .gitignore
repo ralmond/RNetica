@@ -22,3 +22,9 @@ aclocal.m4
 config.h
 #DESCRIPTION#
 symbols.rds
+src/Netica/Makefile
+src/Netica/NeticaAPI.zip
+src/Netica/Netica_API_607/lib/libnetica.a
+src/Netica/Netica_API_607/*
+src/Netica/NeticaAPI.zip
+src/Netica/Makefile
