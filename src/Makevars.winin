@@ -14,7 +14,7 @@ PKG_CFLAGS = -I. @NETICA_CFLAGS@ -DLONG_SIZE=${LONG_SIZE}
 
 .PHONY:  all NeticaDLL clean
 
-all: NeticaDLL $(SHLIB)
+all: $(SHLIB)
 
 
 NeticaDLL:
