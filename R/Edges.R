@@ -628,7 +628,8 @@ setMethod("[[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
     stop("Expected an active netica node, got",x)
   }
   if (!IsNodeDeterministic(x)) {
-    warning("Use of '[[' with chance nodes is depricated: Use numericPart and '['.")
+    ## Suppress the warning as it is RStudio is triggering it randomly
+    ##warning("Use of '[[' with chance nodes is depricated: Use numericPart and '['.")
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
   ## values are only recognized on setting values, so expand them
