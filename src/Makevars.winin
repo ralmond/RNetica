@@ -9,7 +9,7 @@ else
    LONG_SIZE = 4
 endif
 
-PKG_LIBS = -L. -L${INSTALL_LIB} -lNetica
+PKG_LIBS = -L. -l:Netica.dll
 PKG_CFLAGS = -I. @NETICA_CFLAGS@ -DLONG_SIZE=${LONG_SIZE}
 
 .PHONY:  all NeticaDLL clean
@@ -18,10 +18,11 @@ all: NeticaDLL
 
 
 NeticaDLL:
+	cp "$(NETICA_LIB)/Netica.dll" .
 	mkdir -p "${INSTALL_LIB}"
 	cp "${NETICA_LIB}/Netica.dll" "${INSTALL_LIB}" 
 	cp "${NETICA_LIB}/Netica.lib" "${INSTALL_LIB}" 
 
 clean:
 	Netica/clean.win
-	rm config.h
+	rm config.h Netica.dll
