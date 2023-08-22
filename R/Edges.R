@@ -628,6 +628,15 @@ setMethod("[[","NeticaNode", function(x, i, j, ...,  drop=FALSE) {
     stop("Expected an active netica node, got",x)
   }
   if (!IsNodeDeterministic(x)) {
+    ## Work around for rather obscure bug because of 
+    ## R and RStudio interaction
+    rsenv <- call(".rs.environment.isSuspendable")
+    sc <- sys.calls()
+    for (nframe in 1:length(sc)) {
+      if (sc == sc) {
+        stop("No Peeking RStudio!")
+      }
+    }
     warning("Use of '[[' with chance nodes is depricated: Use numericPart and '['.")
   }
   ## Massage selection into a matrix of numeric indexes, EVERY_STATE
