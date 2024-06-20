@@ -112,6 +112,11 @@ NetworkUserObj(userNet,"x") <- x
 x1 <- NetworkUserObj(userNet,"x")
 stopifnot(all(x==x1))
 
+## Better to use the function name, but testing storing 
+## the actual function
+NetworkUserObj(userNet,"rule") <- CPTtools::Compensatory
+NetworkUserObj(userNet,"rule")
+
 DeleteNetwork(userNet)
 stopSession(sess)
 }

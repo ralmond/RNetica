@@ -536,7 +536,7 @@ NetworkUserObj <- function (net, fieldname) {
   sval <- dputToString(value)
   ## Sometimes R "helpfully" breaks this into multiple lines.
   if (length(sval) > 1)
-    sval <- paste(sval,collapse=" ")
+    sval <- paste(sval,collapse="\n")
   NetworkUserField(net,fieldname) <- sval
   net
 }
