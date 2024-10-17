@@ -1,0 +1,70 @@
+// ~->[DNET-1]->~
+
+// File created by AlmondR at FloridaStateU using Netica 6.09 on Oct 16, 2024 at 23:26:10 UTC.
+
+bnet ReadingTask {
+autoupdate = TRUE;
+whenchanged = 1729121170;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (210, 98, 1285, 542);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Reading_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Reading";
+	whenchanged = 1729121131;
+	};
+
+node TaskA {
+	discrete = TRUE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	kind = NATURE;
+	chance = CHANCE;
+	inputs = (Reading);
+	parents = (X_Reading_1);
+	probs = 
+		// Poor         Okay         Good         Very Good     // Reading      
+		  (0.5,         0.375,       0.115,       0.01,         // Novice       
+		   0.2,         0.3,         0.3,         0.2,          // Intermediate 
+		   0.01,        0.125,       0.375,       0.49);        // Advanced     ;
+	title = "TaskA";
+	whenchanged = 1121108131;
+	visual V1 {
+		center = (180, 120);
+		height = 7;
+		link 1 {
+			labelposn = (182, 55, 229, 70);
+			path = ((180, 55), (180, 80));
+			};
+		};
+	};
+};

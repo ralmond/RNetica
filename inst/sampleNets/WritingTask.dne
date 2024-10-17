@@ -1,0 +1,89 @@
+// ~->[DNET-1]->~
+
+// File created by AlmondR at FloridaStateU using Netica 6.09 on Oct 16, 2024 at 23:27:04 UTC.
+
+bnet WritingTask {
+autoupdate = TRUE;
+whenchanged = 1729121224;
+
+visual V2 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (88, 88, 1163, 532);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Reading_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Reading";
+	whenchanged = 1729121183;
+	};
+
+param X_Writing_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Writing";
+	whenchanged = 1729121183;
+	};
+
+node TaskB {
+	discrete = TRUE;
+	states = (PoorW_Off_, PoorW_On_, GoodW_Off_, GoodW_On_);
+	statetitles = ("PoorW(Off)", "PoorW(On)", "GoodW(Off)", "GoodW(On)");
+	kind = NATURE;
+	chance = CHANCE;
+	inputs = (Reading, Writing);
+	parents = (X_Reading_1, X_Writing_1);
+	probs = 
+		// PoorW(Off)   PoorW(On)    GoodW(Off)   GoodW(On)     // Reading      Writing      
+		  (0.8,         0.1,         0.1,         0,            // Novice       Novice       
+		   0.4,         0.4,         0.1,         0.1,          // Novice       Intermediate 
+		   0.3,         0.3,         0.2,         0.2,          // Novice       Advanced     
+		   0.4,         0.3,         0.2,         0.1,          // Intermediate Novice       
+		   0.1,         0.2,         0.3,         0.4,          // Intermediate Intermediate 
+		   0.1,         0.1,         0.2,         0.6,          // Intermediate Advanced     
+		   0.1,         0.3,         0.3,         0.3,          // Advanced     Novice       
+		   0,           0.1,         0.2,         0.7,          // Advanced     Intermediate 
+		   0,           0.05,        0.05,        0.9);         // Advanced     Advanced     ;
+	title = "TaskB";
+	whenchanged = 1121108131;
+	visual V2 {
+		center = (300, 120);
+		height = 5;
+		link 1 {
+			labelposn = (341, 55, 388, 70);
+			path = ((339, 55), (324, 80));
+			};
+		link 2 {
+			labelposn = (272, 55, 310, 70);
+			path = ((261, 55), (276, 80));
+			};
+		};
+	};
+};

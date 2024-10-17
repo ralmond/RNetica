@@ -1,0 +1,120 @@
+// ~->[DNET-1]->~
+
+// File created by AlmondR at FloridaStateU using Netica 6.09 on Oct 16, 2024 at 23:28:13 UTC.
+
+bnet SpeakingTask {
+autoupdate = TRUE;
+whenchanged = 1729121293;
+
+visual V3 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (110, 110, 1185, 554);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Reading_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Reading";
+	whenchanged = 1729121273;
+	};
+
+param X_Speaking_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Speaking";
+	whenchanged = 1729121273;
+	};
+
+param X_Listening_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Listening";
+	whenchanged = 1729121273;
+	};
+
+node TaskC {
+	discrete = TRUE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	kind = NATURE;
+	chance = CHANCE;
+	inputs = (Reading, Speaking, Listening);
+	parents = (X_Reading_1, X_Speaking_1, X_Listening_1);
+	probs = 
+		// Poor         Okay         Good         Very Good     // Reading      Speaking     Listening    
+		  (0.8,         0.1,         0.1,         0,            // Novice       Novice       Novice       
+		   0.5,         0.3,         0.2,         0,            // Novice       Novice       Intermediate 
+		   0.2,         0.3,         0.3,         0.2,          // Novice       Novice       Advanced     
+		   0.7,         0.2,         0.1,         0,            // Novice       Intermediate Novice       
+		   0.1,         0.4,         0.4,         0.1,          // Novice       Intermediate Intermediate 
+		   0,           0.1,         0.3,         0.6,          // Novice       Intermediate Advanced     
+		   0.2,         0.3,         0.3,         0.2,          // Novice       Advanced     Novice       
+		   0,           0.1,         0.3,         0.6,          // Novice       Advanced     Intermediate 
+		   0,           0.1,         0.2,         0.7,          // Novice       Advanced     Advanced     
+		   0.8,         0.1,         0.1,         0,            // Intermediate Novice       Novice       
+		   0.5,         0.3,         0.2,         0,            // Intermediate Novice       Intermediate 
+		   0.2,         0.3,         0.3,         0.2,          // Intermediate Novice       Advanced     
+		   0.5,         0.3,         0.2,         0,            // Intermediate Intermediate Novice       
+		   0.1,         0.4,         0.4,         0.1,          // Intermediate Intermediate Intermediate 
+		   0,           0.1,         0.2,         0.7,          // Intermediate Intermediate Advanced     
+		   0.2,         0.3,         0.3,         0.2,          // Intermediate Advanced     Novice       
+		   0,           0.1,         0.2,         0.7,          // Intermediate Advanced     Intermediate 
+		   0,           0.1,         0.1,         0.8,          // Intermediate Advanced     Advanced     
+		   0.7,         0.2,         0.1,         0,            // Advanced     Novice       Novice       
+		   0.5,         0.2,         0.2,         0.1,          // Advanced     Novice       Intermediate 
+		   0.3,         0.2,         0.2,         0.3,          // Advanced     Novice       Advanced     
+		   0.4,         0.3,         0.2,         0.1,          // Advanced     Intermediate Novice       
+		   0.1,         0.4,         0.4,         0.1,          // Advanced     Intermediate Intermediate 
+		   0.05,        0.1,         0.15,        0.7,          // Advanced     Intermediate Advanced     
+		   0.05,        0.1,         0.25,        0.6,          // Advanced     Advanced     Novice       
+		   0.05,        0.1,         0.15,        0.7,          // Advanced     Advanced     Intermediate 
+		   0,           0,           0.1,         0.9);         // Advanced     Advanced     Advanced     ;
+	title = "TaskC";
+	whenchanged = 1121117912;
+	visual V3 {
+		center = (372, 216);
+		height = 6;
+		link 1 {
+			labelposn = (436, 154, 483, 169);
+			path = ((436, 152), (412, 176));
+			};
+		link 2 {
+			labelposn = (308, 135, 360, 150);
+			path = ((308, 152), (332, 176));
+			};
+		link 3 {
+			labelposn = (374, 149, 424, 164);
+			path = ((372, 149), (372, 176));
+			};
+		};
+	};
+};
