@@ -88,7 +88,7 @@ export(
    NetworkCompiledSize, JunctionTreeReport,
    NodeFinding, "NodeFinding<-", EnterNegativeFinding,
    RetractNetFindings, RetractNodeFinding, EnterFindings,
-   NodeBeliefs, IsBeliefUpdated,
+   NodeBeliefs, IsBeliefUpdated, NodeMode,
    NodeLikelihood, "NodeLikelihood<-",
    JointProbability, FindingsProbability, MostProbableConfig
  )
@@ -112,7 +112,7 @@ export(CaseFileDelimiter,CaseFileMissingCode,
        getCaseStreamPos,getCaseStreamLastFreq,
        getCaseStreamDataFrameName,
        MemoryStreamContents,"MemoryStreamContents<-",
-       read.CaseFile,write.CaseFile,
+       read.CaseFile,write.CaseFile,orderVars,
        WriteFindings,ReadFindings,
        NodeExperience, "NodeExperience<-",
        FadeCPT, LearnFindings,

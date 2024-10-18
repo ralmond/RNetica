@@ -362,6 +362,18 @@ write.CaseFile <- function(x,file,...,session=getDefaultSession()) {
 
 }
 
+orderVars <- function(data,nodes) {
+  for (vname in names(data)) {
+    node <- nodes[[vname]]
+    if (!is.null(node)) {
+      data[[vname]] <- ordered(data[[vname]],NodeStates(node))
+    }
+  }
+  data
+}
+  
+  
+
 MemoryStreamContents <- function (stream) {
   if (!is.MemoryCaseStream(stream)) {
     stop("MemoryStreamContents only worksfor MemoryCaseStreams.")
