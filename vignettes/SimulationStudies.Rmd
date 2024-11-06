@@ -35,7 +35,7 @@ This exercise uses the language assessment proposed in @Mislevy1995.
 Based on that paper, the following Netica files were built (and are distributed in the "sampleNets" directory of the `RNetica` package.)
 
 | Model       | Filename          | Variables                             | Replications |
-|------------------|-----------------------------|-------------|-------------|
+|----------------|--------------------------|----------------|----------------|
 | Proficiency | LanguagePM.dne    | Reading, Writing, Speaking, Listening | `NA`         |
 | Reading     | ReadingTask.dne   | TaskA                                 | 5            |
 | Writing     | WritingTask.dne   | TaskB                                 | 3            |
@@ -78,11 +78,11 @@ for (em in ems) {
 
 ## Build the motif
 
-While the proficiency model is a complete Bayesian network, the evidence models (with "Task" in their name) are fragments.  In particular, they have unconnected edges corresponding to the node of the proficiency variables.  The `AdjoinNetwork()` function copies the evidence model into the active network and reconnects the edges.  A network containing the proficiency model plus one or more evidence models is a _motif_.
+While the proficiency model is a complete Bayesian network, the evidence models (with "Task" in their name) are fragments. In particular, they have unconnected edges corresponding to the node of the proficiency variables. The `AdjoinNetwork()` function copies the evidence model into the active network and reconnects the edges. A network containing the proficiency model plus one or more evidence models is a *motif*.
 
 For testing purposes, motifs with just the proficiency variable and the evidence model for a single task are useful.
 
-For evaluating an assessment form, a motif consisting of the proficiency model plus evidence models for all of the tasks is what is needed.  To construct this, adjoin copies of the evidence models according the the form design given in the `reps` variable.
+For evaluating an assessment form, a motif consisting of the proficiency model plus evidence models for all of the tasks is what is needed. To construct this, adjoin copies of the evidence models according the the form design given in the `reps` variable.
 
 ```{r buildMotif}
 ## If reruning this code, delete the motif.
@@ -97,6 +97,7 @@ for (whichTask in 1:length(reps.form16)) {
 observables <- NetworkNodesInSet(motif16,"Observables")
 names(observables)
 ```
+
 ```{r profs}
 proficiencies <- NetworkNodesInSet(motif16,"Proficiencies")
 names(proficiencies)
@@ -108,10 +109,9 @@ Finally, compile the network.
 CompileNetwork(motif16)
 ```
 
-
 # The Simulation
 
-First set some constants.  `B` is the number of cases to simulate.  
+First set some constants. `B` is the number of cases to simulate.
 
 ```{r simData}
 B <- 1000L
@@ -123,8 +123,7 @@ allvars <- c(proficiencies,observables)
 
 ## Setup space for the simulation.
 
-The sample data and true values for the proficiency variables.  However, need a space for the margin scores.
-Pre-allocating the space makes the simulation run faster.
+The sample data and true values for the proficiency variables. However, need a space for the margin scores. Pre-allocating the space makes the simulation run faster.
 
 ```{r preallocation}
 varstatenames <- 
@@ -135,22 +134,19 @@ motif16.modes <- matrix(NA_character_,B,length(proficiencies))
 colnames(motif16.modes) <- names(proficiencies)
 ```
 
-
-
-
 ## Simulate Proficiency Variables and observables
 
 Loop through the simulees.
 
-1. Generate the data using the motif.
+1.  Generate the data using the motif.
 
-2. Write out the cases.
+2.  Write out the cases.
 
-3. Retract the generated proficiency variables.
+3.  Retract the generated proficiency variables.
 
-4. Collect the marginal distributions for the proficiency variables.
+4.  Collect the marginal distributions for the proficiency variables.
 
-5. Unset all variables.
+5.  Unset all variables.
 
 ```{r}
 WithOpenCaseStream(filestream,
@@ -170,7 +166,7 @@ WithOpenCaseStream(filestream,
     }))
 ```
 
-Read the case data back in, and bind the raw data to the scores.  Use the `orderVars` function to convert to factors.
+Read the case data back in, and bind the raw data to the scores. Use the `orderVars` function to convert to factors.
 
 ```{r readCaseData}
 motif16.data <- orderVars(read.CaseFile(casefile,session=sess),
@@ -180,7 +176,6 @@ motif16.data <- data.frame(motif16.data,motif16.margins,
                            mode=motif16.modes)
 head(motif16.data)
 ```
-
 
 # Evaluate the Form
 
@@ -194,6 +189,15 @@ names(motif16.cm) <- names(proficiencies)
 motif16.cm$Reading
 ```
 
+```{r}
+lapply(motif16.cm,gkLambda)
+```
+
+```{r}
+lapply(motif16.cm,fcKappa)
+```
+
+
 
 ## Build Expected Confusion Matrixes
 
@@ -204,8 +208,6 @@ motif16.em <-
 names(motif16.em) <- names(proficiencies)
 motif16.em$Reading
 ```
-
-
 
 ## Goodman and Kruskal Lambda
 
@@ -234,6 +236,7 @@ CompileNetwork(motif24)
 ```
 
 ## Redo the simulation
+
 ```{r simData24}
 B <- 1000L
 casefile <- tempfile("motif24test",fileext=".cas")
@@ -241,6 +244,7 @@ filestream <- CaseFileStream(casefile, session=sess)
 allvars <- c(proficiencies,observables)
 rng <- NewNeticaRNG(677912356, session=sess)
 ```
+
 ```{r preallocation24}
 varstatenames <- 
   names(unlist(lapply(proficiencies,NodeBeliefs)))
@@ -267,7 +271,6 @@ WithOpenCaseStream(filestream,
       RetractNetFindings(motif24)
     }))
 ```
-
 
 ```{r readCaseData24}
 motif24.data <- orderVars(read.CaseFile(casefile,session=sess),
