@@ -139,6 +139,8 @@ export(testerNet, testerTarget, testerIgnore,
        testNetwork)
 S3method(summary,NetworkTester)
 
+export(SetupDefaultSession,local_create_nets,local_load_nets,
+       local_copy_nets,local_RNetica_net)
 
 ## Now called from .onLoad so we can explicitly load it.
 ##useDynLib(RNetica)
