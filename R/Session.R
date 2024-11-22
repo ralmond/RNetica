@@ -338,9 +338,9 @@ getDefaultSession <- function() {
     }
     if (exists("NeticaLicenseKey",envir=.GlobalEnv)) {
       key <- get("NeticaLicenseKey",envir=.GlobalEnv)
-      defSess <- NeticaSession$new(LicenseKey=key)
+      defSess <- NeticaSession(LicenseKey=key)
     } else {
-      defSess <- NeticaSession$new()
+      defSess <- NeticaSession()
     }
     assign("DefaultNeticaSession",defSess,envir=.GlobalEnv)
   }
