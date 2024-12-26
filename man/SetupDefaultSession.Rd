@@ -17,14 +17,12 @@ SetupDefaultSession(license = options("NeticaLicenseKey")[[1]],
                     env = .GlobalEnv)
 }
 \arguments{
-  \item{LicenseKey}{If supplied, this should be a character scalar
+  \item{license}{If supplied, this should be a character scalar
     providing the license key purchased from Norsys
     \url{http://www.norsys.com/}.  If left as default, and if the
     license key is not set in Netica, RNetica will run
     in a limited mode.}
-  \item{SessionName}{A character vector giving an identifier for the
-    session.  Only used in printing.}
-  \item{Checking}{Object of class \code{character} one of the 
+  \item{checking}{Object of class \code{character} one of the 
       keywords: 
     \code{"NO_CHECK"}, \code{"QUICK_CHECK"}, \code{"REGULAR_CHECK"},
     \code{"COMPLETE_CHECK"}, or \code{"QUERY_CHECK"}, which controls how
@@ -37,7 +35,7 @@ SetupDefaultSession(license = options("NeticaLicenseKey")[[1]],
       used by the Netica shared library in bytes.  If supplied, this
       should be at least 200,000.
     }
-  \item{env}{An R \link{envirnoment} passed to \code{withr::defer}, see details.
+  \item{env}{An R \link[base]{envirnoment} passed to \code{withr::defer}, see details.
   }
 }
 \details{

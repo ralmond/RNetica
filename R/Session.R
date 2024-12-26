@@ -370,7 +370,7 @@ StopNetica <- function(session=getDefaultSession()) {
 
 SetupDefaultSession <- function(license=options("NeticaLicenseKey")[[1]],
                                 checking=NULL, maxmem=NULL, env=.GlobalEnv) {
-  if (exists("DefaultNeticaSession",env=.GlobalEnv)) {
+  if (exists("DefaultNeticaSession",envir=.GlobalEnv)) {
     defSess <- get("DefaultNeticaSession",envir=.GlobalEnv)
     if (!is(defSess,"NeticaSession")) stop("Weird DefaultNeticaSession.")
   } else {

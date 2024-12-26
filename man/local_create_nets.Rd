@@ -11,7 +11,7 @@
   sure it is deleted when the testing is completed.  In the
   \code{testthat} framework these are called \code{local_} functions.
   They wrap the functions \code{\link{CreateNetwork}},
-  \code{\link{CopyNetwork}}, and \code{\link{ReadNetworks}} with a 
+  \code{\link{CopyNetworks}}, and \code{\link{ReadNetworks}} with a 
   call to \code{withr::\link[withr::defer]{defer}} function to ensure
   that \code{\link{DeleteNetwork}()} is called when the network is no
   longer needed.
@@ -26,6 +26,7 @@ local_RNetica_net(filename, session=getDefaultSession(), env=parent.frame())
 \arguments{
   \item{names}{Character vector of name(s) for the new network(s).}
   \item{nets}{The network to be copied or a list of networks to be copied.}
+  \item{netpaths}{The pathnames of the network files loaded networks to be copied.}
   \item{newnames}{A character vector of new names for the copied networks.}
   \item{options}{Options passed to \code{\link{CopyNetworks}}.}
   \item{filename}{The name of a file in the "sampleNets" directory of
@@ -82,12 +83,12 @@ local_RNetica_net(filename, session=getDefaultSession(), env=parent.frame())
 \examples{
 SetupDefaultSession()
 testLoader <- function() {
-  bna <- load_RNetica_net("binAll.dne")
+  bna <- local_RNetica_net("System.dne")
   print(bna)
 }
-GetNamedNetworks("binAll") # Should be null
+GetNamedNetworks("System") # Should be null
 testLoader() # should be active
-GetNamedNetworks("binAll") # Should be inactive (deleted)
+GetNamedNetworks("System") # Should be inactive (deleted)
 
 withr::deferred_run()  # Stops Netica.
 }
