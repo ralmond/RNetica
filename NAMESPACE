@@ -88,7 +88,7 @@ export(
    NetworkCompiledSize, JunctionTreeReport,
    NodeFinding, "NodeFinding<-", EnterNegativeFinding,
    RetractNetFindings, RetractNodeFinding, EnterFindings,
-   NodeBeliefs, IsBeliefUpdated,
+   NodeBeliefs, IsBeliefUpdated, NodeMode,
    NodeLikelihood, "NodeLikelihood<-",
    JointProbability, FindingsProbability, MostProbableConfig
  )
@@ -112,7 +112,7 @@ export(CaseFileDelimiter,CaseFileMissingCode,
        getCaseStreamPos,getCaseStreamLastFreq,
        getCaseStreamDataFrameName,
        MemoryStreamContents,"MemoryStreamContents<-",
-       read.CaseFile,write.CaseFile,
+       read.CaseFile,write.CaseFile,orderVars,
        WriteFindings,ReadFindings,
        NodeExperience, "NodeExperience<-",
        FadeCPT, LearnFindings,
@@ -139,6 +139,8 @@ export(testerNet, testerTarget, testerIgnore,
        testNetwork)
 S3method(summary,NetworkTester)
 
+export(SetupDefaultSession,local_create_nets,local_load_nets,
+       local_copy_nets,local_RNetica_net)
 
 ## Now called from .onLoad so we can explicitly load it.
 ##useDynLib(RNetica)

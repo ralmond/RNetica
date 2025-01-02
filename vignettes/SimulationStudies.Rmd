@@ -1,0 +1,323 @@
+---
+title: "Simulation Studies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SimulationStudies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(RNetica)
+library(CPTtools)
+```
+
+## Netica Setup
+
+If you have a license key from Norsys, set the value of `"NETICA_LICENSE_KEY"` in `~/.Renviron`.
+
+```{r startNetica}
+sess <- NeticaSession(LicenseKey = Sys.getenv("NETICA_LICENSE_KEY"))
+startSession(sess)
+```
+
+## Build the network for the test form.
+
+This exercise uses the language assessment proposed in @Mislevy1995.
+
+Based on that paper, the following Netica files were built (and are distributed in the "sampleNets" directory of the `RNetica` package.)
+
+| Model       | Filename          | Variables                             | Replications |
+|----------------|--------------------------|----------------|----------------|
+| Proficiency | LanguagePM.dne    | Reading, Writing, Speaking, Listening | `NA`         |
+| Reading     | ReadingTask.dne   | TaskA                                 | 5            |
+| Writing     | WritingTask.dne   | TaskB                                 | 3            |
+| Speaking    | SpeakingTask.dne  | TaskC                                 | 3            |
+| Listening   | ListeningTask.dne | TaskD                                 | 5            |
+
+: Networks in Language Model
+
+```{r form design}
+
+pmname <- "LanguagePM"
+tasks <- c("Reading","Writing","Speaking","Listening")
+reps.form16<-c(5,3,3,5)
+```
+
+Load the proficiency and evidence models.
+
+```{r LoadNets}
+pmfile <- system.file(paste0("sampleNets/",
+                             pmname,".dne"),
+                      package="RNetica")
+pm <- ReadNetworks(pmfile,session=sess)
+
+emfiles <- system.file(paste0("sampleNets/",
+                              tasks,
+                              "Task.dne"),
+                       package="RNetica")
+ems <- ReadNetworks(emfiles,session=sess)
+```
+
+Putting the proficiency variables and observable variables into node sets will make it easier to find them later.
+
+```{r nodeSets}
+proficiencies <- NetworkAllNodes(pm)
+NetworkNodesInSet(pm,"Proficiencies") <- proficiencies
+for (em in ems) {
+  NetworkNodesInSet(em,"Observables") <- NetworkAllNodes(em)
+}
+```
+
+## Build the motif
+
+While the proficiency model is a complete Bayesian network, the evidence models (with "Task" in their name) are fragments. In particular, they have unconnected edges corresponding to the node of the proficiency variables. The `AdjoinNetwork()` function copies the evidence model into the active network and reconnects the edges. A network containing the proficiency model plus one or more evidence models is a *motif*.
+
+For testing purposes, motifs with just the proficiency variable and the evidence model for a single task are useful.
+
+For evaluating an assessment form, a motif consisting of the proficiency model plus evidence models for all of the tasks is what is needed. To construct this, adjoin copies of the evidence models according the the form design given in the `reps` variable.
+
+```{r buildMotif}
+## If reruning this code, delete the motif.
+if (exists("motif16") && is.active(motif16))
+  DeleteNetwork(motif16)
+motif16 <- CopyNetworks(pm,"motif16")
+for (whichTask in 1:length(reps.form16)) {
+  for (iTasks in 1:reps.form16[whichTask]) {
+    newobs <- AdjoinNetwork(motif16,ems[[whichTask]])
+  }
+}
+observables <- NetworkNodesInSet(motif16,"Observables")
+names(observables)
+```
+
+```{r profs}
+proficiencies <- NetworkNodesInSet(motif16,"Proficiencies")
+names(proficiencies)
+```
+
+Finally, compile the network.
+
+```{r compile}
+CompileNetwork(motif16)
+```
+
+# The Simulation
+
+First set some constants. `B` is the number of cases to simulate.
+
+```{r simData}
+B <- 1000L
+casefile16 <- tempfile("motif16test",fileext=".cas")
+filestream <- CaseFileStream(casefile16, session=sess)
+rng <- NewNeticaRNG(123456779, session=sess)
+allvars <- c(proficiencies,observables)
+```
+
+## Setup space for the simulation.
+
+The sample data and true values for the proficiency variables. However, need a space for the margin scores. Pre-allocating the space makes the simulation run faster.
+
+```{r preallocation}
+varstatenames <- 
+  names(unlist(lapply(proficiencies,NodeBeliefs)))
+motif16.margins <- matrix(NA_real_,B,length(varstatenames))
+colnames(motif16.margins) <- varstatenames
+motif16.modes <- matrix(NA_character_,B,length(proficiencies))
+colnames(motif16.modes) <- names(proficiencies)
+```
+
+## Simulate Proficiency Variables and observables
+
+Loop through the simulees.
+
+1.  Generate the data using the motif.
+
+2.  Write out the cases.
+
+3.  Retract the generated proficiency variables.
+
+4.  Collect the marginal distributions for the proficiency variables.
+
+5.  Unset all variables.
+
+```{r}
+WithOpenCaseStream(filestream,
+  WithRNG(rng,
+    for (b in 1L:B) {
+      ## 1.  Generate the data
+      GenerateRandomCase(allvars,rng=rng)
+      ## 2. Write the findings both proficiency and observable variables.
+      WriteFindings(allvars,filestream,b)
+      ## 3. Retract the proficiency "findings", this leaves the marginal "scores" of the remaining variables.
+      lapply(proficiencies,RetractNodeFinding) 
+      ## 4. Save the marginal distributions
+      motif16.margins[b,] <- unlist(lapply(proficiencies,NodeBeliefs))
+      motif16.modes[b,] <- unlist(lapply(proficiencies,NodeMode))
+      ## 5. Now clear out the rest of the nodes.
+      RetractNetFindings(motif16)
+    }))
+```
+
+Read the case data back in, and bind the raw data to the scores. Use the `orderVars` function to convert to factors.
+
+```{r readCaseData}
+motif16.data <- orderVars(read.CaseFile(casefile16,session=sess),
+                          allvars)
+motif16.modes <- orderVars(as.data.frame(motif16.modes),proficiencies)
+motif16.data <- data.frame(motif16.data,motif16.margins,
+                           mode=motif16.modes)
+head(motif16.data)
+```
+
+# Evaluate the Form
+
+The basic tool used to see how accurately the latent variables can be estimated is the confusion matrix.  Let $a_{km}$ be the count of the number of cases where the simulated state was $k$ and the estimated state was $m$.  Several statistics are available using that matrix.
+
+## Build Confusion Matrixes
+
+The basic confusion matrix can be built using the `table()` function.
+
+```{r}
+motif16.cm <- 
+  lapply(names(proficiencies), function (p)
+         table(motif16.data[,paste0(c("","mode."),p)]))
+names(motif16.cm) <- names(proficiencies)
+motif16.cm$Reading
+```
+
+The function `CPTtools::accuracy` gives the fraction of cases on the diagonal.
+
+```{r}
+sapply(motif16.cm,CPTtools::accuracy)
+```
+
+The Goodman--Kruskal lambda statistic corrects for agreement by simply guessing the most populuous category.
+
+```{r}
+round(sapply(motif16.cm,CPTtools::gkLambda),3)
+```
+
+And the Fleis-Cohen kappa corrects for random agreement.
+
+```{r}
+round(sapply(motif16.cm,CPTtools::fcKappa),3)
+```
+
+These are all explained in greater detail in the vignette `vignette("MeasuringAgreement", package="CPTtools")`.
+
+## Build Expected Confusion Matrixes
+
+Using the marginal distributions instead of the modal predictions, we can construct an expected confusion matrix.  This is done using the function `CPTtools::expTable`.
+
+```{r}
+motif16.em <- 
+  lapply(names(proficiencies), function (p)
+         CPTtools::expTable(motif16.data,p,p,"<var>\\.<state>"))
+names(motif16.em) <- names(proficiencies)
+round(motif16.em$Reading,3)
+```
+
+The same statistics can be used for looking at agreement:
+
+```{r}
+round(data.frame(
+  Accuracy=sapply(motif16.em,CPTtools::accuracy),
+  Lambda=sapply(motif16.em,CPTtools::gkLambda),
+  Kappa =sapply(motif16.em,CPTtools::fcKappa)),
+  3)
+```
+
+
+# Try again with a longer test:
+
+Now use six tasks of each type.
+
+```{r buildMotif24}
+motif24.addreps <- c(1,3,3,1)
+reps.form24 <- reps.form16+motif24.addreps
+## If reruning this code, delete the motif.
+if (exists("motif24") && is.active(motif24))
+  DeleteNetwork(motif24)
+motif24 <- CopyNetworks(motif16,"motif24")
+for (whichTask in 1:length(motif24.addreps)) {
+  for (iTasks in 1:motif24.addreps[whichTask]) {
+    newobs <- AdjoinNetwork(motif24,ems[[whichTask]])
+  }
+}
+observables <- NetworkNodesInSet(motif24,"Observables")
+## Same names, but different nodes in different networks.
+proficiencies <- NetworkNodesInSet(motif24,"Proficiencies")
+CompileNetwork(motif24)
+```
+
+## Redo the simulation
+
+```{r simData24}
+B <- 1000L
+casefile24 <- tempfile("motif24test",fileext=".cas")
+filestream <- CaseFileStream(casefile24, session=sess)
+allvars <- c(proficiencies,observables)
+rng <- NewNeticaRNG(677912356, session=sess)
+```
+
+```{r preallocation24}
+varstatenames <- 
+  names(unlist(lapply(proficiencies,NodeBeliefs)))
+motif24.margins <- matrix(NA_real_,B,length(varstatenames))
+colnames(motif24.margins) <- varstatenames
+motif24.modes <- matrix(NA_character_,B,length(proficiencies))
+colnames(motif24.modes) <- names(proficiencies)
+```
+
+```{r}
+WithOpenCaseStream(filestream,
+  WithRNG(rng,
+    for (b in 1L:B) {
+      ## 1.  Generate the data
+      GenerateRandomCase(allvars,rng=rng)
+      ## 2. Write the findings both proficiency and observable variables.
+      WriteFindings(allvars,filestream,b)
+      ## 3. Retract the proficiency "findings", this leaves the marginal "scores" of the remaining variables.
+      lapply(proficiencies,RetractNodeFinding) 
+      ## 4. Save the marginal distributions
+      motif24.margins[b,] <- unlist(lapply(proficiencies,NodeBeliefs))
+      motif24.modes[b,] <- unlist(lapply(proficiencies,NodeMode))
+      ## 5. Now clear out the rest of the nodes.
+      RetractNetFindings(motif24)
+    }))
+```
+
+```{r readCaseData24}
+motif24.data <- orderVars(read.CaseFile(casefile24,session=sess),
+                          allvars)
+motif24.modes <- orderVars(as.data.frame(motif16.modes),proficiencies)
+motif24.data <- data.frame(motif24.data,motif16.margins,
+                           mode=motif24.modes)
+head(motif24.data)
+```
+
+
+# Using the built-in NetworkTester
+
+Rather than calculating the expected values by hand, the Netica `NeticaTester` object can be used instead.  
+
+This function uses the case file we generated above, but marks certain nodes as targets, whose values will be estimated and the estimated values compared with the actual (simulated) values.
+
+[Note, the network is inferred from the nodes in the list of target variables, `proficiencies`.  In this case, these are the nodes in the `motif24` network.  However, that doesn't matter as the extra observables won't be referenced.]
+
+```{r}
+filestream16 <- CaseFileStream(casefile16,session=sess)
+motif16.test <- 
+  testNetwork(proficiencies,
+              OpenCaseStream(filestream16))
+summary(motif16.test)
+```
+

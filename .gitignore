@@ -1,4 +1,4 @@
-#*#
+\#*
 *.o
 *~
 .Rproj.user
@@ -21,11 +21,12 @@ Makevars
 aclocal.m4
 ./
 config.h
-#DESCRIPTION#
 symbols.rds
+inst/doc
 src/Netica/Makefile
 src/Netica/NeticaAPI.zip
 src/Netica/Netica_API_607/lib/libnetica.a
 src/Netica/Netica_API_607/*
 src/Netica/NeticaAPI.zip
 src/Netica/Makefile
+

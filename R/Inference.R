@@ -131,6 +131,11 @@ NodeBeliefs <- function (node) {
   result
 }
 
+NodeMode <- function(node) {
+  names(which.max(NodeBeliefs(node)))
+}
+  
+
 NodeLikelihood <- function (node) {
   if (!is.NeticaNode(node) || !is.active(node)) {
     stop ("Node is not an active Netica node", node)

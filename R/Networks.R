@@ -566,3 +566,34 @@ NetworkRedo <- function (net) {
   invisible(flag)
 }
 
+
+### "Local" network creation tools.  These use withr::defer to ensure
+### that the network is deleted when the environment (by default the
+### calling function) is exited.
+
+local_create_nets <- function(names, session=getDefaultSession(),
+                              env=parent.frame()) {
+  nets <- CreateNetwork(names,session)
+  withr::defer(DeleteNetwork(nets),env)
+  nets
+}
+
+local_load_nets <- function(netpaths, session=getDefaultSession(),
+                            env=parent.frame()) {
+  nets <- ReadNetworks(netpaths,session)
+  withr::defer(DeleteNetwork(nets),env)
+  nets
+}
+local_copy_nets <- function(nets, newnames, options=character(0), env=parent.frame()) {
+  newnets <- CopyNetworks(nets,newnames,options)
+  withr::defer(DeleteNetwork(newnets),env)
+  newnets
+}
+
+## These are just wrappers to make grabbing examples from the packages easier.
+
+local_RNetica_net <- function(filename, session=getDefaultSession(),
+                              env=parent.frame())
+  local_load_nets(system.file(file.path("sampleNets",filename),
+                              package="RNetica",
+                              mustWork=TRUE),session,env)

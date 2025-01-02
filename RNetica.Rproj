@@ -1,4 +1,5 @@
 Version: 1.0
+ProjectId: fb01800e-9f0e-4308-baac-3751c97f8f5b
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
@@ -13,7 +14,6 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Package
-PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source  --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'
 PackageBuildArgs: --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'
 PackageBuildBinaryArgs: --configure-args='--with-netica=/home/ralmond/software/Netica_API_607'

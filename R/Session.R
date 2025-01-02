@@ -338,9 +338,9 @@ getDefaultSession <- function() {
     }
     if (exists("NeticaLicenseKey",envir=.GlobalEnv)) {
       key <- get("NeticaLicenseKey",envir=.GlobalEnv)
-      defSess <- NeticaSession$new(LicenseKey=key)
+      defSess <- NeticaSession(LicenseKey=key)
     } else {
-      defSess <- NeticaSession$new()
+      defSess <- NeticaSession()
     }
     assign("DefaultNeticaSession",defSess,envir=.GlobalEnv)
   }
@@ -367,4 +367,20 @@ StopNetica <- function(session=getDefaultSession()) {
   stopSession(session)
 }
 
+
+SetupDefaultSession <- function(license=options("NeticaLicenseKey")[[1]],
+                                checking=NULL, maxmem=NULL, env=.GlobalEnv) {
+  if (exists("DefaultNeticaSession",envir=.GlobalEnv)) {
+    defSess <- get("DefaultNeticaSession",envir=.GlobalEnv)
+    if (!is(defSess,"NeticaSession")) stop("Weird DefaultNeticaSession.")
+  } else {
+    defSess <- NeticaSession()
+    assign("DefaultNeticaSession",defSess,envir=.GlobalEnv)
+  }
+  if (!defSess$isActive())
+    startSession(defSess)
+
+  withr::defer(stopSession(defSess), env)
+  
+}
 

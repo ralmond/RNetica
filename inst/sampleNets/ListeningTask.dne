@@ -1,0 +1,69 @@
+// ~->[DNET-1]->~
+
+// File created by AlmondR at FloridaStateU using Netica 6.09 on Oct 16, 2024 at 23:29:04 UTC.
+
+bnet ListeningTask {
+autoupdate = TRUE;
+whenchanged = 1729121344;
+
+visual V4 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 9;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	ShowLinkStrengths = 1;
+	windowposn = (115, 143, 1190, 587);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0x00e1e1e1;};
+	NodeSet Nature {BuiltIn = 1; Color = 0x00f8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0x00d3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0x00c8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0x00ffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0x00ffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0x00ffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0x00dee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0x00f0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0x00ffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		};
+	};
+
+param X_Listening_1 {
+	discrete = TRUE;
+	states = (Novice, Intermediate, Advanced);
+	kind = DISCONNECTED;
+	chance = CHANCE;
+	title = "Listening";
+	whenchanged = 1729121300;
+	};
+
+node TaskD {
+	discrete = TRUE;
+	states = (Wrong, Right);
+	kind = NATURE;
+	chance = CHANCE;
+	inputs = (Listening);
+	parents = (X_Listening_1);
+	probs = 
+		// Wrong        Right         // Listening    
+		  (0.99,        0.01,         // Novice       
+		   0.6,         0.4,          // Intermediate 
+		   0.3,         0.7);         // Advanced     ;
+	title = "TaskD";
+	whenchanged = 1121108131;
+	visual V4 {
+		center = (156, 102);
+		height = 1;
+		link 1 {
+			labelposn = (158, 51, 208, 66);
+			path = ((156, 51), (156, 76));
+			};
+		};
+	};
+};

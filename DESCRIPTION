@@ -1,6 +1,6 @@
 Package: RNetica
-Version: 0.10-3
-Date: 2024/06/20
+Version: 0.10-4
+Date: 2024/12/25
 Title: R interface to Netica(R) Bayesian Network Engine 
 Author: Russell Almond
 Maintainer: Russell Almond <ralmond@fsu.edu>
@@ -11,11 +11,12 @@ Authors@R:
            email = "ralmond@fsu.edu",
            comment = c(ORCID = "0000-0002-8876-9337"))
 Depends: R (>= 3.0), methods, utils, CPTtools (>= 0.5-3)
-Imports: grDevices, R.utils
-Suggests: 
+Imports: grDevices, R.utils, withr
+Suggests:
     knitr,
     rmarkdown,
     tidyr,
+    withr,
     futile.logger
 VignetteBuilder: knitr
 Description: This provides an R interface to the Netica (http://norsys.com/) Bayesian network library API.
