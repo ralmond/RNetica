@@ -57,7 +57,7 @@ NeticaBN <-
                                           call = sys.call(sys.parent())) {
                     e <- reportErrors(maxreport, clear, call)
                     if (inherits(e,"error")) stop(e)
-                    if (inherits(e,"warning")) warn(e)
+                    if (inherits(e,"warning")) warning(e)
                     if (inherits(e,"condition")) signalCondition(e)
                   },
                   clearErrors = function(severity="XXX_ERR") {
@@ -536,7 +536,7 @@ NetworkUserObj <- function (net, fieldname) {
   sval <- dputToString(value)
   ## Sometimes R "helpfully" breaks this into multiple lines.
   if (length(sval) > 1)
-    sval <- paste(sval,collapse=" ")
+    sval <- paste(sval,collapse="\n")
   NetworkUserField(net,fieldname) <- sval
   net
 }

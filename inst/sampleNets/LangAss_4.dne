@@ -1,0 +1,353 @@
+// ~->[DNET-1]->~
+
+// File created by ZapataD at ETSTech using Netica 2.17 on Jul 11, 2005 at 17:40:49.
+
+bnet LangAss_4 {
+autoupdate = TRUE;
+whenchanged = 1121117955;
+
+visual V3 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (1, 3, 933, 591);
+	resolution = 72;
+	drawingbounds = (1080, 720);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		landscape = FALSE;
+		magnify = 1;
+		};
+	};
+
+node Reading {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Novice, Intermediate, Advanced);
+	parents = ();
+	probs = 
+		// Novice       Intermediate Advanced     
+		  (0.25,        0.5,         0.25);
+	title = "Reading";
+	whenchanged = 1121111437;
+	visual V3 {
+		center = (294, 78);
+		height = 10;
+		};
+	};
+
+node Writing {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Novice, Intermediate, Advanced);
+	parents = (Reading);
+	probs = 
+		// Novice       Intermediate Advanced       // Reading      
+		 ((0.25,        0.5,         0.25),         // Novice       
+		  (0.25,        0.5,         0.25),         // Intermediate 
+		  (0.25,        0.5,         0.25));        // Advanced     ;
+	title = "Writing";
+	whenchanged = 1121111441;
+	visual V3 {
+		center = (126, 228);
+		height = 1;
+		};
+	};
+
+node Speaking {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Novice, Intermediate, Advanced);
+	parents = (Reading, Writing);
+	probs = 
+		// Novice       Intermediate Advanced        // Reading      Writing      
+		(((0.25,        0.5,         0.25),          // Novice       Novice       
+		  (0.25,        0.5,         0.25),          // Novice       Intermediate 
+		  (0.25,        0.5,         0.25)),         // Novice       Advanced     
+		 ((0.25,        0.5,         0.25),          // Intermediate Novice       
+		  (0.25,        0.5,         0.25),          // Intermediate Intermediate 
+		  (0.25,        0.5,         0.25)),         // Intermediate Advanced     
+		 ((0.25,        0.5,         0.25),          // Advanced     Novice       
+		  (0.25,        0.5,         0.25),          // Advanced     Intermediate 
+		  (0.25,        0.5,         0.25)));        // Advanced     Advanced     ;
+	title = "Speaking";
+	whenchanged = 1121111446;
+	visual V3 {
+		center = (126, 384);
+		height = 2;
+		};
+	};
+
+node Listening {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Novice, Intermediate, Advanced);
+	parents = (Reading, Speaking, Writing);
+	probs = 
+		//  Novice       Intermediate Advanced         // Reading      Speaking     Writing      
+		((((0.25,        0.5,         0.25),           // Novice       Novice       Novice       
+		   (0.25,        0.5,         0.25),           // Novice       Novice       Intermediate 
+		   (0.25,        0.5,         0.25)),          // Novice       Novice       Advanced     
+		  ((0.25,        0.5,         0.25),           // Novice       Intermediate Novice       
+		   (0.25,        0.5,         0.25),           // Novice       Intermediate Intermediate 
+		   (0.25,        0.5,         0.25)),          // Novice       Intermediate Advanced     
+		  ((0.25,        0.5,         0.25),           // Novice       Advanced     Novice       
+		   (0.25,        0.5,         0.25),           // Novice       Advanced     Intermediate 
+		   (0.25,        0.5,         0.25))),         // Novice       Advanced     Advanced     
+		 (((0.25,        0.5,         0.25),           // Intermediate Novice       Novice       
+		   (0.25,        0.5,         0.25),           // Intermediate Novice       Intermediate 
+		   (0.25,        0.5,         0.25)),          // Intermediate Novice       Advanced     
+		  ((0.25,        0.5,         0.25),           // Intermediate Intermediate Novice       
+		   (0.25,        0.5,         0.25),           // Intermediate Intermediate Intermediate 
+		   (0.25,        0.5,         0.25)),          // Intermediate Intermediate Advanced     
+		  ((0.25,        0.5,         0.25),           // Intermediate Advanced     Novice       
+		   (0.25,        0.5,         0.25),           // Intermediate Advanced     Intermediate 
+		   (0.25,        0.5,         0.25))),         // Intermediate Advanced     Advanced     
+		 (((0.25,        0.5,         0.25),           // Advanced     Novice       Novice       
+		   (0.25,        0.5,         0.25),           // Advanced     Novice       Intermediate 
+		   (0.25,        0.5,         0.25)),          // Advanced     Novice       Advanced     
+		  ((0.25,        0.5,         0.25),           // Advanced     Intermediate Novice       
+		   (0.25,        0.5,         0.25),           // Advanced     Intermediate Intermediate 
+		   (0.25,        0.5,         0.25)),          // Advanced     Intermediate Advanced     
+		  ((0.25,        0.5,         0.25),           // Advanced     Advanced     Novice       
+		   (0.25,        0.5,         0.25),           // Advanced     Advanced     Intermediate 
+		   (0.25,        0.5,         0.25))));        // Advanced     Advanced     Advanced     ;
+	title = "Listening";
+	whenchanged = 1121111456;
+	visual V3 {
+		center = (294, 522);
+		height = 3;
+		};
+	};
+
+node TaskB {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (PoorW_Off_, PoorW_On_, GoodW_Off_, GoodW_On_);
+	statetitles = ("PoorW(Off)", "PoorW(On)", "GoodW(Off)", "GoodW(On)");
+	parents = (Reading, Writing);
+	probs = 
+		// PoorW(Off)   PoorW(On)    GoodW(Off)   GoodW(On)       // Reading      Writing      
+		(((0.8,         0.1,         0.1,         0),             // Novice       Novice       
+		  (0.4,         0.4,         0.1,         0.1),           // Novice       Intermediate 
+		  (0.3,         0.3,         0.2,         0.2)),          // Novice       Advanced     
+		 ((0.4,         0.3,         0.2,         0.1),           // Intermediate Novice       
+		  (0.1,         0.2,         0.3,         0.4),           // Intermediate Intermediate 
+		  (0.1,         0.1,         0.2,         0.6)),          // Intermediate Advanced     
+		 ((0.1,         0.3,         0.3,         0.3),           // Advanced     Novice       
+		  (0,           0.1,         0.2,         0.7),           // Advanced     Intermediate 
+		  (0,           0.05,        0.05,        0.9)));         // Advanced     Advanced     ;
+	title = "TaskB";
+	whenchanged = 1121108131;
+	visual V3 {
+		center = (690, 228);
+		height = 5;
+		};
+	};
+
+node TaskA {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	parents = (Reading);
+	probs = 
+		// Poor         Okay         Good         Very Good      // Reading      
+		 ((0.5,         0.375,       0.115,       0.01),         // Novice       
+		  (0.2,         0.3,         0.3,         0.2),          // Intermediate 
+		  (0.01,        0.125,       0.375,       0.49));        // Advanced     ;
+	title = "TaskA";
+	whenchanged = 1121108131;
+	visual V3 {
+		center = (684, 84);
+		height = 7;
+		};
+	};
+
+node TaskC {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	parents = (Reading, Speaking, Listening);
+	probs = 
+		//  Poor         Okay         Good         Very Good        // Reading      Speaking     Listening    
+		((((0.8,         0.1,         0.1,         0),              // Novice       Novice       Novice       
+		   (0.5,         0.3,         0.2,         0),              // Novice       Novice       Intermediate 
+		   (0.2,         0.3,         0.3,         0.2)),           // Novice       Novice       Advanced     
+		  ((0.7,         0.2,         0.1,         0),              // Novice       Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Novice       Intermediate Intermediate 
+		   (0,           0.1,         0.3,         0.6)),           // Novice       Intermediate Advanced     
+		  ((0.2,         0.3,         0.3,         0.2),            // Novice       Advanced     Novice       
+		   (0,           0.1,         0.3,         0.6),            // Novice       Advanced     Intermediate 
+		   (0,           0.1,         0.2,         0.7))),          // Novice       Advanced     Advanced     
+		 (((0.8,         0.1,         0.1,         0),              // Intermediate Novice       Novice       
+		   (0.5,         0.3,         0.2,         0),              // Intermediate Novice       Intermediate 
+		   (0.2,         0.3,         0.3,         0.2)),           // Intermediate Novice       Advanced     
+		  ((0.5,         0.3,         0.2,         0),              // Intermediate Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Intermediate Intermediate Intermediate 
+		   (0,           0.1,         0.2,         0.7)),           // Intermediate Intermediate Advanced     
+		  ((0.2,         0.3,         0.3,         0.2),            // Intermediate Advanced     Novice       
+		   (0,           0.1,         0.2,         0.7),            // Intermediate Advanced     Intermediate 
+		   (0,           0.1,         0.1,         0.8))),          // Intermediate Advanced     Advanced     
+		 (((0.7,         0.2,         0.1,         0),              // Advanced     Novice       Novice       
+		   (0.5,         0.2,         0.2,         0.1),            // Advanced     Novice       Intermediate 
+		   (0.3,         0.2,         0.2,         0.3)),           // Advanced     Novice       Advanced     
+		  ((0.4,         0.3,         0.2,         0.1),            // Advanced     Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Advanced     Intermediate Intermediate 
+		   (0.05,        0.1,         0.15,        0.7)),           // Advanced     Intermediate Advanced     
+		  ((0.05,        0.1,         0.25,        0.6),            // Advanced     Advanced     Novice       
+		   (0.05,        0.1,         0.15,        0.7),            // Advanced     Advanced     Intermediate 
+		   (0,           0,           0.1,         0.9))));         // Advanced     Advanced     Advanced     ;
+	title = "TaskC";
+	whenchanged = 1121117912;
+	visual V3 {
+		center = (690, 384);
+		height = 6;
+		};
+	};
+
+node TaskA1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	inputs = (Reading);
+	parents = (Reading);
+	probs = 
+		// Poor         Okay         Good         Very Good      // Reading      
+		 ((0.5,         0.375,       0.115,       0.01),         // Novice       
+		  (0.2,         0.3,         0.3,         0.2),          // Intermediate 
+		  (0.01,        0.125,       0.375,       0.49));        // Advanced     ;
+	title = "TaskA";
+	whenchanged = 1121111230;
+	visual V3 {
+		center = (870, 102);
+		height = 8;
+		};
+	};
+
+node TaskB1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (PoorW_Off_, PoorW_On_, GoodW_Off_, GoodW_On_);
+	statetitles = ("PoorW(Off)", "PoorW(On)", "GoodW(Off)", "GoodW(On)");
+	inputs = (Reading, Writing);
+	parents = (Reading, Writing);
+	probs = 
+		// PoorW(Off)   PoorW(On)    GoodW(Off)   GoodW(On)       // Reading      Writing      
+		(((0.8,         0.1,         0.1,         0),             // Novice       Novice       
+		  (0.4,         0.4,         0.1,         0.1),           // Novice       Intermediate 
+		  (0.3,         0.3,         0.2,         0.2)),          // Novice       Advanced     
+		 ((0.4,         0.3,         0.2,         0.1),           // Intermediate Novice       
+		  (0.1,         0.2,         0.3,         0.4),           // Intermediate Intermediate 
+		  (0.1,         0.1,         0.2,         0.6)),          // Intermediate Advanced     
+		 ((0.1,         0.3,         0.3,         0.3),           // Advanced     Novice       
+		  (0,           0.1,         0.2,         0.7),           // Advanced     Intermediate 
+		  (0,           0.05,        0.05,        0.9)));         // Advanced     Advanced     ;
+	title = "TaskB";
+	whenchanged = 1121111388;
+	visual V3 {
+		center = (882, 246);
+		height = 11;
+		};
+	};
+
+node TaskC1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Poor, Okay, Good, Very_Good);
+	statetitles = ("Poor", "Okay", "Good", "Very Good");
+	inputs = (Reading, Speaking, Listening);
+	parents = (Reading, Speaking, Listening);
+	probs = 
+		//  Poor         Okay         Good         Very Good        // Reading      Speaking     Listening    
+		((((0.8,         0.1,         0.1,         0),              // Novice       Novice       Novice       
+		   (0.5,         0.3,         0.2,         0),              // Novice       Novice       Intermediate 
+		   (0.2,         0.3,         0.3,         0.2)),           // Novice       Novice       Advanced     
+		  ((0.7,         0.2,         0.1,         0),              // Novice       Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Novice       Intermediate Intermediate 
+		   (0,           0.1,         0.3,         0.6)),           // Novice       Intermediate Advanced     
+		  ((0.2,         0.3,         0.3,         0.2),            // Novice       Advanced     Novice       
+		   (0,           0.1,         0.3,         0.6),            // Novice       Advanced     Intermediate 
+		   (0,           0.1,         0.2,         0.7))),          // Novice       Advanced     Advanced     
+		 (((0.8,         0.1,         0.1,         0),              // Intermediate Novice       Novice       
+		   (0.5,         0.3,         0.2,         0),              // Intermediate Novice       Intermediate 
+		   (0.2,         0.3,         0.3,         0.2)),           // Intermediate Novice       Advanced     
+		  ((0.5,         0.3,         0.2,         0),              // Intermediate Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Intermediate Intermediate Intermediate 
+		   (0,           0.1,         0.2,         0.7)),           // Intermediate Intermediate Advanced     
+		  ((0.2,         0.3,         0.3,         0.2),            // Intermediate Advanced     Novice       
+		   (0,           0.1,         0.2,         0.7),            // Intermediate Advanced     Intermediate 
+		   (0,           0.1,         0.1,         0.8))),          // Intermediate Advanced     Advanced     
+		 (((0.7,         0.2,         0.1,         0),              // Advanced     Novice       Novice       
+		   (0.5,         0.2,         0.2,         0.1),            // Advanced     Novice       Intermediate 
+		   (0.3,         0.2,         0.2,         0.3)),           // Advanced     Novice       Advanced     
+		  ((0.4,         0.3,         0.2,         0.1),            // Advanced     Intermediate Novice       
+		   (0.1,         0.4,         0.4,         0.1),            // Advanced     Intermediate Intermediate 
+		   (0.05,        0.1,         0.15,        0.7)),           // Advanced     Intermediate Advanced     
+		  ((0.05,        0.1,         0.25,        0.6),            // Advanced     Advanced     Novice       
+		   (0.05,        0.1,         0.15,        0.7),            // Advanced     Advanced     Intermediate 
+		   (0,           0,           0.1,         0.9))));         // Advanced     Advanced     Advanced     ;
+	title = "TaskC";
+	whenchanged = 1121117955;
+	visual V3 {
+		center = (876, 408);
+		height = 12;
+		};
+	};
+
+node TaskD {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Wrong, Right);
+	parents = (Listening);
+	probs = 
+		// Wrong        Right          // Listening    
+		 ((0.99,        0.01),         // Novice       
+		  (0.6,         0.4),          // Intermediate 
+		  (0.3,         0.7));         // Advanced     ;
+	title = "TaskD";
+	whenchanged = 1121108131;
+	visual V3 {
+		center = (684, 522);
+		height = 4;
+		};
+	};
+
+node TaskD1 {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Wrong, Right);
+	inputs = (Listening);
+	parents = (Listening);
+	probs = 
+		// Wrong        Right          // Listening    
+		 ((0.99,        0.01),         // Novice       
+		  (0.6,         0.4),          // Intermediate 
+		  (0.3,         0.7));         // Advanced     ;
+	title = "TaskD";
+	whenchanged = 1121111338;
+	visual V3 {
+		center = (864, 540);
+		height = 9;
+		};
+	};
+};

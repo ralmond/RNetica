@@ -428,7 +428,7 @@ NodeUserObj <- function (node, fieldname) {
   sval <- dputToString(value)
   ## Sometimes R "helpfully" breaks this into multiple lines.
   if (length(sval) > 1)
-    sval <- paste(sval,collapse=" ")
+    sval <- paste(sval,collapse="\n")
   NodeUserField(node,fieldname) <- sval
   node
 }
@@ -497,7 +497,7 @@ NodeVisPos <- function (node) {
   if (!is.NeticaNode(node)) {
     stop("Expected an active Netica node, got, ",node)
   }
-  value <- as.numeric(value)
+  value <- as.double(value)
   if (length(value) >2 || any(is.na(value))) {
     stop("Expected a vector of 2 numbers, got", value)
   }

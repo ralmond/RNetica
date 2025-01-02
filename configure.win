@@ -47,25 +47,33 @@ fi
 echo "Using Netica at $NETICA_HOME"
 
 #Moved to Makefile.win
-#echo "${R_HOME}/bin${R_ARCH_BIN}/Rscript" 
-#x86=`"${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e 'cat(.Machine$sizeof.pointer==8)'`
-#echo "Building for x86..." $x86
-#if test $x86 = "TRUE"; then
-#   NETICA_LIB="${NETICA_HOME}/lib64"
-#   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/x64
-#   LONG_SIZE=8
-#else
-#   NETICA_LIB="${NETICA_HOME}/lib"
-#   INSTALL_LIB=\${R_PACKAGE_DIR}/libs/i386
-#   LONG_SIZE=4
-#fi
+echo "${R_HOME}/bin${R_ARCH_BIN}/Rscript" 
+x86=`"${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e 'cat(.Machine$sizeof.pointer==8)'`
+echo "Building for x86..." $x86
+
+if test $x86 = "TRUE"; then
+   NETICA_LIB="${NETICA_HOME}/lib64"
+   INSTALL_LIB="libs/x64"
+   LONG_SIZE=8
+else
+   NETICA_LIB="${NETICA_HOME}/lib"
+   INSTALL_LIB="libs/i386"
+   LONG_SIZE=4
+fi
+
+## Need to do this here, as apparently it is not getting picked up in
+## Makevars.win
+#mkdir -p "${INSTALL_LIB}"
+#cp "${NETICA_LIB}/Netica.dll" "${INSTALL_LIB}" 
+#cp "${NETICA_LIB}/Netica.lib" "${INSTALL_LIB}" 
+
 
 if test -z "$NETICA_CFLAGS"; then
    NETICA_CFLAGS=-I"${NETICA_HOME}/src"
 fi
 
 if test -z "$NETICA_LDFLAGS"; then
-   NETICA_LDFLAGS="${INSTALL_LIB}/Netica.dll"
+   NETICA_LDFLAGS="\${R_PACKAGE_DIR}/${INSTALL_LIB}/Netica.dll"
 fi
 
 echo "%%%%%%%%%%%%%%%%%%%%%%%%%%"

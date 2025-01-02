@@ -10,6 +10,7 @@ src/*.so
 src/*.dll
 src-i386
 src-x64
+src/Netica/LicAgree.txt
 
 autom4te.cache
 config.log
@@ -22,3 +23,10 @@ aclocal.m4
 config.h
 symbols.rds
 inst/doc
+src/Netica/Makefile
+src/Netica/NeticaAPI.zip
+src/Netica/Netica_API_607/lib/libnetica.a
+src/Netica/Netica_API_607/*
+src/Netica/NeticaAPI.zip
+src/Netica/Makefile
+
