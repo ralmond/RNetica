@@ -106,7 +106,8 @@ NeticaBN <-
 ## This function creates the Bayesian Network objects.
 ## *Vectorized*
 CreateNetwork <- function (names,session=getDefaultSession()) {
-  if (!is.character(names) || length(names) == 0) {
+  if (!is.active(session)) stop("Session not active")
+    if (!is.character(names) || length(names) == 0) {
     stop("Network names not supplied.")
   }
   goodNames <- is.IDname(names)
@@ -253,6 +254,7 @@ CopyNetworks <- function (nets, newnamelist, options=character(0)) {
   newnamelist <- as.character(newnamelist)
   options <- paste(options,collapse=",")
   session <- nets[[1]]$Session
+  if (!is.active(session)) stop("Netica Session is not active.")
 
   existing <- sapply(newnamelist, function (name) {
     if (!is.null(session$findNet(name)) && is.active(session$findNet(name)))
@@ -315,6 +317,7 @@ ReadNetworks <- function (paths,session=getDefaultSession(),loadVisual=TRUE) {
     if (missing(session)) {
       session <- paths$Session
     }
+    if (!is.active(session)) stop("Netica Session not active.")
     return(ReadNetworks(paths$PathnameName,session,loadVisual))
   }
   if (is.list(paths) && length(paths) >0 && is.NeticaBN(paths[[1]])) {

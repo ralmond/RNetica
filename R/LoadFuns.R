@@ -49,7 +49,7 @@ CCodeLoader <- function() {
     .C("RN_Define_Symbols",PACKAGE=RNetica)
     assignInMyNamespace("EV_STATE",.Call("RN_GetEveryState",PACKAGE=RNetica))
     assignInMyNamespace("CCodeLoaded",TRUE)
-    if (is.null(options("NeticaLicenceKey")))
+    if (is.null(options("NeticaLicencsKey")))
       options("NeticaLicenseKey"=Sys.getenv("NeticaLicenseKey"))
   }
 }
