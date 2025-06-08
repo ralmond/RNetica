@@ -1,0 +1,231 @@
+---
+title: "R Bindings for Netica :: Cheat Sheet"
+description: " "
+execute:
+  eval: true
+  output: false
+  warning: false
+---
+
+```{r}
+#| output: asis
+#| echo: false
+#| column: margin
+
+source("common.R")
+use_cheatsheet_logo(
+  "Peanut", 
+  alt = "Hex logo for Peanut - A peanut with a small three node network."
+)
+
+sheet_name <- tools::file_path_sans_ext(knitr::current_input())
+pdf_preview_link(sheet_name)
+translation_list(sheet_name)
+```
+
+<!-- Page 1 -->
+
+## Netica Licence Keys
+
+The Netica shared library which is the heart of RNetica is availble
+under license from Norsys, LLC (<https://www.norsys.com>).  Unlocking
+its full potential requires purchasing an API (not GUI) licences key
+from Norsys.  This will be a string.  There are several different
+places you can set this.
+
+- Create an environment variable, `NETICA_LICENSE_KEY` in `.Renviorn`
+  or other place.
+- Set `options("NeticaLicenseKey")` to the string.
+- Pass it in explicitly with a call to `NeticaSession`.
+
+Sessions started without a licence key will still operate, but the
+size the networks will be limited.
+
+## Netica Naming conventions
+
+Netica networks, nodes, and states must have a name that (1) start
+with a letter, (2) have 30 characters or fewer, and (3) all characters
+are alphanumeric or `_`.  While names must conform to the Netica
+conventions, titles do not.
+
+	- `r args(is.IDname)`, `r args(as.IDname)`
+
+## Netica Sessions
+
+To use RNetica, a `NeticaSession` object must be created and started.
+Networks and other objects are then created within a session.  A
+session, network or node object is active if it is connected to an
+object inside of the Netica session.  When
+the session is stoped (including when R exits) the connection to all
+networks and nodes is lost and they become inactive.
+
+	- `r args(NeticaSession)` -- Generateds a new session
+    - `r args(startSession)`, `r args(stopSession)`
+	- `r args(is.active)` -- Tests connection of object to Netica session.
+	- `r args(getDefaultSession)` -- Returns the default value used in
+	function which expect a session.
+	- `r args(GetNthNetwork)` -- Used for looping through open
+	networks, returns `NULL` when all networks processed.
+	- `r args(GetNamedNeworks)` -- Returns networks by name.
+	- `session$nets$<netname>` -- The `$nets` field of the session
+	argument stores the network objects.  `ls(session$nets)` lists them.
+	- `r args(CheckNamedNetworks)` -- Searches Netica memory for
+	matching network.
+	
+## Error Handling	
+
+
+
+- `NeticaCondition`
+- `r args(ReportErrors)`
+- `r args(ClearAllErrors)`
+- `r args(logErrors)`, `r args(flogErrors)`
+
+## Networks
+
+- `NeticaBN`
+-  is.NeticaBN,
+- `r args(NetworkName)`, `r args(NetworkTitle)`, `r args(NetworkComment)`
+-  CreateNetwork, DeleteNetwork, CopyNetworks
+- `r args(ReadNetworks)`, `r args(WriteNetworks)`
+- `r args(GetNetworkFileName)`
+-  NetworkUserField, 
+-  NetworkUserObj, 
+-  NetworkAllUserFields
+-  NetworkSession
+-  NetworkAllNodes,
+-  `net$nodes$<nodename>`
+-  NetworkFindNode,
+
+## Temporary network creation
+
+	- `r args(SetupDefaultSession)`
+   local_create_nets,local_load_nets,
+       local_copy_nets,local_RNetica_net
+
+
+## Nodes
+
+  NewDiscreteNode, NewContinuousNode, DeleteNodes,
+  CopyNodes,
+  NodeNet, NodeName, "NodeName<-",
+  is.NeticaNode,
+  NodeTitle, "NodeTitle<-",
+  NodeDescription, "NodeDescription<-",
+  NodeUserField, "NodeUserField<-", NodeAllUserFields,
+  NodeUserObj, "NodeUserObj<-",
+  NodeKind, "NodeKind<-",
+  NodeVisStyle, "NodeVisStyle<-",
+  NodeVisPos, "NodeVisPos<-"
+
+## Node States
+
+  is.discrete, is.continuous,
+  NodeStates, NodeNumStates, "NodeStates<-",
+  NodeStateTitles, "NodeStateTitles<-",
+  NodeStateComments, "NodeStateComments<-",
+  NodeLevels, "NodeLevels<-", ParentStates, ParentNames
+
+
+## Edges
+
+- `CliqueNode`
+   AddLink, DeleteLink, ReverseLink,
+   NodeParents, "NodeParents<-", NodeChildren,
+   AbsorbNodes, MakeCliqueNode, is.CliqueNode,
+   GetClique,
+   is.NodeRelated, GetRelatedNodes,
+   NodeInputNames, "NodeInputNames<-",
+   AdjoinNetwork, NetworkFootprint
+
+## CPTs
+
+- `[`, `[[`
+-   NodeProbs, "NodeProbs<-", EVERY_STATE,
+  IsNodeDeterministic, HasNodeTable,
+  DeleteNodeTable
+    NodeEquation, "NodeEquation<-",EquationToTable,
+
+
+## Inference
+
+   CompileNetwork, UncompileNetwork, is.NetworkCompiled,
+   EliminationOrder, "EliminationOrder<-",
+   NetworkCompiledSize, JunctionTreeReport,
+   NodeFinding, "NodeFinding<-", EnterNegativeFinding,
+   RetractNetFindings, RetractNodeFinding, EnterFindings,
+   NodeBeliefs, IsBeliefUpdated, NodeMode,
+   NodeLikelihood, "NodeLikelihood<-",
+   JointProbability, FindingsProbability, MostProbableConfig
+   GetNetworkAutoUpdate, SetNetworkAutoUpdate, WithoutAutoUpdate,
+   NodeValue, "NodeValue<-",
+   EnterGaussianFinding, EnterIntervalFinding,
+   NodeExpectedValue, NodeExpectedUtils,
+   CalcNodeState, CalcNodeValue,
+   MutualInfo, VarianceOfReal,
+   woe, ewoe
+
+
+## Node Sets
+
+    NodeSets, "NodeSets<-",
+    AddNodeToSets, RemoveNodeFromSets,
+    NetworkNodeSets, NetworkSetPriority,
+    NetworkNodesInSet, "NetworkNodesInSet<-",
+    NetworkNodeSetColor
+
+## Cases
+	- `CaseStream`, `FileCaseStream`, `MemoryCaseStream`
+	   CaseFileDelimiter,CaseFileMissingCode,
+       OpenCaseStream, CloseCaseStream,
+       WithOpenCaseStream,
+       is.NeticaCaseStream, isCaseStreamOpen,
+       CaseMemoryStream, CaseFileStream,
+       is.MemoryCaseStream, is.CaseFileStream,
+       getCaseStreamPath,getCaseStreamLastId,
+       getCaseStreamPos,getCaseStreamLastFreq,
+       getCaseStreamDataFrameName,
+       MemoryStreamContents,"MemoryStreamContents<-",
+       read.CaseFile,write.CaseFile,orderVars,
+       WriteFindings,ReadFindings,
+       NodeExperience, "NodeExperience<-",
+       FadeCPT, LearnFindings,
+       LearnCases, LearnCPTs
+
+
+## Random Numbers
+
+GenerateRandomCase, NetworkSetRNG, WithRNG, isNeticaRNGActive,
+       is.NeticaRNG, FreeNeticaRNG, NewNeticaRNG
+	   
+## Tester
+
+testerNet, testerTarget, testerIgnore,
+       testerErrorRate, testerLogLoss, testerQuadraticLoss,
+       testerConfusion, testerKappa, testerLambda,
+       testNetwork
+
+
+## Utilities
+
+       dputToString, dgetFromString
+
+
+
+
+
+------------------------------------------------------------------------
+
+CC BY SA Russell G. Almond • [ralmond\@fsu.edu](mailto:ralmond@fsu.edu) • [ralmond.net](https://ralmond.net)
+
+Learn more at [https://ralmond.net/Peanut](https://ralmond.net/Peanut).
+
+Updated: `r format(Sys.Date(), "%Y-%m")`.
+
+```{r}
+#| output: true
+
+packageVersion("RNetica")
+```
+
+------------------------------------------------------------------------

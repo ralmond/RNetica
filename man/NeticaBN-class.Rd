@@ -25,7 +25,7 @@ destructively modified.  Also fields (slots) are accessed using the
 \section{Methods}{
   \describe{
     \item{Compare}{\code{signature(e1 = "NeticaBN", e2 = "NeticaBN")}:
-      Tests for equality (mainly of pointers. }
+      Tests for equality (mainly of pointers). }
     \item{is.active}{\code{signature(x = "NeticaBN")}: Returns true if
       the \code{NeticaBN} objectcurrently references an active Netica
       object, and returns false if it references a deleted network or a

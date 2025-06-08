@@ -288,9 +288,9 @@ setMethod("is.active","list",function(x) sapply(x, is.active))
 
 setMethod("toString","NeticaSession",function(x,...) {
   if (is.active(x))
-    paste("<Netica Session:",x$Name,">")
+    paste("<Netica Session:",x$SessionName,">")
   else
-    paste("<Inactive Netica Session:",x$Name,">")
+    paste("<Inactive Netica Session:",x$SessionName,">")
 })
 
 setMethod("print","NeticaSession", function(x, ...) {
